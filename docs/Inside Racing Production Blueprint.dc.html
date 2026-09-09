@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&display=swap" rel="stylesheet" />
+<style>
+doc-page:not(:defined){visibility:hidden}
+body{margin:0}
+a{color:#8a2b23;text-decoration:none;border-bottom:1px solid rgba(138,43,35,.35)}
+a:hover{color:#5d1a15;border-bottom-color:#5d1a15}
+</style>
+<script src="./doc-page.js"></script>
+</helmet>
+<doc-page margin="0.8in">
+<div style="font-family:'Newsreader',Georgia,serif;color:#1b1d21;font-size:15.5px;line-height:1.6">
+
+<div style="display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px solid #10233f;padding-bottom:8px;margin-bottom:26px;font-family:'Archivo',sans-serif;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#10233f">
+<span>Inside Racing — production blueprint</span>
+<span style="color:#6b6f76">Draft 1 · for review</span>
+</div>
+
+<h1 style="font-family:'Archivo',sans-serif;font-weight:700;font-size:33px;line-height:1.1;letter-spacing:-.02em;color:#10233f;margin:0 0 14px">How Inside Racing gets produced</h1>
+
+<p style="font-size:18px;line-height:1.5;color:#3d424a;margin:0 0 26px;max-width:44em">A read of the August 2026 edition, broken down by where every page's content comes from and how much of it has to be authored each month rather than generated. The output side of this is fact, taken from the edition itself. The input side is my best inference and is marked where it needs your confirmation.</p>
+
+<h2 style="font-family:'Archivo',sans-serif;font-weight:600;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:#8a2b23;margin:34px 0 10px">1. The edition is a fixed skeleton</h2>
+
+<p style="margin:0 0 14px">Fifty-six pages, in a stable order, with a stable set of section types. Nothing in the August edition suggests the structure is decided each month — the decisions are about content within slots. That means the production problem is a data problem, not a layout problem.</p>
+
+<table style="width:100%;border-collapse:collapse;font-family:'Archivo',sans-serif;font-size:11.5px;margin:0 0 8px">
+<thead>
+<tr style="background:#10233f;color:#fff;text-align:left">
+<th style="padding:7px 8px;font-weight:600">Section</th>
+<th style="padding:7px 8px;font-weight:600;width:52px">Pages</th>
+<th style="padding:7px 8px;font-weight:600;width:74px">Class</th>
+<th style="padding:7px 8px;font-weight:600">What changes each month</th>
+</tr>
+</thead>
+<tbody>
+<tr style="border-bottom:1px solid #e2ded6"><td style="padding:6px 8px">Cover</td><td style="padding:6px 8px">1</td><td style="padding:6px 8px">Editorial</td><td style="padding:6px 8px">Month, image, cover lines</td></tr>
+<tr style="border-bottom:1px solid #e2ded6;background:#faf8f4"><td style="padding:6px 8px">Contents + Stableline notice</td><td style="padding:6px 8px">2</td><td style="padding:6px 8px">Computed</td><td style="padding:6px 8px">Page numbers only</td></tr>
+<tr style="border-bottom:1px solid #e2ded6"><td style="padding:6px 8px">Dates for entries, acceptances, riders</td><td style="padding:6px 8px">3–4</td><td style="padding:6px 8px">Computed</td><td style="padding:6px 8px">Everything — derived from the meeting list</td></tr>
+<tr style="border-bottom:1px solid #e2ded6;background:#faf8f4"><td style="padding:6px 8px">Programs summary chart</td><td style="padding:6px 8px">5–25</td><td style="padding:6px 8px">Generated</td><td style="padding:6px 8px">Everything — pivot of the approved program</td></tr>
+<tr style="border-bottom:1px solid #e2ded6"><td style="padding:6px 8px">Race programs, metro and country</td><td style="padding:6px 8px">26–46</td><td style="padding:6px 8px">Generated</td><td style="padding:6px 8px">Everything — full race conditions</td></tr>
+<tr style="border-bottom:1px solid #e2ded6;background:#faf8f4"><td style="padding:6px 8px">Permits to ride, eligible to ride in trials</td><td style="padding:6px 8px">47</td><td style="padding:6px 8px">Generated</td><td style="padding:6px 8px">Licensing register extract</td></tr>
+<tr style="border-bottom:1px solid #e2ded6"><td style="padding:6px 8px">Riders' agents</td><td style="padding:6px 8px">48</td><td style="padding:6px 8px">Generated</td><td style="padding:6px 8px">Agent/rider pairings, phone numbers</td></tr>
+<tr style="border-bottom:1px solid #e2ded6;background:#faf8f4"><td style="padding:6px 8px">Jumps program, trials, prizemoney breakdown</td><td style="padding:6px 8px">49</td><td style="padding:6px 8px">Generated + Static</td><td style="padding:6px 8px">Program rows; breakdown table is fixed</td></tr>
+<tr style="border-bottom:1px solid #e2ded6"><td style="padding:6px 8px">Jump-outs schedule, official flat trials</td><td style="padding:6px 8px">50</td><td style="padding:6px 8px">Generated</td><td style="padding:6px 8px">Two months of dates and venues</td></tr>
+<tr style="border-bottom:1px solid #e2ded6;background:#faf8f4"><td style="padding:6px 8px">Division of races policy</td><td style="padding:6px 8px">50</td><td style="padding:6px 8px">Static</td><td style="padding:6px 8px">Nothing, until policy changes</td></tr>
+<tr style="border-bottom:1px solid #e2ded6"><td style="padding:6px 8px">Victorian Race Series</td><td style="padding:6px 8px">51</td><td style="padding:6px 8px">Generated</td><td style="padding:6px 8px">Heats in force this period</td></tr>
+<tr style="border-bottom:1px solid #e2ded6;background:#faf8f4"><td style="padding:6px 8px">Industry notice</td><td style="padding:6px 8px">52</td><td style="padding:6px 8px">Editorial</td><td style="padding:6px 8px">Which notice runs, if any</td></tr>
+<tr style="border-bottom:1px solid #e2ded6"><td style="padding:6px 8px">From the Stewards' Room, incl. rule updates</td><td style="padding:6px 8px">53</td><td style="padding:6px 8px">Editorial</td><td style="padding:6px 8px">Items and rule texts selected</td></tr>
+<tr style="border-bottom:1px solid #e2ded6;background:#faf8f4"><td style="padding:6px 8px">HR Assist notice, back cover</td><td style="padding:6px 8px">54–56</td><td style="padding:6px 8px">Static</td><td style="padding:6px 8px">Nothing</td></tr>
+</tbody>
+</table>
+<p style="font-size:12.5px;color:#6b6f76;font-family:'Archivo',sans-serif;margin:0 0 4px">Page numbers as listed in the August 2026 contents.</p>
+
+<h2 style="font-family:'Archivo',sans-serif;font-weight:600;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:#8a2b23;margin:34px 0 10px">2. Forty-four of the fifty-six pages are one dataset, rendered three ways</h2>
+
+<p style="margin:0 0 14px">Pages 3–4, 5–25 and 26–46 are not three bodies of content. They are three views of the same thing: the approved race program for the period ahead.</p>
+
+<div style="border:1px solid #d8d3c8;background:#faf8f4;padding:16px 18px;margin:0 0 16px;break-inside:avoid;orphans:3;widows:3">
+<p style="margin:0 0 10px;font-family:'Archivo',sans-serif;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#10233f">One record per race, carrying:</p>
+<p style="margin:0;font-size:14.5px;color:#3d424a">meeting date · venue and sponsor-prefixed name · track (course proper, synthetic, Heath) · race number, name and type · distance · prizemoney and, where applicable, the full placing breakdown · rating or age band · sex restriction · VOBIS Silver / Gold / Platinum flags · series heat membership · ballot and weight conditions · nomination and acceptance fees · entry, acceptance and riders deadlines · N/C and Q/C markers</p>
+</div>
+
+<p style="margin:0 0 10px">From that single record set, each section is a different projection:</p>
+
+<div style="display:grid;grid-template-columns:1fr;gap:9px;margin:0 0 16px">
+<div style="display:grid;grid-template-columns:118px 1fr;gap:14px;border-left:3px solid #10233f;padding:8px 0 8px 12px;break-inside:avoid"><div style="font-family:'Archivo',sans-serif;font-size:11.5px;font-weight:600;color:#10233f;line-height:1.4">Pages 3–4<br /><span style="font-weight:400;color:#6b6f76">Deadlines</span></div><div>Group the deadline fields by the day the action falls due, split into Feature Race Entry, Entries, Acceptances and Riders. No new information — a re-sort of fields that already exist on each race.</div></div>
+<div style="display:grid;grid-template-columns:118px 1fr;gap:14px;border-left:3px solid #10233f;padding:8px 0 8px 12px;break-inside:avoid"><div style="font-family:'Archivo',sans-serif;font-size:11.5px;font-weight:600;color:#10233f;line-height:1.4">Pages 5–25<br /><span style="font-weight:400;color:#6b6f76">Summary chart</span></div><div>Meetings down the side, thirteen class bands across the top, prizemoney and distance in the cells. A pivot: each race lands in a band by its rating or age condition.</div></div>
+<div style="display:grid;grid-template-columns:118px 1fr;gap:14px;border-left:3px solid #10233f;padding:8px 0 8px 12px;break-inside:avoid"><div style="font-family:'Archivo',sans-serif;font-size:11.5px;font-weight:600;color:#10233f;line-height:1.4">Pages 26–46<br /><span style="font-weight:400;color:#6b6f76">Race programs</span></div><div>The same records printed in full, meeting by meeting, with conditions and deadline blocks.</div></div>
+</div>
+
+<p style="margin:0 0 14px">Two consequences worth naming. First, any deadline is printed at least three times in an edition, so consistency is only guaranteed if all three come off one source. Second, the sections cover different horizons: the August chart runs out to meetings in late October, while the detailed programs stop in early October. The horizon per section is a production rule, not a monthly judgement, and needs to be written down.</p>
+
+<h2 style="font-family:'Archivo',sans-serif;font-weight:600;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:#8a2b23;margin:34px 0 10px">3. Inputs — my inference, for your correction</h2>
+
+<p style="margin:0 0 14px">You said the inputs are always the same and only their detail changes. Here is what the edition implies they must be. Every row needs confirming: what the actual file or system is, who owns it, and when in the month it is stable enough to use.</p>
+
+<table style="width:100%;border-collapse:collapse;font-family:'Archivo',sans-serif;font-size:11.5px;margin:0 0 8px">
+<thead>
+<tr style="background:#10233f;color:#fff;text-align:left">
+<th style="padding:7px 8px;font-weight:600">Input, as inferred</th>
+<th style="padding:7px 8px;font-weight:600">Feeds</th>
+<th style="padding:7px 8px;font-weight:600;width:120px">Needs confirming</th>
+</tr>
+</thead>
+<tbody>
+<tr style="border-bottom:1px solid #e2ded6"><td style="padding:6px 8px">Approved race program and conditions for the period</td><td style="padding:6px 8px">3–4, 5–25, 26–46, 49, 51</td><td style="padding:6px 8px">Source system and export format</td></tr>
+<tr style="border-bottom:1px solid #e2ded6;background:#faf8f4"><td style="padding:6px 8px">Meeting calendar with entry, acceptance and riders times</td><td style="padding:6px 8px">3–4, and repeated in 5–46</td><td style="padding:6px 8px">Same source as above, or separate?</td></tr>
+<tr style="border-bottom:1px solid #e2ded6"><td style="padding:6px 8px">Series schedules — MRC and VRC Grand Handicaps, sprint, highweights</td><td style="padding:6px 8px">51, plus heat notes in 26–46</td><td style="padding:6px 8px">Who maintains, and where</td></tr>
+<tr style="border-bottom:1px solid #e2ded6;background:#faf8f4"><td style="padding:6px 8px">Trials and jump-outs schedule</td><td style="padding:6px 8px">50</td><td style="padding:6px 8px">Owner and lead time</td></tr>
+<tr style="border-bottom:1px solid #e2ded6"><td style="padding:6px 8px">Licensing register — permits, trial eligibility, riders' agents</td><td style="padding:6px 8px">47–48</td><td style="padding:6px 8px">Extract available, or manually kept?</td></tr>
+<tr style="border-bottom:1px solid #e2ded6;background:#faf8f4"><td style="padding:6px 8px">Stewards' and Integrity items, plus rule texts</td><td style="padding:6px 8px">53</td><td style="padding:6px 8px">Who writes, who approves</td></tr>
+<tr style="border-bottom:1px solid #e2ded6"><td style="padding:6px 8px">Standing notices and ads — Stableline, HR Assist, OTT, policies</td><td style="padding:6px 8px">2, 49, 50, 52, 54</td><td style="padding:6px 8px">Review cycle</td></tr>
+</tbody>
+</table>
+
+<h2 style="font-family:'Archivo',sans-serif;font-weight:600;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:#8a2b23;margin:34px 0 10px">4. Where the month actually goes</h2>
+
+<p style="margin:0 0 14px">On this reading, the monthly effort divides into four kinds of work, and only one of them is genuinely writing:</p>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 0 16px">
+<div style="border-top:2px solid #10233f;padding:10px 0 0;break-inside:avoid"><div style="font-family:'Archivo',sans-serif;font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#10233f;margin-bottom:5px">Generated</div><div style="font-size:14.5px;color:#3d424a">Comes out of a system. The work is extracting and formatting it, not deciding it. Roughly 44 pages.</div></div>
+<div style="border-top:2px solid #10233f;padding:10px 0 0;break-inside:avoid"><div style="font-family:'Archivo',sans-serif;font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#10233f;margin-bottom:5px">Computed</div><div style="font-size:14.5px;color:#3d424a">Derived from generated data by a fixed rule — deadline pages, contents page numbers. No judgement involved.</div></div>
+<div style="border-top:2px solid #10233f;padding:10px 0 0;break-inside:avoid"><div style="font-family:'Archivo',sans-serif;font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#10233f;margin-bottom:5px">Editorial</div><div style="font-size:14.5px;color:#3d424a">Cover, industry notice, Stewards' Room. Written or selected each month. Three or four pages.</div></div>
+<div style="border-top:2px solid #10233f;padding:10px 0 0;break-inside:avoid"><div style="font-family:'Archivo',sans-serif;font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#10233f;margin-bottom:5px">Static</div><div style="font-size:14.5px;color:#3d424a">Carried forward until a policy or a service changes. Should be a library, not a re-key.</div></div>
+</div>
+
+<p style="margin:0 0 14px">If that split holds, the leverage is entirely in the first two categories. The question I need answered before designing the process further is how the 44 generated pages are produced today: exported and formatted, or transcribed.</p>
+
+<h2 style="font-family:'Archivo',sans-serif;font-weight:600;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:#8a2b23;margin:34px 0 10px">5. The shape I'd propose</h2>
+
+<div style="display:grid;grid-template-columns:1fr;gap:0;margin:0 0 18px">
+<div style="display:grid;grid-template-columns:26px 1fr;gap:12px;padding:9px 0;border-bottom:1px solid #e2ded6;break-inside:avoid"><div style="font-family:'Archivo',sans-serif;font-weight:700;color:#8a2b23;font-size:13px">1</div><div><strong style="font-family:'Archivo',sans-serif;font-size:13.5px">One edition dataset.</strong> Every input normalised into a single set of records for the edition's horizon, before any page is laid out.</div></div>
+<div style="display:grid;grid-template-columns:26px 1fr;gap:12px;padding:9px 0;border-bottom:1px solid #e2ded6;break-inside:avoid"><div style="font-family:'Archivo',sans-serif;font-weight:700;color:#8a2b23;font-size:13px">2</div><div><strong style="font-family:'Archivo',sans-serif;font-size:13.5px">Validation before layout.</strong> Missing acceptance times, races that fall in no class band, series heats with no matching race, deadlines that fall on a day the calendar says is closed. Caught once, centrally, rather than found at proofing.</div></div>
+<div style="display:grid;grid-template-columns:26px 1fr;gap:12px;padding:9px 0;border-bottom:1px solid #e2ded6;break-inside:avoid"><div style="font-family:'Archivo',sans-serif;font-weight:700;color:#8a2b23;font-size:13px">3</div><div><strong style="font-family:'Archivo',sans-serif;font-size:13.5px">One template per section.</strong> Deadlines, chart, programs, jumps, series, agents. Each reads the dataset and renders itself, so a late program change reflows every section at once.</div></div>
+<div style="display:grid;grid-template-columns:26px 1fr;gap:12px;padding:9px 0;border-bottom:1px solid #e2ded6;break-inside:avoid"><div style="font-family:'Archivo',sans-serif;font-weight:700;color:#8a2b23;font-size:13px">4</div><div><strong style="font-family:'Archivo',sans-serif;font-size:13.5px">A standing library for static pages.</strong> Policies, notices and service ads held as approved assets with review dates, dropped in rather than rebuilt.</div></div>
+<div style="display:grid;grid-template-columns:26px 1fr;gap:12px;padding:9px 0;border-bottom:1px solid #e2ded6;break-inside:avoid"><div style="font-family:'Archivo',sans-serif;font-weight:700;color:#8a2b23;font-size:13px">5</div><div><strong style="font-family:'Archivo',sans-serif;font-size:13.5px">Editorial as the only authored step.</strong> Cover, industry notice, Stewards' Room. Everything else assembles around them.</div></div>
+<div style="display:grid;grid-template-columns:26px 1fr;gap:12px;padding:9px 0;break-inside:avoid"><div style="font-family:'Archivo',sans-serif;font-weight:700;color:#8a2b23;font-size:13px">6</div><div><strong style="font-family:'Archivo',sans-serif;font-size:13.5px">One proof, one sign-off.</strong> With the data validated upstream, proofing checks the edition reads correctly rather than re-checking every figure.</div></div>
+</div>
+
+<h2 style="font-family:'Archivo',sans-serif;font-weight:600;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:#8a2b23;margin:34px 0 10px">6. What I need from you to take this further</h2>
+
+<div style="border:1px solid #d8d3c8;padding:16px 18px;break-inside:avoid">
+<ol style="margin:0;padding-left:20px;font-size:15px">
+<li style="margin-bottom:7px">The actual inputs. What arrives each month, in what format, from whom — ideally a copy of one month's set.</li>
+<li style="margin-bottom:7px">How the 44 generated pages are made today. Exported and styled, or typed up?</li>
+<li style="margin-bottom:7px">The tool the edition is laid out in, and whether that is fixed.</li>
+<li style="margin-bottom:7px">The production calendar. When each input lands, when proofing happens, when it publishes.</li>
+<li style="margin-bottom:0">Who owns each section, and where the approvals sit.</li>
+</ol>
+</div>
+
+<p style="margin:20px 0 0;font-size:13px;color:#6b6f76;font-family:'Archivo',sans-serif">Observations in sections 1 and 2 are taken from the August 2026 edition. Sections 3 to 5 are proposals and assumptions.</p>
+
+</div>
+</doc-page>
+</x-dc>
+</body>
+</html>
