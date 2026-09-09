@@ -81,7 +81,20 @@ class Component extends DCLogic {
         ]).then(() => document.fonts.ready)
       : Promise.resolve();
     Promise.all([
-      import('./parsers/series.js').then(m => m.loadSeries('inputs/Race Series.docx')),
+      // The highweight schedule arrives as its own monthly document, in the same
+      // shape the series parser already reads: one heading, one three-column
+      // DATE / VENUE / RACE table. It prints last, at the foot of column two.
+      import('./parsers/series.js').then(m => Promise.all([
+        m.loadSeries('inputs/Race Series.docx'),
+        m.loadSeries('inputs/Highweights.docx')
+          .catch(e => ({ blocks: [], count: 0, warnings: ['Highweight Schedule: ' + (e.message || e)] }))
+      ])).then(([a, b]) => ({
+        // tail: printed last, at the foot of column two, whatever the series
+        // count — it does not take its turn in the alternation
+        blocks: a.blocks.concat(b.blocks.map(x => ({ ...x, tail: true }))),
+        count: a.count + b.count,
+        warnings: a.warnings.concat(b.warnings)
+      })),
       import('./parsers/settings.js').then(m => m.loadSettings('inputs/Edition Settings.xlsx')),
       faces
     ]).then(([s, cfg]) => {
@@ -117,10 +130,13 @@ class Component extends DCLogic {
       };
     };
     // blocks alternate down the two columns, in document order
+    const tail = this.state.blocks.filter(b => b.tail);
+    const main = this.state.blocks.filter(b => !b.tail);
     const columns = [21.7, 305].map((left, side) => ({
       left: left + 'pt',
-      blocks: this.state.blocks
+      blocks: main
         .filter((b, i) => i % 2 === side)
+        .concat(side === 1 ? tail : [])
         .map((b, i) => ({ ...shape(b), gap: i === 0 ? '0pt' : '34pt' }))
     }));
     return {

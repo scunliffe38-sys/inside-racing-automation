@@ -87,7 +87,7 @@ a:hover{color:#1b7fb4}
 
 <div style="position:absolute;left:22.7pt;top:568.6pt;width:549.9pt;height:245.2pt;background:#151f45;overflow:hidden">
 <sc-if value="{{ adPanelHouse }}" hint-placeholder-val="{{ true }}"><img src="assets/ads/stableline.png" alt="Stableline — free confidential counselling, 1300 520 122" style="position:absolute;left:0;top:0;width:549.9pt;height:auto;display:block" /></sc-if>
-<sc-if value="{{ adPanelBooked }}"><img src="{{ adPanelArt }}" alt="" style="position:absolute;left:0;top:0;width:100%;height:100%;object-fit:contain;display:block" /></sc-if>
+<sc-if value="{{ adPanelBooked }}" hint-placeholder-val="{{ false }}"><img src="{{ adPanelArt }}" alt="" style="position:absolute;left:0;top:0;width:100%;height:100%;object-fit:contain;display:block" /></sc-if>
 </div>
 </section>
 </sc-for>
@@ -541,7 +541,7 @@ DETAILS</div>
 </sc-for>
 <sc-for list="{{ jpFillerAd }}" as="f" hint-placeholder-count="0">
 <div style="position:relative;margin-top:29pt;height:96pt;background:#edf6fb;overflow:hidden">
-<img src="{{ f.art }}" alt="" style="position:absolute;left:0;top:0;width:100%;height:100%;object-fit:contain;display:block" />
+<sc-if value="{{ f.art }}" hint-placeholder-val="{{ false }}"><img src="{{ f.art }}" alt="" style="position:absolute;left:0;top:0;width:100%;height:100%;object-fit:contain;display:block" /></sc-if>
 </div>
 </sc-for>
 </div>
@@ -852,7 +852,7 @@ DETAILS</div>
 
 <sc-for list="{{ adPages }}" as="ad" hint-placeholder-count="0">
 <section class="page" data-screen-label="Full-page advertising" style="position:relative;font-family:'Gotham Narrow',sans-serif;color:#fff;background:#1668dc;overflow:hidden">
-<img src="{{ ad.art }}" alt="" style="position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover" />
+<sc-if value="{{ ad.art }}" hint-placeholder-val="{{ false }}"><img src="{{ ad.art }}" alt="" style="position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover" /></sc-if>
 <sc-if value="{{ ad.live }}" hint-placeholder-val="{{ true }}">
 <div style="position:absolute;left:48pt;top:120pt;width:400pt;font-family:'Gotham XNarrow',sans-serif;font-size:38pt;font-weight:700;line-height:1.04;letter-spacing:-.015em;text-wrap:pretty">{{ ad.headline }}</div>
 <div style="position:absolute;left:48pt;top:330pt;width:330pt;font-size:11pt;line-height:16pt;text-wrap:pretty">{{ ad.body }}</div>
@@ -1140,7 +1140,18 @@ class Component extends DCLogic {
               .catch(e => ({ heading: '', bullets: [], warnings: ['Division of Races Policy: ' + (e.message || e)] }))
           : skip({ heading: '', bullets: [], warnings: [] }),
         sc.tail
-          ? import('./parsers/series.js').then(m => m.loadSeries('inputs/Race Series.docx'))
+          ? import('./parsers/series.js').then(m => Promise.all([
+              m.loadSeries('inputs/Race Series.docx'),
+              // the highweight schedule is its own monthly document, same shape
+              m.loadSeries('inputs/Highweights.docx')
+                .catch(e => ({ blocks: [], count: 0, warnings: ['Highweight Schedule: ' + (e.message || e)] }))
+            ])).then(([a, b]) => ({
+              // tail: printed last, at the foot of column two, whatever the
+              // series count — it does not take its turn in the alternation
+              blocks: a.blocks.concat(b.blocks.map(x => ({ ...x, tail: true }))),
+              count: a.count + b.count,
+              warnings: a.warnings.concat(b.warnings)
+            }))
               .catch(e => ({ blocks: [], count: 0, warnings: ['Race Series: ' + (e.message || e)] }))
           : skip({ blocks: [], count: 0, warnings: [] }),
         N ? N.then(m => m.loadNotice('inputs/Industry Notice.docx')).catch(failDoc('blocks')) : skip({ blocks: [], count: 0, warnings: [] }),
@@ -1364,6 +1375,10 @@ class Component extends DCLogic {
     const PAGE_H = 841.89, BOTTOM = 30, GAP = 11;
     const noteEl = host.querySelector('[data-note]');
     const noteBottom = 93.9 + (noteEl ? toPt(noteEl.getBoundingClientRect().height) : 165) + 12;
+    // The spacer that holds column one clear of the Trainers' Note has to be
+    // measured, not assumed: a constant here silently disagrees with limits.note
+    // the moment the note's copy changes, and the first day heading lands wrong.
+    this._dlNoteGap = (noteBottom - 61.4).toFixed(1) + 'pt';
     const limits = { full: PAGE_H - 95 - BOTTOM, cont: PAGE_H - 61.4 - BOTTOM, note: PAGE_H - noteBottom - BOTTOM };
 
     // Greedy line-level fill; a day block may continue into the next column.
@@ -1785,10 +1800,13 @@ class Component extends DCLogic {
         note: b.note ? [{ t: b.note }] : []
       };
     };
+    const rsTail = this.state.seriesBlocks.filter(b => b.tail);
+    const rsMain = this.state.seriesBlocks.filter(b => !b.tail);
     const rsColumns = [21.7, 305].map((left, side) => ({
       left: left + 'pt',
-      blocks: this.state.seriesBlocks
+      blocks: rsMain
         .filter((b, i) => i % 2 === side)
+        .concat(side === 1 ? rsTail : [])
         .map((b, i) => ({ ...rsShape(b), gap: i === 0 ? '0pt' : '34pt' }))
     }));
 

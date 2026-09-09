@@ -1140,7 +1140,18 @@ class Component extends DCLogic {
               .catch(e => ({ heading: '', bullets: [], warnings: ['Division of Races Policy: ' + (e.message || e)] }))
           : skip({ heading: '', bullets: [], warnings: [] }),
         sc.tail
-          ? import('./parsers/series.js').then(m => m.loadSeries('inputs/Race Series.docx'))
+          ? import('./parsers/series.js').then(m => Promise.all([
+              m.loadSeries('inputs/Race Series.docx'),
+              // the highweight schedule is its own monthly document, same shape
+              m.loadSeries('inputs/Highweights.docx')
+                .catch(e => ({ blocks: [], count: 0, warnings: ['Highweight Schedule: ' + (e.message || e)] }))
+            ])).then(([a, b]) => ({
+              // tail: printed last, at the foot of column two, whatever the
+              // series count — it does not take its turn in the alternation
+              blocks: a.blocks.concat(b.blocks.map(x => ({ ...x, tail: true }))),
+              count: a.count + b.count,
+              warnings: a.warnings.concat(b.warnings)
+            }))
               .catch(e => ({ blocks: [], count: 0, warnings: ['Race Series: ' + (e.message || e)] }))
           : skip({ blocks: [], count: 0, warnings: [] }),
         N ? N.then(m => m.loadNotice('inputs/Industry Notice.docx')).catch(failDoc('blocks')) : skip({ blocks: [], count: 0, warnings: [] }),
@@ -1785,10 +1796,13 @@ class Component extends DCLogic {
         note: b.note ? [{ t: b.note }] : []
       };
     };
+    const rsTail = this.state.seriesBlocks.filter(b => b.tail);
+    const rsMain = this.state.seriesBlocks.filter(b => !b.tail);
     const rsColumns = [21.7, 305].map((left, side) => ({
       left: left + 'pt',
-      blocks: this.state.seriesBlocks
+      blocks: rsMain
         .filter((b, i) => i % 2 === side)
+        .concat(side === 1 ? rsTail : [])
         .map((b, i) => ({ ...rsShape(b), gap: i === 0 ? '0pt' : '34pt' }))
     }));
 
