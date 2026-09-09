@@ -39,14 +39,16 @@ const styleOf = xml => ((String(xml).match(/<w:pStyle\s+w:val="([^"]+)"/) || [])
 // section pages use the same model to break their copy across pages.
 const PAGE_DEPTH = 712;      // A4 less the title block and the folio zone
 
+// Characters to the line measured off the printed page: a full-measure line
+// at 8pt holds about 158, not the 118 a narrower column would.
 const NOTICE_METRICS = {
-  isSubject: [10, 17, 60], isSubhead: [11, 11, 105],
-  isStep: [5, 10.4, 113], isClause: [4, 10.4, 115], isPara: [7, 10.4, 118]
+  isSubject: [10, 17, 70], isSubhead: [11, 11, 120],
+  isStep: [5, 10.4, 150], isClause: [4, 10.4, 152], isPara: [7, 10.4, 158]
 };
 
 const STEWARDS_METRICS = {
-  isHeading: [13, 17, 60], isSubhead: [9, 11, 105],
-  isClause: [4, 10.4, 115], isPara: [6, 10.4, 118]
+  isHeading: [13, 17, 70], isSubhead: [9, 11, 120],
+  isClause: [4, 10.4, 152], isPara: [6, 10.4, 158]
 };
 
 function estimate(blocks, metrics) {
@@ -195,6 +197,10 @@ export async function loadPolicy(url) {
   const unstyled = paras.filter(b => !isH1(b.style) && b.style !== 'IRBullet').length;
 
   if (!heading) warnings.push('Division of Races Policy: no Heading 1 — page 50 will fall back to its printed title.');
+  if (!bullets.length) warnings.push('Division of Races Policy: no bullets — the page prints the heading over empty space.');
+  if (bullets.filter(t => !String(t).trim()).length) {
+    warnings.push('Division of Races Policy: some bullets have no text.');
+  }
   if (unstyled) warnings.push('Division of Races Policy: ' + unstyled + ' bullet' + (unstyled > 1 ? 's are' : ' is') + ' not styled IR Bullet — still printed as bullets.');
   bullets.forEach(t => {
     if (/^[•\-\u2013]\s*/.test(t)) warnings.push('Division of Races Policy: a bullet starts with its own bullet character — the layout adds it.');

@@ -163,8 +163,8 @@ export async function loadPlacements(url) {
     const c = line.split('\t').map(v => (v || '').trim());
     const slot = c[col('slot')] || '';
     if (!slot || slot.charAt(0) === '#') continue;
-    if (!slotById(slot) && !/^fullpage-\d+$/.test(slot)) {
-      warnings.push('Unknown ad slot "' + slot + '" — row ignored. Slots: ' + SLOTS.map(s => s.id).join(', ') + ', fullpage-N.');
+    if (!slotById(slot) && !/^fullpage-\d+$/.test(slot) && !/^page-\d+$/.test(slot)) {
+      warnings.push('Unknown ad slot "' + slot + '" — row ignored. Slots: ' + SLOTS.map(s => s.id).join(', ') + ', fullpage-N, page-N.');
       continue;
     }
     if (bySlot[slot]) { warnings.push('Slot "' + slot + '" booked twice — the later row is ignored.'); continue; }
@@ -294,6 +294,45 @@ export function fillers(pages, threshold) {
     .filter(c => hasBlankSpace(LIVE_DEPTH - c.gapPt, threshold))
     .sort((a, b) => b.gapPt - a.gapPt);
   return candidates.map((c, i) => ({ page: c.page, gapPt: c.gapPt, ad: stock[i % stock.length] }));
+}
+
+/**
+ * A bookable panel in whatever depth a page has left over.
+ *
+ * The producer books it by folio — `page-54` — which is the identifier the
+ * placeholder prints, so what is on the page and what goes in
+ * inputs/Ad Placements.csv are the same string. Returns a one-item list to
+ * drop straight into a template, or an empty one when the page is full or the
+ * slot has been switched off.
+ *
+ *   topPt     where the section's content starts
+ *   usedPt    how deep it ran from there
+ *   bottomPt  the last line the page can print on
+ */
+export function pageSlot(folio, topPt, usedPt, bottomPt, placements) {
+  const bottom = Number(bottomPt) || 811.89;
+  const contentEnd = (Number(topPt) || 0) + (Number(usedPt) || 0);
+  const live = bottom - (Number(topPt) || 0);
+  const gap = bottom - contentEnd;
+  if (!folio || live <= 0 || gap / live < BLANK_THRESHOLD || gap < 140) return [];
+
+  const id = 'page-' + folio;
+  const booking = (placements && placements.bySlot && placements.bySlot[id]) || null;
+  if (booking && !booking.enabled) return [];
+
+  const top = contentEnd + 20;
+  const height = bottom - top;
+  const mm = n => Math.round(n * 0.3528);
+  return [{
+    id,
+    top: top + 'pt',
+    height: height + 'pt',
+    size: mm(549.9) + ' \u00d7 ' + mm(height) + ' mm  \u00b7  ' + Math.round(549.9 / 72 * 300) + ' \u00d7 ' + Math.round(height / 72 * 300) + ' px at 300dpi',
+    booked: !!(booking && booking.artwork),
+    open: !(booking && booking.artwork),
+    art: (booking && booking.artwork) || '',
+    caption: (booking && booking.caption) || ''
+  }];
 }
 
 export { byId };

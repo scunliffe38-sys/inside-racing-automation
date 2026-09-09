@@ -208,8 +208,8 @@ class Component extends DCLogic {
   pack(which) {
     const PAGE = 841.89, BOTTOM = 30, TOP_FIRST = 100, TOP_CONT = 50;
     const M = which === 'notice'
-      ? { isSubject: [10, 17, 60], isSubhead: [11, 11, 105], isPara: [7, 10.4, 118], isStep: [5, 10.4, 113], isClause: [4, 10.4, 115] }
-      : { isHeading: [13, 17, 60], isSubhead: [9, 11, 105], isPara: [6, 10.4, 118], isClause: [4, 10.4, 115] };
+      ? { isSubject: [10, 17, 70], isSubhead: [11, 11, 120], isPara: [7, 10.4, 158], isStep: [5, 10.4, 150], isClause: [4, 10.4, 152] }
+      : { isHeading: [13, 17, 70], isSubhead: [9, 11, 120], isPara: [6, 10.4, 158], isClause: [4, 10.4, 152] };
     const HEADS = which === 'notice' ? ['isSubject', 'isSubhead'] : ['isHeading', 'isSubhead'];
 
     const blocks = (this.state[which] || []).map(b => {

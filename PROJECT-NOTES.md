@@ -123,4 +123,8 @@ grows `count.fullpage`, moving the back cover down. **Never pad an edition with
 a blank page — pad it with advertising.**
 
 Automatic fill: a page leaving more than 40% of its live depth empty is a filler
-candidate (`hasBlankSpace`, `fillers()`), deepest gap first.
+candidate (`hasBlankSpace`, `fillers()`), deepest gap first. The assembled
+edition measures every page once it has laid out and draws a bookable panel in
+what is left over, named after the folio it sits on — `page-26`. That name is
+the slot id: put it in `inputs/Ad Placements.csv` with artwork and the panel
+becomes the ad. The panel prints its own size in mm and pixels at 300dpi.

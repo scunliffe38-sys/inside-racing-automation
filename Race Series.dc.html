@@ -56,6 +56,18 @@ a:hover{color:#1b7fb4}
 </div>
 </sc-for>
 
+
+<sc-for list="{{ p.filler }}" as="slot" hint-placeholder-count="0">
+<sc-if value="{{ slot.booked }}" hint-placeholder-val="{{ false }}">
+<img src="{{ slot.art }}" alt="" style="position:absolute;left:22.7pt;top:{{ slot.top }};width:549.9pt;height:{{ slot.height }};object-fit:cover" />
+</sc-if>
+<sc-if value="{{ slot.open }}" hint-placeholder-val="{{ true }}">
+<div style="position:absolute;left:22.7pt;top:{{ slot.top }};width:549.9pt;height:{{ slot.height }};box-sizing:border-box;border:0.75pt dashed #b6bcc3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5pt;color:#9aa1a9">
+<div style="font-family:'Gotham XNarrow',sans-serif;font-size:10pt;font-weight:700;letter-spacing:.09em">ADVERTISING SLOT &mdash; {{ slot.id }}</div>
+<div style="font-size:7.5pt;letter-spacing:.02em">{{ slot.size }}</div>
+</div>
+</sc-if>
+</sc-for>
 <div style="position:absolute;left:12.2pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1;letter-spacing:-.013em">{{ footer }}</div>
 <div style="position:absolute;right:12.3pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1">{{ p.no }}</div>
 </section>
@@ -73,6 +85,8 @@ class Component extends DCLogic {
   static THREE = [{ w: 85, pad: 3 }, { w: 75, pad: 3 }, { w: 108.4, pad: 3 }];
 
   componentDidMount() {
+    // the bookable panel in whatever depth a page has left over
+    import('./parsers/ads.js').then(A => { this.ads = A; this.forceUpdate(); }).catch(() => {});
     const faces = document.fonts
       ? Promise.all([
           document.fonts.load('400 7pt "Gotham Narrow"'),
@@ -168,7 +182,7 @@ class Component extends DCLogic {
         i++;
       }
       if (!placed) { cols[0].blocks.push(order[i]); i++; }   // a block taller than the page
-      pages.push({ first, cols });
+      pages.push({ first, cols, height: Math.max(cols[0].used, cols[1].used) });
     }
     if (!pages.length) pages.push({ first: true, cols: [{ blocks: [] }, { blocks: [] }] });
     return pages;
@@ -191,7 +205,10 @@ class Component extends DCLogic {
       };
     };
     const from = this.state.from || 0;
+    const placements = (this.state.settings || {}).$placements;
+    const slot = (no, top, used) => (this.ads ? this.ads.pageSlot(no, top, used, 811.89, placements) : []);
     const pages = this.pack().map((p, i) => ({
+      filler: slot(from ? from + i : '', p.first ? 93.8 : 57.9, p.height || 0),
       top: (p.first ? 93.8 : 57.9) + 'pt',
       titleRow: p.first ? [{}] : [],
       columns: [21.7, 305].map((left, side) => ({

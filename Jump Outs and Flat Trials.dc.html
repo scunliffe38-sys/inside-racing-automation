@@ -53,22 +53,26 @@ a:hover{color:#1b7fb4}
 <div style="position:absolute;left:{{ d.left }};top:{{ p.rulesTop }};width:0.75pt;height:{{ p.rulesHeight }};background:#2c2e35"></div>
 </sc-for>
 
-<sc-for list="{{ p.meetings }}" as="t" hint-placeholder-count="3">
-<div style="position:absolute;left:{{ t.left }};top:{{ p.trialsTop }};width:126.5pt">
-<div style="height:3.5pt;background:#2c2e35"></div>
-<div style="margin-top:3.75pt;font-size:9.3pt;font-weight:700;line-height:1;letter-spacing:.01em">{{ t.venue }}</div>
-<div style="margin-top:3.8pt;font-size:8pt;font-weight:400;line-height:1;letter-spacing:.01em">{{ t.date }}</div>
-<sc-for list="{{ t.races }}" as="r" hint-placeholder-count="7">
-<div style="margin-top:3.9pt;display:flex;justify-content:space-between;gap:5pt;background:#d8d9da;height:10pt;box-sizing:border-box;padding:1.8pt 3pt 0;font-size:6.5pt;line-height:7.6pt"><span>{{ r.cond }}</span><span style="text-align:right">{{ r.dist }}</span></div>
-<div style="margin-top:1.95pt;font-size:7pt;line-height:9pt">{{ r.title }}</div>
+<sc-for list="{{ p.columns }}" as="c" hint-placeholder-count="4">
+<div style="position:absolute;left:{{ c.left }};top:{{ p.trialsTop }};width:126.5pt">
+<sc-for list="{{ c.atoms }}" as="a" hint-placeholder-count="9">
+<sc-if value="{{ a.isHead }}" hint-placeholder-val="{{ true }}">
+<div style="margin-top:{{ a.gap }};height:3.5pt;background:#2c2e35"></div>
+<div style="margin-top:3.75pt;font-size:9.3pt;font-weight:700;line-height:1;letter-spacing:.01em">{{ a.venue }}</div>
+<div style="margin-top:3.8pt;font-size:8pt;font-weight:400;line-height:1;letter-spacing:.01em">{{ a.date }}</div>
+</sc-if>
+<sc-if value="{{ a.isRace }}" hint-placeholder-val="{{ false }}">
+<div style="margin-top:3.5pt;display:flex;justify-content:space-between;gap:5pt;background:#d8d9da;height:9pt;box-sizing:border-box;padding:1.6pt 3pt 0;font-size:6.3pt;line-height:6.8pt"><span>{{ a.cond }}</span><span style="text-align:right">{{ a.dist }}</span></div>
+<div style="margin-top:1.75pt;font-size:6.8pt;line-height:8.1pt">{{ a.title }}</div>
+</sc-if>
 </sc-for>
 </div>
 </sc-for>
 
-<sc-for list="{{ p.firstOnly }}" as="f" hint-placeholder-count="1">
-<div style="position:absolute;left:20.7pt;top:543.6pt;font-size:20pt;font-weight:700;line-height:1;letter-spacing:-.01em">{{ policyHeading }}</div>
-<div style="position:absolute;left:22.7pt;top:567.2pt;width:549.9pt;height:3pt;background:#2c2e35"></div>
-<div style="position:absolute;left:22.7pt;top:582.2pt;width:545.3pt;font-size:8pt;line-height:9.6pt">
+<sc-for list="{{ p.policyRow }}" as="f" hint-placeholder-count="1">
+<div style="position:absolute;left:20.7pt;top:{{ p.policyTop }};font-size:20pt;font-weight:700;line-height:1;letter-spacing:-.01em">{{ policyHeading }}</div>
+<div style="position:absolute;left:22.7pt;top:{{ p.policyRuleTop }};width:549.9pt;height:3pt;background:#2c2e35"></div>
+<div style="position:absolute;left:22.7pt;top:{{ p.policyTextTop }};width:545.3pt;font-size:8pt;line-height:9.6pt">
 <sc-for list="{{ policy }}" as="q" hint-placeholder-count="8">
 <div style="display:flex"><span style="width:8.5pt;flex:0 0 8.5pt">&bull;</span><span style="flex:1">{{ q.t }}</span></div>
 </sc-for>
@@ -144,18 +148,81 @@ class Component extends DCLogic {
   }
 
   /**
-   * Four trial meetings to the row. The opening page carries the jump-out
-   * schedule above them and the division-of-races policy below, so it takes
-   * one row; a month with more trials than that runs the rest onto further
-   * pages, four at a time, in the same treatment.
+   * The trials run down four columns and across, so a meeting carries on in
+   * the next column rather than each meeting owning one. The columns on a page
+   * are filled to a common depth, which leaves the last one shortest, and the
+   * division-of-races policy sits under whatever depth that came to.
+   *
+   * Depth is worked out from the printed metrics of each part, so the page can
+   * be planned without laying it out first.
    */
+  static trialAtoms(meetings) {
+    const HEAD = 28.35, RACE = 14.25, LINE = 8.1, CPL = 34;
+    const out = [];
+    (meetings || []).forEach(m => {
+      out.push({ isHead: true, venue: m.venue, date: m.date, depth: HEAD });
+      (m.races || []).forEach(r => {
+        const lines = Math.max(1, Math.ceil(String(r.title || '').length / CPL));
+        out.push({ isRace: true, cond: r.cond, dist: r.dist, title: r.title, depth: RACE + lines * LINE });
+      });
+    });
+    return out;
+  }
+
+  /** How deep the policy block prints, heading and rule included. */
+  policyDepth() {
+    const bullets = this.state.policy || [];
+    if (!bullets.length) return 0;
+    return 20 + 3.6 + 11 + bullets.reduce((n, b) =>
+      n + Math.max(1, Math.ceil(String(b.t || '').length / 118)) * 9.6, 0);
+  }
+
   pack() {
-    const PER_PAGE = 4;
-    const all = this.state.meetings || [];
-    const pages = [{ first: true, meetings: all.slice(0, PER_PAGE) }];
-    for (let i = PER_PAGE; i < all.length; i += PER_PAGE) {
-      pages.push({ first: false, meetings: all.slice(i, i + PER_PAGE) });
+    const BOTTOM = 811.89, TOP_FIRST = 311.85, TOP_CONT = 94.4, GAP = 9, COLS = 4;
+    const atoms = Component.trialAtoms(this.state.meetings);
+    const policy = this.policyDepth();
+    const limitOf = first => (first ? BOTTOM - TOP_FIRST - (policy ? policy + 22 : 0) : BOTTOM - TOP_CONT);
+
+    // fill four columns to a common depth; returns where it got to
+    const fill = (from, target) => {
+      const cols = [[], [], [], []];
+      const used = [0, 0, 0, 0];
+      let c = 0, k = from;
+      while (k < atoms.length && c < COLS) {
+        const a = atoms[k];
+        const gap = a.isHead && cols[c].length ? GAP : 0;
+        if (used[c] + gap + a.depth > target && cols[c].length) { c++; continue; }
+        cols[c].push(Object.assign({}, a, { gap: gap + 'pt' }));
+        used[c] += gap + a.depth;
+        k++;
+      }
+      // a venue heading never sits alone at the foot of a column
+      for (let j = 0; j < COLS; j++) {
+        const last = cols[j][cols[j].length - 1];
+        if (!last || !last.isHead) continue;
+        cols[j].pop();
+        used[j] -= last.depth;
+        if (j + 1 < COLS) { cols[j + 1].unshift(Object.assign({}, last, { gap: '0pt' })); used[j + 1] += last.depth; }
+        else k--;
+      }
+      return { cols, next: k, height: Math.max(...used) };
+    };
+
+    const pages = [];
+    let i = 0;
+    while (i < atoms.length) {
+      const first = pages.length === 0;
+      const limit = limitOf(first);
+      const left = atoms.slice(i).reduce((n, a) => n + a.depth, 0);
+      const target = Math.min(limit, Math.max(60, Math.ceil(left / COLS)));
+      let r = fill(i, target);
+      // when the four columns cannot hold what is left, fill them properly
+      if (r.next < atoms.length && target < limit) r = fill(i, limit);
+      if (r.next === i) r = fill(i, limit);      // one atom taller than the target
+      pages.push({ first, cols: r.cols, height: r.height, policyOn: first && !!policy });
+      i = r.next;
     }
+    if (!pages.length) pages.push({ first: true, cols: [[], [], [], []], height: 0, policyOn: !!policy });
     return pages;
   }
 
@@ -185,20 +252,24 @@ class Component extends DCLogic {
     }));
     const from = this.state.from || 0;
     const pages = this.pack().map((p, i) => {
-      const meetings = p.meetings.map((m, j) => ({
-        left: C(j) + 'pt', venue: m.venue, date: m.date, races: m.races
-      }));
+      const top = p.first ? 311.85 : 94.4;
+      const filled = p.cols.filter(c => c.length).length;
+      const policyTop = top + p.height + 22;
       return {
         firstOnly: p.first ? [{}] : [],
         months: p.first ? months : [],
-        meetings,
-        // one hairline in each gutter between adjacent trial columns
-        dividers: meetings.slice(1).map((m, j) => ({ left: (C(j) + 126.5 + 6.6) + 'pt' })),
+        columns: p.cols.map((atoms, j) => ({ left: C(j) + 'pt', atoms })),
+        // one hairline in each gutter between adjacent columns that carry trials
+        dividers: Array.from({ length: Math.max(0, filled - 1) }, (u, j) => ({ left: (C(j) + 126.5 + 6.6) + 'pt' })),
         trialsTitle: p.first ? 'Official Flat Trials' : 'Official Flat Trials continued',
         trialsTitleTop: (p.first ? 281 : 59.3) + 'pt',
-        trialsTop: (p.first ? 311.85 : 94.4) + 'pt',
-        rulesTop: (p.first ? 315 : 97.5) + 'pt',
-        rulesHeight: (p.first ? 193 : 640) + 'pt',
+        trialsTop: top + 'pt',
+        rulesTop: (top + 3.15) + 'pt',
+        rulesHeight: Math.max(0, p.height - 3.15) + 'pt',
+        policyRow: p.policyOn ? [{}] : [],
+        policyTop: policyTop + 'pt',
+        policyRuleTop: (policyTop + 23.6) + 'pt',
+        policyTextTop: (policyTop + 38.6) + 'pt',
         no: from ? String(from + i) : ''
       };
     });

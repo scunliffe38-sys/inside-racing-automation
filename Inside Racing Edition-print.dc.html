@@ -444,7 +444,7 @@ DETAILS</div>
 </section>
 </sc-for>
 
-<sc-for list="{{ tailPages }}" as="tp" hint-placeholder-count="1">
+<sc-for list="{{ jumpsPages }}" as="tp" hint-placeholder-count="1">
 <section class="page" data-screen-label="Jumps Program" style="position:relative;font-family:'Gotham Narrow',sans-serif;color:#2c2e35;background:#fff;padding:0;overflow:hidden">
 <div style="position:absolute;left:22.7pt;top:24pt;font-size:10pt;font-weight:400;line-height:1;letter-spacing:.019em">JUMPS RACING PROGRAM, JUMPS TRIALS AND JUMPS RACES PRIZEMONEY BREAKDOWNS</div>
 <div style="position:absolute;left:22.7pt;top:37pt;width:549.9pt;height:3pt;background:#9ecff0"></div>
@@ -719,22 +719,26 @@ DETAILS</div>
 <div style="position:absolute;left:{{ d.left }};top:{{ tp.rulesTop }};width:0.75pt;height:{{ tp.rulesHeight }};background:#2c2e35"></div>
 </sc-for>
 
-<sc-for list="{{ tp.meetings }}" as="t" hint-placeholder-count="3">
-<div style="position:absolute;left:{{ t.left }};top:{{ tp.trialsTop }};width:126.5pt">
-<div style="height:3.5pt;background:#2c2e35"></div>
-<div style="margin-top:3.75pt;font-size:9.3pt;font-weight:700;line-height:1;letter-spacing:.01em">{{ t.venue }}</div>
-<div style="margin-top:3.8pt;font-size:8pt;font-weight:400;line-height:1;letter-spacing:.01em">{{ t.date }}</div>
-<sc-for list="{{ t.races }}" as="r" hint-placeholder-count="7">
-<div style="margin-top:3.9pt;display:flex;justify-content:space-between;gap:5pt;background:#d8d9da;height:10pt;box-sizing:border-box;padding:1.8pt 3pt 0;font-size:6.5pt;line-height:7.6pt"><span>{{ r.cond }}</span><span style="text-align:right">{{ r.dist }}</span></div>
-<div style="margin-top:1.95pt;font-size:7pt;line-height:9pt">{{ r.title }}</div>
+<sc-for list="{{ tp.columns }}" as="c" hint-placeholder-count="4">
+<div style="position:absolute;left:{{ c.left }};top:{{ tp.trialsTop }};width:126.5pt">
+<sc-for list="{{ c.atoms }}" as="a" hint-placeholder-count="9">
+<sc-if value="{{ a.isHead }}" hint-placeholder-val="{{ true }}">
+<div style="margin-top:{{ a.gap }};height:3.5pt;background:#2c2e35"></div>
+<div style="margin-top:3.75pt;font-size:9.3pt;font-weight:700;line-height:1;letter-spacing:.01em">{{ a.venue }}</div>
+<div style="margin-top:3.8pt;font-size:8pt;font-weight:400;line-height:1;letter-spacing:.01em">{{ a.date }}</div>
+</sc-if>
+<sc-if value="{{ a.isRace }}" hint-placeholder-val="{{ false }}">
+<div style="margin-top:3.5pt;display:flex;justify-content:space-between;gap:5pt;background:#d8d9da;height:9pt;box-sizing:border-box;padding:1.6pt 3pt 0;font-size:6.3pt;line-height:6.8pt"><span>{{ a.cond }}</span><span style="text-align:right">{{ a.dist }}</span></div>
+<div style="margin-top:1.75pt;font-size:6.8pt;line-height:8.1pt">{{ a.title }}</div>
+</sc-if>
 </sc-for>
 </div>
 </sc-for>
 
-<sc-for list="{{ tp.firstOnly }}" as="f" hint-placeholder-count="1">
-<div style="position:absolute;left:20.7pt;top:543.6pt;font-size:20pt;font-weight:700;line-height:1;letter-spacing:-.01em">{{ joPolicyHeading }}</div>
-<div style="position:absolute;left:22.7pt;top:567.2pt;width:549.9pt;height:3pt;background:#2c2e35"></div>
-<div style="position:absolute;left:22.7pt;top:582.2pt;width:545.3pt;font-size:8pt;line-height:9.6pt">
+<sc-for list="{{ tp.policyRow }}" as="f" hint-placeholder-count="1">
+<div style="position:absolute;left:20.7pt;top:{{ tp.policyTop }};font-size:20pt;font-weight:700;line-height:1;letter-spacing:-.01em">{{ joPolicyHeading }}</div>
+<div style="position:absolute;left:22.7pt;top:{{ tp.policyRuleTop }};width:549.9pt;height:3pt;background:#2c2e35"></div>
+<div style="position:absolute;left:22.7pt;top:{{ tp.policyTextTop }};width:545.3pt;font-size:8pt;line-height:9.6pt">
 <sc-for list="{{ joPolicy }}" as="q" hint-placeholder-count="8">
 <div style="display:flex"><span style="width:8.5pt;flex:0 0 8.5pt">&bull;</span><span style="flex:1">{{ q.t }}</span></div>
 </sc-for>
@@ -1042,6 +1046,8 @@ class Component extends DCLogic {
    * reading the inputs live, which is fine on screen and too slow to export.
    * Re-bake whenever the inputs change — see the run sheet. */
   componentDidMount() {
+    // the advertising rules, for the bookable panel on a page that came out short
+    import('./parsers/ads.js').then(A => { this.ads = A; this.markFillers(); }).catch(() => {});
     // The producer's own input folder first, if this browser has been pointed
     // at one: the console bakes edition.json into it after every run, so the
     // edition shows the month just run rather than whatever was published with
@@ -1105,7 +1111,8 @@ class Component extends DCLogic {
       agents: b.agents || [],
       joBlocks: b.joBlocks || [],
       joMeetings: b.joMeetings || [],
-      policy: b.policy || [],
+      // the bake may carry the bullets as plain strings; the page prints {t}
+      policy: (b.policy || []).map(x => (typeof x === 'string' ? { t: x } : x)),
       policyHeading: b.policyHeading || 'Division of Races Policy at Country TAB Race Meetings',
       seriesBlocks: b.seriesBlocks || [],
       jpMeetings: b.jpMeetings || [],
@@ -1374,6 +1381,7 @@ class Component extends DCLogic {
     }
     const dp = document.querySelector('doc-page');
     if (dp && dp._measure) dp._measure();
+    this.markFillers();
     this.maybePrint();
   }
 
@@ -1387,6 +1395,11 @@ class Component extends DCLogic {
     this._printing = true;
     clearTimeout(this._printTimer);
     this._printTimer = setTimeout(() => {
+      // the browser names the PDF after the document title
+      const words = String(this.state.edition || '').split(/\s+/).filter(Boolean);
+      const month = (words[0] || '').replace(/^(\w)(\w*)$/, (m, a, b) => a + b.toLowerCase());
+      const year = words[words.length - 1] || '';
+      if (month) document.title = 'Inside Racing ' + month + ' ' + year + ' Edition';
       requestAnimationFrame(() => window.print());
     }, 2500);
   }
@@ -1699,9 +1712,59 @@ class Component extends DCLogic {
    * row; more trials than that run on, four at a time.
    */
   joPack() {
-    const all = this.state.joMeetings || [];
-    const pages = [{ first: true, meetings: all.slice(0, 4) }];
-    for (let i = 4; i < all.length; i += 4) pages.push({ first: false, meetings: all.slice(i, i + 4) });
+    const BOTTOM = 811.89, TOP_FIRST = 311.85, TOP_CONT = 94.4, GAP = 9, COLS = 4;
+    const HEAD = 28.35, RACE = 14.25, LINE = 8.1, CPL = 34;
+    const atoms = [];
+    (this.state.joMeetings || []).forEach(m => {
+      atoms.push({ isHead: true, venue: m.venue, date: m.date, depth: HEAD });
+      (m.races || []).forEach(r => {
+        const lines = Math.max(1, Math.ceil(String(r.title || '').length / CPL));
+        atoms.push({ isRace: true, cond: r.cond, dist: r.dist, title: r.title, depth: RACE + lines * LINE });
+      });
+    });
+    const bullets = this.state.policy || [];
+    const policy = bullets.length
+      ? 20 + 3.6 + 11 + bullets.reduce((n, b) => n + Math.max(1, Math.ceil(String(b.t || '').length / 118)) * 9.6, 0)
+      : 0;
+    const limitOf = first => (first ? BOTTOM - TOP_FIRST - (policy ? policy + 22 : 0) : BOTTOM - TOP_CONT);
+
+    const fill = (from, target) => {
+      const cols = [[], [], [], []];
+      const used = [0, 0, 0, 0];
+      let c = 0, k = from;
+      while (k < atoms.length && c < COLS) {
+        const a = atoms[k];
+        const gap = a.isHead && cols[c].length ? GAP : 0;
+        if (used[c] + gap + a.depth > target && cols[c].length) { c++; continue; }
+        cols[c].push(Object.assign({}, a, { gap: gap + 'pt' }));
+        used[c] += gap + a.depth;
+        k++;
+      }
+      for (let j = 0; j < COLS; j++) {
+        const last = cols[j][cols[j].length - 1];
+        if (!last || !last.isHead) continue;
+        cols[j].pop();
+        used[j] -= last.depth;
+        if (j + 1 < COLS) { cols[j + 1].unshift(Object.assign({}, last, { gap: '0pt' })); used[j + 1] += last.depth; }
+        else k--;
+      }
+      return { cols, next: k, height: Math.max.apply(null, used) };
+    };
+
+    const pages = [];
+    let i = 0;
+    while (i < atoms.length) {
+      const first = pages.length === 0;
+      const limit = limitOf(first);
+      const left = atoms.slice(i).reduce((n, a) => n + a.depth, 0);
+      const target = Math.min(limit, Math.max(60, Math.ceil(left / COLS)));
+      let r = fill(i, target);
+      if (r.next < atoms.length && target < limit) r = fill(i, limit);
+      if (r.next === i) r = fill(i, limit);
+      pages.push({ first, cols: r.cols, height: r.height, policyOn: first && !!policy });
+      i = r.next;
+    }
+    if (!pages.length) pages.push({ first: true, cols: [[], [], [], []], height: 0, policyOn: !!policy });
     return pages;
   }
 
@@ -1750,8 +1813,8 @@ class Component extends DCLogic {
   ntPack(which) {
     const PAGE = 841.89, BOTTOM = 30, TOP_FIRST = 100, TOP_CONT = 50;
     const M = which === 'notice'
-      ? { isSubject: [10, 17, 60], isSubhead: [11, 11, 105], isPara: [7, 10.4, 118], isStep: [5, 10.4, 113], isClause: [4, 10.4, 115] }
-      : { isHeading: [13, 17, 60], isSubhead: [9, 11, 105], isPara: [6, 10.4, 118], isClause: [4, 10.4, 115] };
+      ? { isSubject: [10, 17, 70], isSubhead: [11, 11, 120], isPara: [7, 10.4, 158], isStep: [5, 10.4, 150], isClause: [4, 10.4, 152] }
+      : { isHeading: [13, 17, 70], isSubhead: [9, 11, 120], isPara: [6, 10.4, 158], isClause: [4, 10.4, 152] };
     const HEADS = which === 'notice' ? ['isSubject', 'isSubhead'] : ['isHeading', 'isSubhead'];
     const items = (this.state[which] || []).map(b => {
       const kind = Object.keys(M).find(k => b[k]) || 'isPara';
@@ -1777,6 +1840,70 @@ class Component extends DCLogic {
     }
     if (!pages.length) pages.push({ first: true, blocks: [] });
     return pages;
+  }
+
+  /**
+   * A page that leaves more than 40% of its live depth empty is worth selling.
+   * Rather than each section working out its own leftovers, this runs once the
+   * edition has laid out and measures what actually reached the page: the slot
+   * is named after the folio it sits on — page-26 — which is the id the
+   * producer books in inputs/Ad Placements.csv, and the panel prints that name
+   * and its size so there is nothing to look up.
+   */
+  markFillers() {
+    // wait for the last section to settle: measuring a page mid-build reads it
+    // as empty and offers a slot where the content is about to land
+    clearTimeout(this._fillerTimer);
+    this._fillerTimer = setTimeout(() => this.applyFillers(), 900);
+  }
+
+  applyFillers() {
+    if (!this.ads) return;
+    const pages = [...document.querySelectorAll('doc-page > .page')];
+    if (!pages.length) return;
+    const placements = (this.state.settings || {}).$placements;
+    pages.forEach(pg => {
+      const had = pg.querySelector('[data-filler]');
+      if (had) had.remove();
+      const foot = pg.lastElementChild;
+      const folio = ((foot && foot.textContent) || '').trim();
+      if (!/^\d+$/.test(folio)) return;                 // artwork pages carry no folio
+      const pr = pg.getBoundingClientRect();
+      if (!pr.height) return;
+      const scale = pr.height / 841.89;
+      let top = 811.89, bottom = 0;
+      [...pg.children].forEach(el => {
+        if (/bottom:/.test(el.getAttribute('style') || '')) return;   // the footer line
+        const r = el.getBoundingClientRect();
+        if (!r.height) return;
+        top = Math.min(top, (r.top - pr.top) / scale);
+        bottom = Math.max(bottom, (r.bottom - pr.top) / scale);
+      });
+      const from = Math.max(top, 90);
+      const slot = this.ads.pageSlot(folio, from, Math.max(0, bottom - from), 811.89, placements)[0];
+      if (!slot) return;
+      const box = document.createElement('div');
+      box.setAttribute('data-filler', slot.id);
+      box.style.cssText = 'position:absolute;left:22.7pt;top:' + slot.top + ';width:549.9pt;height:' + slot.height + ';box-sizing:border-box';
+      if (slot.booked) {
+        const img = document.createElement('img');
+        img.src = slot.art;
+        img.alt = '';
+        img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block';
+        box.appendChild(img);
+      } else {
+        box.style.cssText += ';border:0.75pt dashed #b6bcc3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5pt;color:#9aa1a9';
+        const name = document.createElement('div');
+        name.style.cssText = "font-family:'Gotham XNarrow',sans-serif;font-size:10pt;font-weight:700;letter-spacing:.09em";
+        name.textContent = 'ADVERTISING SLOT \u2014 ' + slot.id;
+        const size = document.createElement('div');
+        size.style.cssText = 'font-size:7.5pt;letter-spacing:.02em';
+        size.textContent = slot.size;
+        box.appendChild(name);
+        box.appendChild(size);
+      }
+      pg.appendChild(box);
+    });
   }
 
   renderVals() {
@@ -1870,7 +1997,9 @@ class Component extends DCLogic {
     const tailNo = () => (sc.tail ? String(n++) : '');
     const paPagePermits = tailNo();
     const paPageAgents = tailNo();
-    const jpPageNo = tailNo();
+    // out of the edition entirely when the toggle is No: no page, no folio
+    const jpOn = yes(cs.jumps_included);
+    const jpPageNo = jpOn ? tailNo() : '';
     const pcFolios = pcPacked.map(() => tailNo());
     const joFolios = joPacked.map(() => tailNo());
     const joPageNo = joFolios[0] || '';
@@ -1946,19 +2075,23 @@ class Component extends DCLogic {
       right1: b.right
     }));
     const joPages = joPacked.map((p, i) => {
-      const meetings = p.meetings.map((m, j) => ({
-        left: JO_COL(j) + 'pt', venue: m.venue, date: m.date, races: m.races
-      }));
+      const top = p.first ? 311.85 : 94.4;
+      const filled = p.cols.filter(c => c.length).length;
+      const policyTop = top + p.height + 22;
       return {
         firstOnly: p.first ? [{}] : [],
         months: p.first ? joMonths : [],
-        meetings,
-        dividers: meetings.slice(1).map((m, j) => ({ left: (JO_COL(j) + 126.5 + 6.6) + 'pt' })),
+        columns: p.cols.map((atoms, j) => ({ left: JO_COL(j) + 'pt', atoms })),
+        dividers: Array.from({ length: Math.max(0, filled - 1) }, (u, j) => ({ left: (JO_COL(j) + 126.5 + 6.6) + 'pt' })),
         trialsTitle: p.first ? 'Official Flat Trials' : 'Official Flat Trials continued',
         trialsTitleTop: (p.first ? 281 : 59.3) + 'pt',
-        trialsTop: (p.first ? 311.85 : 94.4) + 'pt',
-        rulesTop: (p.first ? 315 : 97.5) + 'pt',
-        rulesHeight: (p.first ? 193 : 640) + 'pt',
+        trialsTop: top + 'pt',
+        rulesTop: (top + 3.15) + 'pt',
+        rulesHeight: Math.max(0, p.height - 3.15) + 'pt',
+        policyRow: p.policyOn ? [{}] : [],
+        policyTop: policyTop + 'pt',
+        policyRuleTop: (policyTop + 23.6) + 'pt',
+        policyTextTop: (policyTop + 38.6) + 'pt',
         no: joFolios[i] || ''
       };
     });
@@ -2069,6 +2202,7 @@ class Component extends DCLogic {
       frontPages: sc.front ? [{}] : [],
       rpKeyPages: sc.programs ? [{}] : [],
       tailPages: sc.tail ? [{}] : [],
+      jumpsPages: sc.tail && jpOn ? [{}] : [],
       adPages,
       adPanelBooked,
       adPanelHouse,
