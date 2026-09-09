@@ -52,7 +52,7 @@ a:hover{color:#1b7fb4}
 
 <sc-for list="{{ frontPages }}" as="fp" hint-placeholder-count="1">
 <section class="page" data-screen-label="01 Cover" style="position:relative;font-family:'Gotham Narrow',sans-serif;color:#2c2e35;background:#fff;overflow:hidden">
-<img src="assets/photos/cover.jpg" alt="" style="position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;object-position:50% 50%;display:block" />
+<img src="{{ coverArt }}" alt="" style="position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;object-position:50% 50%;display:block" />
 <div style="position:absolute;left:0;right:0;top:0;height:37.3pt;background:#0086bf"></div>
 <div style="position:absolute;left:21.3pt;top:15.1pt;font-family:'Gotham XNarrow',sans-serif;font-size:16pt;font-weight:700;line-height:1;letter-spacing:.03em;color:#fff">{{ coverDate }}</div>
 <div style="position:absolute;right:22.7pt;top:17.7pt;font-size:9pt;line-height:1;letter-spacing:.01em;text-align:right;color:#fff">VICTORIAN THOROUGHBRED RACING INDUSTRY OFFICIAL PUBLICATION</div>
@@ -1010,12 +1010,9 @@ class Component extends DCLogic {
     // the pages. Falls back to the published bake, then to reading the inputs.
     const json = url => fetch(url).then(r => (r.ok ? r.json() : null)).catch(() => null);
     import('./parsers/source.js')
-      .then(S => S.restore().then(st => (st.ready ? json('inputs/edition.json') : null)))
+      .then(S => S.loadBake().then(b => b || S.restore().then(st => (st.ready ? json('inputs/edition.json') : null))))
       .catch(() => null)
-      .then(fromFolder => {
-        if (fromFolder) return fromFolder;
-        return json('data/edition.json');
-      })
+      .then(fromRun => fromRun || json('data/edition.json'))
       .then(baked => {
         if (baked && baked.chart && baked.settings) {
           this.applyBaked(baked);
@@ -1030,6 +1027,7 @@ class Component extends DCLogic {
   /** Pass 1 from the baked file: one request, no parsing, no waiting. */
   applyBaked(b) {
     const t0 = performance.now();
+    if (b.cover) this.state.cover = b.cover;
     const say = (label, list) => {
       if (list && list.length) console.warn('Inside Racing — ' + label + ', ' + list.length + ' to check:\n' + list.join('\n'));
     };
@@ -2060,6 +2058,9 @@ class Component extends DCLogic {
       ntStewardsEmpty: this.state.tailLoaded && !this.state.stewards.length,
       ntRulesEmpty: this.state.tailLoaded && !this.state.rules.length,
       ntPageNotices,
+      // the run makes a 1800px derivative from the producer's Cover.jpg; the
+      // published copy is the fallback when there has been no run
+      coverArt: this.state.cover || 'assets/photos/cover.jpg',
       coverDate: e.toUpperCase(),
       footer: 'INSIDE RACING I ' + (this.state.edition || ''),
       deadlinesMeasureRef: el => { this.dlMeasureEl = el; },

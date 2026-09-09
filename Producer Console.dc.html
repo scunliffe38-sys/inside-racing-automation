@@ -477,6 +477,27 @@ class Component extends DCLogic {
         ctx.pcMeetings = r.meetings; ctx.pcNotes = r.notes; ctx.pcRange = r.range;
         return { warnings: r.warnings, summary: r.count + ' meetings (' + (r.range || '') + ')' };
       } },
+      { name: 'Cover photograph', fn: async ctx => {
+        // The cover arrives at full camera resolution, far too heavy to
+        // composite on every relayout, so the run makes the derivative the
+        // pages actually load: 1800px on the long edge.
+        const res = await fetch('inputs/Cover.jpg');
+        if (!res.ok) return { warnings: ['No Cover.jpg in the input folder — the edition keeps the cover it was published with.'], summary: 'not supplied' };
+        const blob = await res.blob();
+        const bmp = await createImageBitmap(blob);
+        const scale = Math.min(1, 1800 / Math.max(bmp.width, bmp.height));
+        const w = Math.round(bmp.width * scale), h = Math.round(bmp.height * scale);
+        const canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(bmp, 0, 0, w, h);
+        ctx.cover = canvas.toDataURL('image/jpeg', 0.86);
+        bmp.close();
+        return {
+          warnings: [],
+          summary: bmp.width + '\u00d7' + bmp.height + ' reduced to ' + w + '\u00d7' + h
+            + ' (' + Math.round(ctx.cover.length / 1365) + ' kB)'
+        };
+      } },
       { name: 'Pagination and advertising', fn: async ctx => {
         const m = await P('./parsers/ads.js');
         const r = await m.loadPlacements('inputs/Ad Placements.csv');
@@ -540,7 +561,7 @@ class Component extends DCLogic {
     this.state.stages.forEach(s => { if ((s.warnings || []).length) warnings[s.name] = s.warnings; });
     const payload = {
       bakedAt: new Date().toISOString(), warnings,
-      settings: c.settings || {}, edition: c.edition || '',
+      settings: c.settings || {}, edition: c.edition || '', cover: c.cover || '',
       days: c.days || [], chart: c.chart || { header: [], rows: [] }, chartMonths: c.chartMonths || [],
       meetings: c.meetings || [], permits: c.permits || [], trialsText: c.trialsText || '', agents: c.agents || [],
       joBlocks: c.joBlocks || [], joMeetings: c.joMeetings || [],
@@ -549,23 +570,18 @@ class Component extends DCLogic {
       jpMeetings: c.jpMeetings || [], jpTrials: c.jpTrials || [], jpTiers: c.jpTiers || [],
       pcMeetings: c.pcMeetings || [], pcNotes: c.pcNotes || [], pcRange: c.pcRange || ''
     };
-    const text = JSON.stringify(payload);
     // The assembled edition and the print copy read this rather than the
     // inputs: seventeen files take too long for the export, which snapshots a
-    // half-built document. Writing it back into the producer's own folder is
-    // what makes the edition show the month that was just run.
-    return this.S.write('edition.json', text)
-      .then(() => { this.setState({ baked: payload.bakedAt, bakeError: '' }); return true; })
+    // half-built document. It goes into browser storage, which the edition's
+    // own tab can read without a permission prompt, and into the input folder
+    // as a file when the folder allows writing.
+    return this.S.saveBake(payload)
+      .then(() => {
+        this.setState({ baked: payload.bakedAt, bakeError: '' });
+        return this.S.write('edition.json', JSON.stringify(payload)).catch(() => false);
+      })
       .catch(e => {
-        const url = URL.createObjectURL(new Blob([text], { type: 'application/json' }));
-        const a = document.createElement('a');
-        a.href = url; a.download = 'edition.json';
-        document.body.appendChild(a); a.click(); a.remove();
-        setTimeout(() => URL.revokeObjectURL(url), 4000);
-        this.setState({
-          baked: payload.bakedAt,
-          bakeError: 'Could not write into the folder (' + ((e && e.message) || e) + ') — edition.json has been downloaded instead; put it in the input folder.'
-        });
+        this.setState({ bakeError: 'Could not store the run: ' + ((e && e.message) || e) });
         return false;
       });
   }
@@ -671,7 +687,7 @@ class Component extends DCLogic {
         : 'Not run yet',
       runLabel: st.running ? 'Reading\u2026' : st.ran ? 'Run again' : 'Run the edition',
       runNote: st.error || st.bakeError
-        || (st.baked ? 'Run complete \u2014 edition.json written into the input folder at ' + st.baked.slice(11, 16) + '.'
+        || (st.baked ? 'Run complete at ' + st.baked.slice(11, 16) + ' \u2014 the edition and the PDF now show this run.'
           : 'Every section is read from the source above, in the order it prints.'),
       checksSummary: st.ran ? (warnCount ? warnCount + ' item(s)' : 'nothing flagged') : '',
       noChecks: !groups.length,

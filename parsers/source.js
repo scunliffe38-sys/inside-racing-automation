@@ -68,24 +68,42 @@ function idb() {
   });
 }
 
-async function idbPut(value) {
+async function idbPut(value, key) {
   const db = await idb();
   return new Promise((res, rej) => {
     const t = db.transaction(STORE, 'readwrite');
-    t.objectStore(STORE).put(value, KEY);
+    t.objectStore(STORE).put(value, key || KEY);
     t.oncomplete = () => res();
     t.onerror = () => rej(t.error);
   });
 }
 
-async function idbGet() {
+async function idbGet(key) {
   const db = await idb();
   return new Promise((res, rej) => {
     const t = db.transaction(STORE, 'readonly');
-    const q = t.objectStore(STORE).get(KEY);
+    const q = t.objectStore(STORE).get(key || KEY);
     q.onsuccess = () => res(q.result);
     q.onerror = () => rej(q.error);
   });
+}
+
+// ---- the bake ---------------------------------------------------------------
+//
+// The assembled edition and the print copy read a parsed bake rather than the
+// inputs, which take too long for an export. The console produces it, but the
+// edition opens in its own tab, and a folder permission does not travel there.
+// Browser storage does: same site, no prompt, survives a reload.
+
+const BAKE = 'edition';
+
+export async function saveBake(payload) {
+  await idbPut(payload, BAKE);
+  return true;
+}
+
+export async function loadBake() {
+  try { return (await idbGet(BAKE)) || null; } catch (e) { return null; }
 }
 
 // ---- the fetch wrapper ------------------------------------------------------
