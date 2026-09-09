@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+@font-face{font-family:'Gotham Narrow';src:url('fonts/GothamNarrow-Book.otf') format('opentype');font-weight:400;font-style:normal;font-display:block}
+@font-face{font-family:'Gotham XNarrow';src:url('fonts/GothamXNarrow-Book.ttf') format('truetype');font-weight:400;font-style:normal;font-display:block}
+@font-face{font-family:'Gotham XNarrow';src:url('fonts/GothamXNarrow-Bold.ttf') format('truetype');font-weight:700;font-style:normal;font-display:block}
+doc-page:not(:defined){visibility:hidden}
+body{margin:0}
+a{color:#2c9cd7;text-decoration:none}
+a:hover{color:#1b7fb4}
+</style>
+<script src="./doc-page.js"></script>
+</helmet>
+<doc-page size="a4">
+
+<section class="page" data-screen-label="51" style="position:relative;font-family:'Gotham Narrow',sans-serif;color:#2c2e35;background:#fff;padding:0;overflow:hidden">
+<div style="position:absolute;left:22.7pt;top:24pt;font-size:10pt;font-weight:400;line-height:1;letter-spacing:.019em">RACE SERIES</div>
+<div style="position:absolute;left:22.7pt;top:37pt;width:549.9pt;height:3pt;background:#9ecff0"></div>
+<div style="position:absolute;left:22pt;top:50.6pt;font-size:22pt;font-weight:700;line-height:1;letter-spacing:-.01em">Victorian Race Series</div>
+<div style="position:absolute;left:22pt;top:73.1pt;width:549.9pt;height:2pt;background:#2c2e35"></div>
+
+<sc-for list="{{ columns }}" as="col" hint-placeholder-count="2">
+<div style="position:absolute;left:{{ col.left }};top:93.8pt;width:268.4pt">
+<sc-for list="{{ col.blocks }}" as="b" hint-placeholder-count="3">
+<div style="margin-top:{{ b.gap }}">
+<div style="font-size:10pt;font-weight:700;line-height:1;letter-spacing:-.005em">{{ b.title }}</div>
+<div style="height:2pt;background:#2c2e35;margin-top:1.2pt"></div>
+<sc-for list="{{ b.note }}" as="n" hint-placeholder-count="0">
+<div style="margin:6.7pt 0 6.2pt;font-size:7pt;line-height:9.05pt">{{ n.t }}</div>
+</sc-for>
+<div style="display:flex;font-size:8pt;font-weight:700;line-height:8pt;letter-spacing:.02em">
+<sc-for list="{{ b.head }}" as="c" hint-placeholder-count="4">
+<div style="width:{{ c.w }};flex:0 0 {{ c.w }};padding:4.6pt 0 2.1pt {{ c.pad }};box-sizing:border-box;box-shadow:inset 0 -0.25pt 0 #2c2e35">{{ c.t }}</div>
+</sc-for>
+</div>
+<sc-for list="{{ b.rows }}" as="r" hint-placeholder-count="9">
+<div style="display:flex;line-height:8pt">
+<sc-for list="{{ r.cells }}" as="c" hint-placeholder-count="4">
+<div style="width:{{ c.w }};flex:0 0 {{ c.w }};padding:4.15pt 0 2.05pt {{ c.pad }};box-sizing:border-box;box-shadow:inset 0 -0.25pt 0 #2c2e35;font-size:{{ c.size }}">{{ c.t }}</div>
+</sc-for>
+</div>
+</sc-for>
+</div>
+</sc-for>
+</div>
+</sc-for>
+
+<div style="position:absolute;left:12.2pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1;letter-spacing:-.013em">{{ footer }}</div>
+<div style="position:absolute;right:12.3pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1">{{ pageNo }}</div>
+</section>
+
+</doc-page>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { blocks: [], settings: {} };
+
+  // measured from the printed edition: four-column series tables and the
+  // three-column highweight schedule, as widths inside a 268.4pt column
+  static FOUR = [{ w: 27, pad: 3 }, { w: 50.9, pad: 4 }, { w: 48.1, pad: 4 }, { w: 142.4, pad: 3.9 }];
+  static THREE = [{ w: 85, pad: 3 }, { w: 75, pad: 3 }, { w: 108.4, pad: 3 }];
+
+  componentDidMount() {
+    const faces = document.fonts
+      ? Promise.all([
+          document.fonts.load('400 7pt "Gotham Narrow"'),
+          document.fonts.load('400 6.5pt "Gotham Narrow"'),
+          document.fonts.load('400 10pt "Gotham Narrow"'),
+          document.fonts.load('700 8pt "Gotham Narrow"'),
+          document.fonts.load('700 10pt "Gotham Narrow"'),
+          document.fonts.load('700 22pt "Gotham Narrow"'),
+          document.fonts.load('400 7pt "Gotham XNarrow"')
+        ]).then(() => document.fonts.ready)
+      : Promise.resolve();
+    Promise.all([
+      import('./parsers/series.js').then(m => m.loadSeries('inputs/Race Series.docx')),
+      import('./parsers/settings.js').then(m => m.loadSettings('inputs/Edition Settings.xlsx')),
+      faces
+    ]).then(([s, cfg]) => {
+      const settings = (cfg && cfg.settings) || {};
+      const warnings = s.warnings.concat((cfg && cfg.warnings) || []);
+      if (warnings.length) console.warn('Race Series — ' + s.count + ' blocks, ' + warnings.length + ' to check:\n' + warnings.join('\n'));
+      this.setState({ blocks: s.blocks, settings }, () => requestAnimationFrame(() => {
+        const dp0 = document.querySelector('doc-page');
+        if (dp0) dp0.setAttribute('data-paged', String(document.querySelectorAll('doc-page > .page').length));
+      }));
+    });
+  }
+
+  componentDidUpdate() {
+    const dp = document.querySelector('doc-page');
+    if (dp && dp._measure) dp._measure();
+  }
+
+  renderVals() {
+    const s = this.state.settings;
+    const shape = b => {
+      const grid = b.columns.length === 3 ? Component.THREE : Component.FOUR;
+      const cell = (t, i) => ({
+        t, w: grid[i].w + 'pt', pad: grid[i].pad + 'pt',
+        // the printed edition sets the venue a half point smaller than the rest
+        size: (grid === Component.FOUR && i === 1 ? 6.5 : 7) + 'pt'
+      });
+      return {
+        title: b.title,
+        head: b.columns.map((c, i) => ({ t: c, w: grid[i].w + 'pt', pad: grid[i].pad + 'pt' })),
+        rows: b.rows.map(r => ({ cells: grid.map((g, i) => cell(r[i] || '', i)) })),
+        note: b.note ? [{ t: b.note }] : []
+      };
+    };
+    // blocks alternate down the two columns, in document order
+    const columns = [21.7, 305].map((left, side) => ({
+      left: left + 'pt',
+      blocks: this.state.blocks
+        .filter((b, i) => i % 2 === side)
+        .map((b, i) => ({ ...shape(b), gap: i === 0 ? '0pt' : '34pt' }))
+    }));
+    return {
+      columns,
+      pageNo: s.page_series || '',
+      footer: 'INSIDE RACING I ' + (s.edition || '')
+    };
+  }
+}
+</script>
+</body>
+</html>

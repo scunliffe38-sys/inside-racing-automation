@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+@font-face{font-family:'Gotham Narrow';src:url('fonts/GothamNarrow-Book.otf') format('opentype');font-weight:400;font-style:normal;font-display:block}
+@font-face{font-family:'Gotham XNarrow';src:url('fonts/GothamXNarrow-Book.ttf') format('truetype');font-weight:400;font-style:normal;font-display:block}
+@font-face{font-family:'Gotham XNarrow';src:url('fonts/GothamXNarrow-Bold.ttf') format('truetype');font-weight:700;font-style:normal;font-display:block}
+doc-page:not(:defined){visibility:hidden}
+body{margin:0}
+a{color:#2c9cd7;text-decoration:none}
+a:hover{color:#1b7fb4}
+</style>
+<script src="./doc-page.js"></script>
+</helmet>
+<doc-page size="a4">
+<div ref="{{ measureRef }}" style="position:absolute;left:-9999pt;top:0;width:130pt;font-family:'Gotham Narrow',sans-serif;visibility:hidden">
+<div data-note="1" style="width:121.8pt;box-sizing:border-box;padding:6pt;border-radius:4pt;background:#ebf4f9">
+<div style="display:inline-block;background:#2c2e35;color:#fff;border-radius:4pt;padding:3.5pt 7pt;font-size:9pt;font-weight:700;letter-spacing:.02em;line-height:1">TRAINERS’ NOTE</div>
+<div style="font-size:8pt;line-height:9.2pt;color:#2c2e35;margin-top:7pt">All entries, acceptances, riders and scratchings are to be lodged with the Racing Australia Service Centre via <span style="font-style:italic">racingaustralia.horse</span> or phone: 1800 138 704.</div>
+<div style="font-size:8pt;line-height:9.2pt;color:#2c2e35;margin-top:7pt">Any information listed regarding nominations and acceptances for interstate races is provided as a guide only. It is compiled from information appearing elsewhere in <span style="font-style:italic">Inside Racing</span>.</div>
+<div style="font-size:8pt;line-height:9.2pt;color:#2c2e35;margin-top:7pt">Riders for all picnic meetings are to be declared no later than 12 noon on the day of acceptances.</div>
+</div>
+<sc-for list="{{ dayRows }}" as="r" hint-placeholder-count="0">
+<div data-r="day">
+<div style="border-top:1pt solid #2c2e35"></div>
+<div style="font-size:8.5pt;font-weight:700;line-height:10.5pt;padding-top:1.5pt;color:#2c9cd7">{{ r.text }}</div>
+<div style="border-top:0.75pt dotted #2c2e35;margin-top:1.5pt;margin-bottom:1.5pt"></div>
+</div>
+</sc-for>
+<sc-for list="{{ headRows }}" as="r" hint-placeholder-count="0">
+<div data-r="head" style="font-size:7pt;font-weight:700;line-height:8pt;margin-top:2pt;color:#2c2e35">{{ r.text }}</div>
+</sc-for>
+<sc-for list="{{ itemRows }}" as="r" hint-placeholder-count="0">
+<div data-r="item" style="font-size:7pt;font-weight:400;line-height:8pt;color:#2c2e35">{{ r.text }}</div>
+</sc-for>
+</div>
+<sc-for list="{{ pages }}" as="pg" hint-placeholder-count="0">
+<section class="page" style="position:relative;font-family:'Gotham Narrow',sans-serif;background:#fff;padding:0">
+<div style="position:absolute;left:23pt;top:18pt;font-size:10pt;font-weight:400;letter-spacing:.05em;color:#2c2e35">{{ pg.eyebrow }}</div>
+<div style="position:absolute;left:23pt;right:23pt;top:37pt;height:2.25pt;background:#9ecff0"></div>
+<sc-if value="{{ pg.first }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;left:21pt;top:48pt;width:540pt;font-family:'Gotham XNarrow',sans-serif;font-size:24pt;font-weight:700;letter-spacing:-.015em;line-height:1.1;color:#2c2e35">Dates for entries, acceptances and riders</div>
+<div style="position:absolute;left:23pt;top:93.9pt;width:121.8pt;box-sizing:border-box;padding:6pt;border-radius:4pt;background:#ebf4f9">
+<div style="display:inline-block;background:#2c2e35;color:#fff;border-radius:4pt;padding:3.5pt 7pt;font-size:9pt;font-weight:700;letter-spacing:.02em;line-height:1">TRAINERS’ NOTE</div>
+<div style="font-size:8pt;line-height:9.2pt;color:#2c2e35;margin-top:7pt">All entries, acceptances, riders and scratchings are to be lodged with the Racing Australia Service Centre via <span style="font-style:italic">racingaustralia.horse</span> or phone: 1800 138 704.</div>
+<div style="font-size:8pt;line-height:9.2pt;color:#2c2e35;margin-top:7pt">Any information listed regarding nominations and acceptances for interstate races is provided as a guide only. It is compiled from information appearing elsewhere in <span style="font-style:italic">Inside Racing</span>.</div>
+<div style="font-size:8pt;line-height:9.2pt;color:#2c2e35;margin-top:7pt">Riders for all picnic meetings are to be declared no later than 12 noon on the day of acceptances.</div>
+</div>
+<div style="position:absolute;left:158.5pt;top:95pt;height:714pt;border-left:0.75pt dotted #9a9c9f"></div>
+<div style="position:absolute;left:299.5pt;top:95pt;height:714pt;border-left:0.75pt dotted #9a9c9f"></div>
+<div style="position:absolute;left:440.5pt;top:95pt;height:714pt;border-left:0.75pt dotted #9a9c9f"></div>
+</sc-if>
+<sc-if value="{{ pg.cont }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;left:158.5pt;top:61.4pt;height:748pt;border-left:0.75pt dotted #9a9c9f"></div>
+<div style="position:absolute;left:299.5pt;top:61.4pt;height:748pt;border-left:0.75pt dotted #9a9c9f"></div>
+<div style="position:absolute;left:440.5pt;top:61.4pt;height:748pt;border-left:0.75pt dotted #9a9c9f"></div>
+</sc-if>
+<div style="position:absolute;left:23pt;right:19pt;top:61.4pt;display:flex;gap:11pt;align-items:flex-start">
+<sc-for list="{{ pg.cols }}" as="col" hint-placeholder-count="4">
+<div style="width:130pt;flex:0 0 130pt">
+<sc-if value="{{ col.pad }}" hint-placeholder-val="{{ false }}"><div style="height:33.6pt"></div></sc-if>
+<sc-if value="{{ col.padNote }}" hint-placeholder-val="{{ false }}"><div style="height:{{ noteGap }}"></div></sc-if>
+<sc-for list="{{ col.blocks }}" as="b" hint-placeholder-count="3">
+<div style="margin-bottom:11pt">
+<sc-for list="{{ b.dayRow }}" as="d" hint-placeholder-count="1">
+<div style="border-top:1pt solid #2c2e35"></div>
+<div style="font-size:8.5pt;font-weight:700;line-height:10.5pt;padding-top:1.5pt;color:#2c9cd7">{{ d.text }}</div>
+<div style="border-top:0.75pt dotted #2c2e35;margin-top:1.5pt;margin-bottom:1.5pt"></div>
+</sc-for>
+<sc-for list="{{ b.groups }}" as="g" hint-placeholder-count="3">
+<sc-for list="{{ g.headRow }}" as="hd" hint-placeholder-count="1">
+<div style="font-size:7pt;font-weight:700;line-height:8pt;margin-top:2pt;color:#2c2e35">{{ hd.text }}</div>
+</sc-for>
+<sc-for list="{{ g.items }}" as="it" hint-placeholder-count="2">
+<div style="font-size:7pt;font-weight:400;line-height:8pt;color:#2c2e35">{{ it }}</div>
+</sc-for>
+</sc-for>
+</div>
+</sc-for>
+</div>
+</sc-for>
+</div>
+<div style="position:absolute;left:12pt;bottom:14pt;font-size:7pt;color:#2c2e35">{{ footer }}</div>
+<div style="position:absolute;right:19pt;bottom:14pt;font-size:7pt;color:#2c2e35">{{ pg.no }}</div>
+</section>
+</sc-for>
+</doc-page>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { days: null, pages: [] };
+  componentDidMount() {
+    const faces = document.fonts
+      ? Promise.all([
+          document.fonts.load('400 7pt "Gotham Narrow"'),
+          document.fonts.load('700 7pt "Gotham Narrow"'),
+          document.fonts.load('700 8.5pt "Gotham Narrow"'),
+          document.fonts.load('400 8pt "Gotham Narrow"'),
+          document.fonts.load('700 24pt "Gotham XNarrow"'),
+          document.fonts.load('400 8pt "Gotham XNarrow"')
+        ]).then(() => document.fonts.ready)
+      : Promise.resolve();
+    Promise.all([
+      import('./parsers/deadlines.js').then(m => m.loadDeadlines('inputs/Entry Deadlines.csv')),
+      import('./parsers/settings.js')
+        .then(m => m.loadSettings('inputs/Edition Settings.xlsx'))
+        .then(cfg => cfg.settings.edition)
+        .catch(() => ''),
+      faces
+    ]).then(([d, edition]) => {
+      this._edition = edition || '';
+      if (d.warnings.length) console.warn('Entry Deadlines — ' + d.count + ' days, ' + d.warnings.length + ' to check:\n' + d.warnings.join('\n'));
+      this.setState({ days: d.days });
+    });
+  }
+  componentDidUpdate() {
+    this.pack();
+    const dp = document.querySelector('doc-page');
+    if (dp && dp._measure && this.state.pages.length) dp._measure();
+  }
+
+  rows() {
+    const out = [];
+    (this.state.days || []).forEach((d, di) => {
+      out.push({ kind: 'day', text: d.day, di });
+      d.groups.forEach((g, gi) => {
+        out.push({ kind: 'head', text: g.header, di, gi });
+        g.items.forEach(it => out.push({ kind: 'item', text: it, di, gi }));
+      });
+    });
+    return out;
+  }
+
+  pack() {
+    const host = this.measureEl;
+    if (!host || !this.state.days || this._packed) return;
+    const rows = this.rows();
+    const measured = { day: [], head: [], item: [] };
+    ['day', 'head', 'item'].forEach(k => {
+      measured[k] = Array.from(host.querySelectorAll('[data-r="' + k + '"]'));
+    });
+    const counts = { day: 0, head: 0, item: 0 };
+    rows.forEach(r => counts[r.kind]++);
+    if (['day', 'head', 'item'].some(k => measured[k].length !== counts[k])) return;
+    this._packed = true;
+
+    const toPt = px => px * 72 / 96;
+    const idx = { day: 0, head: 0, item: 0 };
+    rows.forEach(r => {
+      const el = measured[r.kind][idx[r.kind]++];
+      const cs = getComputedStyle(el);
+      r.h = toPt(el.getBoundingClientRect().height + parseFloat(cs.marginTop || 0) + parseFloat(cs.marginBottom || 0));
+    });
+
+    const PAGE_H = 841.89, BOTTOM = 30, GAP = 11;
+    const noteEl = host.querySelector('[data-note]');
+    const noteBottom = 93.9 + (noteEl ? toPt(noteEl.getBoundingClientRect().height) : 165) + 12;
+    this._noteGap = (noteBottom - 61.4).toFixed(1) + 'pt';
+    const limits = { full: PAGE_H - 95 - BOTTOM, cont: PAGE_H - 61.4 - BOTTOM, note: PAGE_H - noteBottom - BOTTOM };
+
+    // Greedy line-level fill; a day block may continue into the next column.
+    const colRuns = [];
+    let i = 0, ci = 0;
+    while (i < rows.length) {
+      const first = ci < 4;
+      const c = ci % 4;
+      const limit = ci === 0 ? limits.note : (first ? limits.full : limits.cont);
+      let used = 0;
+      const start = i;
+      while (i < rows.length) {
+        const r = rows[i];
+        const cost = (r.kind === 'day' && i > start ? GAP : 0) + r.h;
+        if (used + cost > limit && i > start) break;
+        used += cost; i++;
+      }
+      // never end a column on a day heading or a group header
+      while (i > start + 1 && (rows[i - 1].kind === 'day' || rows[i - 1].kind === 'head')) i--;
+      // never end a column on a day heading + single header pair
+      if (i > start + 2 && rows[i - 1].kind === 'item' && rows[i - 2].kind === 'head' && rows[i - 3].kind === 'day') i -= 3;
+      colRuns.push(rows.slice(start, i));
+      ci++;
+    }
+
+    const toBlocks = run => {
+      const blocks = [];
+      run.forEach(r => {
+        if (r.kind === 'day') blocks.push({ dayRow: [{ text: r.text }], groups: [] });
+        else {
+          if (!blocks.length) blocks.push({ dayRow: [], groups: [] });
+          const b = blocks[blocks.length - 1];
+          if (r.kind === 'head') b.groups.push({ headRow: [{ text: r.text }], items: [] });
+          else {
+            if (!b.groups.length) b.groups.push({ headRow: [], items: [] });
+            b.groups[b.groups.length - 1].items.push(r.text);
+          }
+        }
+      });
+      return blocks;
+    };
+
+    const pages = [];
+    for (let p = 0; p * 4 < colRuns.length; p++) {
+      const first = p === 0;
+      const cols = [];
+      for (let c = 0; c < 4; c++) {
+        const run = colRuns[p * 4 + c] || [];
+        cols.push({ blocks: toBlocks(run), pad: first && c !== 0, padNote: first && c === 0 });
+      }
+      pages.push({ first, cont: !first, cols, no: 0 });
+    }
+    // pagination is the authority on folios; tell it how long this section ran
+    import('./parsers/pagination.js').then(P => {
+      P.report('deadlines', pages.length);
+      const from = P.plan({}).start.deadlines;
+      pages.forEach((pg, i) => { pg.no = from + i; });
+      const announce = () => {
+        const dp0 = document.querySelector('doc-page');
+        if (dp0) dp0.setAttribute('data-paged', String(pages.length));
+      };
+      this.setState({ pages }, () => {
+        requestAnimationFrame(() => {
+          const dp = document.querySelector('doc-page');
+          if (dp && dp._measure) dp._measure();
+          announce();
+        });
+      });
+    });
+  }
+
+  renderVals() {
+    const days = this.state.days || [];
+    const months = [...new Set(days.map(d => d.day.split(' ').pop()))];
+    const range = months.length ? months[0] + ' - ' + months[months.length - 1] + ' 2026' : '';
+    const rows = this.state.pages.length ? [] : this.rows();
+    return {
+      dayRows: rows.filter(r => r.kind === 'day'),
+      headRows: rows.filter(r => r.kind === 'head'),
+      itemRows: rows.filter(r => r.kind === 'item'),
+      measureRef: el => { this.measureEl = el; },
+      noteGap: this._noteGap || '209.6pt',
+      pages: this.state.pages.map(p => ({ ...p, eyebrow: p.first ? range : 'ENTRY DEADLINES' })),
+      footer: 'INSIDE RACING I ' + (this._edition || '')
+    };
+  }
+}
+</script>
+</body>
+</html>

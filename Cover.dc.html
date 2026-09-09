@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+@font-face{font-family:'Gotham Narrow';src:url('fonts/GothamNarrow-Book.otf') format('opentype');font-weight:400;font-style:normal;font-display:block}
+@font-face{font-family:'Gotham XNarrow';src:url('fonts/GothamXNarrow-Book.ttf') format('truetype');font-weight:400;font-style:normal;font-display:block}
+@font-face{font-family:'Gotham XNarrow';src:url('fonts/GothamXNarrow-Bold.ttf') format('truetype');font-weight:700;font-style:normal;font-display:block}
+doc-page:not(:defined){visibility:hidden}
+body{margin:0}
+a{color:#2c9cd7;text-decoration:none}
+a:hover{color:#1b7fb4}
+</style>
+<script src="./doc-page.js"></script>
+</helmet>
+<doc-page size="a4">
+
+<section class="page" data-screen-label="01 Cover" style="position:relative;font-family:'Gotham Narrow',sans-serif;color:#2c2e35;background:#fff;overflow:hidden">
+
+<img src="assets/photos/cover.jpg" alt="" style="position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;object-position:50% 50%;display:block" />
+<div style="position:absolute;left:0;right:0;top:0;height:37.3pt;background:#0086bf"></div>
+<div style="position:absolute;left:21.3pt;top:15.1pt;font-family:'Gotham XNarrow',sans-serif;font-size:16pt;font-weight:700;line-height:1;letter-spacing:.03em;color:#fff">{{ coverDate }}</div>
+<div style="position:absolute;right:22.7pt;top:17.7pt;font-size:9pt;line-height:1;letter-spacing:.01em;text-align:right;color:#fff">VICTORIAN THOROUGHBRED RACING INDUSTRY OFFICIAL PUBLICATION</div>
+<img src="assets/cover-masthead.svg" alt="Inside Racing" style="position:absolute;left:22.68pt;top:63.92pt;width:549.92pt;height:80.64pt" />
+<div style="position:absolute;left:31.2pt;top:753.4pt;width:532.9pt;height:65.2pt;background:rgba(255,255,255,.9)"></div>
+<img src="assets/cover-inside-script.svg" alt="Inside" style="position:absolute;left:48.64pt;top:767.32pt;width:42.37pt;height:15.46pt" />
+<div style="position:absolute;left:205.4pt;top:782.4pt;width:4pt;height:27.7pt;background:#0086bf"></div>
+<div style="position:absolute;left:391.1pt;top:782.4pt;width:4pt;height:27.7pt;background:#0086bf"></div>
+<div style="position:absolute;left:47.3pt;top:791.3pt;font-family:'Gotham XNarrow',sans-serif;font-size:13pt;font-weight:700;line-height:1;letter-spacing:.04em;color:#2c2e35">ENTRY DEADLINES</div>
+<div style="position:absolute;left:237.1pt;top:791.3pt;font-family:'Gotham XNarrow',sans-serif;font-size:13pt;font-weight:700;line-height:1;letter-spacing:.04em;color:#2c2e35">PROGRAM CHART</div>
+<div style="position:absolute;left:423.8pt;top:791.3pt;font-family:'Gotham XNarrow',sans-serif;font-size:13pt;font-weight:700;line-height:1;letter-spacing:.04em;color:#2c2e35">RACE PROGRAMS</div>
+
+</section>
+</doc-page>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{}">
+// Cover (page 1).
+//
+// The photograph is supplied as artwork, so the page carries a slot for it and
+// everything else is set from Edition Settings: "AUGUST EDITION 2026" prints as
+// AUGUST 2026 on the cover, the same way the published edition does.
+//
+// No folio and no footer — covers carry neither.
+
+class Component extends DCLogic {
+  state = { edition: '' };
+
+  componentDidMount() {
+    // doc-page only enters paged mode in its own measure pass, and the element
+    // may not exist (or may be replaced) when this first runs, so keep asking
+    // until the sheet reports itself paginated.
+    const paged = (tries) => {
+      const dp = document.querySelector('doc-page');
+      if (dp) {
+        dp.setAttribute('data-paged', String(document.querySelectorAll('doc-page > .page').length));
+        // Call the measure synchronously: _scheduleMeasure() no-ops while a
+        // stale frame is pending, and that pending frame belongs to a host the
+        // DC has since re-rendered, so it never lands.
+        dp._raf = null;
+        if (dp._measure) dp._measure();
+        else if (dp._scheduleMeasure) dp._scheduleMeasure();
+        if (dp.shadowRoot && dp.shadowRoot.querySelector('.sheet.paginated')) return;
+      }
+      if (tries >= 90) {
+        console.warn('Cover — doc-page never entered paged mode; the cover will not lay out.');
+        return;
+      }
+      requestAnimationFrame(() => paged(tries + 1));
+    };
+    if (window.customElements && customElements.whenDefined) {
+      customElements.whenDefined('doc-page').then(() => paged(0));
+    } else {
+      requestAnimationFrame(() => paged(0));
+    }
+    this._paged = paged;
+    const faces = document.fonts
+      ? Promise.all([
+          document.fonts.load('400 54pt "Gotham XNarrow"'),
+          document.fonts.load('700 54pt "Gotham XNarrow"'),
+          document.fonts.load('700 12pt "Gotham XNarrow"'),
+          document.fonts.load('400 8pt "Gotham Narrow"')
+        ]).then(() => document.fonts.ready)
+      : Promise.resolve();
+    Promise.all([
+      import('./parsers/settings.js')
+        .then(m => m.loadSettings('inputs/Edition Settings.xlsx'))
+        .catch(e => ({ settings: {}, warnings: ['could not read Edition Settings: ' + (e.message || e)] })),
+      faces
+    ]).then(([cfg]) => {
+      if (cfg.warnings && cfg.warnings.length) {
+        console.warn('Cover — ' + cfg.warnings.length + ' to check:\n' + cfg.warnings.join('\n'));
+      }
+      this.setState({ edition: (cfg.settings || {}).edition || '' }, () => requestAnimationFrame(() => paged(0)));
+    });
+  }
+
+  renderVals() {
+    // "AUGUST EDITION 2026" -> "AUGUST 2026"
+    const e = String(this.state.edition || '').replace(/\s*edition\s*/i, ' ').replace(/\s+/g, ' ').trim();
+    return { coverDate: e.toUpperCase() };
+  }
+}
+</script>
+</body>
+</html>

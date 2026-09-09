@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,300..600&display=swap" rel="stylesheet" />
+<style>
+doc-page:not(:defined){visibility:hidden}
+body{margin:0}
+a{color:#8a2b23;text-decoration:none;border-bottom:1px solid rgba(138,43,35,.35)}
+a:hover{color:#5d1a15;border-bottom-color:#5d1a15}
+</style>
+<script src="./doc-page.js"></script>
+</helmet>
+<doc-page margin="0.7in" orientation="landscape">
+<div style="font-family:'Newsreader',Georgia,serif;color:#1b1d21;font-size:14px;line-height:1.55">
+
+<div style="display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px solid #10233f;padding-bottom:7px;margin-bottom:20px;font-family:'Archivo',sans-serif;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#10233f">
+<span>Inside Racing — input source worksheet</span>
+<span style="color:#6b6f76">Draft 1 · to be completed with section owners</span>
+</div>
+
+<h1 style="font-family:'Archivo',sans-serif;font-weight:700;font-size:28px;line-height:1.1;letter-spacing:-.02em;color:#10233f;margin:0 0 12px">Sections requiring an input source</h1>
+
+<p style="font-size:16px;line-height:1.5;color:#3d424a;margin:0 0 20px;max-width:60em">Every content block in the August 2026 edition, with the data each one needs. The right-hand columns are deliberately blank — they are what we need to establish. Static pages are listed last and need a review owner rather than a monthly source.</p>
+
+<h2 style="font-family:'Archivo',sans-serif;font-weight:600;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#8a2b23;margin:0 0 8px">A. Program-derived — one dataset, three renderings</h2>
+<p style="margin:0 0 10px;max-width:60em">These four blocks should resolve to a single source. If they don't today, that is the first thing to fix.</p>
+
+<table style="width:100%;border-collapse:collapse;font-family:'Archivo',sans-serif;font-size:10.5px;margin:0 0 22px">
+<thead>
+<tr style="background:#10233f;color:#fff;text-align:left">
+<th style="padding:6px 7px;font-weight:600;width:150px">Section</th>
+<th style="padding:6px 7px;font-weight:600;width:44px">Pages</th>
+<th style="padding:6px 7px;font-weight:600">Data it needs</th>
+<th style="padding:6px 7px;font-weight:600;width:100px">Source system / file</th>
+<th style="padding:6px 7px;font-weight:600;width:78px">Owner</th>
+<th style="padding:6px 7px;font-weight:600;width:78px">Format</th>
+<th style="padding:6px 7px;font-weight:600;width:78px">Available when</th>
+</tr>
+</thead>
+<tbody>
+<tr style="border-bottom:1px solid #ddd8ce"><td style="padding:7px">Dates for entries, acceptances, riders</td><td style="padding:7px">3–4</td><td style="padding:7px">Per-meeting entry, acceptance and riders deadline date and time; feature race entry dates; N/C and Q/C markers</td><td></td><td></td><td></td><td></td></tr>
+<tr style="border-bottom:1px solid #ddd8ce;background:#faf8f4"><td style="padding:7px">Programs summary chart</td><td style="padding:7px">5–25</td><td style="padding:7px">Every race with class band, distance, prizemoney, venue, date; class-band definitions for the column headings</td><td></td><td></td><td></td><td></td></tr>
+<tr style="border-bottom:1px solid #ddd8ce"><td style="padding:7px">Race programs — metro and country</td><td style="padding:7px">26–46</td><td style="padding:7px">Full race conditions: name, type, weights, ballot conditions, sex and age restrictions, VOBIS flags, prizemoney breakdown, nomination and acceptance fees, track</td><td></td><td></td><td></td><td></td></tr>
+<tr style="border-bottom:1px solid #ddd8ce;background:#faf8f4"><td style="padding:7px">Jumps program</td><td style="padding:7px">49</td><td style="padding:7px">Hurdle and steeple races in the period, plus jumps trial dates</td><td></td><td></td><td></td><td></td></tr>
+</tbody>
+</table>
+
+<h2 style="font-family:'Archivo',sans-serif;font-weight:600;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#8a2b23;margin:0 0 8px">B. Separate feeds</h2>
+
+<table style="width:100%;border-collapse:collapse;font-family:'Archivo',sans-serif;font-size:10.5px;margin:0 0 22px">
+<thead>
+<tr style="background:#10233f;color:#fff;text-align:left">
+<th style="padding:6px 7px;font-weight:600;width:150px">Section</th>
+<th style="padding:6px 7px;font-weight:600;width:44px">Pages</th>
+<th style="padding:6px 7px;font-weight:600">Data it needs</th>
+<th style="padding:6px 7px;font-weight:600;width:100px">Source system / file</th>
+<th style="padding:6px 7px;font-weight:600;width:78px">Owner</th>
+<th style="padding:6px 7px;font-weight:600;width:78px">Format</th>
+<th style="padding:6px 7px;font-weight:600;width:78px">Available when</th>
+</tr>
+</thead>
+<tbody>
+<tr style="border-bottom:1px solid #ddd8ce"><td style="padding:7px">Permits to ride</td><td style="padding:7px">47</td><td style="padding:7px">Riders holding permits, with conditions and expiry</td><td></td><td></td><td></td><td></td></tr>
+<tr style="border-bottom:1px solid #ddd8ce;background:#faf8f4"><td style="padding:7px">Eligible to ride in official trials</td><td style="padding:7px">47</td><td style="padding:7px">Apprentice and rider eligibility list</td><td></td><td></td><td></td><td></td></tr>
+<tr style="border-bottom:1px solid #ddd8ce"><td style="padding:7px">Riders' agents</td><td style="padding:7px">48</td><td style="padding:7px">Agent names, contact numbers, riders represented</td><td></td><td></td><td></td><td></td></tr>
+<tr style="border-bottom:1px solid #ddd8ce;background:#faf8f4"><td style="padding:7px">Jump-outs schedule</td><td style="padding:7px">50</td><td style="padding:7px">Dates and venues, two months ahead</td><td></td><td></td><td></td><td></td></tr>
+<tr style="border-bottom:1px solid #ddd8ce"><td style="padding:7px">Official flat trials</td><td style="padding:7px">50</td><td style="padding:7px">Dates, venues, entry arrangements</td><td></td><td></td><td></td><td></td></tr>
+<tr style="border-bottom:1px solid #ddd8ce;background:#faf8f4"><td style="padding:7px">Victorian Race Series</td><td style="padding:7px">51</td><td style="padding:7px">Series in force, heats and finals with dates and venues, qualification rules</td><td></td><td></td><td></td><td></td></tr>
+</tbody>
+</table>
+
+<h2 style="font-family:'Archivo',sans-serif;font-weight:600;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#8a2b23;margin:0 0 8px">C. Authored each month</h2>
+<p style="margin:0 0 10px;max-width:60em">No data source — these need a writer, an approver and a deadline instead.</p>
+
+<table style="width:100%;border-collapse:collapse;font-family:'Archivo',sans-serif;font-size:10.5px;margin:0 0 22px">
+<thead>
+<tr style="background:#10233f;color:#fff;text-align:left">
+<th style="padding:6px 7px;font-weight:600;width:150px">Section</th>
+<th style="padding:6px 7px;font-weight:600;width:44px">Pages</th>
+<th style="padding:6px 7px;font-weight:600">What has to be decided</th>
+<th style="padding:6px 7px;font-weight:600;width:100px">Author</th>
+<th style="padding:6px 7px;font-weight:600;width:78px">Approver</th>
+<th style="padding:6px 7px;font-weight:600;width:78px">Copy due</th>
+<th style="padding:6px 7px;font-weight:600;width:78px">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr style="border-bottom:1px solid #ddd8ce"><td style="padding:7px">Cover</td><td style="padding:7px">1</td><td style="padding:7px">Month, image, cover lines</td><td></td><td></td><td></td><td></td></tr>
+<tr style="border-bottom:1px solid #ddd8ce;background:#faf8f4"><td style="padding:7px">Contents</td><td style="padding:7px">2</td><td style="padding:7px">Nothing — page numbers follow from the assembled edition</td><td></td><td></td><td></td><td></td></tr>
+<tr style="border-bottom:1px solid #ddd8ce"><td style="padding:7px">Industry notice</td><td style="padding:7px">52</td><td style="padding:7px">Which notice runs, if any</td><td></td><td></td><td></td><td></td></tr>
+<tr style="border-bottom:1px solid #ddd8ce;background:#faf8f4"><td style="padding:7px">From the Stewards' Room</td><td style="padding:7px">53</td><td style="padding:7px">Items selected, plus any rule amendments to reproduce</td><td></td><td></td><td></td><td></td></tr>
+</tbody>
+</table>
+
+<h2 style="font-family:'Archivo',sans-serif;font-weight:600;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#8a2b23;margin:0 0 8px">D. Standing content — needs a review date, not a monthly input</h2>
+
+<table style="width:100%;border-collapse:collapse;font-family:'Archivo',sans-serif;font-size:10.5px;margin:0 0 20px">
+<thead>
+<tr style="background:#10233f;color:#fff;text-align:left">
+<th style="padding:6px 7px;font-weight:600;width:150px">Item</th>
+<th style="padding:6px 7px;font-weight:600;width:44px">Pages</th>
+<th style="padding:6px 7px;font-weight:600">Content</th>
+<th style="padding:6px 7px;font-weight:600;width:100px">Owner</th>
+<th style="padding:6px 7px;font-weight:600;width:78px">Last reviewed</th>
+<th style="padding:6px 7px;font-weight:600;width:78px">Next review</th>
+<th style="padding:6px 7px;font-weight:600;width:78px">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr style="border-bottom:1px solid #ddd8ce"><td style="padding:7px">Stableline notice</td><td style="padding:7px">2</td><td style="padding:7px">Contact and service details</td><td></td><td></td><td></td><td></td></tr>
+<tr style="border-bottom:1px solid #ddd8ce;background:#faf8f4"><td style="padding:7px">Jumps prizemoney breakdown</td><td style="padding:7px">49</td><td style="padding:7px">Fixed placing table</td><td></td><td></td><td></td><td></td></tr>
+<tr style="border-bottom:1px solid #ddd8ce"><td style="padding:7px">Division of races policy</td><td style="padding:7px">50</td><td style="padding:7px">Policy text</td><td></td><td></td><td></td><td></td></tr>
+<tr style="border-bottom:1px solid #ddd8ce;background:#faf8f4"><td style="padding:7px">HR Assist notice</td><td style="padding:7px">54</td><td style="padding:7px">Service details</td><td></td><td></td><td></td><td></td></tr>
+<tr style="border-bottom:1px solid #ddd8ce"><td style="padding:7px">Remaining notices and back cover</td><td style="padding:7px">55–56</td><td style="padding:7px">Standing advertising and contact panel</td><td></td><td></td><td></td><td></td></tr>
+</tbody>
+</table>
+
+<div style="border:1px solid #d8d3c8;background:#faf8f4;padding:14px 16px;break-inside:avoid;max-width:64em">
+<p style="margin:0 0 8px;font-family:'Archivo',sans-serif;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#10233f">Two questions to settle first</p>
+<p style="margin:0 0 6px"><strong>Do the four blocks in group A come off one source?</strong> Deadlines appear in all of pages 3–4, 5–25 and 26–46. If they are keyed or exported separately, that is where errors will be.</p>
+<p style="margin:0">
+<strong>What horizon does each section cover?</strong> In the August edition the summary chart runs to late October but the detailed programs stop in early October. If that is a rule rather than a monthly call, it should be recorded here.</p>
+</div>
+
+<p style="margin:16px 0 0;font-size:12px;color:#6b6f76;font-family:'Archivo',sans-serif">Sections and page numbers taken from the August 2026 edition. Groupings are proposed.</p>
+
+</div>
+</doc-page>
+</x-dc>
+</body>
+</html>

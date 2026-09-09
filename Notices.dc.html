@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+@font-face{font-family:'Gotham Narrow';src:url('fonts/GothamNarrow-Book.otf') format('opentype');font-weight:400;font-style:normal;font-display:block}
+@font-face{font-family:'Gotham XNarrow';src:url('fonts/GothamXNarrow-Book.ttf') format('truetype');font-weight:400;font-style:normal;font-display:block}
+@font-face{font-family:'Gotham XNarrow';src:url('fonts/GothamXNarrow-Bold.ttf') format('truetype');font-weight:700;font-style:normal;font-display:block}
+doc-page:not(:defined){visibility:hidden}
+body{margin:0}
+a{color:#2c9cd7;text-decoration:none}
+a:hover{color:#1b7fb4}
+</style>
+<script src="./doc-page.js"></script>
+</helmet>
+<doc-page size="a4">
+
+<section class="page" data-screen-label="52" style="position:relative;font-family:'Gotham Narrow',sans-serif;color:#2c2e35;background:#fff;padding:0;overflow:hidden">
+<div style="position:absolute;left:22.7pt;top:24pt;font-size:10pt;font-weight:400;line-height:1;letter-spacing:.019em">Notices | INTEGRITY SERVICES</div>
+<div style="position:absolute;left:22.7pt;top:37pt;width:549.9pt;height:3pt;background:#9ecff0"></div>
+<div style="position:absolute;left:22pt;top:59.3pt;font-size:24pt;font-weight:700;line-height:1;letter-spacing:-.01em">INDUSTRY NOTICE</div>
+<div style="position:absolute;left:22.7pt;top:88pt;width:549.9pt;height:3pt;background:#2c2e35"></div>
+
+<div style="position:absolute;left:22.7pt;top:100pt;width:549.9pt">
+<sc-for list="{{ notice }}" as="b" hint-placeholder-count="8">
+<sc-if value="{{ b.isSubject }}" hint-placeholder-val="{{ true }}">
+<div style="margin-top:10pt;font-size:15pt;font-weight:700;line-height:17pt;letter-spacing:-.006em;text-wrap:pretty">{{ b.text }}</div>
+</sc-if>
+<sc-if value="{{ b.isSubhead }}" hint-placeholder-val="{{ true }}">
+<div style="margin-top:11pt;font-size:9pt;font-weight:700;line-height:11pt;letter-spacing:.02em">{{ b.text }}</div>
+</sc-if>
+<sc-if value="{{ b.isPara }}" hint-placeholder-val="{{ true }}">
+<div style="margin-top:7pt;font-size:8pt;font-weight:400;line-height:10.4pt;text-wrap:pretty">{{ b.text }}</div>
+</sc-if>
+<sc-if value="{{ b.isStep }}" hint-placeholder-val="{{ true }}">
+<div style="margin-top:5pt;display:flex;gap:6pt;font-size:8pt;line-height:10.4pt">
+<div style="flex:0 0 13pt;font-weight:700">{{ b.no }}</div>
+<div style="flex:1;text-wrap:pretty">{{ b.text }}</div>
+</div>
+</sc-if>
+<sc-if value="{{ b.isClause }}" hint-placeholder-val="{{ true }}">
+<div style="margin-top:4pt;padding-left:13pt;font-size:8pt;line-height:10.4pt;text-wrap:pretty">{{ b.text }}</div>
+</sc-if>
+</sc-for>
+<sc-if value="{{ noticeEmpty }}" hint-placeholder-val="{{ false }}">
+<div style="margin-top:9pt;background:#edf6fb;box-sizing:border-box;padding:12pt 14pt 14pt">
+<div style="font-size:9pt;font-weight:700;line-height:1;letter-spacing:.02em">AWAITING COPY — inputs/Industry Notice.docx</div>
+<div style="margin-top:7pt;width:440pt;font-size:8pt;line-height:11pt">The Word document has no paragraphs. Supply the notice using Heading 1 for the subject, Heading 2 for section headings, Normal for body copy and IR Step for numbered steps.</div>
+</div>
+</sc-if>
+</div>
+
+<div style="position:absolute;left:12.2pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1;letter-spacing:-.013em">{{ footer }}</div>
+<div style="position:absolute;right:12.3pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1">{{ pageNotice }}</div>
+</section>
+
+<section class="page" data-screen-label="53" style="position:relative;font-family:'Gotham Narrow',sans-serif;color:#2c2e35;background:#fff;padding:0;overflow:hidden">
+<div style="position:absolute;left:22.7pt;top:24pt;font-size:10pt;font-weight:400;line-height:1;letter-spacing:.019em">INTEGRITY UPDATE</div>
+<div style="position:absolute;left:22.7pt;top:37pt;width:549.9pt;height:3pt;background:#9ecff0"></div>
+<div style="position:absolute;left:22pt;top:59.3pt;font-size:24pt;font-weight:700;line-height:1;letter-spacing:-.01em">From the Stewards&rsquo; Room</div>
+<div style="position:absolute;left:22.7pt;top:88pt;width:549.9pt;height:3pt;background:#2c2e35"></div>
+
+<div style="position:absolute;left:22.7pt;top:100pt;width:549.9pt">
+<sc-for list="{{ stewards }}" as="b" hint-placeholder-count="8">
+<sc-if value="{{ b.isHeading }}" hint-placeholder-val="{{ true }}">
+<div style="margin-top:13pt;font-size:15pt;font-weight:700;line-height:17pt;letter-spacing:-.006em;text-wrap:pretty">{{ b.text }}</div>
+</sc-if>
+<sc-if value="{{ b.isSubhead }}" hint-placeholder-val="{{ true }}">
+<div style="margin-top:9pt;font-size:9pt;font-weight:700;line-height:11pt;text-wrap:pretty">{{ b.text }}</div>
+</sc-if>
+<sc-if value="{{ b.isPara }}" hint-placeholder-val="{{ true }}">
+<div style="margin-top:6pt;font-size:8pt;font-weight:400;line-height:10.4pt;text-wrap:pretty">{{ b.text }}</div>
+</sc-if>
+<sc-if value="{{ b.isClause }}" hint-placeholder-val="{{ true }}">
+<div style="margin-top:4pt;padding-left:13pt;font-size:8pt;line-height:10.4pt;text-wrap:pretty">{{ b.text }}</div>
+</sc-if>
+</sc-for>
+<sc-if value="{{ stewardsEmpty }}" hint-placeholder-val="{{ false }}">
+<div style="margin-top:9pt;background:#edf6fb;box-sizing:border-box;padding:12pt 14pt 14pt">
+<div style="font-size:9pt;font-weight:700;line-height:1;letter-spacing:.02em">AWAITING COPY — inputs/Stewards Room.docx</div>
+<div style="margin-top:7pt;width:440pt;font-size:8pt;line-height:11pt">The Word document has no paragraphs. Supply the copy using Heading 1 for each topic, Heading 2 for sub-headings and Normal for body copy.</div>
+</div>
+</sc-if>
+</div>
+
+<div style="position:absolute;left:12.2pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1;letter-spacing:-.013em">{{ footer }}</div>
+<div style="position:absolute;right:12.3pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1">{{ pageStewards }}</div>
+</section>
+
+<section class="page" data-screen-label="54" style="position:relative;font-family:'Gotham Narrow',sans-serif;color:#2c2e35;background:#fff;padding:0;overflow:hidden">
+<div style="position:absolute;left:22.7pt;top:24pt;font-size:10pt;font-weight:400;line-height:1;letter-spacing:.019em">Notices | INTEGRITY SERVICES</div>
+<div style="position:absolute;left:22.7pt;top:37pt;width:549.9pt;height:3pt;background:#9ecff0"></div>
+
+<div style="position:absolute;left:22.7pt;top:50pt;width:549.9pt;column-count:3;column-gap:13pt">
+<sc-for list="{{ rules }}" as="g" hint-placeholder-count="6">
+<div style="break-inside:avoid;margin-bottom:10pt">
+<div style="font-size:9pt;font-weight:700;line-height:11pt;letter-spacing:.01em;text-wrap:pretty">{{ g.heading }}</div>
+<sc-for list="{{ g.blocks }}" as="b" hint-placeholder-count="3">
+<sc-if value="{{ b.isPara }}" hint-placeholder-val="{{ true }}">
+<div style="margin-top:4pt;font-size:7.5pt;font-weight:400;line-height:9.4pt;text-wrap:pretty">{{ b.text }}</div>
+</sc-if>
+<sc-if value="{{ b.isClause }}" hint-placeholder-val="{{ true }}">
+<div style="margin-top:4pt;font-size:7.5pt;font-weight:400;line-height:9.4pt;text-wrap:pretty">{{ b.text }}</div>
+</sc-if>
+</sc-for>
+</div>
+</sc-for>
+</div>
+<sc-if value="{{ rulesEmpty }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;left:22.7pt;top:50pt;width:549.9pt;background:#edf6fb;box-sizing:border-box;padding:12pt 14pt 14pt">
+<div style="font-size:9pt;font-weight:700;line-height:1;letter-spacing:.02em">AWAITING COPY — inputs/Rules Extracts.docx</div>
+<div style="margin-top:7pt;width:440pt;font-size:8pt;line-height:11pt">The Word document has no paragraphs. Supply the extracts using Heading 1 for each rule reference and IR Clause for numbered sub-clauses. This file is standing content, so once filled it carries over between editions.</div>
+</div>
+</sc-if>
+
+<div style="position:absolute;left:12.2pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1;letter-spacing:-.013em">{{ footer }}</div>
+<div style="position:absolute;right:12.3pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1">{{ pageNotices }}</div>
+</section>
+
+</doc-page>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { settings: {}, notice: [], stewards: [], rules: [], loaded: false };
+
+  componentDidMount() {
+    const faces = document.fonts
+      ? Promise.all([
+          document.fonts.load('400 7.5pt "Gotham Narrow"'),
+          document.fonts.load('400 8pt "Gotham Narrow"'),
+          document.fonts.load('700 9pt "Gotham Narrow"'),
+          document.fonts.load('700 15pt "Gotham Narrow"'),
+          document.fonts.load('700 24pt "Gotham Narrow"'),
+          document.fonts.load('400 10pt "Gotham Narrow"'),
+          document.fonts.load('400 7pt "Gotham XNarrow"')
+        ]).then(() => document.fonts.ready)
+      : Promise.resolve();
+
+    const N = import('./parsers/notices.js');
+    const fail = key => e => { const o = { warnings: ['could not read the document: ' + (e.message || e)], empty: true, count: 0 }; o[key] = []; return o; };
+    Promise.all([
+      import('./parsers/settings.js').then(m => m.loadSettings('inputs/Edition Settings.xlsx')),
+      N.then(m => m.loadNotice('inputs/Industry Notice.docx')).catch(fail('blocks')),
+      N.then(m => m.loadStewards('inputs/Stewards Room.docx')).catch(fail('blocks')),
+      N.then(m => m.loadRules('inputs/Rules Extracts.docx')).catch(fail('groups')),
+      faces
+    ]).then(([cfg, n, s, r]) => {
+      const settings = cfg.settings;
+      if (cfg.warnings.length) console.warn('Edition Settings — ' + cfg.warnings.length + ' to check:\n' + cfg.warnings.join('\n'));
+      this.report('Industry Notice (page 52)', n);
+      this.report('Stewards Room (page 53)', s);
+      this.report('Rules Extracts (page 54)', r);
+      this.setState({ settings, notice: n.blocks || [], stewards: s.blocks || [], rules: r.groups || [], loaded: true }, () => requestAnimationFrame(() => {
+        const dp0 = document.querySelector('doc-page');
+        if (dp0) dp0.setAttribute('data-paged', String(document.querySelectorAll('doc-page > .page').length));
+      }));
+    });
+  }
+
+  report(label, r) {
+    const unit = r.groups ? ' rule blocks' : ' paragraphs';
+    if (r.empty) console.warn(label + ' — no copy supplied. The page will print an awaiting-copy panel.');
+    else if (r.warnings && r.warnings.length) console.warn(label + ' — ' + r.count + unit + ', ' + r.warnings.length + ' to check:\n' + r.warnings.join('\n'));
+    else console.info(label + ' — ' + r.count + unit + ', no warnings.');
+  }
+
+  componentDidUpdate() {
+    const dp = document.querySelector('doc-page');
+    if (dp && dp._measure) dp._measure();
+  }
+
+  renderVals() {
+    const s = this.state.settings;
+    return {
+      notice: this.state.notice,
+      stewards: this.state.stewards,
+      rules: this.state.rules,
+      noticeEmpty: this.state.loaded && !this.state.notice.length,
+      stewardsEmpty: this.state.loaded && !this.state.stewards.length,
+      rulesEmpty: this.state.loaded && !this.state.rules.length,
+      pageNotice: s.page_notice || '',
+      pageStewards: s.page_stewards || '',
+      pageNotices: s.page_notices || '',
+      footer: 'INSIDE RACING I ' + (s.edition || '')
+    };
+  }
+}
+</script>
+</body>
+</html>

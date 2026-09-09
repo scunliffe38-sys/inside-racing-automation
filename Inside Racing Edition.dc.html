@@ -1,0 +1,1930 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+@font-face{font-family:'Gotham Narrow';src:url('fonts/GothamNarrow-Book.otf') format('opentype');font-weight:400;font-style:normal;font-display:block}
+@font-face{font-family:'Gotham XNarrow';src:url('fonts/GothamXNarrow-Book.ttf') format('truetype');font-weight:400;font-style:normal;font-display:block}
+@font-face{font-family:'Gotham XNarrow';src:url('fonts/GothamXNarrow-Bold.ttf') format('truetype');font-weight:700;font-style:normal;font-display:block}
+doc-page:not(:defined){visibility:hidden}
+/* Do NOT skip page layout with content-visibility here. It was tried, scoped
+ * to @media screen on the assumption that print would be unaffected. It was
+ * not: this export path renders under screen media, so every page came out
+ * blank — 13 empty sheets. Whatever the settle cost, every page must lay out
+ * for real. */
+body{margin:0}
+a{color:#2c9cd7;text-decoration:none}
+a:hover{color:#1b7fb4}
+</style>
+<script src="./doc-page.js"></script>
+<script src="./image-slot.js"></script>
+</helmet>
+
+<doc-page size="a4">
+
+<div ref="{{ deadlinesMeasureRef }}" style="position:absolute;left:-9999pt;top:0;width:130pt;font-family:'Gotham Narrow',sans-serif;visibility:hidden">
+<div data-note="1" style="width:121.8pt;box-sizing:border-box;padding:6pt;border-radius:4pt;background:#ebf4f9">
+<div style="display:inline-block;background:#2c2e35;color:#fff;border-radius:4pt;padding:3.5pt 7pt;font-size:9pt;font-weight:700;letter-spacing:.02em;line-height:1">TRAINERS’ NOTE</div>
+<div style="font-size:8pt;line-height:9.2pt;color:#2c2e35;margin-top:7pt">All entries, acceptances, riders and scratchings are to be lodged with the Racing Australia Service Centre via <span style="font-style:italic">racingaustralia.horse</span> or phone: 1800 138 704.</div>
+<div style="font-size:8pt;line-height:9.2pt;color:#2c2e35;margin-top:7pt">Any information listed regarding nominations and acceptances for interstate races is provided as a guide only. It is compiled from information appearing elsewhere in <span style="font-style:italic">Inside Racing</span>.</div>
+<div style="font-size:8pt;line-height:9.2pt;color:#2c2e35;margin-top:7pt">Riders for all picnic meetings are to be declared no later than 12 noon on the day of acceptances.</div>
+</div>
+<sc-for list="{{ dlDayRows }}" as="r" hint-placeholder-count="0">
+<div data-r="day">
+<div style="border-top:1pt solid #2c2e35"></div>
+<div style="font-size:8.5pt;font-weight:700;line-height:10.5pt;padding-top:1.5pt;color:#2c9cd7">{{ r.text }}</div>
+<div style="border-top:0.75pt dotted #2c2e35;margin-top:1.5pt;margin-bottom:1.5pt"></div>
+</div>
+</sc-for>
+<sc-for list="{{ dlHeadRows }}" as="r" hint-placeholder-count="0">
+<div data-r="head" style="font-size:7pt;font-weight:700;line-height:8pt;margin-top:2pt;color:#2c2e35">{{ r.text }}</div>
+</sc-for>
+<sc-for list="{{ dlItemRows }}" as="r" hint-placeholder-count="0">
+<div data-r="item" style="font-size:7pt;font-weight:400;line-height:8pt;color:#2c2e35">{{ r.text }}</div>
+</sc-for>
+</div>
+
+<sc-for list="{{ frontPages }}" as="fp" hint-placeholder-count="1">
+<section class="page" data-screen-label="01 Cover" style="position:relative;font-family:'Gotham Narrow',sans-serif;color:#2c2e35;background:#fff;overflow:hidden">
+<img src="assets/photos/cover.jpg" alt="" style="position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;object-position:50% 50%;display:block" />
+<div style="position:absolute;left:0;right:0;top:0;height:37.3pt;background:#0086bf"></div>
+<div style="position:absolute;left:21.3pt;top:15.1pt;font-family:'Gotham XNarrow',sans-serif;font-size:16pt;font-weight:700;line-height:1;letter-spacing:.03em;color:#fff">{{ coverDate }}</div>
+<div style="position:absolute;right:22.7pt;top:17.7pt;font-size:9pt;line-height:1;letter-spacing:.01em;text-align:right;color:#fff">VICTORIAN THOROUGHBRED RACING INDUSTRY OFFICIAL PUBLICATION</div>
+<img src="assets/cover-masthead.svg" alt="Inside Racing" style="position:absolute;left:22.68pt;top:63.92pt;width:549.92pt;height:80.64pt" />
+<div style="position:absolute;left:31.2pt;top:753.4pt;width:532.9pt;height:65.2pt;background:rgba(255,255,255,.9)"></div>
+<img src="assets/cover-inside-script.svg" alt="Inside" style="position:absolute;left:48.64pt;top:767.32pt;width:42.37pt;height:15.46pt" />
+<div style="position:absolute;left:205.4pt;top:782.4pt;width:4pt;height:27.7pt;background:#0086bf"></div>
+<div style="position:absolute;left:391.1pt;top:782.4pt;width:4pt;height:27.7pt;background:#0086bf"></div>
+<div style="position:absolute;left:47.3pt;top:791.3pt;font-family:'Gotham XNarrow',sans-serif;font-size:13pt;font-weight:700;line-height:1;letter-spacing:.04em;color:#2c2e35">ENTRY DEADLINES</div>
+<div style="position:absolute;left:237.1pt;top:791.3pt;font-family:'Gotham XNarrow',sans-serif;font-size:13pt;font-weight:700;line-height:1;letter-spacing:.04em;color:#2c2e35">PROGRAM CHART</div>
+<div style="position:absolute;left:423.8pt;top:791.3pt;font-family:'Gotham XNarrow',sans-serif;font-size:13pt;font-weight:700;line-height:1;letter-spacing:.04em;color:#2c2e35">RACE PROGRAMS</div>
+</section>
+
+<section class="page" data-screen-label="02 Contents" style="position:relative;font-family:'Gotham Narrow',sans-serif;color:#2c2e35;background:#fff;overflow:hidden">
+<div style="position:absolute;left:22.7pt;top:24.5pt;font-size:10pt;line-height:10pt;letter-spacing:-.005em">{{ contentsHeader }}</div>
+<div style="position:absolute;left:22.7pt;width:549.9pt;top:39pt;height:3pt;background:#9ecff0"></div>
+<img src="assets/contents-header.svg" alt="Contents" style="position:absolute;left:22.7pt;top:60.4pt;width:503.7pt;height:95.3pt" />
+
+<div style="position:absolute;left:22.7pt;width:549.9pt;top:198.4pt">
+<sc-for list="{{ contentsRows }}" as="r" hint-placeholder-count="11">
+<div style="position:relative;height:30pt">
+<div style="display:flex;align-items:baseline;gap:12pt;font-size:12pt;line-height:12pt">
+<div style="flex:1;letter-spacing:-.004em">{{ r.label }}</div>
+<div style="font-weight:700;letter-spacing:-.004em;white-space:nowrap">{{ r.pages }}</div>
+</div>
+<div style="position:absolute;left:0;right:0;top:14.8pt;border-top:0.25pt dotted #2c2e35"></div>
+</div>
+</sc-for>
+</div>
+
+<div style="position:absolute;left:23.7pt;right:22.7pt;top:527.5pt;font-size:6pt;line-height:8pt">{{ contentsNote }}</div>
+
+<div style="position:absolute;left:22.7pt;top:568.6pt;width:549.9pt;height:245.2pt;background:#151f45;overflow:hidden">
+<sc-if value="{{ adPanelHouse }}" hint-placeholder-val="{{ true }}"><img src="assets/ads/stableline.png" alt="Stableline — free confidential counselling, 1300 520 122" style="position:absolute;left:0;top:0;width:549.9pt;height:auto;display:block" /></sc-if>
+<sc-if value="{{ adPanelBooked }}"><img src="{{ adPanelArt }}" alt="" style="position:absolute;left:0;top:0;width:100%;height:100%;object-fit:contain;display:block" /></sc-if>
+</div>
+</section>
+</sc-for>
+
+<sc-for list="{{ dlPages }}" as="pg" hint-placeholder-count="0">
+<section class="page" data-screen-label="Entry Deadlines" style="position:relative;font-family:'Gotham Narrow',sans-serif;background:#fff;padding:0">
+<div style="position:absolute;left:23pt;top:18pt;font-size:10pt;font-weight:400;letter-spacing:.05em;color:#2c2e35">{{ pg.eyebrow }}</div>
+<div style="position:absolute;left:23pt;right:23pt;top:37pt;height:2.25pt;background:#9ecff0"></div>
+<sc-if value="{{ pg.first }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;left:21pt;top:48pt;width:540pt;font-family:'Gotham XNarrow',sans-serif;font-size:24pt;font-weight:700;letter-spacing:-.015em;line-height:1.1;color:#2c2e35">Dates for entries, acceptances and riders</div>
+<div style="position:absolute;left:23pt;top:93.9pt;width:121.8pt;box-sizing:border-box;padding:6pt;border-radius:4pt;background:#ebf4f9">
+<div style="display:inline-block;background:#2c2e35;color:#fff;border-radius:4pt;padding:3.5pt 7pt;font-size:9pt;font-weight:700;letter-spacing:.02em;line-height:1">TRAINERS’ NOTE</div>
+<div style="font-size:8pt;line-height:9.2pt;color:#2c2e35;margin-top:7pt">All entries, acceptances, riders and scratchings are to be lodged with the Racing Australia Service Centre via <span style="font-style:italic">racingaustralia.horse</span> or phone: 1800 138 704.</div>
+<div style="font-size:8pt;line-height:9.2pt;color:#2c2e35;margin-top:7pt">Any information listed regarding nominations and acceptances for interstate races is provided as a guide only. It is compiled from information appearing elsewhere in <span style="font-style:italic">Inside Racing</span>.</div>
+<div style="font-size:8pt;line-height:9.2pt;color:#2c2e35;margin-top:7pt">Riders for all picnic meetings are to be declared no later than 12 noon on the day of acceptances.</div>
+</div>
+<div style="position:absolute;left:158.5pt;top:95pt;height:714pt;border-left:0.75pt dotted #9a9c9f"></div>
+<div style="position:absolute;left:299.5pt;top:95pt;height:714pt;border-left:0.75pt dotted #9a9c9f"></div>
+<div style="position:absolute;left:440.5pt;top:95pt;height:714pt;border-left:0.75pt dotted #9a9c9f"></div>
+</sc-if>
+<sc-if value="{{ pg.cont }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;left:158.5pt;top:61.4pt;height:748pt;border-left:0.75pt dotted #9a9c9f"></div>
+<div style="position:absolute;left:299.5pt;top:61.4pt;height:748pt;border-left:0.75pt dotted #9a9c9f"></div>
+<div style="position:absolute;left:440.5pt;top:61.4pt;height:748pt;border-left:0.75pt dotted #9a9c9f"></div>
+</sc-if>
+<div style="position:absolute;left:23pt;right:19pt;top:61.4pt;display:flex;gap:11pt;align-items:flex-start">
+<sc-for list="{{ pg.cols }}" as="col" hint-placeholder-count="4">
+<div style="width:130pt;flex:0 0 130pt">
+<sc-if value="{{ col.pad }}" hint-placeholder-val="{{ false }}"><div style="height:33.6pt"></div></sc-if>
+<sc-if value="{{ col.padNote }}" hint-placeholder-val="{{ false }}"><div style="height:{{ dlNoteGap }}"></div></sc-if>
+<sc-for list="{{ col.blocks }}" as="b" hint-placeholder-count="3">
+<div style="margin-bottom:11pt">
+<sc-for list="{{ b.dayRow }}" as="d" hint-placeholder-count="1">
+<div style="border-top:1pt solid #2c2e35"></div>
+<div style="font-size:8.5pt;font-weight:700;line-height:10.5pt;padding-top:1.5pt;color:#2c9cd7">{{ d.text }}</div>
+<div style="border-top:0.75pt dotted #2c2e35;margin-top:1.5pt;margin-bottom:1.5pt"></div>
+</sc-for>
+<sc-for list="{{ b.groups }}" as="g" hint-placeholder-count="3">
+<sc-for list="{{ g.headRow }}" as="hd" hint-placeholder-count="1">
+<div style="font-size:7pt;font-weight:700;line-height:8pt;margin-top:2pt;color:#2c2e35">{{ hd.text }}</div>
+</sc-for>
+<sc-for list="{{ g.items }}" as="it" hint-placeholder-count="2">
+<div style="font-size:7pt;font-weight:400;line-height:8pt;color:#2c2e35">{{ it }}</div>
+</sc-for>
+</sc-for>
+</div>
+</sc-for>
+</div>
+</sc-for>
+</div>
+<div style="position:absolute;left:12pt;bottom:14pt;font-size:7pt;color:#2c2e35">{{ footer }}</div>
+<div style="position:absolute;right:19pt;bottom:14pt;font-size:7pt;color:#2c2e35">{{ pg.no }}</div>
+</section>
+</sc-for>
+
+<sc-for list="{{ chPages }}" as="pg" hint-placeholder-count="0">
+<section class="page" data-screen-label="Programs Summary Chart" style="position:relative;font-family:'Gotham Narrow',sans-serif;background:#fff;padding:0;overflow:hidden">
+<div style="position:absolute;right:13pt;top:16pt;display:flex;align-items:center;gap:6pt;font-size:9pt;font-weight:700;color:#2c2e35">
+<span>KEY</span>
+<span style="display:flex;align-items:center;gap:3pt"><span style="width:7pt;height:7pt;background:#ff0040;display:inline-block"></span>Metropolitan</span>
+<span style="display:flex;align-items:center;gap:3pt"><span style="width:7pt;height:7pt;background:#00b0f0;display:inline-block"></span>Country</span>
+</div>
+<div style="position:absolute;left:13pt;right:13pt;top:37pt;height:2.25pt;background:#9ecff0"></div>
+<sc-for list="{{ pg.titleRow }}" as="t" hint-placeholder-count="0">
+<div style="position:absolute;left:20.7pt;top:47pt;width:560pt;white-space:nowrap;font-family:'Gotham XNarrow',sans-serif;font-size:21pt;font-weight:700;letter-spacing:-.03em;line-height:1.1;color:#2c2e35">{{ t.text }}</div>
+</sc-for>
+<div style="position:absolute;left:13pt;top:57.9pt;width:569.4pt">
+<sc-for list="{{ pg.titleRow }}" as="t" hint-placeholder-count="0"><div style="height:31.2pt"></div></sc-for>
+<div style="display:flex;border-top:0.25pt solid #2c2e35;border-left:0.25pt solid #2c2e35;background:#f7f7f8">
+<div style="width:67.6pt;flex:0 0 67.6pt;box-sizing:border-box;padding:3.5pt 2pt;border-right:0.25pt solid #2c2e35;border-bottom:0.25pt solid #2c2e35;font-size:7pt;font-weight:700;line-height:7pt;letter-spacing:.01em;color:#2c2e35;white-space:pre-line">MEETING
+DETAILS</div>
+<sc-for list="{{ chHeaderRest }}" as="h" hint-placeholder-count="13">
+<div style="width:38.6pt;flex:0 0 38.6pt;box-sizing:border-box;padding:3.5pt 2pt;border-right:0.25pt solid #2c2e35;border-bottom:0.25pt solid #2c2e35;font-size:7pt;font-weight:700;line-height:7pt;letter-spacing:.01em;color:#2c2e35;white-space:pre-line">{{ h.text }}</div>
+</sc-for>
+</div>
+<div style="position:relative">
+<div style="position:absolute;top:0;bottom:0;left:67.6pt;width:38.6pt;background:#edf6fb"></div>
+<div style="position:absolute;top:0;bottom:0;left:144.8pt;width:38.6pt;background:#edf6fb"></div>
+<div style="position:absolute;top:0;bottom:0;left:222pt;width:38.6pt;background:#edf6fb"></div>
+<div style="position:absolute;top:0;bottom:0;left:299.2pt;width:38.6pt;background:#edf6fb"></div>
+<div style="position:absolute;top:0;bottom:0;left:376.4pt;width:38.6pt;background:#edf6fb"></div>
+<div style="position:absolute;top:0;bottom:0;left:453.6pt;width:38.6pt;background:#edf6fb"></div>
+<div style="position:absolute;top:0;bottom:0;left:530.8pt;width:38.6pt;background:#edf6fb"></div>
+<sc-for list="{{ pg.rows }}" as="row" hint-placeholder-count="6">
+<div data-row="1" lang="en" style="display:flex;position:relative;border-left:0.25pt solid #2c2e35">
+<div style="position:relative;width:67.6pt;flex:0 0 67.6pt;box-sizing:border-box;padding:3.5pt 2pt;border-right:0.25pt solid #2c2e35;border-bottom:0.25pt solid #2c2e35;font-size:6.5pt;line-height:6.3pt;color:#2c2e35;white-space:pre-wrap;hyphens:auto;overflow-wrap:break-word">
+<sc-for list="{{ row.a }}" as="r" hint-placeholder-count="4">
+<sc-for list="{{ r.dt }}" as="v" hint-placeholder-count="0"><span style="font-size:8pt;font-weight:700;line-height:9pt;letter-spacing:-.03em">{{ v.t }}</span></sc-for>
+<sc-for list="{{ r.vm }}" as="v" hint-placeholder-count="0"><span style="font-size:8pt;font-weight:700;line-height:9pt;letter-spacing:-.03em;color:#ff0040">{{ v.t }}</span></sc-for>
+<sc-for list="{{ r.vc }}" as="v" hint-placeholder-count="0"><span style="font-size:8pt;font-weight:700;line-height:9pt;letter-spacing:-.03em;color:#00b0f0">{{ v.t }}</span></sc-for>
+<sc-for list="{{ r.n }}" as="v" hint-placeholder-count="0"><span>{{ v.t }}</span></sc-for>
+<sc-for list="{{ r.b }}" as="v" hint-placeholder-count="0"><span style="font-weight:700">{{ v.t }}</span></sc-for>
+<sc-for list="{{ r.rd }}" as="v" hint-placeholder-count="0"><span style="font-weight:700;color:#ff0040">{{ v.t }}</span></sc-for>
+<sc-for list="{{ r.sep }}" as="v" hint-placeholder-count="0"><span style="display:inline-block;max-width:100%;overflow:hidden;white-space:pre;vertical-align:top">{{ v.t }}</span></sc-for>
+</sc-for>
+</div>
+<sc-for list="{{ row.rest }}" as="c" hint-placeholder-count="13">
+<div style="position:relative;width:38.6pt;flex:0 0 38.6pt;box-sizing:border-box;padding:3.5pt 2pt;border-right:0.25pt solid #2c2e35;border-bottom:0.25pt solid #2c2e35;font-size:6.5pt;line-height:6.3pt;color:#2c2e35;white-space:pre-wrap;hyphens:auto;overflow-wrap:break-word">
+<sc-for list="{{ c.runs }}" as="r" hint-placeholder-count="3">
+<sc-for list="{{ r.n }}" as="v" hint-placeholder-count="1"><span>{{ v.t }}</span></sc-for>
+<sc-for list="{{ r.b }}" as="v" hint-placeholder-count="0"><span style="font-weight:700">{{ v.t }}</span></sc-for>
+<sc-for list="{{ r.rd }}" as="v" hint-placeholder-count="0"><span style="font-weight:700;color:#ff0040">{{ v.t }}</span></sc-for>
+<sc-for list="{{ r.sep }}" as="v" hint-placeholder-count="0"><span style="display:inline-block;max-width:100%;overflow:hidden;white-space:pre;vertical-align:top">{{ v.t }}</span></sc-for>
+</sc-for>
+</div>
+</sc-for>
+</div>
+</sc-for>
+</div>
+</div>
+<div style="position:absolute;left:12pt;bottom:14pt;font-size:7pt;color:#2c2e35">{{ footer }}</div>
+<div style="position:absolute;right:19pt;bottom:14pt;font-size:7pt;color:#2c2e35">{{ pg.no }}</div>
+</section>
+</sc-for>
+
+<sc-for list="{{ rpKeyPages }}" as="kp" hint-placeholder-count="1">
+<section class="page" data-screen-label="Race Programs" style="position:relative;font-family:'Gotham Narrow',sans-serif;background:#fff;padding:0;overflow:hidden">
+<div style="position:absolute;left:23pt;top:18pt;font-size:10pt;font-weight:400;letter-spacing:.05em;color:#2c2e35">{{ rpEyebrow }}</div>
+<div style="position:absolute;left:23pt;right:13pt;top:37pt;height:2.25pt;background:#9ecff0"></div>
+<div style="position:absolute;left:23.2pt;top:47pt;font-family:'Gotham XNarrow',sans-serif;font-size:24pt;font-weight:700;letter-spacing:-.015em;line-height:1.1;color:#2c2e35">Race Programs</div>
+<div style="position:absolute;right:13pt;top:53pt;display:flex;align-items:center;gap:6pt;font-size:8.6pt;font-weight:700;color:#2c2e35">
+<span style="background:#2c2e35;color:#fff;border-radius:3pt;padding:2pt 5pt;line-height:1">KEY</span>
+<span style="display:flex;align-items:center;gap:3pt"><span style="width:7pt;height:7pt;background:#ff2f1a;display:inline-block"></span>Metropolitan</span>
+<span style="display:flex;align-items:center;gap:3pt"><span style="width:7pt;height:7pt;background:#2c9cd7;display:inline-block"></span>Country</span>
+</div>
+<div style="position:absolute;left:23.2pt;top:91.2pt;width:124.8pt;bottom:30pt;background:#ebf4f9;box-sizing:border-box;padding:8pt 7.5pt"><div style="height:2.5pt;border-radius:1.25pt;background:#2c2e35;margin:0 0 4pt"></div><div style="font-size:8.6pt;font-weight:700;line-height:10.2pt;color:#2c9cd7;margin:0 0 3pt">Welfare contribution from total prizemoney</div><div style="border-top:0.75pt dotted #6f7175;margin:0 0 4pt"></div><div style="font-size:7.4pt;font-weight:700;line-height:8.9pt;color:#2c2e35">As of 1 August 2025, 3.5% of all prizemoney payments will be deducted as an industry contribution to horse and participant welfare.</div><div style="height:9pt"></div><div style="height:2.5pt;border-radius:1.25pt;background:#2c2e35;margin:0 0 4pt"></div><div style="font-size:8.6pt;font-weight:700;line-height:10.2pt;color:#2c9cd7;margin:0 0 3pt">Nomination fees</div><div style="border-top:0.75pt dotted #6f7175;margin:0 0 4pt"></div><div style="font-size:7.4pt;font-weight:400;line-height:8.9pt;color:#2c2e35">Unless stated otherwise in the conditions of the race, all nomination fees are as below.</div><div style="height:9pt"></div><div style="height:2.5pt;border-radius:1.25pt;background:#2c2e35;margin:0 0 4pt"></div><div style="font-size:8.6pt;font-weight:700;line-height:10.2pt;color:#2c9cd7;margin:0 0 3pt">Scratching Fee on all races excluding Group and Listed and Picnic races</div><div style="border-top:0.75pt dotted #6f7175;margin:0 0 4pt"></div><div style="font-size:7.4pt;font-weight:700;line-height:8.9pt;color:#2c2e35">Nomination: Free</div><div style="font-size:7.4pt;font-weight:700;line-height:8.9pt;color:#2c2e35">Scratching fee:</div><div style="display:flex;gap:3pt;font-size:7.4pt;font-weight:400;line-height:8.9pt;color:#2c2e35"><span>•</span><span>Scratching with a rider declared - $274.25 (ex GST)</span></div><div style="display:flex;gap:3pt;font-size:7.4pt;font-weight:400;line-height:8.9pt;color:#2c2e35"><span>•</span><span>Scratching without a rider declared - $100 (ex GST)</span></div><div style="display:flex;gap:3pt;font-size:7.4pt;font-weight:400;line-height:8.9pt;color:#2c2e35"><span>•</span><span>Scratching with a veterinary certificate - $120 (ex GST)</span></div><div style="display:flex;gap:3pt;font-size:7.4pt;font-weight:400;line-height:8.9pt;color:#2c2e35"><span>•</span><span>Scratching with a veterinary certificate &amp; 30-day stand down – Free</span></div><div style="height:9pt"></div><div style="height:2.5pt;border-radius:1.25pt;background:#2c2e35;margin:0 0 4pt"></div><div style="font-size:8.6pt;font-weight:700;line-height:10.2pt;color:#2c9cd7;margin:0 0 3pt">Scratching fee on picnic races</div><div style="border-top:0.75pt dotted #6f7175;margin:0 0 4pt"></div><div style="font-size:7.4pt;font-weight:700;line-height:8.9pt;color:#2c2e35">Scratching fee:</div><div style="font-size:7.4pt;font-weight:400;line-height:8.9pt;color:#2c2e35">$10 (ex GST)</div><div style="height:9pt"></div><div style="height:2.5pt;border-radius:1.25pt;background:#2c2e35;margin:0 0 4pt"></div><div style="font-size:8.6pt;font-weight:700;line-height:10.2pt;color:#2c9cd7;margin:0 0 3pt">Group and Listed races</div><div style="border-top:0.75pt dotted #6f7175;margin:0 0 4pt"></div><div style="font-size:7.4pt;font-weight:700;line-height:8.9pt;color:#2c2e35">Nomination: $110 Listed</div><div style="font-size:7.4pt;font-weight:700;line-height:8.9pt;color:#2c2e35">Nomination: $165 Group Three</div><div style="font-size:7.4pt;font-weight:700;line-height:8.9pt;color:#2c2e35">Nomination: $220 Group Two</div><div style="font-size:7.4pt;font-weight:700;line-height:8.9pt;color:#2c2e35">Nomination: $330 Group One</div><div style="font-size:7.4pt;font-weight:400;line-height:8.9pt;color:#2c2e35">Acceptance or scratching fee: 0.5% (excluding GST) of the prizemoney or as advertised in the race conditions. All group Handicap and group SW&amp;P Races in which horses older than three may run. All Group 2 &amp; 3 WFA Races: 0.75% (ex GST).</div><div style="font-size:7.4pt;font-weight:700;line-height:8.9pt;color:#2c2e35">All Group 1 WFA/SWP Races: 1% (ex GST)</div><div style="font-size:7.4pt;font-weight:700;line-height:8.9pt;color:#2c2e35">Scratching fee on veterinary advice FREE</div><div style="font-size:7.4pt;font-weight:400;line-height:8.9pt;color:#2c2e35">(Subject to a veterinary certificate supplied no later than 5pm on the second business day following the day of the running of the race from which the horse was withdrawn. A veterinary clearance will need to be forwarded to Stewards before the horse can compete in another race).</div><div style="font-size:6pt;font-style:italic;line-height:7.5pt;color:#2c2e35;margin-top:3pt">*All fees include GST</div><div style="height:9pt"></div><div style="height:2.5pt;border-radius:1.25pt;background:#2c2e35;margin:0 0 4pt"></div><div style="font-size:8.6pt;font-weight:700;line-height:10.2pt;color:#2c9cd7;margin:0 0 3pt">Set Weights and Penalty Races</div><div style="border-top:0.75pt dotted #6f7175;margin:0 0 4pt"></div><div style="font-size:7.4pt;font-weight:700;line-height:8.9pt;color:#2c2e35">Penalties based on wins in Internationally Recognised Group and Listed races.</div></div>
+<div style="position:absolute;left:155.5pt;top:91.2pt;bottom:30pt;border-left:0.75pt dotted #9a9c9f"></div>
+<div style="position:absolute;left:163.4pt;top:88pt;width:419pt">
+<div style="font-family:'Gotham XNarrow',sans-serif;font-size:12.5pt;font-weight:700;line-height:14pt;color:#2c2e35;margin:0 0 2.5pt">Flat Races Prizemoney Breakdowns</div><div style="height:1.5pt;background:#2c2e35;margin:0 0 5pt"></div>
+<div style="display:flex;gap:9pt;margin-bottom:8pt">
+<div style="width:205pt;flex:0 0 205pt"><div style="font-size:7.7pt;line-height:9pt;color:#2c2e35;margin-bottom:2pt"><span style="font-weight:700">Of $5,000. (Picnic)</span> <span style="font-weight:400">1st $2,300, 2nd $850, 3rd $625, 4th $425, 5th to 8th $200.</span></div><div style="font-size:7.7pt;line-height:9pt;color:#2c2e35;margin-bottom:2pt"><span style="font-weight:700">Of $10,000. (Picnic Cup)</span> <span style="font-weight:400">1st $4,600, 2nd $1,700, 3rd $1,250, 4th $850, 5th to 8th $400.</span></div><div style="font-size:7.7pt;line-height:9pt;color:#2c2e35;margin-bottom:2pt"><span style="font-weight:700">Of $20,000.</span> <span style="font-weight:400">1st $11,000, 2nd $3,400, 3rd $1,600, 4th $900, 5th $600, 6th to 10th $500.</span></div><div style="font-size:7.7pt;line-height:9pt;color:#2c2e35;margin-bottom:2pt"><span style="font-weight:700">Of $22,000.</span> <span style="font-weight:400">1st $12,100, 2nd $3,740, 3rd $1,760, 4th $990, 5th $660, 6th to 10th $550.</span></div><div style="font-size:7.7pt;line-height:9pt;color:#2c2e35;margin-bottom:2pt"><span style="font-weight:700">Of $27,000.</span> <span style="font-weight:400">1st $14,850, 2nd $4,590, 3rd $2,160, 4th $1,215, 5th $810, 6th to 10th $675.</span></div><div style="font-size:7.7pt;line-height:9pt;color:#2c2e35;margin-bottom:2pt"><span style="font-weight:700">Of $30,000.</span> <span style="font-weight:400">1st $16,500, 2nd $5,400, 3rd $2,700, 4th $1,500, 5th $900, 6th to 10th $600.</span></div><div style="font-size:7.7pt;line-height:9pt;color:#2c2e35;margin-bottom:2pt"><span style="font-weight:700">Of $32,000.</span> <span style="font-weight:400">1st $17,600, 2nd $5,760, 3rd $2,880, 4th $1,600, 5th $960, 6th to 10th $640.</span></div><div style="font-size:7.7pt;line-height:9pt;color:#2c2e35;margin-bottom:2pt"><span style="font-weight:700">Of $35,000.</span> <span style="font-weight:400">1st $19,250, 2nd $6,300, 3rd $3,150, 4th $1,750, 5th $1,050, 6th to 10th $700.</span></div><div style="font-size:7.7pt;line-height:9pt;color:#2c2e35;margin-bottom:2pt"><span style="font-weight:700">Of $40,000.</span> <span style="font-weight:400">1st $22,000, 2nd $7,200, 3rd $3,600, 4th $2,000, 5th $1,200, 6th to 10th $800.</span></div><div style="font-size:7.7pt;line-height:9pt;color:#2c2e35;margin-bottom:2pt"><span style="font-weight:700">Of $42,500.</span> <span style="font-weight:400">1st $23,375, 2nd $7,650, 3rd $3,825, 4th $2,125, 5th $1,275, 6th to 10th $850.</span></div></div>
+<div style="width:205pt;flex:0 0 205pt"><div style="font-size:7.7pt;line-height:9pt;color:#2c2e35;margin-bottom:2pt"><span style="font-weight:700">Of $45,000.</span> <span style="font-weight:400">1st $24,750, 2nd $8,100, 3rd $4,050, 4th $2,250, 5th $1,350, 6th to 10th $900.</span></div><div style="font-size:7.7pt;line-height:9pt;color:#2c2e35;margin-bottom:2pt"><span style="font-weight:700">Of $50,000.</span> <span style="font-weight:400">1st $27,500, 2nd $9,000, 3rd $4,500, 4th $2,500, 5th $1,500, 6th to 10th $1,000.</span></div><div style="font-size:7.7pt;line-height:9pt;color:#2c2e35;margin-bottom:2pt"><span style="font-weight:700">Of $55,000.</span> <span style="font-weight:400">1st $30,250, 2nd $9,900, 3rd $4,950, 4th $2,750, 5th $1,650, 6th to 10th $1,100.</span></div><div style="font-size:7.7pt;line-height:9pt;color:#2c2e35;margin-bottom:2pt"><span style="font-weight:700">Of $60,000.</span> <span style="font-weight:400">1st $33,000, 2nd $10,800, 3rd $5,400, 4th $3,000, 5th $1,800, 6th to 10th $1,200.</span></div><div style="font-size:7.7pt;line-height:9pt;color:#2c2e35;margin-bottom:2pt"><span style="font-weight:700">Of $65,000.</span> <span style="font-weight:400">1st $35,750, 2nd $11,700, 3rd $5,850, 4th $3,250, 5th $1,950, 6th to 10th $1,300</span></div><div style="font-size:7.7pt;line-height:9pt;color:#2c2e35;margin-bottom:2pt"><span style="font-weight:700">Of $75,000.</span> <span style="font-weight:400">1st $41,250, 2nd $13,500, 3rd $6,750, 4th $3,750, 5th $2,250, 6th to 10th $1,500.</span></div><div style="font-size:7.7pt;line-height:9pt;color:#2c2e35;margin-bottom:2pt"><span style="font-weight:700">Of $80,000.</span> <span style="font-weight:400">1st $44,000, 2nd $14,400, 3rd $7,200, 4th $4,000, 5th $2,400, 6th to 10th $1,600.</span></div><div style="font-size:7.7pt;line-height:9pt;color:#2c2e35;margin-bottom:2pt"><span style="font-weight:700">Of $100,000</span> <span style="font-weight:400">. 1st $55,000, 2nd $18,000, 3rd $9,000, 4th $5,000, 5th, $3,000, 6th-10th $2,000.</span></div><div style="font-size:7.7pt;line-height:9pt;color:#2c2e35;margin-bottom:2pt"><span style="font-weight:700">Of $130,000.</span> <span style="font-weight:400">1st $71,500, 2nd $23,400, 3rd $11,700, 4th $6,500, 5th $3,900, 6th to 10th $2,600</span></div><div style="font-size:7.7pt;line-height:9pt;color:#2c2e35;margin-bottom:2pt"><span style="font-weight:700">Of $150,000.</span> <span style="font-weight:400">1st $82,500, 2nd $27,000, 3rd $13,500, 4th $7,500, 5th $4,500, 6th to 10th $3,000.</span></div></div>
+</div>
+<div style="font-family:'Gotham XNarrow',sans-serif;font-size:12.5pt;font-weight:700;line-height:14pt;color:#2c2e35;margin:0 0 2.5pt">Handicapping Weights Scale</div><div style="height:1.5pt;background:#2c2e35;margin:0 0 5pt"></div>
+<div style="border-top:0.6pt solid #2c2e35"><div style="display:flex;border-bottom:0.6pt solid #2c2e35"><div style="width:70pt;flex:0 0 70pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:700;color:#2c2e35">Class</div><div style="width:68pt;flex:0 0 68pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:700;color:#2c2e35;text-align:center">Handicap Minimum Topweight</div><div style="width:72pt;flex:0 0 72pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:700;color:#2c2e35;text-align:center">Acceptance Minimum Topweight</div><div style="width:64pt;flex:0 0 64pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:700;color:#2c2e35;text-align:center">Handicap Minimum</div><div style="width:72pt;flex:0 0 72pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:700;color:#2c2e35;text-align:center">Handicap Spread</div><div style="width:73pt;flex:0 0 73pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:700;color:#2c2e35;text-align:center">Acceptance Spread</div></div><div style="display:flex;border-bottom:0.5pt solid #c9cacc"><div style="width:70pt;flex:0 0 70pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35">Cups</div><div style="width:68pt;flex:0 0 68pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">59</div><div style="width:72pt;flex:0 0 72pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">57</div><div style="width:64pt;flex:0 0 64pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">51</div><div style="width:72pt;flex:0 0 72pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">8kg</div><div style="width:73pt;flex:0 0 73pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">n/a</div></div><div style="display:flex;border-bottom:0.5pt solid #c9cacc"><div style="width:70pt;flex:0 0 70pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35">G1</div><div style="width:68pt;flex:0 0 68pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">59</div><div style="width:72pt;flex:0 0 72pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">57</div><div style="width:64pt;flex:0 0 64pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">52</div><div style="width:72pt;flex:0 0 72pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">7kg</div><div style="width:73pt;flex:0 0 73pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">5kg</div></div><div style="display:flex;border-bottom:0.5pt solid #c9cacc"><div style="width:70pt;flex:0 0 70pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35">G2</div><div style="width:68pt;flex:0 0 68pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">59</div><div style="width:72pt;flex:0 0 72pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">58</div><div style="width:64pt;flex:0 0 64pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">53</div><div style="width:72pt;flex:0 0 72pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">6kg</div><div style="width:73pt;flex:0 0 73pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">5kg</div></div><div style="display:flex;border-bottom:0.5pt solid #c9cacc"><div style="width:70pt;flex:0 0 70pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35">G3</div><div style="width:68pt;flex:0 0 68pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">60</div><div style="width:72pt;flex:0 0 72pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">59</div><div style="width:64pt;flex:0 0 64pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">54</div><div style="width:72pt;flex:0 0 72pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">6kg</div><div style="width:73pt;flex:0 0 73pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">5kg</div></div><div style="display:flex;border-bottom:0.5pt solid #c9cacc"><div style="width:70pt;flex:0 0 70pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35">LR to BM52</div><div style="width:68pt;flex:0 0 68pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">60</div><div style="width:72pt;flex:0 0 72pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">59</div><div style="width:64pt;flex:0 0 64pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">54</div><div style="width:72pt;flex:0 0 72pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">6kg</div><div style="width:73pt;flex:0 0 73pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">5kg</div></div><div style="display:flex;border-bottom:0.5pt solid #c9cacc"><div style="width:70pt;flex:0 0 70pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35">2yos</div><div style="width:68pt;flex:0 0 68pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">59</div><div style="width:72pt;flex:0 0 72pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">59</div><div style="width:64pt;flex:0 0 64pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">54</div><div style="width:72pt;flex:0 0 72pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">5kg</div><div style="width:73pt;flex:0 0 73pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">5kg</div></div></div>
+<div style="font-size:7pt;font-style:italic;line-height:8.5pt;color:#2c2e35;margin:3pt 0 0">*Night &amp; Non-TAB meeting minimum weight remains 55kg with a 4kg acceptances spread</div>
+<div style="height:7pt"></div>
+<div style="font-family:'Gotham XNarrow',sans-serif;font-size:12.5pt;font-weight:700;line-height:14pt;color:#2c2e35;margin:0 0 2.5pt">Allowances – 2YO &amp; 3YO</div><div style="height:1.5pt;background:#2c2e35;margin:0 0 5pt"></div>
+<div style="border-top:0.6pt solid #2c2e35"><div style="display:flex;border-bottom:0.6pt solid #2c2e35"><div style="width:88pt;flex:0 0 88pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:700;color:#2c2e35">Distance</div><div style="width:68pt;flex:0 0 68pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:700;color:#2c2e35;text-align:center">Aug-Oct</div><div style="width:68pt;flex:0 0 68pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:700;color:#2c2e35;text-align:center">Nov-Jan</div><div style="width:68pt;flex:0 0 68pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:700;color:#2c2e35;text-align:center">Feb-Apr</div><div style="width:72pt;flex:0 0 72pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:700;color:#2c2e35;text-align:center">May-Jun</div><div style="width:55pt;flex:0 0 55pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:700;color:#2c2e35;text-align:center">July</div></div><div style="border-bottom:0.5pt solid #c9cacc;padding:1.6pt 3pt;font-size:7.7pt;line-height:9pt;font-weight:700;color:#2c2e35">Metropolitan 3yo Allowances (kg) for Open Age BM70 - BM84 Races</div><div style="display:flex;border-bottom:0.5pt solid #c9cacc"><div style="width:88pt;flex:0 0 88pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35">to 1400m</div><div style="width:68pt;flex:0 0 68pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">3</div><div style="width:68pt;flex:0 0 68pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">2</div><div style="width:68pt;flex:0 0 68pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">1</div><div style="width:72pt;flex:0 0 72pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">0.5</div><div style="width:55pt;flex:0 0 55pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">0</div></div><div style="display:flex;border-bottom:0.5pt solid #c9cacc"><div style="width:88pt;flex:0 0 88pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35">1401-1600m</div><div style="width:68pt;flex:0 0 68pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">3.5</div><div style="width:68pt;flex:0 0 68pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">2.5</div><div style="width:68pt;flex:0 0 68pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">1.5</div><div style="width:72pt;flex:0 0 72pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">0.5</div><div style="width:55pt;flex:0 0 55pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">0</div></div><div style="display:flex;border-bottom:0.5pt solid #c9cacc"><div style="width:88pt;flex:0 0 88pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35">1601-2000m</div><div style="width:68pt;flex:0 0 68pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">4</div><div style="width:68pt;flex:0 0 68pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">3</div><div style="width:68pt;flex:0 0 68pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">2</div><div style="width:72pt;flex:0 0 72pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">1</div><div style="width:55pt;flex:0 0 55pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">0</div></div><div style="display:flex;border-bottom:0.5pt solid #c9cacc"><div style="width:88pt;flex:0 0 88pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35">2001m+</div><div style="width:68pt;flex:0 0 68pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">4.5</div><div style="width:68pt;flex:0 0 68pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">3.5</div><div style="width:68pt;flex:0 0 68pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">2.5</div><div style="width:72pt;flex:0 0 72pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">1.5</div><div style="width:55pt;flex:0 0 55pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">0.5</div></div></div>
+<div style="font-size:7pt;font-style:italic;line-height:8.5pt;color:#2c2e35;margin:3pt 0 0">In higher class Metro races, further allowance is subject to Handicapper discretion</div>
+<div style="height:5pt"></div>
+<div style="border-top:0.6pt solid #2c2e35"><div style="display:flex;border-bottom:0.6pt solid #2c2e35"><div style="width:88pt;flex:0 0 88pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:700;color:#2c2e35">All Distances</div><div style="width:68pt;flex:0 0 68pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:700;color:#2c2e35;text-align:center">Aug-Oct</div><div style="width:68pt;flex:0 0 68pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:700;color:#2c2e35;text-align:center">Nov-Jan</div><div style="width:68pt;flex:0 0 68pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:700;color:#2c2e35;text-align:center">Feb-Apr</div><div style="width:127pt;flex:0 0 127pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:700;color:#2c2e35;text-align:center">May-July</div></div><div style="border-bottom:0.5pt solid #c9cacc;padding:1.6pt 3pt;font-size:7.7pt;line-height:9pt;font-weight:700;color:#2c2e35">Country 2yo/3yo Allowances (kg) for Open Age Country BM races</div><div style="display:flex;border-bottom:0.5pt solid #c9cacc"><div style="width:88pt;flex:0 0 88pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35">3yo</div><div style="width:68pt;flex:0 0 68pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">2.5</div><div style="width:68pt;flex:0 0 68pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">1.5</div><div style="width:68pt;flex:0 0 68pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">0.5</div><div style="width:127pt;flex:0 0 127pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">0</div></div><div style="display:flex;border-bottom:0.5pt solid #c9cacc"><div style="width:88pt;flex:0 0 88pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35">2yo</div><div style="width:68pt;flex:0 0 68pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">n/a</div><div style="width:68pt;flex:0 0 68pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">n/a</div><div style="width:68pt;flex:0 0 68pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">n/a</div><div style="width:127pt;flex:0 0 127pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">2.5kg</div></div></div>
+<div style="font-size:7pt;font-style:italic;line-height:8.5pt;color:#2c2e35;margin:3pt 0 0">In some Open class races, inc Country Cups and G&amp;L Races, allowance is subject to Handicapper discretion</div>
+<div style="height:7pt"></div>
+<div style="font-family:'Gotham XNarrow',sans-serif;font-size:12.5pt;font-weight:700;line-height:14pt;color:#2c2e35;margin:0 0 2.5pt">Minimum ratings/metro race meetings</div><div style="height:1.5pt;background:#2c2e35;margin:0 0 5pt"></div>
+<div style="font-size:7.7pt;line-height:9pt;color:#2c2e35;margin-bottom:4pt">These minimum ratings requirements apply to all Victorian Saturday metropolitan meetings, the Caulfield Cup Carnival, Melbourne Cup Carnival, and public holiday meetings which carry Saturday metropolitan-standard prizemoney, including the standalone Saturdays in country Victoria and Group &amp; Listed races for night meetings.</div>
+<div style="border-top:0.6pt solid #2c2e35"><div style="display:flex;border-bottom:0.6pt solid #2c2e35"><div style="width:143pt;flex:0 0 143pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:700;color:#2c2e35">RACE TYPE</div><div style="width:145pt;flex:0 0 145pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:700;color:#2c2e35;text-align:center">RESTRICTIONS (Open Sex Races)</div><div style="width:131pt;flex:0 0 131pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:700;color:#2c2e35;text-align:center">RESTRICTIONS (F&amp;M Races)</div></div><div style="display:flex;border-bottom:0.5pt solid #c9cacc"><div style="width:143pt;flex:0 0 143pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35">2YO &amp; 3YO Races</div><div style="width:145pt;flex:0 0 145pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">Minimum Rating of 50</div><div style="width:131pt;flex:0 0 131pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">Minimum Rating of 50</div></div><div style="display:flex;border-bottom:0.5pt solid #c9cacc"><div style="width:143pt;flex:0 0 143pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35">BM62-66/ C1/NMW</div><div style="width:145pt;flex:0 0 145pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">Minimum rating Of 50</div><div style="width:131pt;flex:0 0 131pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">Minimum Rating of 50</div></div><div style="display:flex;border-bottom:0.5pt solid #c9cacc"><div style="width:143pt;flex:0 0 143pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35">BM70 - BM80</div><div style="width:145pt;flex:0 0 145pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">Minimum rating Of 55</div><div style="width:131pt;flex:0 0 131pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">Minimum rating Of 55</div></div><div style="display:flex;border-bottom:0.5pt solid #c9cacc"><div style="width:143pt;flex:0 0 143pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35">BM84 - BM90</div><div style="width:145pt;flex:0 0 145pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">Minimum rating Of 60</div><div style="width:131pt;flex:0 0 131pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">Minimum rating Of 60</div></div><div style="display:flex;border-bottom:0.5pt solid #c9cacc"><div style="width:143pt;flex:0 0 143pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35">BM100, Open Hcp &amp; Listed</div><div style="width:145pt;flex:0 0 145pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">Minimum rating Of 65</div><div style="width:131pt;flex:0 0 131pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">Minimum rating Of 60</div></div><div style="display:flex;border-bottom:0.5pt solid #c9cacc"><div style="width:143pt;flex:0 0 143pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35">Group 1, 2 &amp; 3</div><div style="width:145pt;flex:0 0 145pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">Minimum rating Of 70</div><div style="width:131pt;flex:0 0 131pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">Minimum rating Of 65</div></div><div style="display:flex;border-bottom:0.5pt solid #c9cacc"><div style="width:143pt;flex:0 0 143pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35">VG &amp; Sales Restricted Races</div><div style="width:145pt;flex:0 0 145pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">Minimum rating Of 50</div><div style="width:131pt;flex:0 0 131pt;padding:1.6pt 3pt;box-sizing:border-box;font-size:7.7pt;line-height:9pt;font-weight:400;color:#2c2e35;text-align:center">Minimum rating Of 50</div></div></div>
+</div>
+<div style="position:absolute;left:12pt;bottom:14pt;font-size:7pt;color:#2c2e35">{{ footer }}</div>
+<div style="position:absolute;right:19pt;bottom:14pt;font-size:7pt;color:#2c2e35">{{ rpKeyNo }}</div>
+</section>
+</sc-for>
+
+<sc-for list="{{ rpPages }}" as="pg" hint-placeholder-count="1">
+<section class="page" data-screen-label="Race Programs" style="position:relative;font-family:'Gotham Narrow',sans-serif;background:#fff;padding:0;overflow:hidden">
+<div style="position:absolute;left:23pt;top:18pt;font-size:10pt;font-weight:400;letter-spacing:.05em;color:#2c2e35">RACE PROGRAMS</div>
+<div style="position:absolute;right:13pt;top:16pt;display:flex;align-items:center;gap:6pt;font-size:9pt;font-weight:700;color:#2c2e35">
+<span>KEY</span>
+<span style="display:flex;align-items:center;gap:3pt"><span style="width:7pt;height:7pt;background:#ff2f1a;display:inline-block"></span>Metropolitan</span>
+<span style="display:flex;align-items:center;gap:3pt"><span style="width:7pt;height:7pt;background:#2c9cd7;display:inline-block"></span>Country</span>
+</div>
+<div style="position:absolute;left:23pt;right:13pt;top:37pt;height:2.25pt;background:#9ecff0"></div>
+<div style="position:absolute;left:158.5pt;top:55.1pt;height:756.8pt;border-left:0.75pt dotted #9a9c9f"></div>
+<div style="position:absolute;left:299.5pt;top:55.1pt;height:756.8pt;border-left:0.75pt dotted #9a9c9f"></div>
+<div style="position:absolute;left:440.5pt;top:55.1pt;height:756.8pt;border-left:0.75pt dotted #9a9c9f"></div>
+<div style="position:absolute;left:23pt;right:19pt;top:55.1pt;display:flex;gap:11pt;align-items:flex-start">
+<sc-for list="{{ pg.cols }}" as="col" hint-placeholder-count="4">
+<div style="width:130pt;flex:0 0 130pt">
+<sc-for list="{{ col.atoms }}" as="a" hint-placeholder-count="6">
+<div data-atom="1">
+<sc-for list="{{ a.gap }}" as="g" hint-placeholder-count="0"><div style="height:13pt"></div></sc-for>
+<sc-for list="{{ a.hm }}" as="m" hint-placeholder-count="0">
+<div style="height:1.6pt;background:#ff2f1a;margin-bottom:2.2pt"></div>
+<div style="font-family:'Gotham XNarrow',sans-serif;font-size:9.3pt;font-weight:700;line-height:13pt;color:#ff2f1a">{{ m.venue }}</div>
+<div style="font-family:'Gotham XNarrow',sans-serif;font-size:8pt;font-weight:700;line-height:9pt;color:#ff2f1a">{{ m.date }}</div>
+</sc-for>
+<sc-for list="{{ a.hc }}" as="m" hint-placeholder-count="0">
+<div style="height:1.6pt;background:#2c9cd7;margin-bottom:2.2pt"></div>
+<div style="font-family:'Gotham XNarrow',sans-serif;font-size:9.3pt;font-weight:700;line-height:13pt;color:#2c9cd7">{{ m.venue }}</div>
+<div style="font-family:'Gotham XNarrow',sans-serif;font-size:8pt;font-weight:700;line-height:9pt;color:#2c9cd7">{{ m.date }}</div>
+</sc-for>
+<sc-for list="{{ a.bar }}" as="r" hint-placeholder-count="1">
+<div style="height:2pt"></div>
+<div style="display:flex;justify-content:space-between;gap:4pt;background:#d8d9da;padding:0 2pt;margin-bottom:2pt;font-size:6.5pt;font-weight:700;line-height:8.8pt;color:#2c2e35">
+<span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ r.cond }}</span>
+<span style="flex:0 0 auto;text-align:right">{{ r.dist }}</span>
+</div>
+</sc-for>
+<sc-for list="{{ a.title }}" as="r" hint-placeholder-count="1"><div style="font-size:7pt;font-weight:700;line-height:9pt;white-space:pre-wrap;color:#2c2e35">{{ r.t }}</div></sc-for>
+<sc-for list="{{ a.claim }}" as="r" hint-placeholder-count="0"><div style="font-size:7pt;font-weight:700;line-height:9pt;white-space:pre-wrap;color:#2c2e35">{{ r.t }}</div></sc-for>
+<sc-for list="{{ a.bonus }}" as="r" hint-placeholder-count="0"><div style="font-size:7pt;font-weight:700;line-height:9pt;white-space:pre-wrap;color:#2c2e35">{{ r.t }}</div></sc-for>
+<sc-for list="{{ a.prize }}" as="r" hint-placeholder-count="1"><div style="font-size:7pt;font-weight:400;line-height:9pt;white-space:pre-wrap;color:#2c2e35">{{ r.t }}</div></sc-for>
+<sc-for list="{{ a.fees }}" as="r" hint-placeholder-count="0"><div style="font-size:7pt;font-weight:400;line-height:9pt;white-space:pre-wrap;color:#2c2e35">{{ r.t }}</div></sc-for>
+<sc-for list="{{ a.penH }}" as="r" hint-placeholder-count="0"><div style="font-family:'Gotham XNarrow',sans-serif;font-size:6pt;font-weight:700;line-height:8pt;letter-spacing:.01em;color:#2c2e35">{{ r.t }}</div></sc-for>
+<sc-for list="{{ a.pen }}" as="r" hint-placeholder-count="0"><div style="font-family:'Gotham XNarrow',sans-serif;font-size:6.5pt;font-weight:400;line-height:8pt;white-space:pre-wrap;color:#2c2e35">{{ r.t }}</div></sc-for>
+<sc-for list="{{ a.balH }}" as="r" hint-placeholder-count="0"><div style="font-family:'Gotham XNarrow',sans-serif;font-size:6pt;font-weight:700;line-height:8pt;letter-spacing:.01em;color:#2c2e35">{{ r.t }}</div></sc-for>
+<sc-for list="{{ a.bal }}" as="r" hint-placeholder-count="0"><div style="font-family:'Gotham XNarrow',sans-serif;font-size:6.5pt;font-weight:400;line-height:8pt;white-space:pre-wrap;color:#2c2e35">{{ r.t }}</div></sc-for>
+<sc-for list="{{ a.other }}" as="r" hint-placeholder-count="0"><div style="font-family:'Gotham XNarrow',sans-serif;font-size:6.5pt;font-weight:400;line-height:8pt;white-space:pre-wrap;color:#2c2e35">{{ r.t }}</div></sc-for>
+<sc-for list="{{ a.nomH }}" as="r" hint-placeholder-count="0"><div style="font-family:'Gotham XNarrow',sans-serif;font-size:6.5pt;font-weight:700;line-height:8pt;color:#2c2e35">{{ r.t }}</div></sc-for>
+<sc-for list="{{ a.nom }}" as="r" hint-placeholder-count="0"><div style="font-family:'Gotham XNarrow',sans-serif;font-size:6.5pt;font-weight:400;line-height:8pt;white-space:pre-wrap;color:#2c2e35">{{ r.t }}</div></sc-for>
+<sc-for list="{{ a.accH }}" as="r" hint-placeholder-count="0"><div style="font-family:'Gotham XNarrow',sans-serif;font-size:6.5pt;font-weight:700;line-height:8pt;color:#2c2e35">{{ r.t }}</div></sc-for>
+<sc-for list="{{ a.acc }}" as="r" hint-placeholder-count="0"><div style="font-family:'Gotham XNarrow',sans-serif;font-size:6.5pt;font-weight:400;line-height:8pt;white-space:pre-wrap;color:#2c2e35">{{ r.t }}</div></sc-for>
+</div>
+</sc-for>
+</div>
+</sc-for>
+</div>
+<div style="position:absolute;left:12pt;bottom:14pt;font-size:7pt;color:#2c2e35">{{ footer }}</div>
+<div style="position:absolute;right:19pt;bottom:14pt;font-size:7pt;color:#2c2e35">{{ pg.no }}</div>
+</section>
+</sc-for>
+<sc-for list="{{ tailPages }}" as="tp" hint-placeholder-count="1">
+<section class="page" data-screen-label="Permits and Riders Agents" style="position:relative;font-family:'Gotham Narrow',sans-serif;color:#2c2e35;background:#fff;padding:0;overflow:hidden">
+<div style="position:absolute;left:22.7pt;top:24pt;font-family:'Gotham Narrow',sans-serif;font-size:10pt;font-weight:400;line-height:1;letter-spacing:.019em">PERMITS TO RIDE IN RACES &amp; ELIGIBLE TO RIDE IN TRIALS</div>
+<div style="position:absolute;left:22.7pt;top:37pt;width:549.9pt;height:3pt;background:#9ecff0"></div>
+<div style="position:absolute;left:22.7pt;top:47.6pt;font-family:'Gotham Narrow',sans-serif;font-size:15pt;font-weight:700;line-height:1;letter-spacing:-.005em">Permits to ride in races</div>
+
+<div style="position:absolute;left:24pt;top:68.1pt;width:547.3pt;font-size:5.4pt;line-height:6.5pt">
+<div style="display:flex;border-top:3pt solid #2c2e35;text-align:center">
+<div style="width:65.4pt;flex:0 0 65.4pt;padding:2.4pt 0 2.1pt 4pt;box-sizing:border-box;border-bottom:0.25pt solid #2c2e35;text-align:left">Apprentice</div>
+<div style="width:28.5pt;flex:0 0 28.5pt;padding:2.4pt 0 2.1pt 4pt;box-sizing:border-box;border-bottom:0.25pt solid #2c2e35;text-align:left">Wgt</div>
+<div style="width:21.2pt;flex:0 0 21.2pt;padding:2.4pt 0 2.1pt 4pt;box-sizing:border-box;border-bottom:0.25pt solid #2c2e35;text-align:left">Cat</div>
+<div style="width:54.4pt;flex:0 0 54.4pt;padding:2.4pt 0 2.1pt 4pt;box-sizing:border-box;border-bottom:0.25pt solid #2c2e35;text-align:left">Master</div>
+<div style="width:169pt;flex:0 0 169pt;padding:2.4pt 0 2.1pt;box-sizing:border-box;border-bottom:0.25pt solid #2c2e35">Contact</div>
+<div style="width:36.2pt;flex:0 0 36.2pt;padding:2.4pt 0 2.1pt;box-sizing:border-box;border-bottom:0.25pt solid #2c2e35">Exp date</div>
+<div style="width:73.9pt;flex:0 0 73.9pt;padding:2.4pt 0 2.1pt;box-sizing:border-box;border-bottom:0.25pt solid #2c2e35">Allowance kgs</div>
+<div style="width:98.7pt;flex:0 0 98.7pt;padding:2.4pt 0 2.1pt;box-sizing:border-box;border-bottom:0.25pt solid #2c2e35">WINS (As at {{ paWinsAsAt }})</div>
+</div>
+<div style="display:flex">
+<div style="width:169.5pt;flex:0 0 169.5pt"></div>
+<div style="width:58.7pt;flex:0 0 58.7pt;padding:3.7pt 0 2.1pt 4pt;box-sizing:border-box;border-left:0.25pt solid #2c2e35;border-bottom:0.25pt solid #2c2e35">Apprentice</div>
+<div style="width:56.5pt;flex:0 0 56.5pt;padding:3.7pt 0 2.1pt 4pt;box-sizing:border-box;border-left:0.25pt solid #2c2e35;border-bottom:0.25pt solid #2c2e35">Employee</div>
+<div style="width:53.8pt;flex:0 0 53.8pt;padding:3.7pt 0 2.1pt 4pt;box-sizing:border-box;border-left:0.25pt solid #2c2e35;border-bottom:0.25pt solid #2c2e35">Rider Agent</div>
+<div style="width:36.2pt;flex:0 0 36.2pt;padding:3.7pt 0 2.1pt 4pt;box-sizing:border-box;border-left:0.25pt solid #2c2e35;border-bottom:0.25pt solid #2c2e35"></div>
+<div style="width:24.6pt;flex:0 0 24.6pt;padding:3.7pt 0 2.1pt 4pt;box-sizing:border-box;border-left:0.25pt solid #2c2e35;border-bottom:0.25pt solid #2c2e35">Metro</div>
+<div style="width:24.7pt;flex:0 0 24.7pt;padding:3.7pt 0 2.1pt 4pt;box-sizing:border-box;border-left:0.25pt solid #2c2e35;border-bottom:0.25pt solid #2c2e35">Prov</div>
+<div style="width:24.6pt;flex:0 0 24.6pt;padding:3.7pt 0 2.1pt 4pt;box-sizing:border-box;border-left:0.25pt solid #2c2e35;border-bottom:0.25pt solid #2c2e35">Other</div>
+<div style="width:24.7pt;flex:0 0 24.7pt;padding:3.7pt 0 2.1pt 4pt;box-sizing:border-box;border-left:0.25pt solid #2c2e35;border-bottom:0.25pt solid #2c2e35">Metro</div>
+<div style="width:24.6pt;flex:0 0 24.6pt;padding:3.7pt 0 2.1pt 4pt;box-sizing:border-box;border-left:0.25pt solid #2c2e35;border-bottom:0.25pt solid #2c2e35">Prov</div>
+<div style="width:24.6pt;flex:0 0 24.6pt;padding:3.7pt 0 2.1pt 4pt;box-sizing:border-box;border-left:0.25pt solid #2c2e35;border-bottom:0.25pt solid #2c2e35">Other</div>
+<div style="width:24.8pt;flex:0 0 24.8pt;padding:3.7pt 0 2.1pt 4pt;box-sizing:border-box;border-left:0.25pt solid #2c2e35;border-bottom:0.25pt solid #2c2e35">Total</div>
+</div>
+<sc-for list="{{ paPermits }}" as="p" hint-placeholder-count="40">
+<div style="display:flex">
+<div style="width:65.4pt;flex:0 0 65.4pt;padding:3.7pt 0 2.1pt 4pt;box-sizing:border-box;border-bottom:0.25pt solid #2c2e35">{{ p.name }}</div>
+<div style="width:28.5pt;flex:0 0 28.5pt;padding:3.7pt 0 2.1pt 4pt;box-sizing:border-box;border-bottom:0.25pt solid #2c2e35">{{ p.wgt }}</div>
+<div style="width:21.2pt;flex:0 0 21.2pt;padding:3.7pt 0 2.1pt 4pt;box-sizing:border-box;border-bottom:0.25pt solid #2c2e35">{{ p.cat }}</div>
+<div style="width:54.4pt;flex:0 0 54.4pt;padding:3.7pt 0 2.1pt 4pt;box-sizing:border-box;border-bottom:0.25pt solid #2c2e35">{{ p.master }}</div>
+<div style="width:58.7pt;flex:0 0 58.7pt;padding:3.7pt 0 2.1pt 4pt;box-sizing:border-box;border-left:0.25pt solid #2c2e35;border-bottom:0.25pt solid #2c2e35">{{ p.aPhone }}</div>
+<div style="width:56.5pt;flex:0 0 56.5pt;padding:3.7pt 0 2.1pt 4pt;box-sizing:border-box;border-left:0.25pt solid #2c2e35;border-bottom:0.25pt solid #2c2e35">{{ p.mPhone }}</div>
+<div style="width:53.8pt;flex:0 0 53.8pt;padding:3.7pt 0 2.1pt 4pt;box-sizing:border-box;border-left:0.25pt solid #2c2e35;border-bottom:0.25pt solid #2c2e35">{{ p.rPhone }}</div>
+<div style="width:36.2pt;flex:0 0 36.2pt;padding:3.7pt 0 2.1pt 4pt;box-sizing:border-box;border-left:0.25pt solid #2c2e35;border-bottom:0.25pt solid #2c2e35">{{ p.exp }}</div>
+<div style="width:24.6pt;flex:0 0 24.6pt;padding:3.7pt 0 2.1pt 4pt;box-sizing:border-box;border-left:0.25pt solid #2c2e35;border-bottom:0.25pt solid #2c2e35">{{ p.aM }}</div>
+<div style="width:24.7pt;flex:0 0 24.7pt;padding:3.7pt 0 2.1pt 4pt;box-sizing:border-box;border-left:0.25pt solid #2c2e35;border-bottom:0.25pt solid #2c2e35">{{ p.aP }}</div>
+<div style="width:24.6pt;flex:0 0 24.6pt;padding:3.7pt 0 2.1pt 4pt;box-sizing:border-box;border-left:0.25pt solid #2c2e35;border-bottom:0.25pt solid #2c2e35">{{ p.aO }}</div>
+<div style="width:24.7pt;flex:0 0 24.7pt;padding:3.7pt 0 2.1pt 4pt;box-sizing:border-box;border-left:0.25pt solid #2c2e35;border-bottom:0.25pt solid #2c2e35">{{ p.wM }}</div>
+<div style="width:24.6pt;flex:0 0 24.6pt;padding:3.7pt 0 2.1pt 4pt;box-sizing:border-box;border-left:0.25pt solid #2c2e35;border-bottom:0.25pt solid #2c2e35">{{ p.wP }}</div>
+<div style="width:24.6pt;flex:0 0 24.6pt;padding:3.7pt 0 2.1pt 4pt;box-sizing:border-box;border-left:0.25pt solid #2c2e35;border-bottom:0.25pt solid #2c2e35">{{ p.wO }}</div>
+<div style="width:24.8pt;flex:0 0 24.8pt;padding:3.7pt 0 2.1pt 4pt;box-sizing:border-box;border-left:0.25pt solid #2c2e35;border-bottom:0.25pt solid #2c2e35">{{ p.wT }}</div>
+</div>
+</sc-for>
+</div>
+
+<div style="position:absolute;left:22.7pt;top:715.7pt;font-family:'Gotham Narrow',sans-serif;font-size:15pt;font-weight:700;line-height:1;letter-spacing:-.005em">Eligible to ride in trials</div>
+<div style="position:absolute;left:25.3pt;top:738.8pt;width:547pt;height:3pt;background:#2c2e35"></div>
+<div style="position:absolute;left:24.3pt;top:747.2pt;width:540pt;font-size:9pt;line-height:1">{{ paTrialsIntro }}</div>
+<sc-for list="{{ paTrialCols }}" as="c" hint-placeholder-count="5">
+<div style="position:absolute;left:{{ c.left }};top:762.3pt;width:100pt;font-size:6pt;line-height:8.8pt">
+<sc-for list="{{ c.top }}" as="t" hint-placeholder-count="1">
+<div>{{ t.name }}</div>
+<div>{{ t.phone }}</div>
+<div>{{ t.cat }}</div>
+</sc-for>
+</div>
+<div style="position:absolute;left:{{ c.left }};top:796.9pt;width:100pt;font-size:6pt;line-height:8.8pt">
+<sc-for list="{{ c.bottom }}" as="t" hint-placeholder-count="1">
+<div>{{ t.name }}</div>
+<div>{{ t.phone }}</div>
+<div>{{ t.cat }}</div>
+</sc-for>
+</div>
+</sc-for>
+
+<div style="position:absolute;left:12.2pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1;letter-spacing:-.013em">{{ footer }}</div>
+<div style="position:absolute;right:12.3pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1">{{ paPagePermits }}</div>
+</section>
+</sc-for>
+
+<sc-for list="{{ tailPages }}" as="tp" hint-placeholder-count="1">
+<section class="page" data-screen-label="Permits and Riders Agents" style="position:relative;font-family:'Gotham Narrow',sans-serif;color:#2c2e35;background:#fff;padding:0;overflow:hidden">
+<div style="position:absolute;left:22.7pt;top:24pt;font-family:'Gotham Narrow',sans-serif;font-size:10pt;font-weight:400;line-height:1;letter-spacing:.019em">RIDERS’ AGENTS</div>
+<div style="position:absolute;left:22.7pt;top:37pt;width:549.9pt;height:3pt;background:#9ecff0"></div>
+<div style="position:absolute;left:22.7pt;top:51.1pt;font-family:'Gotham Narrow',sans-serif;font-size:20pt;font-weight:700;line-height:1;letter-spacing:-.01em">Riders’ Agents</div>
+
+<div style="position:absolute;left:24.9pt;top:78.4pt;width:545.7pt;font-size:6.5pt;border-top:1.47pt solid #2c2e35">
+<div style="display:flex;gap:0.1pt;color:#fff">
+<div style="width:105.6pt;flex:0 0 105.6pt;height:17pt;background:#0071a9;padding:5.6pt 0 0 4pt;box-sizing:border-box;line-height:1">AGENTS</div>
+<div style="width:366.6pt;flex:0 0 366.6pt;height:17pt;background:#0071a9;padding:5.6pt 0 0 4pt;box-sizing:border-box;line-height:1">RIDERS</div>
+<div style="width:73.4pt;flex:0 0 73.4pt;height:17pt;background:#0071a9;padding:5.6pt 0 0 4pt;box-sizing:border-box;line-height:1">CONTACT</div>
+</div>
+<sc-for list="{{ paAgents }}" as="a" hint-placeholder-count="35">
+<div style="display:flex;gap:0.1pt;line-height:7.8pt">
+<div style="width:105.6pt;flex:0 0 105.6pt;background:{{ a.bg }};padding:3.55pt 0 3.55pt 4pt;box-sizing:border-box">{{ a.agent }}</div>
+<div style="width:122.2pt;flex:0 0 122.2pt;background:{{ a.bg }};padding:3.55pt 0 3.55pt 4pt;box-sizing:border-box;white-space:pre-line">{{ a.c1 }}</div>
+<div style="width:122.2pt;flex:0 0 122.2pt;background:{{ a.bg }};padding:3.55pt 0 3.55pt 4pt;box-sizing:border-box;white-space:pre-line">{{ a.c2 }}</div>
+<div style="width:122.2pt;flex:0 0 122.2pt;background:{{ a.bg }};padding:3.55pt 0 3.55pt 4pt;box-sizing:border-box;white-space:pre-line">{{ a.c3 }}</div>
+<div style="width:73.4pt;flex:0 0 73.4pt;background:{{ a.bg }};padding:3.55pt 0 3.55pt 4pt;box-sizing:border-box;white-space:pre-line">{{ a.contact }}</div>
+</div>
+</sc-for>
+</div>
+
+<div style="position:absolute;left:22.7pt;top:796.2pt;width:549.9pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1;letter-spacing:.041em">{{ paAgentsFootnote }}</div>
+
+<div style="position:absolute;left:12.2pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1;letter-spacing:-.013em">{{ footer }}</div>
+<div style="position:absolute;right:12.3pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1">{{ paPageAgents }}</div>
+</section>
+</sc-for>
+
+<sc-for list="{{ tailPages }}" as="tp" hint-placeholder-count="1">
+<section class="page" data-screen-label="Jumps Program" style="position:relative;font-family:'Gotham Narrow',sans-serif;color:#2c2e35;background:#fff;padding:0;overflow:hidden">
+<div style="position:absolute;left:22.7pt;top:24pt;font-size:10pt;font-weight:400;line-height:1;letter-spacing:.019em">JUMPS RACING PROGRAM, JUMPS TRIALS AND JUMPS RACES PRIZEMONEY BREAKDOWNS</div>
+<div style="position:absolute;left:22.7pt;top:37pt;width:549.9pt;height:3pt;background:#9ecff0"></div>
+
+<div style="position:absolute;left:22pt;top:59.3pt;font-size:24pt;font-weight:700;line-height:1;letter-spacing:-.01em">Jumps Racing Program {{ jpMonth }}</div>
+<div id="jp-flow" style="position:absolute;left:22.7pt;top:90.7pt;width:549.9pt">
+
+<div style="border-top:0.75pt solid #2c2e35;border-left:0.75pt solid #2c2e35">
+<div style="display:flex;font-family:'Gotham XNarrow',sans-serif;font-size:6.2pt;font-weight:700;line-height:7pt;letter-spacing:.01em">
+<div style="width:42.4pt;flex:0 0 42.4pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;padding:6pt 3pt;display:flex;align-items:center">DATE</div>
+<div style="width:45.2pt;flex:0 0 45.2pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;padding:6pt 3pt;display:flex;align-items:center">VENUE</div>
+<div style="width:35.2pt;flex:0 0 35.2pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;padding:6pt 3pt;display:flex;align-items:center">MAIDEN HURDLE</div>
+<div style="width:35.4pt;flex:0 0 35.4pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;padding:6pt 3pt;display:flex;align-items:center">PRIZEMONEY</div>
+<div style="width:45.4pt;flex:0 0 45.4pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;padding:6pt 3pt;display:flex;align-items:center">RESTRICTED HURDLE</div>
+<div style="width:37.4pt;flex:0 0 37.4pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;padding:6pt 3pt;display:flex;align-items:center">PRIZEMONEY</div>
+<div style="width:72.9pt;flex:0 0 72.9pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;padding:6pt 3pt;display:flex;align-items:center">OPEN HURDLE</div>
+<div style="width:37.4pt;flex:0 0 37.4pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;padding:6pt 3pt;display:flex;align-items:center">PRIZEMONEY</div>
+<div style="width:46.9pt;flex:0 0 46.9pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;padding:6pt 3pt;display:flex;align-items:center">RESTRICTED STEEPLECHASE</div>
+<div style="width:37.9pt;flex:0 0 37.9pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;padding:6pt 3pt;display:flex;align-items:center">PRIZEMONEY</div>
+<div style="width:77.3pt;flex:0 0 77.3pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;padding:6pt 3pt;display:flex;align-items:center">OPEN STEEPLECHASE</div>
+<div style="width:36.4pt;flex:0 0 36.4pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;padding:6pt 3pt;display:flex;align-items:center">PRIZEMONEY</div>
+</div>
+
+<sc-for list="{{ jpMeetings }}" as="m" hint-placeholder-count="3">
+<div style="display:flex;align-items:stretch;font-size:6.6pt;line-height:8pt">
+<div style="width:42.4pt;flex:0 0 42.4pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;padding:2.5pt 3pt;display:flex;align-items:center;font-weight:700;white-space:nowrap">{{ m.dateLabel }}</div>
+<div style="width:45.2pt;flex:0 0 45.2pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;padding:2.5pt 4pt;display:flex;align-items:center;font-weight:700">{{ m.venue }}</div>
+
+<div style="width:35.2pt;flex:0 0 35.2pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;background:#e6f2fa;display:flex;flex-direction:column">
+<sc-for list="{{ m.mh }}" as="e" hint-placeholder-count="1">
+<div style="flex:1;display:flex;align-items:center;padding:2.5pt 4pt;box-sizing:border-box;border-top:{{ e.rule }}">{{ e.t }}</div>
+</sc-for>
+</div>
+<div style="width:35.4pt;flex:0 0 35.4pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;flex-direction:column">
+<sc-for list="{{ m.mhp }}" as="e" hint-placeholder-count="1">
+<div style="flex:1;display:flex;align-items:center;padding:2.5pt 4pt;box-sizing:border-box;border-top:{{ e.rule }}">{{ e.t }}</div>
+</sc-for>
+</div>
+
+<div style="width:45.4pt;flex:0 0 45.4pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;background:#e6f2fa;display:flex;flex-direction:column">
+<sc-for list="{{ m.rh }}" as="e" hint-placeholder-count="1">
+<div style="flex:1;display:flex;align-items:center;padding:2.5pt 4pt;box-sizing:border-box;border-top:{{ e.rule }}">{{ e.t }}</div>
+</sc-for>
+</div>
+<div style="width:37.4pt;flex:0 0 37.4pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;flex-direction:column">
+<sc-for list="{{ m.rhp }}" as="e" hint-placeholder-count="1">
+<div style="flex:1;display:flex;align-items:center;padding:2.5pt 4pt;box-sizing:border-box;border-top:{{ e.rule }}">{{ e.t }}</div>
+</sc-for>
+</div>
+
+<div style="width:72.9pt;flex:0 0 72.9pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;background:#e6f2fa;display:flex;flex-direction:column;font-weight:700">
+<sc-for list="{{ m.oh }}" as="e" hint-placeholder-count="1">
+<div style="flex:1;display:flex;align-items:center;padding:2.5pt 4pt;box-sizing:border-box;border-top:{{ e.rule }}">{{ e.t }}</div>
+</sc-for>
+</div>
+<div style="width:37.4pt;flex:0 0 37.4pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;flex-direction:column;font-weight:700">
+<sc-for list="{{ m.ohp }}" as="e" hint-placeholder-count="1">
+<div style="flex:1;display:flex;align-items:center;padding:2.5pt 4pt;box-sizing:border-box;border-top:{{ e.rule }}">{{ e.t }}</div>
+</sc-for>
+</div>
+
+<div style="width:46.9pt;flex:0 0 46.9pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;background:#e6f2fa;display:flex;flex-direction:column">
+<sc-for list="{{ m.rs }}" as="e" hint-placeholder-count="1">
+<div style="flex:1;display:flex;align-items:center;padding:2.5pt 4pt;box-sizing:border-box;border-top:{{ e.rule }}">{{ e.t }}</div>
+</sc-for>
+</div>
+<div style="width:37.9pt;flex:0 0 37.9pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;flex-direction:column">
+<sc-for list="{{ m.rsp }}" as="e" hint-placeholder-count="1">
+<div style="flex:1;display:flex;align-items:center;padding:2.5pt 4pt;box-sizing:border-box;border-top:{{ e.rule }}">{{ e.t }}</div>
+</sc-for>
+</div>
+
+<div style="width:77.3pt;flex:0 0 77.3pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;background:#e6f2fa;display:flex;flex-direction:column;font-weight:700">
+<sc-for list="{{ m.os }}" as="e" hint-placeholder-count="1">
+<div style="flex:1;display:flex;align-items:center;padding:2.5pt 4pt;box-sizing:border-box;border-top:{{ e.rule }}">{{ e.t }}</div>
+</sc-for>
+</div>
+<div style="width:36.4pt;flex:0 0 36.4pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;flex-direction:column;font-weight:700">
+<sc-for list="{{ m.osp }}" as="e" hint-placeholder-count="1">
+<div style="flex:1;display:flex;align-items:center;padding:2.5pt 4pt;box-sizing:border-box;border-top:{{ e.rule }}">{{ e.t }}</div>
+</sc-for>
+</div>
+</div>
+</sc-for>
+</div>
+
+<div style="margin-top:27.6pt">
+<div style="margin-left:-0.7pt;font-size:24pt;font-weight:700;line-height:1;letter-spacing:-.01em">Jumps Trials</div>
+<div style="margin-top:5.2pt;display:flex;align-items:stretch">
+<sc-for list="{{ jpTrialColumns }}" as="col" hint-placeholder-count="1">
+<div style="width:133.1pt;flex:0 0 133.1pt;box-sizing:border-box;padding-right:6.6pt;border-right:{{ col.rule }}">
+<div style="width:126.5pt">
+<sc-for list="{{ col.groups }}" as="g" hint-placeholder-count="1">
+<div style="margin-top:{{ g.gap }}">
+<sc-for list="{{ g.head }}" as="hd" hint-placeholder-count="1">
+<div style="height:3.5pt;background:#2c2e35"></div>
+<div style="margin-top:3.2pt;font-size:8.6pt;font-weight:700;line-height:1;letter-spacing:.01em;color:#37ac49">{{ hd.venue }}</div>
+<div style="margin-top:3.2pt;font-size:7.4pt;font-weight:700;line-height:1;letter-spacing:.01em;color:#37ac49">{{ hd.date }}</div>
+</sc-for>
+<sc-for list="{{ g.races }}" as="r" hint-placeholder-count="8">
+<div style="margin-top:2.6pt;display:flex;justify-content:space-between;gap:5pt;background:#d8d9da;height:8.5pt;box-sizing:border-box;padding:1.4pt 3pt 0;font-size:6.2pt;line-height:7pt;font-weight:700"><span>{{ r.cond }}</span><span style="text-align:right">{{ r.dist }}</span></div>
+<div style="margin-top:1.5pt;font-size:6.6pt;font-weight:700;line-height:7.6pt">{{ r.title }}</div>
+</sc-for>
+</div>
+</sc-for>
+</div>
+</div>
+</sc-for>
+</div>
+</div>
+
+<div style="margin-top:27pt">
+<div style="margin-left:-0.7pt;font-size:24pt;font-weight:700;line-height:1;letter-spacing:-.01em">Jumps Races Prizemoney Breakdowns</div>
+<div style="margin-top:5.2pt;height:2pt;background:#2c2e35"></div>
+<div style="margin-top:7pt;display:flex;gap:8pt">
+<sc-for list="{{ jpTierColumns }}" as="col" hint-placeholder-count="2">
+<div style="flex:1;font-size:7.5pt;line-height:9.1pt">
+<sc-for list="{{ col.tiers }}" as="t" hint-placeholder-count="4">
+<div style="margin-top:3pt"><span style="font-weight:700">{{ t.amount }}</span> {{ t.breakdown }}</div>
+</sc-for>
+</div>
+</sc-for>
+</div>
+</div>
+
+<sc-for list="{{ jpOttPanel }}" as="o" hint-placeholder-count="1">
+<div style="position:relative;margin-top:29pt;height:96pt;background:#edf6fb;box-sizing:border-box;padding:10pt 12pt">
+<div style="font-size:20.6pt;font-weight:700;line-height:1;letter-spacing:-.01em">Transition Pathway Programs</div>
+<div style="margin-top:7pt;font-size:8pt;line-height:10.5pt;width:330pt">There are many and varied options for your horse when it retires from racing. Visit ottcommunity.com.au to access RV&rsquo;s easy-to-follow transition guide.</div>
+<img src="assets/photos/off-the-track-handler.png" alt="" style="position:absolute;right:0;top:0;width:130pt;height:96pt;object-fit:cover" />
+</div>
+</sc-for>
+<sc-for list="{{ jpFillerAd }}" as="f" hint-placeholder-count="0">
+<div style="position:relative;margin-top:29pt;height:96pt;background:#edf6fb;overflow:hidden">
+<img src="{{ f.art }}" alt="" style="position:absolute;left:0;top:0;width:100%;height:100%;object-fit:contain;display:block" />
+</div>
+</sc-for>
+</div>
+
+<div style="position:absolute;left:12.2pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1;letter-spacing:-.013em">{{ footer }}</div>
+<div style="position:absolute;right:12.3pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1">{{ jpPageNo }}</div>
+</section>
+</sc-for>
+
+<sc-for list="{{ pcPages }}" as="p" hint-placeholder-count="2">
+<section class="page" data-screen-label="Picnic Racing" style="position:relative;font-family:'Gotham Narrow',sans-serif;color:#2c2e35;background:#fff;padding:0;overflow:hidden">
+<div style="position:absolute;left:22.7pt;top:24pt;font-size:10pt;font-weight:400;line-height:1;letter-spacing:.019em">PROGRAMS FOR PICNIC MEETINGS {{ pcRangeCaps }}</div>
+<div style="position:absolute;left:22.7pt;top:37pt;width:549.9pt;height:3pt;background:#9ecff0"></div>
+
+<sc-for list="{{ p.titleRow }}" as="t" hint-placeholder-count="1">
+<div style="position:absolute;left:22pt;top:45.2pt;font-size:24pt;font-weight:700;line-height:1;letter-spacing:-.01em">Programs for Picnic Meetings {{ t.text }}</div>
+</sc-for>
+
+<div style="position:absolute;left:22.7pt;top:{{ p.top }};width:549.9pt">
+<div style="border-top:0.75pt solid #2c2e35;border-left:0.75pt solid #2c2e35">
+
+<div style="display:flex;background:#e6e7e9;font-family:'Gotham XNarrow',sans-serif;font-size:6.2pt;font-weight:700;line-height:7pt;letter-spacing:.01em">
+<div style="width:44.8pt;flex:0 0 44.8pt;height:14.1pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35"></div>
+<div style="width:116.8pt;flex:0 0 116.8pt;height:14.1pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;align-items:center;justify-content:center">MAIDEN</div>
+<div style="width:192.4pt;flex:0 0 192.4pt;height:14.1pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;align-items:center;justify-content:center">RESTRICTED TROPHY</div>
+<div style="width:195.9pt;flex:0 0 195.9pt;height:14.1pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;align-items:center;justify-content:center">OPEN</div>
+</div>
+
+<div style="display:flex;background:#e6e7e9;font-family:'Gotham XNarrow',sans-serif;font-size:6.2pt;font-weight:700;line-height:7pt;letter-spacing:.01em">
+<div style="width:44.8pt;flex:0 0 44.8pt;height:13pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35"></div>
+<div style="width:60.9pt;flex:0 0 60.9pt;height:13pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35"></div>
+<div style="width:55.9pt;flex:0 0 55.9pt;height:13pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35"></div>
+<div style="width:56.9pt;flex:0 0 56.9pt;height:13pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;align-items:center;justify-content:center">1</div>
+<div style="width:75.1pt;flex:0 0 75.1pt;height:13pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;align-items:center;justify-content:center">2</div>
+<div style="width:60.4pt;flex:0 0 60.4pt;height:13pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;align-items:center;justify-content:center">3</div>
+<div style="width:60.9pt;flex:0 0 60.9pt;height:13pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;align-items:center;justify-content:center">999m - 1499m</div>
+<div style="width:68pt;flex:0 0 68pt;height:13pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;align-items:center;justify-content:center">1500m - 1999m</div>
+<div style="width:67pt;flex:0 0 67pt;height:13pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;align-items:center;justify-content:center">2000m - 3000m</div>
+</div>
+
+<sc-for list="{{ p.rows }}" as="m" hint-placeholder-count="12">
+<div style="display:flex;align-items:stretch;font-size:7pt;line-height:8pt;min-height:{{ m.h }}">
+<div style="width:44.8pt;flex:0 0 44.8pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;padding:0 3pt;display:flex;flex-direction:column;justify-content:center">
+<div style="font-weight:700;white-space:nowrap">{{ m.dateLabel }}</div>
+<div style="font-size:6.6pt;font-weight:700;color:#2c9cd7">{{ m.venue }}</div>
+</div>
+
+<div style="width:60.9pt;flex:0 0 60.9pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;flex-direction:column">
+<sc-for list="{{ m.m1 }}" as="e" hint-placeholder-count="1">
+<div style="flex:1;display:flex;align-items:center;padding:0 3pt;border-top:{{ e.rule }}">{{ e.t }}</div>
+</sc-for>
+</div>
+<div style="width:55.9pt;flex:0 0 55.9pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;background:#edf6fb;display:flex;flex-direction:column">
+<sc-for list="{{ m.m2 }}" as="e" hint-placeholder-count="1">
+<div style="flex:1;display:flex;align-items:center;padding:0 3pt;border-top:{{ e.rule }}">{{ e.t }}</div>
+</sc-for>
+</div>
+
+<div style="width:56.9pt;flex:0 0 56.9pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;flex-direction:column">
+<sc-for list="{{ m.rt1 }}" as="e" hint-placeholder-count="1">
+<div style="flex:1;display:flex;align-items:center;padding:0 3pt;border-top:{{ e.rule }}">{{ e.t }}</div>
+</sc-for>
+</div>
+<div style="width:75.1pt;flex:0 0 75.1pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;background:#edf6fb;display:flex;flex-direction:column">
+<sc-for list="{{ m.rt2 }}" as="e" hint-placeholder-count="1">
+<div style="flex:1;display:flex;align-items:center;padding:0 3pt;border-top:{{ e.rule }}">{{ e.t }}</div>
+</sc-for>
+</div>
+<div style="width:60.4pt;flex:0 0 60.4pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;flex-direction:column">
+<sc-for list="{{ m.rt3 }}" as="e" hint-placeholder-count="1">
+<div style="flex:1;display:flex;align-items:center;padding:0 3pt;border-top:{{ e.rule }}">{{ e.t }}</div>
+</sc-for>
+</div>
+
+<div style="width:60.9pt;flex:0 0 60.9pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;background:#edf6fb;display:flex;flex-direction:column">
+<sc-for list="{{ m.o1 }}" as="e" hint-placeholder-count="1">
+<div style="flex:1;display:flex;align-items:center;padding:0 3pt;border-top:{{ e.rule }}">{{ e.t }}</div>
+</sc-for>
+</div>
+<div style="width:68pt;flex:0 0 68pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;flex-direction:column">
+<sc-for list="{{ m.o2 }}" as="e" hint-placeholder-count="1">
+<div style="flex:1;display:flex;align-items:center;padding:0 3pt;border-top:{{ e.rule }}">{{ e.t }}</div>
+</sc-for>
+</div>
+<div style="width:67pt;flex:0 0 67pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;background:#edf6fb;display:flex;flex-direction:column">
+<sc-for list="{{ m.o3 }}" as="e" hint-placeholder-count="1">
+<div style="flex:1;display:flex;align-items:center;padding:0 3pt;border-top:{{ e.rule }}">{{ e.t }}</div>
+</sc-for>
+</div>
+</div>
+</sc-for>
+</div>
+
+<sc-for list="{{ p.notes }}" as="block" hint-placeholder-count="0">
+<div style="margin-top:8pt;font-size:5.8pt;line-height:7.6pt">
+<sc-for list="{{ block.lines }}" as="n" hint-placeholder-count="6">
+<div>{{ n.t }}</div>
+</sc-for>
+</div>
+</sc-for>
+</div>
+
+<div style="position:absolute;left:12.2pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1;letter-spacing:-.013em">{{ footer }}</div>
+<div style="position:absolute;right:12.3pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1">{{ p.no }}</div>
+</section>
+</sc-for>
+
+<sc-for list="{{ tailPages }}" as="tp" hint-placeholder-count="1">
+<section class="page" data-screen-label="Jump-Outs and Flat Trials" style="position:relative;font-family:'Gotham Narrow',sans-serif;color:#2c2e35;background:#fff;padding:0;overflow:hidden">
+<div style="position:absolute;left:22.7pt;top:24pt;font-size:10pt;font-weight:400;line-height:1;letter-spacing:.019em">JUMP-OUTS AND OFFICIAL FLAT TRIALS</div>
+<div style="position:absolute;left:22.7pt;top:37pt;width:549.9pt;height:3pt;background:#9ecff0"></div>
+
+<div style="position:absolute;left:22pt;top:59.3pt;font-size:24pt;font-weight:700;line-height:1;letter-spacing:-.01em">Jump-Out Schedule</div>
+
+<sc-for list="{{ joMonths }}" as="m" hint-placeholder-count="2">
+<div style="position:absolute;left:{{ m.left }};top:94.4pt;width:267.5pt">
+<div style="font-size:12pt;font-weight:700;line-height:1;letter-spacing:-.005em">{{ m.label }}</div>
+<div style="height:2pt;background:#2c2e35;margin-top:6.9pt"></div>
+</div>
+<div style="position:absolute;left:{{ m.colA }};top:115.65pt;width:126.5pt;font-size:7pt">
+<sc-for list="{{ m.left1 }}" as="e" hint-placeholder-count="13">
+<div style="display:flex;justify-content:space-between;gap:6pt;padding-top:2pt;line-height:8pt;border-bottom:0.25pt solid #2c2e35"><span style="white-space:nowrap">{{ e.date }}</span><span style="text-align:right">{{ e.venue }}</span></div>
+</sc-for>
+</div>
+<div style="position:absolute;left:{{ m.colB }};top:115.65pt;width:126.5pt;font-size:7pt">
+<sc-for list="{{ m.right1 }}" as="e" hint-placeholder-count="13">
+<div style="display:flex;justify-content:space-between;gap:6pt;padding-top:2pt;line-height:8pt;border-bottom:0.25pt solid #2c2e35"><span style="white-space:nowrap">{{ e.date }}</span><span style="text-align:right">{{ e.venue }}</span></div>
+</sc-for>
+</div>
+</sc-for>
+
+<div style="position:absolute;left:21.7pt;top:281pt;font-size:24pt;font-weight:700;line-height:1;letter-spacing:-.01em">Official Flat Trials</div>
+
+<sc-for list="{{ joDividers }}" as="d" hint-placeholder-count="2">
+<div style="position:absolute;left:{{ d.left }};top:315pt;width:0.75pt;height:193pt;background:#2c2e35"></div>
+</sc-for>
+
+<sc-for list="{{ joMeetings }}" as="t" hint-placeholder-count="3">
+<div style="position:absolute;left:{{ t.left }};top:311.85pt;width:126.5pt">
+<div style="height:3.5pt;background:#2c2e35"></div>
+<div style="margin-top:3.75pt;font-size:9.3pt;font-weight:700;line-height:1;letter-spacing:.01em">{{ t.venue }}</div>
+<div style="margin-top:3.8pt;font-size:8pt;font-weight:400;line-height:1;letter-spacing:.01em">{{ t.date }}</div>
+<sc-for list="{{ t.races }}" as="r" hint-placeholder-count="7">
+<div style="margin-top:3.9pt;display:flex;justify-content:space-between;gap:5pt;background:#d8d9da;height:10pt;box-sizing:border-box;padding:1.8pt 3pt 0;font-size:6.5pt;line-height:7.6pt"><span>{{ r.cond }}</span><span style="text-align:right">{{ r.dist }}</span></div>
+<div style="margin-top:1.95pt;font-size:7pt;line-height:9pt">{{ r.title }}</div>
+</sc-for>
+</div>
+</sc-for>
+
+<div style="position:absolute;left:20.7pt;top:543.6pt;font-size:20pt;font-weight:700;line-height:1;letter-spacing:-.01em">{{ joPolicyHeading }}</div>
+<div style="position:absolute;left:22.7pt;top:567.2pt;width:549.9pt;height:3pt;background:#2c2e35"></div>
+<div style="position:absolute;left:22.7pt;top:582.2pt;width:545.3pt;font-size:8pt;line-height:9.6pt">
+<sc-for list="{{ joPolicy }}" as="p" hint-placeholder-count="8">
+<div style="display:flex"><span style="width:8.5pt;flex:0 0 8.5pt">&bull;</span><span style="flex:1">{{ p.t }}</span></div>
+</sc-for>
+</div>
+
+<div style="position:absolute;left:12.2pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1;letter-spacing:-.013em">{{ footer }}</div>
+<div style="position:absolute;right:12.3pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1">{{ joPageNo }}</div>
+</section>
+</sc-for>
+
+<sc-for list="{{ tailPages }}" as="tp" hint-placeholder-count="1">
+<section class="page" data-screen-label="Victorian Race Series" style="position:relative;font-family:'Gotham Narrow',sans-serif;color:#2c2e35;background:#fff;padding:0;overflow:hidden">
+<div style="position:absolute;left:22.7pt;top:24pt;font-size:10pt;font-weight:400;line-height:1;letter-spacing:.019em">RACE SERIES</div>
+<div style="position:absolute;left:22.7pt;top:37pt;width:549.9pt;height:3pt;background:#9ecff0"></div>
+<div style="position:absolute;left:22pt;top:50.6pt;font-size:22pt;font-weight:700;line-height:1;letter-spacing:-.01em">Victorian Race Series</div>
+<div style="position:absolute;left:22pt;top:73.1pt;width:549.9pt;height:2pt;background:#2c2e35"></div>
+
+<sc-for list="{{ rsColumns }}" as="col" hint-placeholder-count="2">
+<div style="position:absolute;left:{{ col.left }};top:93.8pt;width:268.4pt">
+<sc-for list="{{ col.blocks }}" as="b" hint-placeholder-count="3">
+<div style="margin-top:{{ b.gap }}">
+<div style="font-size:10pt;font-weight:700;line-height:1;letter-spacing:-.005em">{{ b.title }}</div>
+<div style="height:2pt;background:#2c2e35;margin-top:1.2pt"></div>
+<sc-for list="{{ b.note }}" as="n" hint-placeholder-count="0">
+<div style="margin:6.7pt 0 6.2pt;font-size:7pt;line-height:9.05pt">{{ n.t }}</div>
+</sc-for>
+<div style="display:flex;font-size:8pt;font-weight:700;line-height:8pt;letter-spacing:.02em">
+<sc-for list="{{ b.head }}" as="c" hint-placeholder-count="4">
+<div style="width:{{ c.w }};flex:0 0 {{ c.w }};padding:4.6pt 0 2.1pt {{ c.pad }};box-sizing:border-box;border-bottom:0.25pt solid #2c2e35">{{ c.t }}</div>
+</sc-for>
+</div>
+<sc-for list="{{ b.rows }}" as="r" hint-placeholder-count="9">
+<div style="display:flex;line-height:8pt">
+<sc-for list="{{ r.cells }}" as="c" hint-placeholder-count="4">
+<div style="width:{{ c.w }};flex:0 0 {{ c.w }};padding:4.15pt 0 2.05pt {{ c.pad }};box-sizing:border-box;border-bottom:0.25pt solid #2c2e35;font-size:{{ c.size }}">{{ c.t }}</div>
+</sc-for>
+</div>
+</sc-for>
+</div>
+</sc-for>
+</div>
+</sc-for>
+
+<div style="position:absolute;left:12.2pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1;letter-spacing:-.013em">{{ footer }}</div>
+<div style="position:absolute;right:12.3pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1">{{ rsPageNo }}</div>
+</section>
+</sc-for>
+
+<sc-for list="{{ tailPages }}" as="tp" hint-placeholder-count="1">
+<section class="page" data-screen-label="Notices" style="position:relative;font-family:'Gotham Narrow',sans-serif;color:#2c2e35;background:#fff;padding:0;overflow:hidden">
+<div style="position:absolute;left:22.7pt;top:24pt;font-size:10pt;font-weight:400;line-height:1;letter-spacing:.019em">Notices | INTEGRITY SERVICES</div>
+<div style="position:absolute;left:22.7pt;top:37pt;width:549.9pt;height:3pt;background:#9ecff0"></div>
+<div style="position:absolute;left:22pt;top:59.3pt;font-size:24pt;font-weight:700;line-height:1;letter-spacing:-.01em">INDUSTRY NOTICE</div>
+<div style="position:absolute;left:22.7pt;top:88pt;width:549.9pt;height:3pt;background:#2c2e35"></div>
+
+<div style="position:absolute;left:22.7pt;top:100pt;width:549.9pt">
+<sc-for list="{{ ntNotice }}" as="b" hint-placeholder-count="8">
+<sc-if value="{{ b.isSubject }}" hint-placeholder-val="{{ true }}">
+<div style="margin-top:10pt;font-size:15pt;font-weight:700;line-height:17pt;letter-spacing:-.006em;text-wrap:pretty">{{ b.text }}</div>
+</sc-if>
+<sc-if value="{{ b.isSubhead }}" hint-placeholder-val="{{ true }}">
+<div style="margin-top:11pt;font-size:9pt;font-weight:700;line-height:11pt;letter-spacing:.02em">{{ b.text }}</div>
+</sc-if>
+<sc-if value="{{ b.isPara }}" hint-placeholder-val="{{ true }}">
+<div style="margin-top:7pt;font-size:8pt;font-weight:400;line-height:10.4pt;text-wrap:pretty">{{ b.text }}</div>
+</sc-if>
+<sc-if value="{{ b.isStep }}" hint-placeholder-val="{{ true }}">
+<div style="margin-top:5pt;display:flex;gap:6pt;font-size:8pt;line-height:10.4pt">
+<div style="flex:0 0 13pt;font-weight:700">{{ b.no }}</div>
+<div style="flex:1;text-wrap:pretty">{{ b.text }}</div>
+</div>
+</sc-if>
+<sc-if value="{{ b.isClause }}" hint-placeholder-val="{{ true }}">
+<div style="margin-top:4pt;padding-left:13pt;font-size:8pt;line-height:10.4pt;text-wrap:pretty">{{ b.text }}</div>
+</sc-if>
+</sc-for>
+<sc-if value="{{ ntNoticeEmpty }}" hint-placeholder-val="{{ false }}">
+<div style="margin-top:9pt;background:#edf6fb;box-sizing:border-box;padding:12pt 14pt 14pt">
+<div style="font-size:9pt;font-weight:700;line-height:1;letter-spacing:.02em">AWAITING COPY — inputs/Industry Notice.docx</div>
+<div style="margin-top:7pt;width:440pt;font-size:8pt;line-height:11pt">The Word document has no paragraphs. Supply the notice using Heading 1 for the subject, Heading 2 for section headings, Normal for body copy and IR Step for numbered steps.</div>
+</div>
+</sc-if>
+</div>
+
+<div style="position:absolute;left:12.2pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1;letter-spacing:-.013em">{{ footer }}</div>
+<div style="position:absolute;right:12.3pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1">{{ ntPageNotice }}</div>
+</section>
+</sc-for>
+
+<sc-for list="{{ tailPages }}" as="tp" hint-placeholder-count="1">
+<section class="page" data-screen-label="Notices" style="position:relative;font-family:'Gotham Narrow',sans-serif;color:#2c2e35;background:#fff;padding:0;overflow:hidden">
+<div style="position:absolute;left:22.7pt;top:24pt;font-size:10pt;font-weight:400;line-height:1;letter-spacing:.019em">INTEGRITY UPDATE</div>
+<div style="position:absolute;left:22.7pt;top:37pt;width:549.9pt;height:3pt;background:#9ecff0"></div>
+<div style="position:absolute;left:22pt;top:59.3pt;font-size:24pt;font-weight:700;line-height:1;letter-spacing:-.01em">From the Stewards&rsquo; Room</div>
+<div style="position:absolute;left:22.7pt;top:88pt;width:549.9pt;height:3pt;background:#2c2e35"></div>
+
+<div style="position:absolute;left:22.7pt;top:100pt;width:549.9pt">
+<sc-for list="{{ ntStewards }}" as="b" hint-placeholder-count="8">
+<sc-if value="{{ b.isHeading }}" hint-placeholder-val="{{ true }}">
+<div style="margin-top:13pt;font-size:15pt;font-weight:700;line-height:17pt;letter-spacing:-.006em;text-wrap:pretty">{{ b.text }}</div>
+</sc-if>
+<sc-if value="{{ b.isSubhead }}" hint-placeholder-val="{{ true }}">
+<div style="margin-top:9pt;font-size:9pt;font-weight:700;line-height:11pt;text-wrap:pretty">{{ b.text }}</div>
+</sc-if>
+<sc-if value="{{ b.isPara }}" hint-placeholder-val="{{ true }}">
+<div style="margin-top:6pt;font-size:8pt;font-weight:400;line-height:10.4pt;text-wrap:pretty">{{ b.text }}</div>
+</sc-if>
+<sc-if value="{{ b.isClause }}" hint-placeholder-val="{{ true }}">
+<div style="margin-top:4pt;padding-left:13pt;font-size:8pt;line-height:10.4pt;text-wrap:pretty">{{ b.text }}</div>
+</sc-if>
+</sc-for>
+<sc-if value="{{ ntStewardsEmpty }}" hint-placeholder-val="{{ false }}">
+<div style="margin-top:9pt;background:#edf6fb;box-sizing:border-box;padding:12pt 14pt 14pt">
+<div style="font-size:9pt;font-weight:700;line-height:1;letter-spacing:.02em">AWAITING COPY — inputs/Stewards Room.docx</div>
+<div style="margin-top:7pt;width:440pt;font-size:8pt;line-height:11pt">The Word document has no paragraphs. Supply the copy using Heading 1 for each topic, Heading 2 for sub-headings and Normal for body copy.</div>
+</div>
+</sc-if>
+</div>
+
+<div style="position:absolute;left:12.2pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1;letter-spacing:-.013em">{{ footer }}</div>
+<div style="position:absolute;right:12.3pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1">{{ ntPageStewards }}</div>
+</section>
+</sc-for>
+
+<sc-for list="{{ tailPages }}" as="tp" hint-placeholder-count="1">
+<section class="page" data-screen-label="Notices" style="position:relative;font-family:'Gotham Narrow',sans-serif;color:#2c2e35;background:#fff;padding:0;overflow:hidden">
+<div style="position:absolute;left:22.7pt;top:24pt;font-size:10pt;font-weight:400;line-height:1;letter-spacing:.019em">Notices | INTEGRITY SERVICES</div>
+<div style="position:absolute;left:22.7pt;top:37pt;width:549.9pt;height:3pt;background:#9ecff0"></div>
+
+<div style="position:absolute;left:22.7pt;top:50pt;width:549.9pt;column-count:3;column-gap:13pt">
+<sc-for list="{{ ntRules }}" as="g" hint-placeholder-count="6">
+<div style="break-inside:avoid;margin-bottom:10pt">
+<div style="font-size:9pt;font-weight:700;line-height:11pt;letter-spacing:.01em;text-wrap:pretty">{{ g.heading }}</div>
+<sc-for list="{{ g.blocks }}" as="b" hint-placeholder-count="3">
+<sc-if value="{{ b.isPara }}" hint-placeholder-val="{{ true }}">
+<div style="margin-top:4pt;font-size:7.5pt;font-weight:400;line-height:9.4pt;text-wrap:pretty">{{ b.text }}</div>
+</sc-if>
+<sc-if value="{{ b.isClause }}" hint-placeholder-val="{{ true }}">
+<div style="margin-top:4pt;font-size:7.5pt;font-weight:400;line-height:9.4pt;text-wrap:pretty">{{ b.text }}</div>
+</sc-if>
+</sc-for>
+</div>
+</sc-for>
+</div>
+<sc-if value="{{ ntRulesEmpty }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;left:22.7pt;top:50pt;width:549.9pt;background:#edf6fb;box-sizing:border-box;padding:12pt 14pt 14pt">
+<div style="font-size:9pt;font-weight:700;line-height:1;letter-spacing:.02em">AWAITING COPY — inputs/Rules Extracts.docx</div>
+<div style="margin-top:7pt;width:440pt;font-size:8pt;line-height:11pt">The Word document has no paragraphs. Supply the extracts using Heading 1 for each rule reference and IR Clause for numbered sub-clauses. This file is standing content, so once filled it carries over between editions.</div>
+</div>
+</sc-if>
+
+<div style="position:absolute;left:12.2pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1;letter-spacing:-.013em">{{ footer }}</div>
+<div style="position:absolute;right:12.3pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1">{{ ntPageNotices }}</div>
+</section>
+</sc-for>
+
+<sc-for list="{{ adPages }}" as="ad" hint-placeholder-count="0">
+<section class="page" data-screen-label="Full-page advertising" style="position:relative;font-family:'Gotham Narrow',sans-serif;color:#fff;background:#1668dc;overflow:hidden">
+<img src="{{ ad.art }}" alt="" style="position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover" />
+<sc-if value="{{ ad.live }}" hint-placeholder-val="{{ true }}">
+<div style="position:absolute;left:48pt;top:120pt;width:400pt;font-family:'Gotham XNarrow',sans-serif;font-size:38pt;font-weight:700;line-height:1.04;letter-spacing:-.015em;text-wrap:pretty">{{ ad.headline }}</div>
+<div style="position:absolute;left:48pt;top:330pt;width:330pt;font-size:11pt;line-height:16pt;text-wrap:pretty">{{ ad.body }}</div>
+<div style="position:absolute;left:48pt;top:450pt;width:400pt;height:1pt;background:rgba(255,255,255,.45)"></div>
+<div style="position:absolute;left:48pt;top:466pt;width:400pt;font-size:11pt;line-height:15pt">{{ ad.hours }}</div>
+<div style="position:absolute;left:48pt;top:490pt;width:400pt;font-family:'Gotham XNarrow',sans-serif;font-size:19pt;font-weight:700;letter-spacing:-.01em">{{ ad.contact }}</div>
+</sc-if>
+<div style="position:absolute;left:48pt;bottom:36pt;font-size:8pt;letter-spacing:.06em;opacity:.85">{{ ad.name }}</div>
+</section>
+</sc-for>
+
+<sc-for list="{{ backPages }}" as="bp" hint-placeholder-count="1">
+
+<section class="page" data-screen-label="Back cover" style="position:relative;font-family:'Gotham Narrow',sans-serif;color:#9a9c9f;background:#fff;overflow:hidden">
+<div style="position:absolute;left:22.7pt;top:24pt;font-size:8pt;letter-spacing:.04em">BACK COVER — ARTWORK</div>
+<div style="position:absolute;left:22.7pt;right:22.7pt;top:37pt;height:3pt;background:#e6e8ea"></div>
+<div style="position:absolute;left:22.7pt;right:22.7pt;top:52pt;font-size:8pt;line-height:11pt;max-width:300pt">Reserved so the folios and the printed extent are right. Supplied as artwork, not built from data.</div>
+</section>
+</sc-for>
+</doc-page>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;part&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Whole edition&quot;,&quot;Part 1 — front to the chart&quot;,&quot;Part 2 — race programs&quot;,&quot;Part 3 — permits to the back cover&quot;],&quot;default&quot;:&quot;Whole edition&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Export&quot;},&quot;firstFolio&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:26,&quot;min&quot;:2,&quot;max&quot;:200,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Export&quot;}}">
+// The whole edition in one document.
+//
+// The earlier combined page assembled itself by opening the ten section files in
+// hidden frames. That works on screen but not for export: PDF export renders the
+// page from scratch and cannot wait ninety seconds, so it printed nothing. A
+// single section that loads its own data and lays itself out — Race Programs,
+// ten seconds and twenty-two pages — exports correctly. So this document is that
+// kind of page, just with every section in it: the inputs are read once and all
+// the pages render in one pass.
+//
+// Folios are computed here from the real page counts, in printed order, so there
+// is no cross-page cache to prime and no order to run things in.
+//
+// Built in stages. Sections still to port: chart, race programs, permits and
+// agents, jumps, jump-outs, series, notices, closing artwork.
+
+const FIRST_CONTENT_FOLIO = 3; // cover and the Stableline notice take 1 and 2
+
+// Set in the generated part files. A data-props default only seeds the Tweaks
+// editor — it is not what the component reads at runtime — and export renders
+// from the file, so the part has to be a constant here.
+const PART_OVERRIDE = null;
+const FIRST_FOLIO_OVERRIDE = null;
+
+// page 50 sets four columns of 126.5pt on a 141.2pt pitch
+const JO_COL = i => 22.7 + i * 141.2;
+// measured from the printed edition: four-column series tables and the
+// three-column highweight schedule, as widths inside a 268.4pt column
+const RS_FOUR = [{ w: 27, pad: 3 }, { w: 50.9, pad: 4 }, { w: 48.1, pad: 4 }, { w: 142.4, pad: 3.9 }];
+const RS_THREE = [{ w: 85, pad: 3 }, { w: 75, pad: 3 }, { w: 108.4, pad: 3 }];
+
+const tsvRows = text => {
+  const lines = String(text || '').replace(/\r/g, '').split('\n').filter(l => l.trim());
+  if (!lines.length) return [];
+  const head = lines[0].split('\t').map(h => h.trim());
+  return lines.slice(1).map(l => {
+    const c = l.split('\t');
+    const o = {};
+    head.forEach((h, i) => { o[h] = (c[i] || '').trim(); });
+    return o;
+  });
+};
+
+const riderColumns = list => {
+  const base = Math.floor(list.length / 3);
+  const extra = list.length % 3;
+  const out = [];
+  let at = 0;
+  for (let i = 0; i < 3; i++) {
+    const take = base + (i < extra ? 1 : 0);
+    out.push(list.slice(at, at + take).join('\n'));
+    at += take;
+  }
+  return out;
+};
+
+class Component extends DCLogic {
+  state = {
+    edition: '', days: null, dlPages: [], chart: null, chPages: null, meetings: null, rpPages: null,
+    permits: [], trials: [], agents: [], joBlocks: [], joMeetings: [], policy: [], policyHeading: '',
+    seriesBlocks: [], notice: [], stewards: [], rules: [], tailLoaded: false, settings: {}
+  };
+
+  /**
+   * Which sections this render includes.
+   *
+   * Export re-renders the file from its SAVED defaults, so a part cannot be
+   * chosen by changing a tweak on screen — that only affects the live view and
+   * the export ignores it. Each part therefore ships as its own file with the
+   * value baked in.
+   *
+   * The split exists because the export captures after a fixed wait and the
+   * whole edition takes about forty seconds to lay out. Each part lands well
+   * inside that.
+   */
+  scope() {
+    const p = String(PART_OVERRIDE || this.props.part || 'Whole edition');
+    const one = /part 1/i.test(p), two = /part 2/i.test(p), three = /part 3/i.test(p);
+    const whole = !one && !two && !three;
+    return {
+      whole,
+      front: whole || one,        // cover and the Stableline notice
+      early: whole || one,        // Entry Deadlines, Programs Summary Chart
+      programs: whole || two,     // Race Programs
+      tail: whole || three,       // permits through the back cover
+      firstFolio: (two || three)
+        ? Number(FIRST_FOLIO_OVERRIDE ?? this.props.firstFolio ?? (two ? 26 : 48))
+        : FIRST_CONTENT_FOLIO
+    };
+  }
+
+  /* The edition is ~28,500 nodes across 57 A4 pages, and a single full
+   * render pass costs about three seconds of style and layout. The old load
+   * did seven or eight of them — data arrived in four separate setStates and
+   * each section packed itself in its own — so the document did not settle
+   * for fifteen to twenty seconds and the PDF export snapshotted a partly
+   * built document, which is why exports came out at thirteen to fifteen
+   * pages. The load is now exactly two passes:
+   *
+   *   pass 1  every parser resolves, then ONE setState. No pages exist yet,
+   *           so this renders only the hidden measuring atoms: cheap.
+   *   pass 2  all three sections measure and pack together in one
+   *           componentDidUpdate and commit ONE setState. This is the only
+   *           expensive pass, and after it the document is complete.
+   *
+   * Keep it that way. Any setState that lands between the two puts another
+   * three seconds on the clock and brings the truncation back. */
+  /* The export prints about four seconds after load, measured: a beforeprint
+   * probe reported 13 pages and an unsettled document at 4,115ms. Reading the
+   * seventeen inputs takes three and a half to seven seconds of that on its
+   * own, so the chart, the deadlines and the race programs never got laid out
+   * in time and the PDF came out at 13 pages.
+   *
+   * So the export does not read the inputs. data/edition.json holds the same
+   * parsed result, produced by running these same parsers ahead of time, and
+   * loads in one request. If it is absent or stale the document falls back to
+   * reading the inputs live, which is fine on screen and too slow to export.
+   * Re-bake whenever the inputs change — see the run sheet. */
+  componentDidMount() {
+    fetch('data/edition.json')
+      .then(r => (r.ok ? r.json() : null))
+      .catch(() => null)
+      .then(baked => {
+        if (baked && baked.chart && baked.settings) {
+          this.applyBaked(baked);
+          return;
+        }
+        console.warn('Inside Racing — no baked inputs at data/edition.json, reading the '
+          + 'inputs live. On screen that is fine; a PDF export will truncate. Re-bake first.');
+        this.loadFromInputs();
+      });
+  }
+
+  /** Pass 1 from the baked file: one request, no parsing, no waiting. */
+  applyBaked(b) {
+    const t0 = performance.now();
+    const say = (label, list) => {
+      if (list && list.length) console.warn('Inside Racing — ' + label + ', ' + list.length + ' to check:\n' + list.join('\n'));
+    };
+    const w = b.warnings || {};
+    const sc = this.scope();
+    if (b.chartMonths && b.chartMonths.length) {
+      console.info('Inside Racing — chart read ' + b.chartMonths.length + ' month'
+        + (b.chartMonths.length > 1 ? 's' : '') + ' in order: ' + b.chartMonths.join(', '));
+    }
+    say('Edition Settings', w.settings);
+    say('Entry Deadlines', w.deadlines);
+    if (sc.early) say('Programs Summary Chart', w.chart);
+    if (sc.programs) say('Race Programs', w.programs);
+    if (sc.tail) {
+      say('Permits to Ride', w.permits);
+      say('Riders\u2019 Agents', w.agents);
+      say('Jump-outs and flat trials', (w.jumpouts || []).concat(w.trials || [], w.policy || []));
+      say('Jumps Program', w.jumps);
+      say('Picnic Racing', w.picnics);
+      say('Race Series', w.series);
+      say('Industry Notice', w.notice);
+      say('Stewards\u2019 Room', w.stewards);
+      say('Rules Extracts', w.rules);
+    }
+    console.info('Inside Racing — baked inputs of ' + (b.bakedAt || 'unknown date')
+      + ' applied in ' + Math.round(performance.now() - t0) + 'ms.');
+    this._inputsMs = Math.round(performance.now() - t0);
+    this._p1 = performance.now();
+    this.setState({
+      edition: b.edition || '',
+      settings: b.settings || {},
+      days: b.days || [],
+      chart: b.chart,
+      meetings: b.meetings || [],
+      permits: b.permits || [],
+      trials: tsvRows(b.trialsText || ''),
+      agents: b.agents || [],
+      joBlocks: b.joBlocks || [],
+      joMeetings: b.joMeetings || [],
+      policy: b.policy || [],
+      policyHeading: b.policyHeading || 'Division of Races Policy at Country TAB Race Meetings',
+      seriesBlocks: b.seriesBlocks || [],
+      jpMeetings: b.jpMeetings || [],
+      pcMeetings: b.pcMeetings || [],
+      pcNotes: b.pcNotes || [],
+      pcRange: b.pcRange || '',
+      jpTrials: b.jpTrials || [],
+      jpTiers: b.jpTiers || [],
+      notice: b.notice || [],
+      stewards: b.stewards || [],
+      rules: b.rules || [],
+      tailLoaded: true
+    });
+  }
+
+  loadFromInputs() {
+    const faces = document.fonts
+      ? Promise.all([
+          document.fonts.load('400 7pt "Gotham Narrow"'),
+          document.fonts.load('700 7pt "Gotham Narrow"'),
+          document.fonts.load('700 8.5pt "Gotham Narrow"'),
+          document.fonts.load('400 8pt "Gotham Narrow"'),
+          document.fonts.load('700 24pt "Gotham XNarrow"'),
+          document.fonts.load('400 54pt "Gotham XNarrow"'),
+          document.fonts.load('700 54pt "Gotham XNarrow"')
+        ]).then(() => document.fonts.ready)
+      : Promise.resolve();
+
+    const say = (label, list) => {
+      if (list && list.length) console.warn('Inside Racing — ' + label + ', ' + list.length + ' to check:\n' + list.join('\n'));
+    };
+    const t0 = performance.now();
+
+    // Edition Settings first and alone: the chart and the race programs both
+    // need the edition month before they know which files to read.
+    Promise.all([
+      import('./parsers/settings.js')
+        .then(m => m.loadSettings('inputs/Edition Settings.xlsx'))
+        .catch(e => ({ settings: {}, warnings: ['Edition Settings: ' + (e.message || e)] })),
+      faces
+    ]).then(([cfg]) => {
+      const edition = (cfg.settings || {}).edition || '';
+      const sc = this.scope();
+      const skip = v => Promise.resolve(v);
+      const failDoc = key => e => { const o = { warnings: ['could not read the document: ' + (e.message || e)], empty: true, count: 0 }; o[key] = []; return o; };
+      const text = f => fetch('inputs/' + f).then(r => r.text()).catch(() => '');
+      const N = sc.tail ? import('./parsers/notices.js') : null;
+
+      // Every input reads in parallel and nothing touches state until they
+      // have all landed. Sections outside this scope resolve to empties so
+      // the shape of the result never changes.
+      return Promise.all([
+        skip(cfg),
+        // always read, gated at layout instead: a scope() call this early
+        // read as the whole edition and dropped the section from Part 1
+        import('./parsers/deadlines.js')
+          .then(m => m.loadDeadlines('inputs/Entry Deadlines.csv'))
+          .catch(e => ({ days: [], count: 0, warnings: ['Entry Deadlines: ' + (e.message || e)] })),
+        sc.early
+          ? import('./parsers/chart.js').then(m => m.loadCharts('inputs/', edition))
+              .catch(e => ({ header: [], rows: [], warnings: ['Programs Summary Chart: ' + (e.message || e)] }))
+          : skip({ header: [], rows: [], warnings: [] }),
+        // the export is a full year; the parser keeps the edition month plus two
+        sc.programs
+          ? import('./parsers/programs.js').then(m => m.loadPrograms('inputs/Race Programs.csv', edition))
+              .catch(e => ({ meetings: [], count: 0, races: 0, warnings: ['Race Programs: ' + (e.message || e)] }))
+          : skip({ meetings: [], count: 0, races: 0, warnings: [] }),
+        sc.tail
+          ? import('./parsers/permits.js').then(m => m.loadPermits('inputs/Permits to Ride.xlsx'))
+              .catch(e => ({ permits: [], count: 0, warnings: ['Permits to Ride: ' + (e.message || e)] }))
+          : skip({ permits: [], count: 0, warnings: [] }),
+        sc.tail ? text('Eligible to Ride in Trials.csv') : skip(''),
+        sc.tail
+          ? import('./parsers/settings.js').then(m => m.loadAgents('inputs/Riders Agents.csv'))
+              .catch(e => ({ agents: [], count: 0, warnings: ['Riders\u2019 Agents: ' + (e.message || e)] }))
+          : skip({ agents: [], count: 0, warnings: [] }),
+        sc.tail
+          ? import('./parsers/jumpouts.js').then(m => m.loadJumpOuts('inputs/Jump Outs.xlsx'))
+              .catch(e => ({ blocks: [], warnings: ['Jump Outs: ' + (e.message || e)] }))
+          : skip({ blocks: [], warnings: [] }),
+        sc.tail
+          ? import('./parsers/trials.js').then(m => m.loadTrials('inputs/Official Flat Trials.csv'))
+              .catch(e => ({ meetings: [], warnings: ['Official Flat Trials: ' + (e.message || e)] }))
+          : skip({ meetings: [], warnings: [] }),
+        sc.tail
+          ? import('./parsers/notices.js').then(m => m.loadPolicy('inputs/Division of Races Policy.docx'))
+              .catch(e => ({ heading: '', bullets: [], warnings: ['Division of Races Policy: ' + (e.message || e)] }))
+          : skip({ heading: '', bullets: [], warnings: [] }),
+        sc.tail
+          ? import('./parsers/series.js').then(m => m.loadSeries('inputs/Race Series.docx'))
+              .catch(e => ({ blocks: [], count: 0, warnings: ['Race Series: ' + (e.message || e)] }))
+          : skip({ blocks: [], count: 0, warnings: [] }),
+        N ? N.then(m => m.loadNotice('inputs/Industry Notice.docx')).catch(failDoc('blocks')) : skip({ blocks: [], count: 0, warnings: [] }),
+        N ? N.then(m => m.loadStewards('inputs/Stewards Room.docx')).catch(failDoc('blocks')) : skip({ blocks: [], count: 0, warnings: [] }),
+        N ? N.then(m => m.loadRules('inputs/Rules Extracts.docx')).catch(failDoc('groups')) : skip({ groups: [], count: 0, warnings: [] }),
+        sc.tail
+          ? import('./parsers/jumps.js').then(m => m.loadJumps('inputs/', edition))
+              .catch(e => ({ meetings: [], trials: [], tiers: [], count: 0, warnings: ['Jumps Program: ' + (e.message || e)] }))
+          : skip({ meetings: [], trials: [], tiers: [], count: 0, warnings: [] }),
+        sc.tail
+          ? import('./parsers/picnics.js').then(m => m.loadPicnics('inputs/Picnic Program.xlsx', edition))
+              .catch(e => ({ meetings: [], notes: [], range: '', count: 0, warnings: ['Picnic Program: ' + (e.message || e)] }))
+          : skip({ meetings: [], notes: [], range: '', count: 0, warnings: [] })
+      ]);
+    }).then(([cfg, d, c, pr, p, trialsText, a, j, t, pol, series, notice, stewards, rules, jp, pc]) => {
+      const edition = (cfg.settings || {}).edition || '';
+      const sc = this.scope();
+
+      if (c.months && c.months.length) {
+        console.info('Inside Racing — chart read ' + c.months.length + ' month'
+          + (c.months.length > 1 ? 's' : '') + ' in order: '
+          + c.months.map(m => m.month + ' (' + m.count + ')').join(', '));
+      }
+      // this document numbers its own folios, so the shared parser's
+      // cross-page pagination notes are noise here
+      say('Edition Settings', (cfg.warnings || []).filter(w => !/^Pagination:/.test(w)));
+      say('Entry Deadlines (' + d.count + ' days)', d.warnings);
+      if (sc.early) say('Programs Summary Chart (' + (c.count || 0) + ' meetings)', c.warnings);
+      if (sc.programs) say('Race Programs (' + pr.count + ' meetings, ' + pr.races + ' races)', pr.warnings);
+      if (sc.tail) {
+        say('Permits to Ride (' + p.count + ' apprentices)', p.warnings);
+        say('Riders\u2019 Agents (' + a.count + ' agents)', a.warnings);
+        say('Jump-outs and flat trials', (j.warnings || []).concat(t.warnings || [], pol.warnings || []));
+        say('Jumps Program (' + (jp.count || 0) + ' meetings)', jp.warnings);
+        say('Picnic Racing (' + (pc.count || 0) + ' meetings)', pc.warnings);
+        say('Race Series (' + series.count + ' blocks)', series.warnings);
+        [['Industry Notice', notice], ['Stewards\u2019 Room', stewards], ['Rules Extracts', rules]].forEach(([label, r]) => {
+          if (r.empty) console.warn('Inside Racing — ' + label + ': no copy supplied. The page prints an awaiting-copy panel.');
+          else say(label + ' (' + r.count + ')', r.warnings);
+        });
+      }
+      this._inputsMs = Math.round(performance.now() - t0);
+
+      // ── pass 1: the whole edition's data in a single commit ──
+      this._p1 = performance.now();
+      this.setState({
+        edition,
+        settings: cfg.settings || {},
+        days: d.days,
+        chart: { header: c.header, rows: c.rows },
+        meetings: pr.meetings,
+        permits: p.permits || [],
+        trials: tsvRows(trialsText),
+        agents: a.agents || [],
+        joBlocks: j.blocks || [],
+        joMeetings: t.meetings || [],
+        policy: (pol.bullets || []).map(b => ({ t: b })),
+        policyHeading: pol.heading || 'Division of Races Policy at Country TAB Race Meetings',
+        seriesBlocks: series.blocks || [],
+        jpMeetings: jp.meetings || [],
+        pcMeetings: pc.meetings || [],
+        pcNotes: pc.notes || [],
+        pcRange: pc.range || '',
+        jpTrials: jp.trials || [],
+        jpTiers: jp.tiers || [],
+        notice: notice.blocks || [],
+        stewards: stewards.blocks || [],
+        rules: rules.groups || [],
+        tailLoaded: true
+      });
+    });
+  }
+
+  // ── Race Programs ─────────────────────────────────────────────────────────
+  rpAtoms() {
+    const nl = t => String(t || '').replace(/(NEWLINECHAR)+/g, '\n').replace(/[ \t]+/g, ' ').replace(/ ?\n ?/g, '\n').trim();
+    const one = t => { const v = nl(t); return v ? [{ t: v }] : []; };
+    const paras = t => nl(t).split('\n').filter(Boolean).map(v => [{ t: v }]);
+    const join = (...p) => nl(p.filter(Boolean).join(' '));
+    const out = [];
+    (this.state.meetings || []).forEach(m => {
+      const head = {
+        venue: (m.venue + (m.night ? ' ' + m.night : '')).toUpperCase(),
+        date: (m.date || '').toUpperCase()
+      };
+      out.push({
+        head: 1,
+        hm: m.metro ? [head] : [], hc: m.metro ? [] : [head],
+        bar: [], title: [], claim: [], bonus: [], prize: [], fees: [],
+        penH: [], pen: [], balH: [], bal: [], other: [], nomH: [], nom: [], accH: [], acc: []
+      });
+      const blank = { head: 0, hm: [], hc: [], bar: [], title: [], claim: [], bonus: [], prize: [], fees: [], penH: [], pen: [], balH: [], bal: [], other: [], nomH: [], nom: [], accH: [], acc: [] };
+      m.races.forEach(r => {
+        out.push({
+          ...blank,
+          bar: [{ cond: r.cond || '', dist: (r.dist || '').replace(/\s+/g, '') }],
+          title: one(join(r.no + '.', r.name).toUpperCase()),
+          claim: one(join(r.claim, r.group)),
+          bonus: one(join(r.bonus, r.notation))
+        });
+        const push = part => { if (Object.values(part).some(v => v && v.length)) out.push({ ...blank, ...part }); };
+        push({ prize: one(join(r.prize, r.weight)) });
+        push({ fees: one(join(r.nomFee, r.accFee, r.decl)) });
+        [['penH', 'pen'], ['balH', 'bal'], [null, 'other'], ['nomH', 'nom'], ['accH', 'acc']].forEach(([hk, bk]) => {
+          const body = paras(r[bk]);
+          const head = hk ? one(r[hk]) : [];
+          if (!body.length) { if (head.length) push({ [hk]: head }); return; }
+          body.forEach((p, k) => push(k === 0 && hk ? { [hk]: head, [bk]: p } : { [bk]: p }));
+        });
+      });
+    });
+    return out;
+  }
+
+  packPrograms() {
+    if (!this.state.meetings || this.state.rpPages || this._rpPacked) return;
+    const els = Array.from(document.querySelectorAll('[data-atom]'));
+    const all = this.rpAtoms();
+    if (els.length !== all.length) return;
+    this._rpPacked = true;
+    const toPt = px => px * 72 / 96;
+    const h = els.map(e => toPt(e.getBoundingClientRect().height));
+    const LIMIT = 841.89 - 55.1 - 30;
+    const GAP = 13;
+    const cols = [];
+    let i = 0;
+    while (i < all.length) {
+      let used = 0;
+      const atoms = [];
+      while (i < all.length) {
+        const cost = (all[i].head && atoms.length ? GAP : 0) + h[i];
+        if (used + cost > LIMIT && atoms.length) break;
+        used += cost; atoms.push(all[i]); i++;
+      }
+      while (atoms.length > 1 && atoms[atoms.length - 1].head) { atoms.pop(); i--; }
+      cols.push({ atoms: atoms.map((a, k) => (a.head && k > 0 ? { ...a, gap: [{}] } : { ...a, gap: [] })) });
+    }
+    const pages = [];
+    for (let p = 0; p * 4 < cols.length; p++) {
+      pages.push({ cols: [0, 1, 2, 3].map(c => cols[p * 4 + c] || { atoms: [] }) });
+    }
+    this._stage({ rpPages: pages });
+  }
+
+  /** Collect a section's finished pages instead of committing them. The three
+   * sections measure in the same pass, so their pages go into the DOM in one
+   * commit rather than three — see the note on componentDidMount. */
+  _stage(patch) {
+    this._pending = Object.assign(this._pending || {}, patch);
+  }
+
+  componentDidUpdate() {
+    const sc = this.scope();
+    // Pass 2: the sections measure and pack in this one update and commit
+    // together — see the note on componentDidMount. A section that commits on
+    // its own puts another three-second pass on the clock and brings the
+    // truncated export back.
+    if (sc.early) { this.packDeadlines(); this.packChart(); }
+    if (sc.programs) this.packPrograms();
+    if (this._pending) {
+      const patch = this._pending;
+      this._pending = null;
+      this.setState(patch, () => requestAnimationFrame(() => this.reportExtent()));
+      return;
+    }
+    const dp = document.querySelector('doc-page');
+    if (dp && dp._measure) dp._measure();
+  }
+
+  /** Once every section has laid out, say how long the edition runs. */
+  reportExtent() {
+    const sc = this.scope();
+    if (sc.early && (!this.state.chPages || !this.state.dlPages.length)) return;
+    if (sc.programs && !this.state.rpPages) return;
+    if (this._reported) return;
+    this._reported = true;
+    const dp = document.querySelector('doc-page');
+    if (dp && dp._measure) dp._measure();
+    const pages = document.querySelectorAll('doc-page > .page').length;
+    if (dp) dp.setAttribute('data-paged', String(pages));
+    console.info('Inside Racing — ' + pages + ' pages, laid out in '
+      + Math.round(performance.now() - this._p1) + 'ms after ' + this._inputsMs + 'ms reading the inputs.');
+  }
+
+  // ── Entry Deadlines ───────────────────────────────────────────────────────
+
+  /** One line per printed row, so the packer can measure and break on lines. */
+  dlRows() {
+    const out = [];
+    (this.state.days || []).forEach((d, di) => {
+      out.push({ kind: 'day', text: d.day, di });
+      d.groups.forEach((g, gi) => {
+        out.push({ kind: 'head', text: g.header, di, gi });
+        g.items.forEach(it => out.push({ kind: 'item', text: it, di, gi }));
+      });
+    });
+    return out;
+  }
+
+  packDeadlines() {
+    const host = this.dlMeasureEl;
+    if (!host || !this.state.days || this._dlPacked) return;
+    const rows = this.dlRows();
+    const measured = { day: [], head: [], item: [] };
+    ['day', 'head', 'item'].forEach(k => {
+      measured[k] = Array.from(host.querySelectorAll('[data-r="' + k + '"]'));
+    });
+    const counts = { day: 0, head: 0, item: 0 };
+    rows.forEach(r => counts[r.kind]++);
+    if (['day', 'head', 'item'].some(k => measured[k].length !== counts[k])) return;
+    this._dlPacked = true;
+
+    const toPt = px => px * 72 / 96;
+    const idx = { day: 0, head: 0, item: 0 };
+    rows.forEach(r => {
+      const el = measured[r.kind][idx[r.kind]++];
+      const cs = getComputedStyle(el);
+      r.h = toPt(el.getBoundingClientRect().height + parseFloat(cs.marginTop || 0) + parseFloat(cs.marginBottom || 0));
+    });
+
+    const PAGE_H = 841.89, BOTTOM = 30, GAP = 11;
+    const noteEl = host.querySelector('[data-note]');
+    const noteBottom = 93.9 + (noteEl ? toPt(noteEl.getBoundingClientRect().height) : 165) + 12;
+    const limits = { full: PAGE_H - 95 - BOTTOM, cont: PAGE_H - 61.4 - BOTTOM, note: PAGE_H - noteBottom - BOTTOM };
+
+    // Greedy line-level fill; a day block may continue into the next column.
+    const colRuns = [];
+    let i = 0, ci = 0;
+    while (i < rows.length) {
+      const first = ci < 4;
+      const limit = ci === 0 ? limits.note : (first ? limits.full : limits.cont);
+      let used = 0;
+      const start = i;
+      while (i < rows.length) {
+        const r = rows[i];
+        const cost = (r.kind === 'day' && i > start ? GAP : 0) + r.h;
+        if (used + cost > limit && i > start) break;
+        used += cost; i++;
+      }
+      // never end a column on a day heading or a group header
+      while (i > start + 1 && (rows[i - 1].kind === 'day' || rows[i - 1].kind === 'head')) i--;
+      // never end a column on a day heading and a lone header/item pair
+      if (i > start + 2 && rows[i - 1].kind === 'item' && rows[i - 2].kind === 'head' && rows[i - 3].kind === 'day') i -= 3;
+      colRuns.push(rows.slice(start, i));
+      ci++;
+    }
+
+    const toBlocks = run => {
+      const blocks = [];
+      run.forEach(r => {
+        if (r.kind === 'day') blocks.push({ dayRow: [{ text: r.text }], groups: [] });
+        else {
+          if (!blocks.length) blocks.push({ dayRow: [], groups: [] });
+          const b = blocks[blocks.length - 1];
+          if (r.kind === 'head') b.groups.push({ headRow: [{ text: r.text }], items: [] });
+          else {
+            if (!b.groups.length) b.groups.push({ headRow: [], items: [] });
+            b.groups[b.groups.length - 1].items.push(r.text);
+          }
+        }
+      });
+      return blocks;
+    };
+
+    const pages = [];
+    for (let p = 0; p * 4 < colRuns.length; p++) {
+      const first = p === 0;
+      const cols = [];
+      for (let c = 0; c < 4; c++) {
+        const run = colRuns[p * 4 + c] || [];
+        cols.push({ blocks: toBlocks(run), pad: first && c !== 0, padNote: first && c === 0 });
+      }
+      pages.push({ first, cont: !first, cols, no: 0 });
+    }
+    this._stage({ dlPages: pages });
+  }
+
+  // ── Programs Summary Chart ────────────────────────────────────────────────
+
+  /**
+   * Splits a cell's rich-text runs into the buckets the chart sets differently:
+   * the meeting date, the VOBIS marks, bold and red conditions, plain text, and
+   * the rule of dashes that divides two entries in one cell. That rule, left as
+   * ordinary text in a 34pt column, breaks over four lines and ran the chart
+   * five pages long, so it is set on one line and clipped.
+   */
+  chClassify(runs, isMeeting) {
+    const empty = () => ({ n: [], b: [], rd: [], dt: [], vm: [], vc: [], sep: [] });
+    const bucket = (r, i) => {
+      if (isMeeting && i === 0) return 'dt';
+      if (isMeeting && r.s === 9 && r.c === '#FF0040') return 'vm';
+      if (isMeeting && r.s === 9 && r.c === '#00B0F0') return 'vc';
+      if (r.b && r.c === '#FF0040') return 'rd';
+      if (r.b) return 'b';
+      return 'n';
+    };
+    const out = [];
+    (runs || []).forEach((r, i) => {
+      const key = bucket(r, i);
+      const text = key === 'dt' ? String(r.t).toUpperCase() : String(r.t);
+      text.split(/([-\u2013\u2014]{3,})/).forEach(part => {
+        if (!part) return;
+        const o = empty();
+        if (/^[-\u2013\u2014]{3,}$/.test(part)) o.sep.push({ t: part });
+        else o[key].push({ t: part });
+        out.push(o);
+      });
+    });
+    return out;
+  }
+
+  /** "Programs Summary Chart August - October", from the months it covers. */
+  chTitle() {
+    const d = this.state.chart;
+    if (!d || !d.rows || !d.rows.length) return 'Programs Summary Chart';
+    const M = { Jan: 'January', Feb: 'February', Mar: 'March', Apr: 'April', May: 'May', Jun: 'June', Jul: 'July', Aug: 'August', Sep: 'September', Oct: 'October', Nov: 'November', Dec: 'December' };
+    const mon = row => {
+      const t = (row.cells[0][0] || {}).t || '';
+      const m = t.match(/-([A-Za-z]{3})-/);
+      return m ? M[m[1]] : '';
+    };
+    const a = mon(d.rows[0]), b = mon(d.rows[d.rows.length - 1]);
+    return 'Programs Summary Chart ' + (a === b ? a : a + ' - ' + b);
+  }
+
+  chBuildRows() {
+    const d = this.state.chart;
+    if (!d || !d.rows) return [];
+    return d.rows.map(row => ({
+      a: this.chClassify(row.cells[0], true),
+      rest: row.cells.slice(1).map(c => ({ runs: this.chClassify(c, false) }))
+    }));
+  }
+
+  packChart() {
+    if (!this.state.chart || this.state.chPages || this._chPacked) return;
+    const els = Array.from(document.querySelectorAll('[data-row]'));
+    if (els.length !== this.state.chart.rows.length) return;
+    this._chPacked = true;
+    const toPt = px => px * 72 / 96;
+    const h = els.map(e => toPt(e.getBoundingClientRect().height));
+    const all = this.chBuildRows();
+    const LIMIT_FIRST = 841.89 - (89.1 + 26.4) - 30;
+    const LIMIT_CONT = 841.89 - (57.9 + 26.4) - 30;
+    const pages = [];
+    let i = 0, p = 0;
+    while (i < all.length) {
+      const limit = p === 0 ? LIMIT_FIRST : LIMIT_CONT;
+      let used = 0;
+      const rows = [];
+      while (i < all.length && (used + h[i] <= limit || !rows.length)) {
+        used += h[i]; rows.push(all[i]); i++;
+      }
+      pages.push({ rows, titleRow: p === 0 ? [{ text: this.chTitle() }] : [], no: 0 });
+      p++;
+    }
+    this._stage({ chPages: pages });
+  }
+
+  /**
+   * Breaks the meetings into pages. Every cell divides its row equally, so a
+   * row is exactly as deep as its fullest cell and the pages can be worked out
+   * without measuring anything.
+   *
+   * The eligibility notes belong under the table. They ride on the last page
+   * when it has the room and take a page of their own when it has not.
+   */
+  pcPack() {
+    const ROW = 22.2;          // one entry's share of a meeting row
+    const HEAD = 27.1;         // the two heading bands
+    const BOTTOM = 30;
+    const TOP_FIRST = 76.6;    // under the title
+    const TOP_CONT = 57.9;     // under the eyebrow rule
+    const PAGE = 841.89;
+    const IDS = ['m1', 'm2', 'rt1', 'rt2', 'rt3', 'o1', 'o2', 'o3'];
+    const RULE = '0.75pt solid #2c2e35';
+
+    const rows = this.state.pcMeetings.map(m => {
+      const out = { dateLabel: m.dateLabel, venue: String(m.venue || '').toUpperCase() };
+      let deepest = 1;
+      IDS.forEach(id => {
+        const list = (m.cells || {})[id] || [];
+        if (list.length > deepest) deepest = list.length;
+        out[id] = list.map((t, i) => ({ t, rule: i ? RULE : 'none' }));
+      });
+      out.depth = deepest * ROW;
+      out.h = out.depth + 'pt';
+      return out;
+    });
+
+    const notes = this.state.pcNotes || [];
+    const notesDepth = notes.length ? 8 + notes.length * 7.6 : 0;
+    const limitOf = first => PAGE - (first ? TOP_FIRST : TOP_CONT) - HEAD - BOTTOM;
+
+    const pages = [];
+    let i = 0;
+    while (i < rows.length) {
+      const first = pages.length === 0;
+      const limit = limitOf(first);
+      let used = 0;
+      const take = [];
+      while (i < rows.length && (used + rows[i].depth <= limit || !take.length)) {
+        used += rows[i].depth; take.push(rows[i]); i++;
+      }
+      pages.push({ first, rows: take, used, limit });
+    }
+    if (!pages.length) pages.push({ first: true, rows: [], used: 0, limit: limitOf(true) });
+
+    const last = pages[pages.length - 1];
+    if (notesDepth && last.used + notesDepth <= last.limit) last.notesOn = true;
+    else if (notesDepth) pages.push({ first: false, rows: [], used: 0, limit: limitOf(false), notesOn: true });
+
+    return pages;
+  }
+
+
+  /**
+   * The trials fill the page top to bottom, then left to right, and a meeting
+   * carries on into the next column rather than being kept whole. Every block
+   * is a fixed height, so the columns can be worked out without measuring.
+   *
+   *   depth  how deep a column may run, in points
+   */
+  jpPackTrials(depth) {
+    const HEAD = 29;      // rule, venue, date
+    const RACE = 20.2;    // gap, conditions bar, title
+    const GAP = 8;        // between one meeting and the next in a column
+    const items = [];
+    (this.state.jpTrials || []).forEach(m => {
+      items.push({ head: 1, venue: m.venue, date: m.date });
+      m.races.forEach(r => items.push({ head: 0, cond: r.cond, dist: r.dist, title: r.title }));
+    });
+
+    const cols = [{ items: [], used: 0 }];
+    items.forEach(it => {
+      const col = cols[cols.length - 1];
+      const first = col.items.length === 0;
+      const gap = first ? 0 : (it.head ? GAP : 0);
+      const h = gap + (it.head ? HEAD : RACE);
+      // never leave a venue heading stranded at the foot of a column
+      const need = it.head ? h + RACE : h;
+      if (!first && col.used + need > depth) {
+        cols.push({ items: [it], used: it.head ? HEAD : RACE });
+        return;
+      }
+      col.items.push(it);
+      col.used += h;
+    });
+
+    // regroup each column so a heading and the races under it render together
+    return cols.filter(c => c.items.length).map(col => {
+      const groups = [];
+      col.items.forEach(it => {
+        if (it.head || !groups.length) {
+          groups.push({
+            gap: groups.length ? '8pt' : '0pt',
+            head: it.head ? [{ venue: it.venue.toUpperCase(), date: String(it.date || '').toUpperCase() }] : [],
+            races: it.head ? [] : [it]
+          });
+        } else {
+          groups[groups.length - 1].races.push(it);
+        }
+      });
+      return { groups, depth: col.used };
+    });
+  }
+
+  renderVals() {
+    const sc = this.scope();
+    const days = this.state.days || [];
+    const months = [...new Set(days.map(d => d.day.split(' ').pop()))];
+    const range = months.length ? months[0] + ' - ' + months[months.length - 1] + ' 2026' : '';
+    // the hidden measuring rig only needs rows while the section is unpacked
+    const dlRows = (!sc.early || this.state.dlPages.length) ? [] : this.dlRows();
+    const e = String(this.state.edition || '').replace(/\s*edition\s*/i, ' ').replace(/\s+/g, ' ').trim();
+
+    // Folios run straight through the sections, so they are numbered here from
+    // the real page counts rather than being baked in section by section.
+    // Part 2 cannot know how long the front ran, so it starts from the folio
+    // baked into that part file — Part 1's last page plus one.
+    let n = sc.firstFolio;
+    const dlPages = this.state.dlPages.map(p => ({ ...p, no: n++, eyebrow: p.first ? range : 'ENTRY DEADLINES' }));
+    // before packing, the chart renders every row on one page so it can be measured
+    const ch = this.state.chPages
+      || (this.state.chart ? [{ rows: this.chBuildRows(), titleRow: [{ text: this.chTitle() }] }] : []);
+    const chPages = ch.map(p => ({ ...p, no: n++ }));
+
+    // the key page is page one of Race Programs, then the packed pages follow
+    const rpKeyNo = sc.programs ? String(n++) : '';
+    const rp = this.state.rpPages
+      || (this.state.meetings ? [{ cols: [{ atoms: this.rpAtoms() }, { atoms: [] }, { atoms: [] }, { atoms: [] }] }] : []);
+    const rpPages = rp.map(p => ({ ...p, no: n++ }));
+    const M = ['JANUARY','FEBRUARY','MARCH','APRIL','MAY','JUNE','JULY','AUGUST','SEPTEMBER','OCTOBER','NOVEMBER','DECEMBER'];
+    const ms = this.state.meetings || [];
+    const rpFirst = ms.find(m => m.when), rpLast = [...ms].reverse().find(m => m.when);
+    const rpEyebrow = rpFirst && rpLast ? M[rpFirst.when.m] + ' - ' + M[rpLast.when.m] + ' ' + rpLast.when.y : '';
+
+
+    // ── page 2 contents ──
+    // Folios here are counted, never typed: the measured extent where this
+    // render laid the section out, the standing extent otherwise. The standing
+    // figures are the same fallbacks parsers/pagination.js carries.
+    const STANDING = { deadlines: 2, chart: 21, programs: 21 };
+    const len = (arr, fb) => (arr && arr.length ? arr.length : fb);
+    const yes = v => /^(yes|y|true|1|included)$/i.test(String(v || '').trim());
+    const cs = this.state.settings || {};
+    let cn = FIRST_CONTENT_FOLIO;
+    const span = k => { const from = cn; cn += k; return k > 1 ? from + '-' + (cn - 1) : String(from); };
+    const pcOn = yes(cs.picnics_included);
+    const pcPacked = pcOn ? this.pcPack() : [];
+    const cDeadlines = span(len(this.state.dlPages, STANDING.deadlines));
+    const cChart = span(len(this.state.chPages, STANDING.chart));
+    const cPrograms = span(1 + len(this.state.rpPages, STANDING.programs - 1));
+    const cPermits = span(1);
+    const cAgents = span(1);
+    const cJumps = yes(cs.jumps_included) ? span(1) : '';
+    const cJumpouts = span(1); // jump-outs, flat trials and the division policy share a page
+    const cPicnics = pcOn ? span(pcPacked.length || 1) : '';
+    const cSeries = span(1);
+    const cNotice = span(1);
+    const cStewards = span(1);
+    const noticeSubject = ((this.state.notice || []).find(b => b.isSubject) || {}).text || '';
+    const contentsRows = [
+      { label: 'Dates for Entries, Acceptances and Riders', pages: cDeadlines },
+      { label: 'Programs Summary Chart', pages: cChart },
+      { label: 'Race Programs \u2013 Metro and Country', pages: cPrograms },
+      { label: 'Permits to ride in races, Eligible to ride in trials', pages: cPermits },
+      { label: 'Riders\u2019 Agents', pages: cAgents },
+      { label: 'Jumps Program, Jumps Trials, Jumps Races Prizemoney Breakdown', pages: cJumps },
+      { label: 'Jump-Outs Schedule, Official Flat Trials', pages: cJumpouts },
+      { label: 'Division of Races Policy at Country TAB Race Meetings', pages: cJumpouts },
+      { label: 'Picnic Racing', pages: cPicnics },
+      { label: 'Victorian Race Series', pages: cSeries },
+      { label: 'Industry Notice' + (noticeSubject ? ' - ' + noticeSubject : ''), pages: cNotice },
+      { label: 'From the Stewards\u2019 Room (incorporating rule updates)', pages: cStewards }
+    ].filter(r => r.pages);
+    const edWords = String(this.state.edition || '').split(/\s+/).filter(Boolean);
+    const edMonth = (edWords[0] || '').replace(/^(\w)(\w*)$/, (m0, a0, b0) => a0 + b0.toLowerCase());
+    const edYear = edWords[edWords.length - 1] || '';
+    const contentsHeader = 'INSIDE RACING | ' + String(this.state.edition || '');
+    const contentsNote = edMonth
+      ? 'Data within Inside Racing is accurate as of 1 ' + edMonth + ' ' + edYear + ' and subject to change.'
+      : '';
+    if (sc.front && (!this.state.chPages || !this.state.rpPages)) {
+      console.info('Contents: standing extents used for the sections this part does not lay out \u2014 '
+        + 'the whole-edition file counts them for real.');
+    }
+
+    // ── the tail, one page each in printed order ──
+    const tailNo = () => (sc.tail ? String(n++) : '');
+    const paPagePermits = tailNo();
+    const paPageAgents = tailNo();
+    const jpPageNo = tailNo();
+    const pcFolios = pcPacked.map(() => tailNo());
+    const joPageNo = tailNo();
+    const rsPageNo = tailNo();
+    const ntPageNotice = tailNo();
+    const ntPageStewards = tailNo();
+    const ntPageNotices = tailNo();
+
+
+    // Whole-page advertising. One page always runs before the back cover; the
+    // saddle-stitch shortfall runs as further ad pages rather than blank paper,
+    // which is what parsers/ads.js fullPages() computes for the folios.
+    const AD_STOCK = [{
+      id: 'hrassist', name: 'RACING VICTORIA HR ASSIST',
+      art: 'assets/ads/hr-assist-full-page.png',
+      headline: 'Award wages are increasing from the first full pay period on or after 1 July 2026.',
+      body: 'For free and confidential guidance, contact HR Assist via the channels below and state that you require advice under the Racing Victoria HR Assist support service.',
+      hours: 'HR Assist available weekdays (Mon to Fri) 9am-5pm',
+      contact: '1300 884 687   rvhra@ihraustralia.com'
+    }];
+    const adProvisional = (Number(ntPageNotices) || 0) + 2; // this page and the back cover
+    const adShort = adProvisional % 4 ? 4 - (adProvisional % 4) : 0;
+    // Bookings from inputs/Ad Placements.csv, read by parsers/ads.js at parse
+    // time and carried in settings.$placements. A booked page runs as supplied
+    // artwork with no live type; an unbooked one keeps the house ad.
+    const adBooked = ((this.state.settings || {}).$placements || {}).bySlot || {};
+    const adPages = sc.tail
+      ? Array.from({ length: 1 + adShort }, (unused, i) => {
+          const b = adBooked['fullpage-' + (i + 1)];
+          if (b && !b.enabled) return { id: b.slot, name: '', art: null, live: false };
+          if (b && b.artwork) return { id: b.slot, name: b.caption || '', art: b.artwork, live: false };
+          return Object.assign({ live: true }, AD_STOCK[i % AD_STOCK.length]);
+        })
+      : [];
+    const adPanelBooking = adBooked['contents-panel'];
+    const adPanelBooked = !!(adPanelBooking && adPanelBooking.enabled && adPanelBooking.artwork);
+    const adPanelHouse = !adPanelBooked && !(adPanelBooking && !adPanelBooking.enabled);
+    const adPanelArt = adPanelBooked ? adPanelBooking.artwork : '';
+
+    const paPermits = this.state.permits.map(p => ({
+      name: p.Apprentice, wgt: p.Wgt, cat: p.Cat, master: p.Master,
+      aPhone: p.ApprenticePhone ? '(A) ' + p.ApprenticePhone : '',
+      mPhone: p.MasterPhone ? '(M) ' + p.MasterPhone : '',
+      rPhone: p.AgentPhone ? '(R) ' + p.AgentPhone : '',
+      exp: p.ExpDate,
+      aM: p.AllowMetro, aP: p.AllowProv, aO: p.AllowOther,
+      wM: p.WinsMetro, wP: p.WinsProv, wO: p.WinsOther, wT: p.WinsTotal
+    }));
+    const paAgents = this.state.agents.map((a, i) => {
+      const cols = riderColumns((a.Riders || '').split(';').map(x => x.trim()).filter(Boolean));
+      return {
+        agent: a.Agent, c1: cols[0], c2: cols[1], c3: cols[2],
+        contact: (a.Contact || '').split(';').map(x => x.trim()).join('\n'),
+        bg: i % 2 ? '#e2f0fa' : '#fbfbfb'
+      };
+    });
+    // five columns across the foot of the permits page, two entries deep
+    const trialLefts = [24.7, 121, 207.7, 311.8, 398.5];
+    const tr = this.state.trials.map(x => ({ name: x.Name, phone: x.Phone, cat: x.Category }));
+    const paTrialCols = trialLefts.map((l, i) => ({
+      left: l + 'pt',
+      top: tr[i * 2] ? [tr[i * 2]] : [],
+      bottom: tr[i * 2 + 1] ? [tr[i * 2 + 1]] : []
+    }));
+
+    // the two month blocks each own two of the four jump-out columns
+    const joMonths = this.state.joBlocks.slice(0, 2).map((b, i) => ({
+      label: b.label,
+      left: (i === 0 ? 22.2 : 305.1) + 'pt',
+      colA: JO_COL(i * 2) + 0.3 + 'pt',
+      colB: JO_COL(i * 2 + 1) + 0.3 + 'pt',
+      left1: b.left,
+      right1: b.right
+    }));
+    const joMeetings = this.state.joMeetings.map((m, i) => ({
+      left: JO_COL(i) + 'pt', venue: m.venue, date: m.date, races: m.races
+    }));
+    const joDividers = joMeetings.slice(1).map((m, i) => ({ left: (JO_COL(i) + 126.5 + 6.6) + 'pt' }));
+
+    const rsShape = b => {
+      const grid = b.columns.length === 3 ? RS_THREE : RS_FOUR;
+      const cell = (t, i) => ({
+        t, w: grid[i].w + 'pt', pad: grid[i].pad + 'pt',
+        size: (grid === RS_FOUR && i === 1 ? 6.5 : 7) + 'pt'
+      });
+      return {
+        title: b.title,
+        head: b.columns.map((c, i) => ({ t: c, w: grid[i].w + 'pt', pad: grid[i].pad + 'pt' })),
+        rows: b.rows.map(r => ({ cells: grid.map((g, i) => cell(r[i] || '', i)) })),
+        note: b.note ? [{ t: b.note }] : []
+      };
+    };
+    const rsColumns = [21.7, 305].map((left, side) => ({
+      left: left + 'pt',
+      blocks: this.state.seriesBlocks
+        .filter((b, i) => i % 2 === side)
+        .map((b, i) => ({ ...rsShape(b), gap: i === 0 ? '0pt' : '34pt' }))
+    }));
+
+    const jpMonth = (String(this.state.edition || '').split(' ')[0] || '')
+      .replace(/^(\w)(\w*)$/, (m, a2, b2) => a2 + b2.toLowerCase());
+
+    // ── Jumps Program ──
+    const JP_RULE = '0.75pt solid #2c2e35';
+    const jpSplit = list => (list || []).map((e, i) => ({ t: e.desc, rule: i ? JP_RULE : 'none' }));
+    const jpPrize = list => (list || []).map((e, i) => ({ t: e.prize, rule: i ? JP_RULE : 'none' }));
+    const jpMeetings = (this.state.jpMeetings || []).map(m => ({
+      dateLabel: m.dateLabel,
+      venue: m.venue,
+      mh: jpSplit(m.cells.mh), mhp: jpPrize(m.cells.mh),
+      rh: jpSplit(m.cells.rh), rhp: jpPrize(m.cells.rh),
+      oh: jpSplit(m.cells.oh), ohp: jpPrize(m.cells.oh),
+      rs: jpSplit(m.cells.rs), rsp: jpPrize(m.cells.rs),
+      os: jpSplit(m.cells.os), osp: jpPrize(m.cells.os)
+    }));
+    const jpTiers = this.state.jpTiers || [];
+    const jpHalf = Math.ceil(jpTiers.length / 2);
+    const jpTierColumns = jpTiers.length
+      ? [{ tiers: jpTiers.slice(0, jpHalf) }, { tiers: jpTiers.slice(jpHalf) }]
+      : [];
+    // What is left for the trials once the program and the breakdowns have
+    // taken theirs. The Off The Track panel is discretionary.
+    const jpSpare = (790 - 90.7) - (26 + jpMeetings.length * 37) - (27.6 + 29.2)
+      - (27 + 24 + 5.2 + 2 + 7 + jpHalf * 21.2);
+    const JP_PANEL = 29 + 96;
+    let jpCols = this.jpPackTrials(jpSpare - JP_PANEL);
+    let jpOttPanel = [{}];
+    if (jpCols.length > 4) { jpCols = this.jpPackTrials(jpSpare); jpOttPanel = []; }
+    // Second test, on what the page actually came to rather than what the
+    // trials were allowed: a long program pushes everything down too, so the
+    // panel goes whenever the foot of the page cannot hold it.
+    const jpDepth = Math.max(0, ...jpCols.slice(0, 4).map(c => c.depth));
+    const jpSettled = 90.7 + (26 + jpMeetings.length * 37) + (27.6 + 29.2) + jpDepth
+      + (27 + 24 + 5.2 + 2 + 7 + jpHalf * 21.2);
+    if (jpOttPanel.length && jpSettled + JP_PANEL > 790) jpOttPanel = [];
+    // A booked jumps-filler takes the Off The Track panel's place.
+    const jpBooking = (((this.state.settings || {}).$placements || {}).bySlot || {})['jumps-filler'];
+    let jpFillerAd = [];
+    if (jpOttPanel.length && jpBooking) {
+      if (!jpBooking.enabled) jpOttPanel = [];
+      else if (jpBooking.artwork) { jpOttPanel = []; jpFillerAd = [{ art: jpBooking.artwork }]; }
+    }
+    if (jpCols.length > 4 && !this._jpWarnedCols) {
+      this._jpWarnedCols = true;
+      console.warn('Jumps Trials: the races fill ' + jpCols.length + ' columns against the four page 49 sets'
+        + ' — ' + (jpCols.length - 4) + ' will not print. Reduce the races listed, or the section needs a second page.');
+    }
+    if (jpSettled > 790 && !this._jpWarnedDepth) {
+      this._jpWarnedDepth = true;
+      console.warn('Jumps Program: the page comes to about ' + Math.round(jpSettled) + 'pt against 790pt of usable'
+        + ' depth, with the advertisement already dropped — the section needs a second page.');
+    }
+    // a hairline sits in the gutter after every column but the fourth, so a
+    // single-column month still carries the rule the published page shows
+    const jpTrialColumns = jpCols.slice(0, 4).map((c, i) => ({
+      groups: c.groups,
+      rule: i < 3 ? '0.5pt solid #a7a9ac' : 'none'
+    }));
+
+    // ── Picnic Racing ──
+    const pcNoteLines = (this.state.pcNotes || []).map(t => ({ t }));
+    const pcPages = (sc.tail ? pcPacked : []).map((p, i) => ({
+      top: (p.first ? 76.6 : 57.9) + 'pt',
+      titleRow: p.first ? [{ text: this.state.pcRange || '' }] : [],
+      rows: p.rows,
+      notes: p.notesOn ? [{ lines: pcNoteLines }] : [],
+      no: pcFolios[i] || ''
+    }));
+
+    return {
+      frontPages: sc.front ? [{}] : [],
+      rpKeyPages: sc.programs ? [{}] : [],
+      tailPages: sc.tail ? [{}] : [],
+      adPages,
+      adPanelBooked,
+      adPanelHouse,
+      adPanelArt,
+      contentsRows,
+      contentsNote,
+      contentsHeader,
+      backPages: sc.tail ? [{}] : [],
+      rpKeyNo,
+      rpPages,
+      rpEyebrow,
+      paPermits,
+      paAgents,
+      paTrialCols,
+      paWinsAsAt: (this.state.settings || {}).wins_as_at || '',
+      paTrialsIntro: (this.state.settings || {}).trials_intro || '',
+      paAgentsFootnote: (this.state.settings || {}).agents_footnote || '',
+      paPagePermits,
+      paPageAgents,
+      jpMonth,
+      jpMeetings,
+      jpTrialColumns,
+      jpOttPanel,
+      jpFillerAd,
+      pcPages,
+      pcRangeCaps: String(this.state.pcRange || '').toUpperCase(),
+      jpTierColumns,
+      jpPageNo,
+      jpPageJumpouts: joPageNo,
+      joMonths,
+      joMeetings,
+      joDividers,
+      joPolicy: this.state.policy,
+      joPolicyHeading: this.state.policyHeading || 'Division of Races Policy at Country TAB Race Meetings',
+      joPageNo,
+      rsColumns,
+      rsPageNo,
+      ntNotice: this.state.notice,
+      ntStewards: this.state.stewards,
+      ntRules: this.state.rules,
+      ntNoticeEmpty: this.state.tailLoaded && !this.state.notice.length,
+      ntStewardsEmpty: this.state.tailLoaded && !this.state.stewards.length,
+      ntRulesEmpty: this.state.tailLoaded && !this.state.rules.length,
+      ntPageNotice,
+      ntPageStewards,
+      ntPageNotices,
+      coverDate: e.toUpperCase(),
+      footer: 'INSIDE RACING I ' + (this.state.edition || ''),
+      deadlinesMeasureRef: el => { this.dlMeasureEl = el; },
+      dlDayRows: dlRows.filter(r => r.kind === 'day'),
+      dlHeadRows: dlRows.filter(r => r.kind === 'head'),
+      dlItemRows: dlRows.filter(r => r.kind === 'item'),
+      dlNoteGap: this._dlNoteGap || '209.6pt',
+      dlPages,
+      chPages,
+      chHeaderRest: this.state.chart ? this.state.chart.header.slice(1).map(t => ({ text: t.toUpperCase() })) : []
+    };
+  }
+}
+</script>
+</body>
+</html>

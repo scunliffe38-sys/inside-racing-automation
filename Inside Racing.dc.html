@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+@font-face{font-family:'Gotham Narrow';src:url('fonts/GothamNarrow-Book.otf') format('opentype');font-weight:400;font-style:normal;font-display:block}
+@font-face{font-family:'Gotham XNarrow';src:url('fonts/GothamXNarrow-Book.ttf') format('truetype');font-weight:400;font-style:normal;font-display:block}
+@font-face{font-family:'Gotham XNarrow';src:url('fonts/GothamXNarrow-Bold.ttf') format('truetype');font-weight:700;font-style:normal;font-display:block}
+doc-page:not(:defined){visibility:hidden}
+body{margin:0}
+/* the build overlay is position:fixed, so print would repeat it over the pages */
+@media print{.ir-build-overlay{display:none !important}}
+a{color:#2c9cd7;text-decoration:none}
+a:hover{color:#1b7fb4}
+</style>
+<script src="./doc-page.js"></script>
+<script src="./image-slot.js"></script>
+</helmet>
+
+<div class="ir-build-overlay" style="position:fixed;inset:0;z-index:40;display:{{ overlayDisplay }};align-items:center;justify-content:center;background:rgba(255,255,255,.94);font-family:'Gotham Narrow',sans-serif;color:#2c2e35">
+<div style="width:340pt;padding:0 24pt">
+<div style="font-size:10pt;letter-spacing:.019em;line-height:1">BUILDING THE EDITION</div>
+<div style="height:3pt;background:#9ecff0;margin-top:9pt"></div>
+<div style="margin-top:14pt;font-size:8pt;line-height:12pt">Each section is opened, allowed to lay itself out, and its finished pages moved into this document. The chart and the race programs take the longest.</div>
+<div style="margin-top:14pt;display:flex;flex-direction:column;gap:4pt;font-size:8pt;line-height:11pt">
+<sc-for list="{{ steps }}" as="s" hint-placeholder-count="8">
+<div style="display:flex;align-items:baseline;gap:8pt">
+<span style="width:11pt;flex:0 0 11pt;color:{{ s.colour }};font-weight:700">{{ s.mark }}</span>
+<span style="flex:1;color:{{ s.textColour }}">{{ s.label }}</span>
+<span style="color:#9a9c9f;font-variant-numeric:tabular-nums">{{ s.detail }}</span>
+</div>
+</sc-for>
+</div>
+<div style="margin-top:16pt;height:2pt;background:#e6e8ea"><div style="height:2pt;background:#2c9cd7;width:{{ progressWidth }}"></div></div>
+</div>
+</div>
+
+<div class="ir-build-overlay" style="position:fixed;top:12px;right:12px;z-index:41;display:{{ failedDisplay }};max-width:300pt;padding:10pt 12pt;background:#ff2f1a;color:#fff;font-family:'Gotham Narrow',sans-serif;font-size:8pt;line-height:11pt">{{ failedText }}</div>
+
+<div class="ir-build-overlay" style="position:fixed;bottom:12px;left:12px;z-index:41;display:{{ readyDisplay }};align-items:center;gap:12pt;padding:8pt 12pt;background:#2c2e35;color:#fff;font-family:'Gotham Narrow',sans-serif;font-size:8pt;line-height:11pt;letter-spacing:.02em">
+<span>{{ readyText }}</span>
+<button type="button" onClick="{{ onRebuild }}" style="appearance:none;border:0.75pt solid #9ecff0;background:transparent;color:#9ecff0;font-family:'Gotham Narrow',sans-serif;font-size:8pt;line-height:1;letter-spacing:.02em;padding:4pt 8pt;cursor:pointer" style-hover="background:#9ecff0;color:#2c2e35">Rebuild from inputs</button>
+</div>
+
+<doc-page size="a4" ref="{{ stageRef }}">
+</doc-page>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{}">
+// The whole edition as one document.
+//
+// doc-page only paginates its own direct .page children, so this document cannot
+// mount the section files as components — it has to own every page node. Rather
+// than keep a second copy of ten layouts, it assembles: each section file is
+// opened in a hidden frame at A4 width, given time to measure and pack itself,
+// and its finished <section class="page"> nodes are imported here in printed
+// order. The section files stay the single source of truth and still work on
+// their own.
+//
+// Order matters twice over. The flowing sections report their real page count to
+// parsers/pagination.js as they lay out, and sessionStorage is shared with the
+// frames, so running them in printed order means every folio after a section is
+// already right by the time that section is reached. The pass is therefore
+// strictly sequential, not parallel.
+
+// announces: the section measures and packs, and sets data-paged when it has
+// finished. Those must be waited on and never judged by watching the page count
+// settle — Race Programs shows a single fallback page for the eight seconds it
+// spends parsing, which reads as "finished" to any stability test.
+// An entry is either a section file to harvest or an artwork page to reserve.
+// Reserved pages are supplied as artwork later; they hold their place so the
+// folios and the printed extent are right.
+const SECTIONS = [
+  { file: 'Cover.dc.html', label: 'Cover', announces: true },
+  { artwork: ['Stableline notice', 'STABLELINE NOTICE — ARTWORK'], label: 'Stableline notice' },
+  { file: 'Entry Deadlines.dc.html', label: 'Entry Deadlines', announces: true },
+  { file: 'Programs Summary Chart.dc.html', label: 'Programs Summary Chart', announces: true },
+  { file: 'Race Programs.dc.html', label: 'Race Programs', announces: true },
+  { file: 'Permits and Riders Agents.dc.html', label: 'Permits, Riders\u2019 Agents', announces: true },
+  { file: 'Jumps Program.dc.html', label: 'Jumps Program', announces: true },
+  { file: 'Jump Outs and Flat Trials.dc.html', label: 'Jump-Outs, Flat Trials', announces: true },
+  { file: 'Race Series.dc.html', label: 'Victorian Race Series', announces: true },
+  { file: 'Notices.dc.html', label: 'Notices, Stewards, Rules', announces: true }
+];
+
+// Artwork pages that close the edition, reserved so the extent is right.
+const TAIL_ARTWORK = [
+  ['Full-page notice', 'FULL-PAGE NOTICE — ARTWORK'],
+  ['Back cover', 'BACK COVER — ARTWORK']
+];
+
+const A4 = { w: 794, h: 1123 };          // px at 96dpi
+const SETTLE_MS = 1200;                  // page count must hold this long
+const MIN_DWELL_MS = 1800;               // and never finish sooner than this
+const GRACE_MS = 12000;                  // announcing section that never speaks
+const TIMEOUT_MS = 90000;                // per section
+
+// Assembling takes about ninety seconds, and PDF export renders the page from
+// scratch — it cannot wait that long, which is why an export used to come out
+// blank. So a completed edition is cached to a sidecar and restored on load in
+// one pass. Opening the file, and printing it, are then immediate.
+//
+// The cache is keyed on the edition name, so changing Edition Settings to a new
+// month rebuilds by itself. Replacing an input inside the same edition does not
+// change the key — use Rebuild for that.
+const CACHE_FILE = '.inside-racing.state.json';
+
+// Sections that measure and pack set data-paged on their doc-page when they are
+// done. Waiting on that is exact; the alternative — watching the page count stop
+// changing — reads Race Programs as finished while it is still parsing 6,400
+// rows and shows only its key page.
+const PAGED_ATTR = 'data-paged';
+
+class Component extends DCLogic {
+  state = { done: [], current: 0, failed: [], finished: false, total: 0 };
+
+  componentDidMount() {
+    this.start();
+  }
+
+  /** Restore a cached edition if there is one for this month; otherwise build. */
+  async start() {
+    let edition = '';
+    try {
+      const m = await import('./parsers/settings.js');
+      const cfg = await m.loadSettings('inputs/Edition Settings.xlsx');
+      edition = (cfg.settings || {}).edition || '';
+    } catch (e) { /* build anyway; the sections report their own problems */ }
+    this._edition = edition;
+
+    if (!this._forceBuild) {
+      try {
+        const res = await fetch(CACHE_FILE, { cache: 'no-store' });
+        if (res.ok) {
+          const j = await res.json();
+          if (j && j.html && j.edition === edition) {
+            this.stage.innerHTML = j.html;
+            if (this.stage._measure) this.stage._measure();
+            const total = this.stage.querySelectorAll(':scope > .page').length;
+            this.setState({ finished: true, total, restored: true, builtAt: j.builtAt || '' });
+            console.info('Inside Racing — restored ' + total + ' pages for ' + edition
+              + (j.builtAt ? ', assembled ' + j.builtAt : '') + '. Rebuild to pick up changed inputs.');
+            return;
+          }
+        }
+      } catch (e) { /* no cache yet */ }
+    }
+    this.build();
+  }
+
+  /** Discards the cache and assembles again. */
+  rebuild() {
+    this._forceBuild = true;
+    this.stage.innerHTML = '';
+    this.setState({ done: [], current: 0, failed: [], finished: false, total: 0, restored: false });
+    this.build();
+  }
+
+  cache(total) {
+    const w = window.omelette && window.omelette.writeFile;
+    if (!w) return;
+    const payload = JSON.stringify({
+      edition: this._edition || '',
+      pages: total,
+      builtAt: new Date().toISOString().slice(0, 16).replace('T', ' '),
+      html: this.stage.innerHTML
+    });
+    try { Promise.resolve(w(CACHE_FILE, payload)).catch(() => {}); } catch (e) { /* best effort */ }
+  }
+
+  renderVals() {
+    const done = this.state.done;
+    const failed = this.state.failed;
+    const steps = SECTIONS.map((s, i) => {
+      const rec = done[i];
+      const bad = failed.includes(s.file);
+      const running = !rec && !bad && i === this.state.current;
+      return {
+        label: s.label,
+        mark: rec ? '\u2713' : bad ? '\u2715' : running ? '\u2192' : '\u00b7',
+        colour: rec ? '#2c9cd7' : bad ? '#ff2f1a' : running ? '#2c2e35' : '#c9ccd0',
+        textColour: rec || running ? '#2c2e35' : '#9a9c9f',
+        detail: rec ? rec.count + (rec.count === 1 ? ' page' : ' pages') : bad ? 'failed' : running ? 'laying out' : ''
+      };
+    });
+    return {
+      steps,
+      overlayDisplay: this.state.finished ? 'none' : 'flex',
+      progressWidth: Math.round((done.filter(Boolean).length / SECTIONS.length) * 100) + '%',
+      failedDisplay: this.state.finished && failed.length ? 'block' : 'none',
+      failedText: failed.length
+        ? 'Could not assemble: ' + failed.join(', ') + '. Open the section on its own and read the console.'
+        : '',
+      // export is only safe once every section is in; say so plainly
+      readyDisplay: this.state.finished ? 'flex' : 'none',
+      readyText: this.state.total
+        ? this.state.total + ' pages ' + (this.state.restored ? 'restored' : 'assembled') + ' \u2014 ready to export'
+        : '',
+      onRebuild: () => this.rebuild(),
+      stageRef: el => { this.stage = el; }
+    };
+  }
+
+  /** Runs the sections in printed order, appending pages as each one finishes. */
+  async build() {
+    const done = [];
+    const failed = [];
+    for (let i = 0; i < SECTIONS.length; i++) {
+      this.setState({ current: i });
+      const sec = SECTIONS[i];
+      if (sec.artwork) {
+        this.stage.appendChild(this.artwork(sec.artwork[0], sec.artwork[1]));
+        done[i] = { count: 1 };
+        this.setState({ done: done.slice(), failed: failed.slice() });
+        continue;
+      }
+      try {
+        const pages = await this.harvest(sec.file, sec.announces);
+        pages.forEach(node => this.stage.appendChild(node));
+        done[i] = { count: pages.length };
+      } catch (e) {
+        console.warn('Inside Racing — ' + sec.file + ': ' + (e.message || e));
+        failed.push(sec.file);
+        done[i] = null;
+      }
+      this.setState({ done: done.slice(), failed: failed.slice() });
+      if (this.stage && this.stage._measure) this.stage._measure();
+    }
+    TAIL_ARTWORK.forEach(([label, heading]) => {
+      this.stage.appendChild(this.artwork(label, heading));
+    });
+    // the imported pages carry the label they had in their own section file, so
+    // renumber to the assembled position — that is what a folio reference means
+    // in this document, and what a comment on a page needs to say
+    const all = [...this.stage.querySelectorAll(':scope > .page')];
+    all.forEach((p, i) => {
+      const was = (p.getAttribute('data-screen-label') || '').replace(/^\d+\s*/, '').trim();
+      p.setAttribute('data-screen-label', String(i + 1).padStart(2, '0') + (was ? ' ' + was : ''));
+    });
+    const total = all.length;
+    this.setState({ finished: true, total, restored: false });
+    if (!failed.length) this.cache(total);
+    console.info('Inside Racing — assembled ' + total + ' pages'
+      + (failed.length ? ', ' + failed.length + ' section(s) failed' : '')
+      + '. Multiple of four: ' + (total % 4 === 0 ? 'yes' : 'no, ' + (4 - (total % 4)) + ' to add') + '.');
+  }
+
+  artwork(label, heading) {
+    const s = document.createElement('section');
+    s.className = 'page';
+    s.setAttribute('data-screen-label', label);
+    s.setAttribute('style', "position:relative;font-family:'Gotham Narrow',sans-serif;color:#9a9c9f;background:#fff;overflow:hidden");
+    s.innerHTML = '<div style="position:absolute;left:22.7pt;top:24pt;font-size:8pt;letter-spacing:.04em">' + heading + '</div>'
+      + '<div style="position:absolute;left:22.7pt;right:22.7pt;top:37pt;height:3pt;background:#e6e8ea"></div>'
+      + '<div style="position:absolute;left:22.7pt;right:22.7pt;top:52pt;font-size:8pt;line-height:11pt;max-width:300pt">'
+      + 'Reserved so the folios and the printed extent are right. Supplied as artwork, not built from data.</div>';
+    return s;
+  }
+
+  /**
+   * Opens one section file in a hidden A4-width frame, waits for its page count
+   * to stop changing, and returns its pages imported into this document.
+   */
+  harvest(file, announces) {
+    return new Promise((resolve, reject) => {
+      const frame = document.createElement('iframe');
+      frame.setAttribute('aria-hidden', 'true');
+      // off-screen but laid out at full size — the sections measure real geometry
+      frame.style.cssText = 'position:fixed;left:-20000px;top:0;border:0;width:' + A4.w + 'px;height:' + A4.h + 'px;visibility:hidden';
+      frame.src = file;
+
+      let settleTimer = null, poll = null, lastCount = -1, loadedAt = 0;
+      const cleanup = () => {
+        clearInterval(poll);
+        clearTimeout(settleTimer);
+        clearTimeout(hardStop);
+        frame.remove();
+      };
+      const finish = () => {
+        const doc = frame.contentDocument;
+        const found = doc ? doc.querySelectorAll('doc-page > .page') : [];
+        if (!found.length) { cleanup(); reject(new Error('no pages rendered')); return; }
+        const pages = [...found].map(n => document.importNode(n, true));
+        cleanup();
+        resolve(pages);
+      };
+      const hardStop = setTimeout(() => {
+        const doc = frame.contentDocument;
+        const n = doc ? doc.querySelectorAll('doc-page > .page').length : 0;
+        if (n) finish();
+        else { cleanup(); reject(new Error('timed out with no pages')); }
+      }, TIMEOUT_MS);
+
+      frame.addEventListener('load', () => {
+        loadedAt = Date.now();
+        poll = setInterval(() => {
+          const doc = frame.contentDocument;
+          if (!doc) return;
+          const stage = doc.querySelector('doc-page');
+          const n = doc.querySelectorAll('doc-page > .page').length;
+          // a section that announces is finished when it says so and the
+          // rendered count matches. If the announcement never comes — an older
+          // copy of the file, a packing pass that bailed — fall back to a long
+          // stability window rather than hanging.
+          if (announces) {
+            if (stage && stage.hasAttribute(PAGED_ATTR)
+              && n > 0 && n === Number(stage.getAttribute(PAGED_ATTR))) { finish(); return; }
+            if (n !== lastCount) {
+              lastCount = n;
+              clearTimeout(settleTimer);
+              if (n > 0) settleTimer = setTimeout(() => {
+                console.info('Inside Racing — ' + file + ' never signalled that it had finished; taking '
+                  + n + ' pages after ' + (GRACE_MS / 1000) + 's of no change.');
+                finish();
+              }, GRACE_MS);
+            }
+            return;
+          }
+          if (n !== lastCount) {
+            lastCount = n;
+            clearTimeout(settleTimer);
+            if (n > 0) {
+              const wait = Math.max(SETTLE_MS, MIN_DWELL_MS - (Date.now() - loadedAt));
+              settleTimer = setTimeout(finish, wait);
+            }
+          }
+        }, 120);
+      });
+      frame.addEventListener('error', () => { cleanup(); reject(new Error('could not open the file')); });
+      document.body.appendChild(frame);
+    });
+  }
+}
+</script>
+</body>
+</html>
