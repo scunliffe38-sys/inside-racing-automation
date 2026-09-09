@@ -118,12 +118,38 @@ async function fromFolder(path) {
       try { d = await d.getDirectoryHandle(seg); } catch (e) { ok = false; break; }
     }
     if (!ok) continue;
+    const want = parts[parts.length - 1];
     try {
-      const h = await d.getFileHandle(parts[parts.length - 1]);
+      const h = await d.getFileHandle(want);
       return await h.getFile();
-    } catch (e) { /* try the next prefix */ }
+    } catch (e) { /* fall through to a case-insensitive look */ }
+    const f = await loosely(d, want);
+    if (f) return f;
   }
   return null;
+}
+
+/**
+ * The producer's file may differ from the expected name only in case, or the
+ * cover may have arrived as .jpeg or .png. Match on that basis rather than
+ * reporting a file that is plainly sitting there as missing.
+ */
+async function loosely(d, want) {
+  const target = want.toLowerCase();
+  const stem = target.replace(/\.[^.]+$/, '');
+  const swappable = /\.(jpg|jpeg|png)$/.test(target);
+  let fallback = null;
+  try {
+    for await (const [name, entry] of d.entries()) {
+      if (entry.kind !== 'file') continue;
+      const low = name.toLowerCase();
+      if (low === target) return await entry.getFile();
+      if (swappable && low.replace(/\.[^.]+$/, '') === stem && /\.(jpg|jpeg|png)$/.test(low)) {
+        fallback = fallback || entry;
+      }
+    }
+  } catch (e) { return null; }
+  return fallback ? await fallback.getFile() : null;
 }
 
 function fromUpload(path) {
