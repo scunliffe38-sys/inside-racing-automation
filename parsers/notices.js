@@ -43,12 +43,12 @@ const PAGE_DEPTH = 712;      // A4 less the title block and the folio zone
 // at 8pt holds about 158, not the 118 a narrower column would.
 const NOTICE_METRICS = {
   isSubject: [10, 17, 70], isSubhead: [11, 11, 120],
-  isStep: [5, 10.4, 150], isClause: [4, 10.4, 152], isPara: [7, 10.4, 158]
+  isStep: [5, 10.4, 150], isClause: [4, 10.4, 152], isBullet: [4, 10.4, 150], isPara: [7, 10.4, 158]
 };
 
 const STEWARDS_METRICS = {
   isHeading: [13, 17, 70], isSubhead: [9, 11, 120],
-  isClause: [4, 10.4, 152], isPara: [6, 10.4, 158]
+  isClause: [4, 10.4, 152], isBullet: [4, 10.4, 150], isPara: [6, 10.4, 158]
 };
 
 function estimate(blocks, metrics) {
@@ -74,6 +74,11 @@ async function paragraphs(url) {
 }
 
 const isH1 = s => /^Heading1$|^Title$/i.test(s);
+// Word carries a bullet either as the IR Bullet style, as a list paragraph, or
+// as a typed glyph. All three set as bullets; the glyph is the layout's.
+const BULLET_GLYPH = /^[\u2022\u25cf\u25aa\u00b7\u2013-]\s+/;
+const isBulletPara = b => b.style === 'IRBullet' || b.style === 'ListParagraph' || BULLET_GLYPH.test(b.text);
+const debullet = t => String(t).replace(BULLET_GLYPH, '');
 const isH2 = s => /^Heading2$|^Heading3$/i.test(s);
 const KNOWN = ['Heading1', 'Heading2', 'Heading3', 'Title', 'Normal', 'IRStep', 'IRClause', 'IRBullet', 'BodyText', 'ListParagraph'];
 
@@ -93,14 +98,17 @@ export async function loadNotice(url) {
   const blocks = paras.map(b => {
     if (isH1(b.style) || isH2(b.style)) step = 0;
     if (b.style === 'IRStep') step += 1;
+    const head = isH1(b.style) || isH2(b.style);
+    const bullet = !head && b.style !== 'IRStep' && b.style !== 'IRClause' && isBulletPara(b);
     return {
       isSubject: isH1(b.style),
       isSubhead: isH2(b.style),
       isStep: b.style === 'IRStep',
       isClause: b.style === 'IRClause',
-      isPara: !isH1(b.style) && !isH2(b.style) && b.style !== 'IRStep' && b.style !== 'IRClause',
+      isBullet: bullet,
+      isPara: !head && !bullet && b.style !== 'IRStep' && b.style !== 'IRClause',
       no: b.style === 'IRStep' ? step + '.' : '',
-      text: b.text
+      text: bullet ? debullet(b.text) : b.text
     };
   });
 
@@ -127,13 +135,18 @@ export async function loadStewards(url) {
   const paras = await paragraphs(url);
   flagUnknown(paras, warnings, 'Stewards Room');
 
-  const blocks = paras.map(b => ({
-    isHeading: isH1(b.style),
-    isSubhead: isH2(b.style),
-    isClause: b.style === 'IRClause',
-    isPara: !isH1(b.style) && !isH2(b.style) && b.style !== 'IRClause',
-    text: b.text
-  }));
+  const blocks = paras.map(b => {
+    const head = isH1(b.style) || isH2(b.style);
+    const bullet = !head && b.style !== 'IRClause' && isBulletPara(b);
+    return {
+      isHeading: isH1(b.style),
+      isSubhead: isH2(b.style),
+      isClause: b.style === 'IRClause',
+      isBullet: bullet,
+      isPara: !head && !bullet && b.style !== 'IRClause',
+      text: bullet ? debullet(b.text) : b.text
+    };
+  });
 
   const topics = blocks.filter(b => b.isHeading).length;
   if (blocks.length && !topics) warnings.push('Stewards Room: no Heading 1 — every topic needs one.');

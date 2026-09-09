@@ -219,6 +219,8 @@ DETAILS</div>
 <sc-for list="{{ r.n }}" as="v" hint-placeholder-count="0"><span>{{ v.t }}</span></sc-for>
 <sc-for list="{{ r.b }}" as="v" hint-placeholder-count="0"><span style="font-weight:700">{{ v.t }}</span></sc-for>
 <sc-for list="{{ r.rd }}" as="v" hint-placeholder-count="0"><span style="font-weight:700;color:#ff0040">{{ v.t }}</span></sc-for>
+<sc-for list="{{ r.mn }}" as="v" hint-placeholder-count="0"><span style="white-space:nowrap">{{ v.t }}</span></sc-for>
+<sc-for list="{{ r.mb }}" as="v" hint-placeholder-count="0"><span style="font-weight:700;white-space:nowrap">{{ v.t }}</span></sc-for>
 <sc-for list="{{ r.sep }}" as="v" hint-placeholder-count="0"><span style="display:inline-block;max-width:100%;overflow:hidden;white-space:pre;vertical-align:top">{{ v.t }}</span></sc-for>
 </sc-for>
 </div>
@@ -228,6 +230,8 @@ DETAILS</div>
 <sc-for list="{{ r.n }}" as="v" hint-placeholder-count="1"><span>{{ v.t }}</span></sc-for>
 <sc-for list="{{ r.b }}" as="v" hint-placeholder-count="0"><span style="font-weight:700">{{ v.t }}</span></sc-for>
 <sc-for list="{{ r.rd }}" as="v" hint-placeholder-count="0"><span style="font-weight:700;color:#ff0040">{{ v.t }}</span></sc-for>
+<sc-for list="{{ r.mn }}" as="v" hint-placeholder-count="0"><span style="white-space:nowrap">{{ v.t }}</span></sc-for>
+<sc-for list="{{ r.mb }}" as="v" hint-placeholder-count="0"><span style="font-weight:700;white-space:nowrap">{{ v.t }}</span></sc-for>
 <sc-for list="{{ r.sep }}" as="v" hint-placeholder-count="0"><span style="display:inline-block;max-width:100%;overflow:hidden;white-space:pre;vertical-align:top">{{ v.t }}</span></sc-for>
 </sc-for>
 </div>
@@ -589,104 +593,6 @@ DETAILS</div>
 </section>
 </sc-for>
 
-<sc-for list="{{ pcPages }}" as="p" hint-placeholder-count="2">
-<section class="page" data-screen-label="Picnic Racing" style="position:relative;font-family:'Gotham Narrow',sans-serif;color:#2c2e35;background:#fff;padding:0;overflow:hidden">
-<div style="position:absolute;left:22.7pt;top:24pt;font-size:10pt;font-weight:400;line-height:1;letter-spacing:.019em">PROGRAMS FOR PICNIC MEETINGS {{ pcRangeCaps }}</div>
-<div style="position:absolute;left:22.7pt;top:37pt;width:549.9pt;height:3pt;background:#9ecff0"></div>
-
-<sc-for list="{{ p.titleRow }}" as="t" hint-placeholder-count="1">
-<div style="position:absolute;left:22pt;top:45.2pt;font-size:24pt;font-weight:700;line-height:1;letter-spacing:-.01em">Programs for Picnic Meetings {{ t.text }}</div>
-</sc-for>
-
-<div style="position:absolute;left:22.7pt;top:{{ p.top }};width:549.9pt">
-<div style="border-top:0.75pt solid #2c2e35;border-left:0.75pt solid #2c2e35">
-
-<div style="display:flex;background:#e6e7e9;font-family:'Gotham XNarrow',sans-serif;font-size:6.2pt;font-weight:700;line-height:7pt;letter-spacing:.01em">
-<div style="width:44.8pt;flex:0 0 44.8pt;height:14.1pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35"></div>
-<div style="width:116.8pt;flex:0 0 116.8pt;height:14.1pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;align-items:center;justify-content:center">MAIDEN</div>
-<div style="width:192.4pt;flex:0 0 192.4pt;height:14.1pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;align-items:center;justify-content:center">RESTRICTED TROPHY</div>
-<div style="width:195.9pt;flex:0 0 195.9pt;height:14.1pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;align-items:center;justify-content:center">OPEN</div>
-</div>
-
-<div style="display:flex;background:#e6e7e9;font-family:'Gotham XNarrow',sans-serif;font-size:6.2pt;font-weight:700;line-height:7pt;letter-spacing:.01em">
-<div style="width:44.8pt;flex:0 0 44.8pt;height:13pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35"></div>
-<div style="width:60.9pt;flex:0 0 60.9pt;height:13pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35"></div>
-<div style="width:55.9pt;flex:0 0 55.9pt;height:13pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35"></div>
-<div style="width:56.9pt;flex:0 0 56.9pt;height:13pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;align-items:center;justify-content:center">1</div>
-<div style="width:75.1pt;flex:0 0 75.1pt;height:13pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;align-items:center;justify-content:center">2</div>
-<div style="width:60.4pt;flex:0 0 60.4pt;height:13pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;align-items:center;justify-content:center">3</div>
-<div style="width:60.9pt;flex:0 0 60.9pt;height:13pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;align-items:center;justify-content:center">999m - 1499m</div>
-<div style="width:68pt;flex:0 0 68pt;height:13pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;align-items:center;justify-content:center">1500m - 1999m</div>
-<div style="width:67pt;flex:0 0 67pt;height:13pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;align-items:center;justify-content:center">2000m - 3000m</div>
-</div>
-
-<sc-for list="{{ p.rows }}" as="m" hint-placeholder-count="12">
-<div style="display:flex;align-items:stretch;font-size:7pt;line-height:8pt;min-height:{{ m.h }}">
-<div style="width:44.8pt;flex:0 0 44.8pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;padding:0 3pt;display:flex;flex-direction:column;justify-content:center">
-<div style="font-weight:700;white-space:nowrap">{{ m.dateLabel }}</div>
-<div style="font-size:6.6pt;font-weight:700;color:#2c9cd7">{{ m.venue }}</div>
-</div>
-
-<div style="width:60.9pt;flex:0 0 60.9pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;flex-direction:column">
-<sc-for list="{{ m.m1 }}" as="e" hint-placeholder-count="1">
-<div style="flex:1;display:flex;align-items:center;padding:0 3pt;border-top:{{ e.rule }}">{{ e.t }}</div>
-</sc-for>
-</div>
-<div style="width:55.9pt;flex:0 0 55.9pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;background:#edf6fb;display:flex;flex-direction:column">
-<sc-for list="{{ m.m2 }}" as="e" hint-placeholder-count="1">
-<div style="flex:1;display:flex;align-items:center;padding:0 3pt;border-top:{{ e.rule }}">{{ e.t }}</div>
-</sc-for>
-</div>
-
-<div style="width:56.9pt;flex:0 0 56.9pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;flex-direction:column">
-<sc-for list="{{ m.rt1 }}" as="e" hint-placeholder-count="1">
-<div style="flex:1;display:flex;align-items:center;padding:0 3pt;border-top:{{ e.rule }}">{{ e.t }}</div>
-</sc-for>
-</div>
-<div style="width:75.1pt;flex:0 0 75.1pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;background:#edf6fb;display:flex;flex-direction:column">
-<sc-for list="{{ m.rt2 }}" as="e" hint-placeholder-count="1">
-<div style="flex:1;display:flex;align-items:center;padding:0 3pt;border-top:{{ e.rule }}">{{ e.t }}</div>
-</sc-for>
-</div>
-<div style="width:60.4pt;flex:0 0 60.4pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;flex-direction:column">
-<sc-for list="{{ m.rt3 }}" as="e" hint-placeholder-count="1">
-<div style="flex:1;display:flex;align-items:center;padding:0 3pt;border-top:{{ e.rule }}">{{ e.t }}</div>
-</sc-for>
-</div>
-
-<div style="width:60.9pt;flex:0 0 60.9pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;background:#edf6fb;display:flex;flex-direction:column">
-<sc-for list="{{ m.o1 }}" as="e" hint-placeholder-count="1">
-<div style="flex:1;display:flex;align-items:center;padding:0 3pt;border-top:{{ e.rule }}">{{ e.t }}</div>
-</sc-for>
-</div>
-<div style="width:68pt;flex:0 0 68pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;flex-direction:column">
-<sc-for list="{{ m.o2 }}" as="e" hint-placeholder-count="1">
-<div style="flex:1;display:flex;align-items:center;padding:0 3pt;border-top:{{ e.rule }}">{{ e.t }}</div>
-</sc-for>
-</div>
-<div style="width:67pt;flex:0 0 67pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;background:#edf6fb;display:flex;flex-direction:column">
-<sc-for list="{{ m.o3 }}" as="e" hint-placeholder-count="1">
-<div style="flex:1;display:flex;align-items:center;padding:0 3pt;border-top:{{ e.rule }}">{{ e.t }}</div>
-</sc-for>
-</div>
-</div>
-</sc-for>
-</div>
-
-<sc-for list="{{ p.notes }}" as="block" hint-placeholder-count="0">
-<div style="margin-top:8pt;font-size:5.8pt;line-height:7.6pt">
-<sc-for list="{{ block.lines }}" as="n" hint-placeholder-count="6">
-<div>{{ n.t }}</div>
-</sc-for>
-</div>
-</sc-for>
-</div>
-
-<div style="position:absolute;left:12.2pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1;letter-spacing:-.013em">{{ footer }}</div>
-<div style="position:absolute;right:12.3pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1">{{ p.no }}</div>
-</section>
-</sc-for>
-
 <sc-for list="{{ joPages }}" as="tp" hint-placeholder-count="1">
 <section class="page" data-screen-label="Jump-Outs and Flat Trials" style="position:relative;font-family:'Gotham Narrow',sans-serif;color:#2c2e35;background:#fff;padding:0;overflow:hidden">
 <div style="position:absolute;left:22.7pt;top:24pt;font-size:10pt;font-weight:400;line-height:1;letter-spacing:.019em">JUMP-OUTS AND OFFICIAL FLAT TRIALS</div>
@@ -790,6 +696,104 @@ DETAILS</div>
 </section>
 </sc-for>
 
+<sc-for list="{{ pcPages }}" as="p" hint-placeholder-count="2">
+<section class="page" data-screen-label="Picnic Racing" style="position:relative;font-family:'Gotham Narrow',sans-serif;color:#2c2e35;background:#fff;padding:0;overflow:hidden">
+<div style="position:absolute;left:22.7pt;top:24pt;font-size:10pt;font-weight:400;line-height:1;letter-spacing:.019em">PROGRAMS FOR PICNIC MEETINGS {{ pcRangeCaps }}</div>
+<div style="position:absolute;left:22.7pt;top:37pt;width:549.9pt;height:3pt;background:#9ecff0"></div>
+
+<sc-for list="{{ p.titleRow }}" as="t" hint-placeholder-count="1">
+<div style="position:absolute;left:22pt;top:45.2pt;font-size:24pt;font-weight:700;line-height:1;letter-spacing:-.01em">Programs for Picnic Meetings {{ t.text }}</div>
+</sc-for>
+
+<div style="position:absolute;left:22.7pt;top:{{ p.top }};width:549.9pt">
+<div style="border-top:0.75pt solid #2c2e35;border-left:0.75pt solid #2c2e35">
+
+<div style="display:flex;background:#e6e7e9;font-family:'Gotham XNarrow',sans-serif;font-size:6.2pt;font-weight:700;line-height:7pt;letter-spacing:.01em">
+<div style="width:44.8pt;flex:0 0 44.8pt;height:14.1pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35"></div>
+<div style="width:116.8pt;flex:0 0 116.8pt;height:14.1pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;align-items:center;justify-content:center">MAIDEN</div>
+<div style="width:192.4pt;flex:0 0 192.4pt;height:14.1pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;align-items:center;justify-content:center">RESTRICTED TROPHY</div>
+<div style="width:195.9pt;flex:0 0 195.9pt;height:14.1pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;align-items:center;justify-content:center">OPEN</div>
+</div>
+
+<div style="display:flex;background:#e6e7e9;font-family:'Gotham XNarrow',sans-serif;font-size:6.2pt;font-weight:700;line-height:7pt;letter-spacing:.01em">
+<div style="width:44.8pt;flex:0 0 44.8pt;height:13pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35"></div>
+<div style="width:60.9pt;flex:0 0 60.9pt;height:13pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35"></div>
+<div style="width:55.9pt;flex:0 0 55.9pt;height:13pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35"></div>
+<div style="width:56.9pt;flex:0 0 56.9pt;height:13pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;align-items:center;justify-content:center">1</div>
+<div style="width:75.1pt;flex:0 0 75.1pt;height:13pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;align-items:center;justify-content:center">2</div>
+<div style="width:60.4pt;flex:0 0 60.4pt;height:13pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;align-items:center;justify-content:center">3</div>
+<div style="width:60.9pt;flex:0 0 60.9pt;height:13pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;align-items:center;justify-content:center">999m - 1499m</div>
+<div style="width:68pt;flex:0 0 68pt;height:13pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;align-items:center;justify-content:center">1500m - 1999m</div>
+<div style="width:67pt;flex:0 0 67pt;height:13pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;align-items:center;justify-content:center">2000m - 3000m</div>
+</div>
+
+<sc-for list="{{ p.rows }}" as="m" hint-placeholder-count="12">
+<div style="display:flex;align-items:stretch;font-size:7pt;line-height:8pt;min-height:{{ m.h }}">
+<div style="width:44.8pt;flex:0 0 44.8pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;padding:0 3pt;display:flex;flex-direction:column;justify-content:center">
+<div style="font-weight:700;white-space:nowrap">{{ m.dateLabel }}</div>
+<div style="font-size:6.6pt;font-weight:700;color:#2c9cd7">{{ m.venue }}</div>
+</div>
+
+<div style="width:60.9pt;flex:0 0 60.9pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;flex-direction:column">
+<sc-for list="{{ m.m1 }}" as="e" hint-placeholder-count="1">
+<div style="flex:1;display:flex;align-items:center;padding:0 3pt;border-top:{{ e.rule }}">{{ e.t }}</div>
+</sc-for>
+</div>
+<div style="width:55.9pt;flex:0 0 55.9pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;background:#edf6fb;display:flex;flex-direction:column">
+<sc-for list="{{ m.m2 }}" as="e" hint-placeholder-count="1">
+<div style="flex:1;display:flex;align-items:center;padding:0 3pt;border-top:{{ e.rule }}">{{ e.t }}</div>
+</sc-for>
+</div>
+
+<div style="width:56.9pt;flex:0 0 56.9pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;flex-direction:column">
+<sc-for list="{{ m.rt1 }}" as="e" hint-placeholder-count="1">
+<div style="flex:1;display:flex;align-items:center;padding:0 3pt;border-top:{{ e.rule }}">{{ e.t }}</div>
+</sc-for>
+</div>
+<div style="width:75.1pt;flex:0 0 75.1pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;background:#edf6fb;display:flex;flex-direction:column">
+<sc-for list="{{ m.rt2 }}" as="e" hint-placeholder-count="1">
+<div style="flex:1;display:flex;align-items:center;padding:0 3pt;border-top:{{ e.rule }}">{{ e.t }}</div>
+</sc-for>
+</div>
+<div style="width:60.4pt;flex:0 0 60.4pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;flex-direction:column">
+<sc-for list="{{ m.rt3 }}" as="e" hint-placeholder-count="1">
+<div style="flex:1;display:flex;align-items:center;padding:0 3pt;border-top:{{ e.rule }}">{{ e.t }}</div>
+</sc-for>
+</div>
+
+<div style="width:60.9pt;flex:0 0 60.9pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;background:#edf6fb;display:flex;flex-direction:column">
+<sc-for list="{{ m.o1 }}" as="e" hint-placeholder-count="1">
+<div style="flex:1;display:flex;align-items:center;padding:0 3pt;border-top:{{ e.rule }}">{{ e.t }}</div>
+</sc-for>
+</div>
+<div style="width:68pt;flex:0 0 68pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;flex-direction:column">
+<sc-for list="{{ m.o2 }}" as="e" hint-placeholder-count="1">
+<div style="flex:1;display:flex;align-items:center;padding:0 3pt;border-top:{{ e.rule }}">{{ e.t }}</div>
+</sc-for>
+</div>
+<div style="width:67pt;flex:0 0 67pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;background:#edf6fb;display:flex;flex-direction:column">
+<sc-for list="{{ m.o3 }}" as="e" hint-placeholder-count="1">
+<div style="flex:1;display:flex;align-items:center;padding:0 3pt;border-top:{{ e.rule }}">{{ e.t }}</div>
+</sc-for>
+</div>
+</div>
+</sc-for>
+</div>
+
+<sc-for list="{{ p.notes }}" as="block" hint-placeholder-count="0">
+<div style="margin-top:8pt;font-size:5.8pt;line-height:7.6pt">
+<sc-for list="{{ block.lines }}" as="n" hint-placeholder-count="6">
+<div>{{ n.t }}</div>
+</sc-for>
+</div>
+</sc-for>
+</div>
+
+<div style="position:absolute;left:12.2pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1;letter-spacing:-.013em">{{ footer }}</div>
+<div style="position:absolute;right:12.3pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1">{{ p.no }}</div>
+</section>
+</sc-for>
+
 <sc-for list="{{ ntNoticePages }}" as="tp" hint-placeholder-count="1">
 <section class="page" data-screen-label="Notices" style="position:relative;font-family:'Gotham Narrow',sans-serif;color:#2c2e35;background:#fff;padding:0;overflow:hidden">
 <div style="position:absolute;left:22.7pt;top:24pt;font-size:10pt;font-weight:400;line-height:1;letter-spacing:.019em">Notices | INTEGRITY SERVICES</div>
@@ -818,6 +822,12 @@ DETAILS</div>
 </sc-if>
 <sc-if value="{{ b.isClause }}" hint-placeholder-val="{{ true }}">
 <div style="margin-top:4pt;padding-left:13pt;font-size:8pt;line-height:10.4pt;text-wrap:pretty">{{ b.text }}</div>
+</sc-if>
+<sc-if value="{{ b.isBullet }}" hint-placeholder-val="{{ true }}">
+<div style="margin-top:4pt;display:flex;gap:5pt;font-size:8pt;line-height:10.4pt">
+<div style="flex:0 0 7pt">&bull;</div>
+<div style="flex:1;text-wrap:pretty">{{ b.text }}</div>
+</div>
 </sc-if>
 </sc-for>
 <sc-if value="{{ ntNoticeEmpty }}" hint-placeholder-val="{{ false }}">
@@ -855,6 +865,12 @@ DETAILS</div>
 </sc-if>
 <sc-if value="{{ b.isClause }}" hint-placeholder-val="{{ true }}">
 <div style="margin-top:4pt;padding-left:13pt;font-size:8pt;line-height:10.4pt;text-wrap:pretty">{{ b.text }}</div>
+</sc-if>
+<sc-if value="{{ b.isBullet }}" hint-placeholder-val="{{ true }}">
+<div style="margin-top:4pt;display:flex;gap:5pt;font-size:8pt;line-height:10.4pt">
+<div style="flex:0 0 7pt">&bull;</div>
+<div style="flex:1;text-wrap:pretty">{{ b.text }}</div>
+</div>
 </sc-if>
 </sc-for>
 <sc-if value="{{ ntStewardsEmpty }}" hint-placeholder-val="{{ false }}">
@@ -1305,13 +1321,32 @@ class Component extends DCLogic {
   }
 
   // ── Race Programs ─────────────────────────────────────────────────────────
+
+  /* A picnic meeting belongs in the picnic programs grid, not here. The Race
+   * Programs export carries them alongside the TAB meetings, so they are
+   * matched out by date and venue against the picnic workbook. */
+  rpPrinted() {
+    const all = this.state.meetings || [];
+    const pc = this.state.pcMeetings || [];
+    if (!pc.length) return all;
+    const norm = v => String(v || '').toLowerCase().replace(/[^a-z]/g, '');
+    const keys = new Set(pc.filter(m => m.iso).map(m => norm(m.venue) + '|' + m.iso));
+    if (!keys.size) return all;
+    return all.filter(m => {
+      const p = String(m.key || '').split('|')[0].split('/');
+      if (p.length !== 3) return true;
+      const iso = p[2] + '-' + String(p[0]).padStart(2, '0') + '-' + String(p[1]).padStart(2, '0');
+      return !keys.has(norm(m.venue) + '|' + iso);
+    });
+  }
+
   rpAtoms() {
     const nl = t => String(t || '').replace(/(NEWLINECHAR)+/g, '\n').replace(/[ \t]+/g, ' ').replace(/ ?\n ?/g, '\n').trim();
     const one = t => { const v = nl(t); return v ? [{ t: v }] : []; };
     const paras = t => nl(t).split('\n').filter(Boolean).map(v => [{ t: v }]);
     const join = (...p) => nl(p.filter(Boolean).join(' '));
     const out = [];
-    (this.state.meetings || []).forEach(m => {
+    this.rpPrinted().forEach(m => {
       const head = {
         venue: (m.venue + (m.night ? ' ' + m.night : '')).toUpperCase(),
         date: (m.date || '').toUpperCase()
@@ -1543,7 +1578,7 @@ class Component extends DCLogic {
    * five pages long, so it is set on one line and clipped.
    */
   chClassify(runs, isMeeting) {
-    const empty = () => ({ n: [], b: [], rd: [], dt: [], vm: [], vc: [], sep: [] });
+    const empty = () => ({ n: [], b: [], rd: [], dt: [], vm: [], vc: [], mn: [], mb: [], sep: [] });
     const bucket = (r, i) => {
       if (isMeeting && i === 0) return 'dt';
       if (isMeeting && r.s === 9 && r.c === '#FF0040') return 'vm';
@@ -1558,10 +1593,22 @@ class Component extends DCLogic {
       const text = key === 'dt' ? String(r.t).toUpperCase() : String(r.t);
       text.split(/([-\u2013\u2014]{3,})/).forEach(part => {
         if (!part) return;
-        const o = empty();
-        if (/^[-\u2013\u2014]{3,}$/.test(part)) o.sep.push({ t: part });
-        else o[key].push({ t: part });
-        out.push(o);
+        if (/^[-\u2013\u2014]{3,}$/.test(part)) {
+          const o = empty();
+          o.sep.push({ t: part });
+          out.push(o);
+          return;
+        }
+        // prizemoney is split off so it can be set unbreakable: the cell is
+        // narrow enough that break-word was splitting $10,200,000 after the
+        // second comma
+        part.split(/(\$\d[\d,]*)/).forEach(bit => {
+          if (!bit) return;
+          const o = empty();
+          if (/^\$\d/.test(bit) && (key === 'n' || key === 'b')) o[key === 'b' ? 'mb' : 'mn'].push({ t: bit });
+          else o[key].push({ t: bit });
+          out.push(o);
+        });
       });
     });
     return out;
@@ -1828,8 +1875,8 @@ class Component extends DCLogic {
   ntPack(which) {
     const PAGE = 841.89, BOTTOM = 30, TOP_FIRST = 100, TOP_CONT = 50;
     const M = which === 'notice'
-      ? { isSubject: [10, 17, 70], isSubhead: [11, 11, 120], isPara: [7, 10.4, 158], isStep: [5, 10.4, 150], isClause: [4, 10.4, 152] }
-      : { isHeading: [13, 17, 70], isSubhead: [9, 11, 120], isPara: [6, 10.4, 158], isClause: [4, 10.4, 152] };
+      ? { isSubject: [10, 17, 70], isSubhead: [11, 11, 120], isPara: [7, 10.4, 158], isStep: [5, 10.4, 150], isClause: [4, 10.4, 152], isBullet: [4, 10.4, 150] }
+      : { isHeading: [13, 17, 70], isSubhead: [9, 11, 120], isPara: [6, 10.4, 158], isClause: [4, 10.4, 152], isBullet: [4, 10.4, 150] };
     const HEADS = which === 'notice' ? ['isSubject', 'isSubhead'] : ['isHeading', 'isSubhead'];
     const items = (this.state[which] || []).map(b => {
       const kind = Object.keys(M).find(k => b[k]) || 'isPara';
@@ -1947,7 +1994,7 @@ class Component extends DCLogic {
       || (this.state.meetings ? [{ cols: [{ atoms: this.rpAtoms() }, { atoms: [] }, { atoms: [] }, { atoms: [] }] }] : []);
     const rpPages = rp.map(p => ({ ...p, no: n++ }));
     const M = ['JANUARY','FEBRUARY','MARCH','APRIL','MAY','JUNE','JULY','AUGUST','SEPTEMBER','OCTOBER','NOVEMBER','DECEMBER'];
-    const ms = this.state.meetings || [];
+    const ms = this.rpPrinted();
     const rpFirst = ms.find(m => m.when), rpLast = [...ms].reverse().find(m => m.when);
     const rpEyebrow = rpFirst && rpLast ? M[rpFirst.when.m] + ' - ' + M[rpLast.when.m] + ' ' + rpLast.when.y : '';
 
@@ -1977,11 +2024,16 @@ class Component extends DCLogic {
     const cJumps = yes(cs.jumps_included) ? span(1) : '';
     const cJumpouts = span(joPacked.length);   // the division policy rides on its first page
     const cPolicy = String(cJumpouts).split('-')[0];
-    const cPicnics = pcOn ? span(pcPacked.length || 1) : '';
     const cSeries = span(rsPacked.length);
+    const cPicnics = pcOn ? span(pcPacked.length || 1) : '';
     const cNotice = span(ntNoticePacked.length);
     const cStewards = span(ntStewardsPacked.length);
-    const noticeSubject = ((this.state.notice || []).find(b => b.isSubject) || {}).text || '';
+    const cRules = span(1);
+    // a month can carry two notices; each is listed
+    const noticeSubjects = (this.state.notice || []).filter(b => b.isSubject).map(b => b.text);
+    const noticeRows = (noticeSubjects.length ? noticeSubjects : ['']).map(s => ({
+      label: 'Industry Notice' + (s ? ' - ' + s : ''), pages: cNotice
+    }));
     const contentsRows = [
       { label: 'Dates for Entries, Acceptances and Riders', pages: cDeadlines },
       { label: 'Programs Summary Chart', pages: cChart },
@@ -1991,10 +2043,11 @@ class Component extends DCLogic {
       { label: 'Jumps Program, Jumps Trials, Jumps Races Prizemoney Breakdown', pages: cJumps },
       { label: 'Jump-Outs Schedule, Official Flat Trials', pages: cJumpouts },
       { label: 'Division of Races Policy at Country TAB Race Meetings', pages: cPolicy },
-      { label: 'Picnic Racing', pages: cPicnics },
       { label: 'Victorian Race Series', pages: cSeries },
-      { label: 'Industry Notice' + (noticeSubject ? ' - ' + noticeSubject : ''), pages: cNotice },
-      { label: 'From the Stewards\u2019 Room (incorporating rule updates)', pages: cStewards }
+      { label: 'Picnic Racing', pages: cPicnics },
+      ...noticeRows,
+      { label: 'From the Stewards\u2019 Room (incorporating rule updates)', pages: cStewards },
+      { label: 'Rules and Notices', pages: cRules }
     ].filter(r => r.pages);
     const edWords = String(this.state.edition || '').split(/\s+/).filter(Boolean);
     const edMonth = (edWords[0] || '').replace(/^(\w)(\w*)$/, (m0, a0, b0) => a0 + b0.toLowerCase());
@@ -2015,10 +2068,10 @@ class Component extends DCLogic {
     // out of the edition entirely when the toggle is No: no page, no folio
     const jpOn = yes(cs.jumps_included);
     const jpPageNo = jpOn ? tailNo() : '';
-    const pcFolios = pcPacked.map(() => tailNo());
     const joFolios = joPacked.map(() => tailNo());
     const joPageNo = joFolios[0] || '';
     const rsFolios = rsPacked.map(() => tailNo());
+    const pcFolios = pcPacked.map(() => tailNo());
     const ntNoticeFolios = ntNoticePacked.map(() => tailNo());
     const ntStewardsFolios = ntStewardsPacked.map(() => tailNo());
     const ntPageNotices = tailNo();

@@ -39,7 +39,7 @@ export async function loadJumpOuts(url) {
       if (!v) { warnings.push(label + ': no venue beside ' + excelDate(raw) + ' (row ' + (i + 1) + ')'); return; }
       const d = dateOf(raw);
       if (!d) { warnings.push(label + ': "' + raw + '" is not a date (row ' + (i + 1) + ')'); return; }
-      out.push({ date: excelDate(raw), venue: v, month: d.getUTCMonth(), year: d.getUTCFullYear() });
+      out.push({ date: excelDate(raw), venue: v, month: d.getUTCMonth(), year: d.getUTCFullYear(), at: d.getTime() });
     });
     return out;
   };
@@ -47,18 +47,29 @@ export async function loadJumpOuts(url) {
   const first = pick(rows, ['A'], 'B', 'First month');
   const second = pick(rows, ['C', 'D'], 'E', 'Second month');
 
+  // A column is one month, in date order. The export is not always sorted, and
+  // it sometimes carries a stray meeting from the month before, which the
+  // printed schedule does not run: the column keeps the month most of its
+  // entries fall in and reports the rest.
   const block = entries => {
     if (!entries.length) return null;
-    const months = [...new Set(entries.map(e => e.month))];
-    if (months.length > 1) {
-      warnings.push('Column spans more than one month (' + months.map(m => MONTHS[m]).join(', ') + ') — the heading uses the first.');
+    const sorted = entries.slice().sort((a, b) => a.at - b.at);
+    const tally = new Map();
+    sorted.forEach(e => tally.set(e.month, (tally.get(e.month) || 0) + 1));
+    const main = [...tally.entries()].sort((a, b) => b[1] - a[1])[0][0];
+    const kept = sorted.filter(e => e.month === main);
+    const dropped = sorted.filter(e => e.month !== main);
+    if (dropped.length) {
+      warnings.push('The ' + MONTHS[main] + ' column carries ' + dropped.length + ' entr'
+        + (dropped.length > 1 ? 'ies' : 'y') + ' from another month, left out of the printed schedule: '
+        + dropped.map(e => e.date + ' ' + e.venue).join(', ') + '.');
     }
-    const half = Math.ceil(entries.length / 2);
+    const half = Math.ceil(kept.length / 2);
     return {
-      label: MONTHS[entries[0].month] + ' ' + entries[0].year,
-      count: entries.length,
-      left: entries.slice(0, half),
-      right: entries.slice(half)
+      label: MONTHS[main] + ' ' + kept[0].year,
+      count: kept.length,
+      left: kept.slice(0, half),
+      right: kept.slice(half)
     };
   };
 

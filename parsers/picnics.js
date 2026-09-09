@@ -68,19 +68,22 @@ function dateLabel(d) {
 
 /**
  * The sheet writes prizemoney with a dollar sign and spaces around the rating
- * band; the page prints neither. Everything else is left as typed.
+ * band; the page prints the dollar sign and closes the band up. The sign is
+ * stripped and reapplied so a cell typed without one still prints with one.
  */
 function cell(raw) {
-  return String(raw || '')
+  const t = String(raw || '')
     .replace(/\$/g, '')
     .replace(/\s+/g, ' ')
     .replace(/(\d)\s*-\s*(\d)/g, '$1-$2')
     .trim();
+  return t.replace(/^(\d[\d,]*)/, '$$$1');
 }
 
 /** Anything that does not look like "5,000 1200m" is worth a second look. */
 function suspect(text) {
   if (!text) return null;
+  text = String(text).replace(/\$/g, '');
   if (/^,|,\s*\d{4}/.test(text) && !/^\d{1,3}(,\d{3})/.test(text)) return 'the prizemoney reads "' + text + '"';
   if (/\d+m\s+\d+m/.test(text)) return 'two distances in one entry: "' + text + '"';
   if (/\)\)/.test(text)) return 'a doubled bracket: "' + text + '"';
@@ -151,7 +154,7 @@ export async function loadPicnics(url, edition, months) {
       if (!venue) warnings.push('Picnic Program (' + where + '): no venue — row ' + rowNo + '.');
       const cells = {};
       RACE_COLS.forEach(c => { cells[c.id] = races[c.id].slice(); });
-      last = { date: d, dateLabel: dateLabel(d), venue, cells, sheet: where, row: rowNo };
+      last = { date: d, dateLabel: dateLabel(d), iso: d.toISOString().slice(0, 10), venue, cells, sheet: where, row: rowNo };
       all.push(last);
     });
   });

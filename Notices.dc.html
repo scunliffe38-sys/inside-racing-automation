@@ -50,6 +50,12 @@ a:hover{color:#1b7fb4}
 <sc-if value="{{ b.isClause }}" hint-placeholder-val="{{ true }}">
 <div style="margin-top:4pt;padding-left:13pt;font-size:8pt;line-height:10.4pt;text-wrap:pretty">{{ b.text }}</div>
 </sc-if>
+<sc-if value="{{ b.isBullet }}" hint-placeholder-val="{{ true }}">
+<div style="margin-top:4pt;display:flex;gap:5pt;font-size:8pt;line-height:10.4pt">
+<div style="flex:0 0 7pt">&bull;</div>
+<div style="flex:1;text-wrap:pretty">{{ b.text }}</div>
+</div>
+</sc-if>
 </sc-for>
 <sc-if value="{{ noticeEmpty }}" hint-placeholder-val="{{ false }}">
 <div style="margin-top:9pt;background:#edf6fb;box-sizing:border-box;padding:12pt 14pt 14pt">
@@ -86,6 +92,12 @@ a:hover{color:#1b7fb4}
 </sc-if>
 <sc-if value="{{ b.isClause }}" hint-placeholder-val="{{ true }}">
 <div style="margin-top:4pt;padding-left:13pt;font-size:8pt;line-height:10.4pt;text-wrap:pretty">{{ b.text }}</div>
+</sc-if>
+<sc-if value="{{ b.isBullet }}" hint-placeholder-val="{{ true }}">
+<div style="margin-top:4pt;display:flex;gap:5pt;font-size:8pt;line-height:10.4pt">
+<div style="flex:0 0 7pt">&bull;</div>
+<div style="flex:1;text-wrap:pretty">{{ b.text }}</div>
+</div>
 </sc-if>
 </sc-for>
 <sc-if value="{{ stewardsEmpty }}" hint-placeholder-val="{{ false }}">
@@ -208,8 +220,8 @@ class Component extends DCLogic {
   pack(which) {
     const PAGE = 841.89, BOTTOM = 30, TOP_FIRST = 100, TOP_CONT = 50;
     const M = which === 'notice'
-      ? { isSubject: [10, 17, 70], isSubhead: [11, 11, 120], isPara: [7, 10.4, 158], isStep: [5, 10.4, 150], isClause: [4, 10.4, 152] }
-      : { isHeading: [13, 17, 70], isSubhead: [9, 11, 120], isPara: [6, 10.4, 158], isClause: [4, 10.4, 152] };
+      ? { isSubject: [10, 17, 70], isSubhead: [11, 11, 120], isPara: [7, 10.4, 158], isStep: [5, 10.4, 150], isClause: [4, 10.4, 152], isBullet: [4, 10.4, 150] }
+      : { isHeading: [13, 17, 70], isSubhead: [9, 11, 120], isPara: [6, 10.4, 158], isClause: [4, 10.4, 152], isBullet: [4, 10.4, 150] };
     const HEADS = which === 'notice' ? ['isSubject', 'isSubhead'] : ['isHeading', 'isSubhead'];
 
     const blocks = (this.state[which] || []).map(b => {
