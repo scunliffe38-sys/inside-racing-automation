@@ -1367,6 +1367,21 @@ class Component extends DCLogic {
     }
     const dp = document.querySelector('doc-page');
     if (dp && dp._measure) dp._measure();
+    this.maybePrint();
+  }
+
+  /**
+   * Opened from the console's download button with ?print=1: once the pages
+   * have settled, raise the browser's save dialog, which is where the PDF
+   * comes from. Runs once, and never when the page is opened to be read.
+   */
+  maybePrint() {
+    if (this._printing || !/[?&]print=1/.test(location.search)) return;
+    this._printing = true;
+    clearTimeout(this._printTimer);
+    this._printTimer = setTimeout(() => {
+      requestAnimationFrame(() => window.print());
+    }, 2500);
   }
 
   /** Once every section has laid out, say how long the edition runs. */

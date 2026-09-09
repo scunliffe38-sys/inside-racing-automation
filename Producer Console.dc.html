@@ -485,6 +485,7 @@ class Component extends DCLogic {
         if (!res.ok) return { warnings: ['No Cover.jpg in the input folder — the edition keeps the cover it was published with.'], summary: 'not supplied' };
         const blob = await res.blob();
         const bmp = await createImageBitmap(blob);
+        const from = bmp.width + '\u00d7' + bmp.height;
         const scale = Math.min(1, 1800 / Math.max(bmp.width, bmp.height));
         const w = Math.round(bmp.width * scale), h = Math.round(bmp.height * scale);
         const canvas = document.createElement('canvas');
@@ -494,7 +495,7 @@ class Component extends DCLogic {
         bmp.close();
         return {
           warnings: [],
-          summary: bmp.width + '\u00d7' + bmp.height + ' reduced to ' + w + '\u00d7' + h
+          summary: from + ' reduced to ' + w + '\u00d7' + h
             + ' (' + Math.round(ctx.cover.length / 1365) + ' kB)'
         };
       } },
@@ -706,7 +707,9 @@ class Component extends DCLogic {
         this.setState({ error: '' });
         this.run();
       },
-      onPublish: () => window.open('Inside Racing Edition-print.dc.html', '_blank')
+      // ?print=1 tells the print copy to raise the save dialog once it has
+      // laid out; without it the same page just opens to be read
+      onPublish: () => window.open('Inside Racing Edition-print.dc.html?print=1', '_blank')
     };
   }
 }
