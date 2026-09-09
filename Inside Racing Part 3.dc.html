@@ -881,16 +881,33 @@ DETAILS</div>
 <div style="position:absolute;left:48pt;top:466pt;width:400pt;font-size:11pt;line-height:15pt">{{ ad.hours }}</div>
 <div style="position:absolute;left:48pt;top:490pt;width:400pt;font-family:'Gotham XNarrow',sans-serif;font-size:19pt;font-weight:700;letter-spacing:-.01em">{{ ad.contact }}</div>
 </sc-if>
+<sc-if value="{{ ad.open }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;left:0;top:0;width:100%;height:100%;background:#fff"></div>
+<div style="position:absolute;left:34pt;top:34pt;right:34pt;bottom:34pt;box-sizing:border-box;border:0.75pt dashed #b6bcc3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6pt;color:#9aa1a9">
+<div style="font-family:'Gotham XNarrow',sans-serif;font-size:12pt;font-weight:700;letter-spacing:.09em">ADVERTISING PAGE &mdash; {{ ad.slotName }}</div>
+<div style="font-size:8pt;letter-spacing:.02em">{{ ad.size }}</div>
+</div>
+</sc-if>
 <div style="position:absolute;left:48pt;bottom:36pt;font-size:8pt;letter-spacing:.06em;opacity:.85">{{ ad.name }}</div>
 </section>
 </sc-for>
 
 <sc-for list="{{ backPages }}" as="bp" hint-placeholder-count="1">
 
-<section class="page" data-screen-label="Back cover" style="position:relative;font-family:'Gotham Narrow',sans-serif;color:#9a9c9f;background:#fff;overflow:hidden">
-<div style="position:absolute;left:22.7pt;top:24pt;font-size:8pt;letter-spacing:.04em">BACK COVER — ARTWORK</div>
-<div style="position:absolute;left:22.7pt;right:22.7pt;top:37pt;height:3pt;background:#e6e8ea"></div>
-<div style="position:absolute;left:22.7pt;right:22.7pt;top:52pt;font-size:8pt;line-height:11pt;max-width:300pt">Reserved so the folios and the printed extent are right. Supplied as artwork, not built from data.</div>
+<section class="page" data-screen-label="Back cover" style="position:relative;font-family:'Gotham Narrow',sans-serif;color:#fff;background:#0a6ba4;overflow:hidden">
+<div style="position:absolute;left:0;top:0;width:100%;height:100%;background:linear-gradient(160deg,#0a5f96 0%,#0a6ba4 42%,#0e86c4 78%,#1b93cf 100%)"></div>
+<div style="position:absolute;left:0;right:0;bottom:0;height:9pt;background:linear-gradient(90deg,#0e86c4 0%,#4a86c8 38%,#a45ba0 72%,#e0518e 100%)"></div>
+<div style="position:absolute;left:0;right:0;top:300pt;display:flex;flex-direction:column;align-items:center;gap:13pt">
+<div style="position:relative;width:150pt;height:44pt">
+<div style="position:absolute;left:0;top:0;width:100%;height:100%;box-sizing:border-box;border:0.5pt dashed rgba(255,255,255,.45);display:flex;align-items:center;justify-content:center;font-size:6.5pt;letter-spacing:.08em;color:rgba(255,255,255,.6)">RACING VICTORIA LOGO</div>
+<img src="assets/rv-logo.png" alt="" style="position:absolute;left:0;top:0;width:100%;height:100%;object-fit:contain" />
+</div>
+<div style="text-align:center;line-height:1.5">
+<div style="font-size:10pt;font-weight:700;letter-spacing:.01em">Racing Victoria Limited</div>
+<div style="font-size:8pt;color:rgba(255,255,255,.88)">400 Epsom Road, Flemington, Victoria 3031</div>
+<div style="font-size:8pt;color:rgba(255,255,255,.88)">racingvictoria.com.au</div>
+</div>
+</div>
 </section>
 </sc-for>
 </doc-page>
@@ -1701,11 +1718,9 @@ class Component extends DCLogic {
     while (i < atoms.length) {
       const first = pages.length === 0;
       const limit = limitOf(first);
-      const left = atoms.slice(i).reduce((n, a) => n + a.depth, 0);
-      const target = Math.min(limit, Math.max(60, Math.ceil(left / COLS)));
-      let r = fill(i, target);
-      if (r.next < atoms.length && target < limit) r = fill(i, limit);
-      if (r.next === i) r = fill(i, limit);
+      // fill each column to the page's depth and carry on into the next, so
+      // the trials read continuously: three full columns and a part-full last
+      let r = fill(i, limit);
       pages.push({ first, cols: r.cols, height: r.height, policyOn: first && !!policy });
       i = r.next;
     }
@@ -1971,12 +1986,17 @@ class Component extends DCLogic {
     // time and carried in settings.$placements. A booked page runs as supplied
     // artwork with no live type; an unbooked one keeps the house ad.
     const adBooked = ((this.state.settings || {}).$placements || {}).bySlot || {};
+    // One house page runs; the saddle-stitch shortfall runs as further pages of
+    // advertising, and those are bookable rather than the same ad again — each
+    // prints the slot id to put in inputs/Ad Placements.csv.
     const adPages = sc.tail
       ? Array.from({ length: 1 + adShort }, (unused, i) => {
-          const b = adBooked['fullpage-' + (i + 1)];
-          if (b && !b.enabled) return { id: b.slot, name: '', art: null, live: false };
-          if (b && b.artwork) return { id: b.slot, name: b.caption || '', art: b.artwork, live: false };
-          return Object.assign({ live: true }, AD_STOCK[i % AD_STOCK.length]);
+          const slot = 'fullpage-' + (i + 1);
+          const b = adBooked[slot];
+          if (b && !b.enabled) return { id: slot, name: '', art: null, live: false, open: false };
+          if (b && b.artwork) return { id: slot, name: b.caption || '', art: b.artwork, live: false, open: false };
+          if (i === 0) return Object.assign({ live: true, open: false }, AD_STOCK[0]);
+          return { id: slot, name: '', art: null, live: false, open: true, slotName: slot, size: '210 \u00d7 297 mm  \u00b7  2480 \u00d7 3508 px at 300dpi' };
         })
       : [];
     const adPanelBooking = adBooked['contents-panel'];

@@ -213,12 +213,9 @@ class Component extends DCLogic {
     while (i < atoms.length) {
       const first = pages.length === 0;
       const limit = limitOf(first);
-      const left = atoms.slice(i).reduce((n, a) => n + a.depth, 0);
-      const target = Math.min(limit, Math.max(60, Math.ceil(left / COLS)));
-      let r = fill(i, target);
-      // when the four columns cannot hold what is left, fill them properly
-      if (r.next < atoms.length && target < limit) r = fill(i, limit);
-      if (r.next === i) r = fill(i, limit);      // one atom taller than the target
+      // fill each column to the page's depth and carry on into the next, so
+      // the trials read continuously: three full columns and a part-full last
+      let r = fill(i, limit);
       pages.push({ first, cols: r.cols, height: r.height, policyOn: first && !!policy });
       i = r.next;
     }
