@@ -283,8 +283,13 @@ class Component extends DCLogic {
     if (!S) return;
     this.setState({ scanned: false });
     const months = await S.calendarMonths().catch(() => []);
-    const stats = await Promise.all(S.EXPECTED.map(r => (r.pattern ? Promise.resolve(null) : S.stat(r.file).catch(() => null))));
-    const rows = S.EXPECTED.filter(r => r.file !== 'Ad Placements.csv').map((r, i) => {
+    // Edition Settings is set in the console and the ad bookings have their own
+    // block below, so neither belongs in the catalogue \u2014 but the statuses have to
+    // be read against the same list that is shown, or every row after a skipped
+    // one takes its neighbour's answer.
+    const shown = S.EXPECTED.filter(r => r.file !== 'Ad Placements.csv' && r.file !== 'Edition Settings.xlsx');
+    const stats = await Promise.all(shown.map(r => (r.pattern ? Promise.resolve(null) : S.stat(r.file).catch(() => null))));
+    const rows = shown.map((r, i) => {
       if (r.pattern) {
         const found = months.length > 0;
         return {
@@ -308,7 +313,7 @@ class Component extends DCLogic {
     const ads = listing.filter(f => /^ads\//i.test(f.path)).map(f => ({ name: f.name, size: size(f.size) }));
     const placements = await S.stat('Ad Placements.csv').catch(() => null);
     this.setState({ ads, placements: !!placements });
-    const known = new Set(S.EXPECTED.map(r => r.file.toLowerCase()));
+    const known = new Set(S.EXPECTED.map(r => r.file.toLowerCase()).concat('edition settings.xlsx'));
     const extra = listing
       .filter(f => !known.has(f.name.toLowerCase()) && !/^vic calendar/i.test(f.name) && f.path.indexOf('/') < 0)
       .map(f => f.name);
