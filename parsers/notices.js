@@ -33,6 +33,31 @@ const textOf = xml => unescapeXml(
 
 const styleOf = xml => ((String(xml).match(/<w:pStyle\s+w:val="([^"]+)"/) || [])[1] || 'Normal');
 
+// How deep the copy runs, in points, from the printed metrics of each paragraph
+// style: the gap above it, its line height, and how many characters fit on a
+// line at that size. Close enough to page on, and it needs no layout pass — the
+// section pages use the same model to break their copy across pages.
+const PAGE_DEPTH = 712;      // A4 less the title block and the folio zone
+
+const NOTICE_METRICS = {
+  isSubject: [10, 17, 60], isSubhead: [11, 11, 105],
+  isStep: [5, 10.4, 113], isClause: [4, 10.4, 115], isPara: [7, 10.4, 118]
+};
+
+const STEWARDS_METRICS = {
+  isHeading: [13, 17, 60], isSubhead: [9, 11, 105],
+  isClause: [4, 10.4, 115], isPara: [6, 10.4, 118]
+};
+
+function estimate(blocks, metrics) {
+  const kinds = Object.keys(metrics);
+  return blocks.reduce((total, b) => {
+    const kind = kinds.find(k => b[k]) || 'isPara';
+    const [gap, lh, cpl] = metrics[kind];
+    return total + gap + Math.max(1, Math.ceil(String(b.text || '').length / cpl)) * lh;
+  }, 0);
+}
+
 // one flat list of { style, text }, blank paragraphs dropped
 async function paragraphs(url) {
   const res = await fetch(url);
@@ -84,9 +109,13 @@ export async function loadNotice(url) {
     if (/^\d+[.)]\s/.test(b.text)) warnings.push('Industry Notice: a step begins with its own number ("' + b.text.slice(0, 30) + '…"). Numbering is applied by the layout — remove it to avoid "1. 1.".');
   });
   const lines = blocks.filter(b => !b.isSubject).reduce((n, b) => n + Math.ceil(b.text.length / 118), 0);
-  if (lines > 62) warnings.push('Industry Notice: about ' + lines + ' lines of copy. Page 52 holds roughly 62 — this will overrun.');
+  const depth = estimate(blocks, NOTICE_METRICS);
+  if (depth > PAGE_DEPTH) {
+    warnings.push('Industry Notice: about ' + Math.round(depth) + 'pt of copy against ' + PAGE_DEPTH
+      + 'pt on the page \u2014 it will run to ' + Math.ceil(depth / PAGE_DEPTH) + ' pages.');
+  }
 
-  return { blocks, warnings, empty: !blocks.length, count: blocks.length };
+  return { blocks, warnings, empty: !blocks.length, count: blocks.length, lines, depth };
 }
 
 // ---- page 53, From the Stewards' Room ---------------------------------------
@@ -107,11 +136,15 @@ export async function loadStewards(url) {
   const topics = blocks.filter(b => b.isHeading).length;
   if (blocks.length && !topics) warnings.push('Stewards Room: no Heading 1 — every topic needs one.');
   if (blocks.length && !blocks[0].isHeading) warnings.push('Stewards Room: the document does not open with a topic heading.');
-  if (topics > 4) warnings.push('Stewards Room: ' + topics + ' topics. Two or three is normal; four or more may not fit page 53.');
+  if (topics > 4) warnings.push('Stewards Room: ' + topics + ' topics \u2014 two or three is the usual shape for this page.');
   const lines = blocks.reduce((n, b) => n + Math.ceil(b.text.length / 118), 0);
-  if (lines > 60) warnings.push('Stewards Room: about ' + lines + ' lines of copy. Page 53 holds roughly 60 — this will overrun.');
+  const depth = estimate(blocks, STEWARDS_METRICS);
+  if (depth > PAGE_DEPTH) {
+    warnings.push('Stewards Room: about ' + Math.round(depth) + 'pt of copy against ' + PAGE_DEPTH
+      + 'pt on the page \u2014 it will run to ' + Math.ceil(depth / PAGE_DEPTH) + ' pages.');
+  }
 
-  return { blocks, topics, warnings, empty: !blocks.length, count: blocks.length };
+  return { blocks, topics, warnings, empty: !blocks.length, count: blocks.length, lines, depth };
 }
 
 // ---- page 54, Rules Extracts ------------------------------------------------

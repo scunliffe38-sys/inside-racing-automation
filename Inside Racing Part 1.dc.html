@@ -649,14 +649,16 @@ DETAILS</div>
 </section>
 </sc-for>
 
-<sc-for list="{{ tailPages }}" as="tp" hint-placeholder-count="1">
+<sc-for list="{{ joPages }}" as="tp" hint-placeholder-count="1">
 <section class="page" data-screen-label="Jump-Outs and Flat Trials" style="position:relative;font-family:'Gotham Narrow',sans-serif;color:#2c2e35;background:#fff;padding:0;overflow:hidden">
 <div style="position:absolute;left:22.7pt;top:24pt;font-size:10pt;font-weight:400;line-height:1;letter-spacing:.019em">JUMP-OUTS AND OFFICIAL FLAT TRIALS</div>
 <div style="position:absolute;left:22.7pt;top:37pt;width:549.9pt;height:3pt;background:#9ecff0"></div>
 
+<sc-for list="{{ tp.firstOnly }}" as="f" hint-placeholder-count="1">
 <div style="position:absolute;left:22pt;top:59.3pt;font-size:24pt;font-weight:700;line-height:1;letter-spacing:-.01em">Jump-Out Schedule</div>
+</sc-for>
 
-<sc-for list="{{ joMonths }}" as="m" hint-placeholder-count="2">
+<sc-for list="{{ tp.months }}" as="m" hint-placeholder-count="2">
 <div style="position:absolute;left:{{ m.left }};top:94.4pt;width:267.5pt">
 <div style="font-size:12pt;font-weight:700;line-height:1;letter-spacing:-.005em">{{ m.label }}</div>
 <div style="height:2pt;background:#2c2e35;margin-top:6.9pt"></div>
@@ -673,14 +675,14 @@ DETAILS</div>
 </div>
 </sc-for>
 
-<div style="position:absolute;left:21.7pt;top:281pt;font-size:24pt;font-weight:700;line-height:1;letter-spacing:-.01em">Official Flat Trials</div>
+<div style="position:absolute;left:21.7pt;top:{{ tp.trialsTitleTop }};font-size:24pt;font-weight:700;line-height:1;letter-spacing:-.01em">{{ tp.trialsTitle }}</div>
 
-<sc-for list="{{ joDividers }}" as="d" hint-placeholder-count="2">
-<div style="position:absolute;left:{{ d.left }};top:315pt;width:0.75pt;height:193pt;background:#2c2e35"></div>
+<sc-for list="{{ tp.dividers }}" as="d" hint-placeholder-count="2">
+<div style="position:absolute;left:{{ d.left }};top:{{ tp.rulesTop }};width:0.75pt;height:{{ tp.rulesHeight }};background:#2c2e35"></div>
 </sc-for>
 
-<sc-for list="{{ joMeetings }}" as="t" hint-placeholder-count="3">
-<div style="position:absolute;left:{{ t.left }};top:311.85pt;width:126.5pt">
+<sc-for list="{{ tp.meetings }}" as="t" hint-placeholder-count="3">
+<div style="position:absolute;left:{{ t.left }};top:{{ tp.trialsTop }};width:126.5pt">
 <div style="height:3.5pt;background:#2c2e35"></div>
 <div style="margin-top:3.75pt;font-size:9.3pt;font-weight:700;line-height:1;letter-spacing:.01em">{{ t.venue }}</div>
 <div style="margin-top:3.8pt;font-size:8pt;font-weight:400;line-height:1;letter-spacing:.01em">{{ t.date }}</div>
@@ -691,28 +693,32 @@ DETAILS</div>
 </div>
 </sc-for>
 
+<sc-for list="{{ tp.firstOnly }}" as="f" hint-placeholder-count="1">
 <div style="position:absolute;left:20.7pt;top:543.6pt;font-size:20pt;font-weight:700;line-height:1;letter-spacing:-.01em">{{ joPolicyHeading }}</div>
 <div style="position:absolute;left:22.7pt;top:567.2pt;width:549.9pt;height:3pt;background:#2c2e35"></div>
 <div style="position:absolute;left:22.7pt;top:582.2pt;width:545.3pt;font-size:8pt;line-height:9.6pt">
-<sc-for list="{{ joPolicy }}" as="p" hint-placeholder-count="8">
-<div style="display:flex"><span style="width:8.5pt;flex:0 0 8.5pt">&bull;</span><span style="flex:1">{{ p.t }}</span></div>
+<sc-for list="{{ joPolicy }}" as="q" hint-placeholder-count="8">
+<div style="display:flex"><span style="width:8.5pt;flex:0 0 8.5pt">&bull;</span><span style="flex:1">{{ q.t }}</span></div>
 </sc-for>
 </div>
+</sc-for>
 
 <div style="position:absolute;left:12.2pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1;letter-spacing:-.013em">{{ footer }}</div>
-<div style="position:absolute;right:12.3pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1">{{ joPageNo }}</div>
+<div style="position:absolute;right:12.3pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1">{{ tp.no }}</div>
 </section>
 </sc-for>
 
-<sc-for list="{{ tailPages }}" as="tp" hint-placeholder-count="1">
+<sc-for list="{{ rsPages }}" as="tp" hint-placeholder-count="1">
 <section class="page" data-screen-label="Victorian Race Series" style="position:relative;font-family:'Gotham Narrow',sans-serif;color:#2c2e35;background:#fff;padding:0;overflow:hidden">
 <div style="position:absolute;left:22.7pt;top:24pt;font-size:10pt;font-weight:400;line-height:1;letter-spacing:.019em">RACE SERIES</div>
 <div style="position:absolute;left:22.7pt;top:37pt;width:549.9pt;height:3pt;background:#9ecff0"></div>
+<sc-for list="{{ tp.titleRow }}" as="t" hint-placeholder-count="1">
 <div style="position:absolute;left:22pt;top:50.6pt;font-size:22pt;font-weight:700;line-height:1;letter-spacing:-.01em">Victorian Race Series</div>
 <div style="position:absolute;left:22pt;top:73.1pt;width:549.9pt;height:2pt;background:#2c2e35"></div>
+</sc-for>
 
-<sc-for list="{{ rsColumns }}" as="col" hint-placeholder-count="2">
-<div style="position:absolute;left:{{ col.left }};top:93.8pt;width:268.4pt">
+<sc-for list="{{ tp.columns }}" as="col" hint-placeholder-count="2">
+<div style="position:absolute;left:{{ col.left }};top:{{ tp.top }};width:268.4pt">
 <sc-for list="{{ col.blocks }}" as="b" hint-placeholder-count="3">
 <div style="margin-top:{{ b.gap }}">
 <div style="font-size:10pt;font-weight:700;line-height:1;letter-spacing:-.005em">{{ b.title }}</div>
@@ -738,19 +744,21 @@ DETAILS</div>
 </sc-for>
 
 <div style="position:absolute;left:12.2pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1;letter-spacing:-.013em">{{ footer }}</div>
-<div style="position:absolute;right:12.3pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1">{{ rsPageNo }}</div>
+<div style="position:absolute;right:12.3pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1">{{ tp.no }}</div>
 </section>
 </sc-for>
 
-<sc-for list="{{ tailPages }}" as="tp" hint-placeholder-count="1">
+<sc-for list="{{ ntNoticePages }}" as="tp" hint-placeholder-count="1">
 <section class="page" data-screen-label="Notices" style="position:relative;font-family:'Gotham Narrow',sans-serif;color:#2c2e35;background:#fff;padding:0;overflow:hidden">
 <div style="position:absolute;left:22.7pt;top:24pt;font-size:10pt;font-weight:400;line-height:1;letter-spacing:.019em">Notices | INTEGRITY SERVICES</div>
 <div style="position:absolute;left:22.7pt;top:37pt;width:549.9pt;height:3pt;background:#9ecff0"></div>
+<sc-for list="{{ tp.titleRow }}" as="t" hint-placeholder-count="1">
 <div style="position:absolute;left:22pt;top:59.3pt;font-size:24pt;font-weight:700;line-height:1;letter-spacing:-.01em">INDUSTRY NOTICE</div>
 <div style="position:absolute;left:22.7pt;top:88pt;width:549.9pt;height:3pt;background:#2c2e35"></div>
+</sc-for>
 
-<div style="position:absolute;left:22.7pt;top:100pt;width:549.9pt">
-<sc-for list="{{ ntNotice }}" as="b" hint-placeholder-count="8">
+<div style="position:absolute;left:22.7pt;top:{{ tp.top }};width:549.9pt">
+<sc-for list="{{ tp.blocks }}" as="b" hint-placeholder-count="8">
 <sc-if value="{{ b.isSubject }}" hint-placeholder-val="{{ true }}">
 <div style="margin-top:10pt;font-size:15pt;font-weight:700;line-height:17pt;letter-spacing:-.006em;text-wrap:pretty">{{ b.text }}</div>
 </sc-if>
@@ -779,19 +787,21 @@ DETAILS</div>
 </div>
 
 <div style="position:absolute;left:12.2pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1;letter-spacing:-.013em">{{ footer }}</div>
-<div style="position:absolute;right:12.3pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1">{{ ntPageNotice }}</div>
+<div style="position:absolute;right:12.3pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1">{{ tp.no }}</div>
 </section>
 </sc-for>
 
-<sc-for list="{{ tailPages }}" as="tp" hint-placeholder-count="1">
+<sc-for list="{{ ntStewardsPages }}" as="tp" hint-placeholder-count="1">
 <section class="page" data-screen-label="Notices" style="position:relative;font-family:'Gotham Narrow',sans-serif;color:#2c2e35;background:#fff;padding:0;overflow:hidden">
 <div style="position:absolute;left:22.7pt;top:24pt;font-size:10pt;font-weight:400;line-height:1;letter-spacing:.019em">INTEGRITY UPDATE</div>
 <div style="position:absolute;left:22.7pt;top:37pt;width:549.9pt;height:3pt;background:#9ecff0"></div>
+<sc-for list="{{ tp.titleRow }}" as="t" hint-placeholder-count="1">
 <div style="position:absolute;left:22pt;top:59.3pt;font-size:24pt;font-weight:700;line-height:1;letter-spacing:-.01em">From the Stewards&rsquo; Room</div>
 <div style="position:absolute;left:22.7pt;top:88pt;width:549.9pt;height:3pt;background:#2c2e35"></div>
+</sc-for>
 
-<div style="position:absolute;left:22.7pt;top:100pt;width:549.9pt">
-<sc-for list="{{ ntStewards }}" as="b" hint-placeholder-count="8">
+<div style="position:absolute;left:22.7pt;top:{{ tp.top }};width:549.9pt">
+<sc-for list="{{ tp.blocks }}" as="b" hint-placeholder-count="8">
 <sc-if value="{{ b.isHeading }}" hint-placeholder-val="{{ true }}">
 <div style="margin-top:13pt;font-size:15pt;font-weight:700;line-height:17pt;letter-spacing:-.006em;text-wrap:pretty">{{ b.text }}</div>
 </sc-if>
@@ -814,7 +824,7 @@ DETAILS</div>
 </div>
 
 <div style="position:absolute;left:12.2pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1;letter-spacing:-.013em">{{ footer }}</div>
-<div style="position:absolute;right:12.3pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1">{{ ntPageStewards }}</div>
+<div style="position:absolute;right:12.3pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1">{{ tp.no }}</div>
 </section>
 </sc-for>
 
@@ -1623,6 +1633,92 @@ class Component extends DCLogic {
     });
   }
 
+  /**
+   * Four trial meetings to the row. The opening page carries the jump-out
+   * schedule above and the division-of-races policy below, so it takes one
+   * row; more trials than that run on, four at a time.
+   */
+  joPack() {
+    const all = this.state.joMeetings || [];
+    const pages = [{ first: true, meetings: all.slice(0, 4) }];
+    for (let i = 4; i < all.length; i += 4) pages.push({ first: false, meetings: all.slice(i, i + 4) });
+    return pages;
+  }
+
+  /**
+   * Series blocks alternate down two columns and run onto further pages when
+   * both are full. Depth comes from the block's own parts, so no measuring.
+   */
+  rsPack() {
+    const PAGE = 841.89, BOTTOM = 30, TOP_FIRST = 93.8, TOP_CONT = 57.9, GAP = 34;
+    const depth = b => {
+      const note = b.note ? 6.7 + Math.max(1, Math.ceil(String(b.note).length / 62)) * 9.05 + 6.2 : 0;
+      return 14.2 + note + 14.7 + (b.rows || []).length * 14.2;
+    };
+    const blocks = this.state.seriesBlocks || [];
+    const order = blocks.filter(b => !b.tail).concat(blocks.filter(b => b.tail));
+    const limitOf = first => PAGE - (first ? TOP_FIRST : TOP_CONT) - BOTTOM;
+    const pages = [];
+    let i = 0;
+    while (i < order.length) {
+      const first = pages.length === 0;
+      const limit = limitOf(first);
+      const cols = [{ used: 0, blocks: [] }, { used: 0, blocks: [] }];
+      let placed = false;
+      while (i < order.length) {
+        const d = depth(order[i]);
+        const sides = cols[0].used <= cols[1].used ? [0, 1] : [1, 0];
+        const side = sides.find(x => cols[x].used + (cols[x].blocks.length ? GAP : 0) + d <= limit);
+        if (side === undefined) break;
+        cols[side].used += (cols[side].blocks.length ? GAP : 0) + d;
+        cols[side].blocks.push(order[i]);
+        placed = true;
+        i++;
+      }
+      if (!placed) { cols[0].blocks.push(order[i]); i++; }
+      pages.push({ first, cols });
+    }
+    if (!pages.length) pages.push({ first: true, cols: [{ blocks: [] }, { blocks: [] }] });
+    return pages;
+  }
+
+  /**
+   * The Industry Notice and the Stewards' Room run as long as the copy does.
+   * Depth is estimated from each paragraph style's printed metrics, and a
+   * heading never sits alone at the foot of a page.
+   */
+  ntPack(which) {
+    const PAGE = 841.89, BOTTOM = 30, TOP_FIRST = 100, TOP_CONT = 50;
+    const M = which === 'notice'
+      ? { isSubject: [10, 17, 60], isSubhead: [11, 11, 105], isPara: [7, 10.4, 118], isStep: [5, 10.4, 113], isClause: [4, 10.4, 115] }
+      : { isHeading: [13, 17, 60], isSubhead: [9, 11, 105], isPara: [6, 10.4, 118], isClause: [4, 10.4, 115] };
+    const HEADS = which === 'notice' ? ['isSubject', 'isSubhead'] : ['isHeading', 'isSubhead'];
+    const items = (this.state[which] || []).map(b => {
+      const kind = Object.keys(M).find(k => b[k]) || 'isPara';
+      const [gap, lh, cpl] = M[kind];
+      const lines = Math.max(1, Math.ceil(String(b.text || '').length / cpl));
+      return { block: b, depth: gap + lines * lh, head: HEADS.indexOf(kind) >= 0 };
+    });
+    const limitOf = first => PAGE - (first ? TOP_FIRST : TOP_CONT) - BOTTOM;
+    const pages = [];
+    let i = 0;
+    while (i < items.length) {
+      const first = pages.length === 0;
+      const limit = limitOf(first);
+      let used = 0;
+      const take = [];
+      while (i < items.length) {
+        const it = items[i];
+        const need = it.depth + (it.head ? Math.min(40, (items[i + 1] || { depth: 0 }).depth) : 0);
+        if (used + need > limit && take.length) break;
+        used += it.depth; take.push(it.block); i++;
+      }
+      pages.push({ first, blocks: take });
+    }
+    if (!pages.length) pages.push({ first: true, blocks: [] });
+    return pages;
+  }
+
   renderVals() {
     const sc = this.scope();
     const days = this.state.days || [];
@@ -1666,17 +1762,23 @@ class Component extends DCLogic {
     const span = k => { const from = cn; cn += k; return k > 1 ? from + '-' + (cn - 1) : String(from); };
     const pcOn = yes(cs.picnics_included);
     const pcPacked = pcOn ? this.pcPack() : [];
+    // the flowing tail sections, packed here so the contents can count them
+    const joPacked = this.joPack();
+    const rsPacked = this.rsPack();
+    const ntNoticePacked = this.ntPack('notice');
+    const ntStewardsPacked = this.ntPack('stewards');
     const cDeadlines = span(len(this.state.dlPages, STANDING.deadlines));
     const cChart = span(len(this.state.chPages, STANDING.chart));
     const cPrograms = span(1 + len(this.state.rpPages, STANDING.programs - 1));
     const cPermits = span(1);
     const cAgents = span(1);
     const cJumps = yes(cs.jumps_included) ? span(1) : '';
-    const cJumpouts = span(1); // jump-outs, flat trials and the division policy share a page
+    const cJumpouts = span(joPacked.length);   // the division policy rides on its first page
+    const cPolicy = String(cJumpouts).split('-')[0];
     const cPicnics = pcOn ? span(pcPacked.length || 1) : '';
-    const cSeries = span(1);
-    const cNotice = span(1);
-    const cStewards = span(1);
+    const cSeries = span(rsPacked.length);
+    const cNotice = span(ntNoticePacked.length);
+    const cStewards = span(ntStewardsPacked.length);
     const noticeSubject = ((this.state.notice || []).find(b => b.isSubject) || {}).text || '';
     const contentsRows = [
       { label: 'Dates for Entries, Acceptances and Riders', pages: cDeadlines },
@@ -1686,7 +1788,7 @@ class Component extends DCLogic {
       { label: 'Riders\u2019 Agents', pages: cAgents },
       { label: 'Jumps Program, Jumps Trials, Jumps Races Prizemoney Breakdown', pages: cJumps },
       { label: 'Jump-Outs Schedule, Official Flat Trials', pages: cJumpouts },
-      { label: 'Division of Races Policy at Country TAB Race Meetings', pages: cJumpouts },
+      { label: 'Division of Races Policy at Country TAB Race Meetings', pages: cPolicy },
       { label: 'Picnic Racing', pages: cPicnics },
       { label: 'Victorian Race Series', pages: cSeries },
       { label: 'Industry Notice' + (noticeSubject ? ' - ' + noticeSubject : ''), pages: cNotice },
@@ -1710,10 +1812,11 @@ class Component extends DCLogic {
     const paPageAgents = tailNo();
     const jpPageNo = tailNo();
     const pcFolios = pcPacked.map(() => tailNo());
-    const joPageNo = tailNo();
-    const rsPageNo = tailNo();
-    const ntPageNotice = tailNo();
-    const ntPageStewards = tailNo();
+    const joFolios = joPacked.map(() => tailNo());
+    const joPageNo = joFolios[0] || '';
+    const rsFolios = rsPacked.map(() => tailNo());
+    const ntNoticeFolios = ntNoticePacked.map(() => tailNo());
+    const ntStewardsFolios = ntStewardsPacked.map(() => tailNo());
     const ntPageNotices = tailNo();
 
 
@@ -1782,10 +1885,23 @@ class Component extends DCLogic {
       left1: b.left,
       right1: b.right
     }));
-    const joMeetings = this.state.joMeetings.map((m, i) => ({
-      left: JO_COL(i) + 'pt', venue: m.venue, date: m.date, races: m.races
-    }));
-    const joDividers = joMeetings.slice(1).map((m, i) => ({ left: (JO_COL(i) + 126.5 + 6.6) + 'pt' }));
+    const joPages = joPacked.map((p, i) => {
+      const meetings = p.meetings.map((m, j) => ({
+        left: JO_COL(j) + 'pt', venue: m.venue, date: m.date, races: m.races
+      }));
+      return {
+        firstOnly: p.first ? [{}] : [],
+        months: p.first ? joMonths : [],
+        meetings,
+        dividers: meetings.slice(1).map((m, j) => ({ left: (JO_COL(j) + 126.5 + 6.6) + 'pt' })),
+        trialsTitle: p.first ? 'Official Flat Trials' : 'Official Flat Trials continued',
+        trialsTitleTop: (p.first ? 281 : 59.3) + 'pt',
+        trialsTop: (p.first ? 311.85 : 94.4) + 'pt',
+        rulesTop: (p.first ? 315 : 97.5) + 'pt',
+        rulesHeight: (p.first ? 193 : 640) + 'pt',
+        no: joFolios[i] || ''
+      };
+    });
 
     const rsShape = b => {
       const grid = b.columns.length === 3 ? RS_THREE : RS_FOUR;
@@ -1800,15 +1916,24 @@ class Component extends DCLogic {
         note: b.note ? [{ t: b.note }] : []
       };
     };
-    const rsTail = this.state.seriesBlocks.filter(b => b.tail);
-    const rsMain = this.state.seriesBlocks.filter(b => !b.tail);
-    const rsColumns = [21.7, 305].map((left, side) => ({
-      left: left + 'pt',
-      blocks: rsMain
-        .filter((b, i) => i % 2 === side)
-        .concat(side === 1 ? rsTail : [])
-        .map((b, i) => ({ ...rsShape(b), gap: i === 0 ? '0pt' : '34pt' }))
+    const rsPages = rsPacked.map((p, i) => ({
+      top: (p.first ? 93.8 : 57.9) + 'pt',
+      titleRow: p.first ? [{}] : [],
+      columns: [21.7, 305].map((left, side) => ({
+        left: left + 'pt',
+        blocks: (p.cols[side] ? p.cols[side].blocks : []).map((b, j) => ({ ...rsShape(b), gap: j === 0 ? '0pt' : '34pt' }))
+      })),
+      no: rsFolios[i] || ''
     }));
+    const ntPaged = (packed, folios, blank) => packed.map((p, i) => ({
+      top: (p.first ? 100 : 50) + 'pt',
+      titleRow: p.first ? [{}] : [],
+      blocks: p.blocks,
+      empty: p.first && blank,
+      no: folios[i] || ''
+    }));
+    const ntNoticePages = ntPaged(ntNoticePacked, ntNoticeFolios, this.state.tailLoaded && !this.state.notice.length);
+    const ntStewardsPages = ntPaged(ntStewardsPacked, ntStewardsFolios, this.state.tailLoaded && !this.state.stewards.length);
 
     const jpMonth = (String(this.state.edition || '').split(' ')[0] || '')
       .replace(/^(\w)(\w*)$/, (m, a2, b2) => a2 + b2.toLowerCase());
@@ -1914,21 +2039,17 @@ class Component extends DCLogic {
       jpPageNo,
       jpPageJumpouts: joPageNo,
       joMonths,
-      joMeetings,
-      joDividers,
+      joPages,
       joPolicy: this.state.policy,
       joPolicyHeading: this.state.policyHeading || 'Division of Races Policy at Country TAB Race Meetings',
       joPageNo,
-      rsColumns,
-      rsPageNo,
-      ntNotice: this.state.notice,
-      ntStewards: this.state.stewards,
+      rsPages,
+      ntNoticePages,
+      ntStewardsPages,
       ntRules: this.state.rules,
       ntNoticeEmpty: this.state.tailLoaded && !this.state.notice.length,
       ntStewardsEmpty: this.state.tailLoaded && !this.state.stewards.length,
       ntRulesEmpty: this.state.tailLoaded && !this.state.rules.length,
-      ntPageNotice,
-      ntPageStewards,
       ntPageNotices,
       coverDate: e.toUpperCase(),
       footer: 'INSIDE RACING I ' + (this.state.edition || ''),

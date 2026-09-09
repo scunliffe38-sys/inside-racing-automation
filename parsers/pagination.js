@@ -37,7 +37,7 @@ export const SPINE = [
   { id: 'agents', label: 'Riders\u2019 Agents', flowing: true, fallback: 1 },
   { id: 'jumps', label: 'Jumps Program, Trials and Prizemoney', fixed: 1, flag: 'jumps_included' },
   { id: 'picnics', label: 'Picnic Racing', flowing: true, fallback: 2, flag: 'picnics_included' },
-  { id: 'jumpouts', label: 'Jump-Outs, Flat Trials, Division of Races', fixed: 1 },
+  { id: 'jumpouts', label: 'Jump-Outs, Flat Trials, Division of Races', flowing: true, fallback: 1 },
   { id: 'series', label: 'Victorian Race Series', flowing: true, fallback: 1 },
   { id: 'notice', label: 'Industry Notice', flowing: true, fallback: 1 },
   { id: 'stewards', label: 'From the Stewards\u2019 Room', flowing: true, fallback: 1 },

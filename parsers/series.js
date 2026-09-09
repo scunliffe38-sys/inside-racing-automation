@@ -74,7 +74,18 @@ export async function loadSeries(url) {
 
   if (pending) warnings.push('"' + pending.title + '" has a heading but no table.');
   if (!blocks.length) warnings.push('No series found in ' + url);
-  if (blocks.length > 6) warnings.push(blocks.length + ' blocks — page 51 comfortably holds about six.');
 
-  return { blocks, warnings, count: blocks.length };
+  // Two columns of 718pt on the opening page. The page itself does the real
+  // packing; this only says how many pages the section will take, so the
+  // producer knows before opening it.
+  const depth = blocks.reduce((total, b) => {
+    const note = b.note ? 6.7 + Math.max(1, Math.ceil(String(b.note).length / 62)) * 9.05 + 6.2 : 0;
+    return total + 34 + 14.2 + note + 14.7 + (b.rows || []).length * 14.2;
+  }, 0);
+  const pages = Math.max(1, Math.ceil(depth / (718 * 2)));
+  if (pages > 1) {
+    warnings.push(blocks.length + ' blocks, about ' + Math.round(depth) + 'pt of tables \u2014 the section runs to ' + pages + ' pages.');
+  }
+
+  return { blocks, warnings, count: blocks.length, depth, pages };
 }

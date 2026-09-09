@@ -21,13 +21,16 @@ a:hover{color:#1b7fb4}
 </helmet>
 <doc-page size="a4">
 
-<section class="page" data-screen-label="50" style="position:relative;font-family:'Gotham Narrow',sans-serif;color:#2c2e35;background:#fff;padding:0;overflow:hidden">
+<sc-for list="{{ pages }}" as="p" hint-placeholder-count="1">
+<section class="page" data-screen-label="Jump-Outs and Flat Trials" style="position:relative;font-family:'Gotham Narrow',sans-serif;color:#2c2e35;background:#fff;padding:0;overflow:hidden">
 <div style="position:absolute;left:22.7pt;top:24pt;font-size:10pt;font-weight:400;line-height:1;letter-spacing:.019em">JUMP-OUTS AND OFFICIAL FLAT TRIALS</div>
 <div style="position:absolute;left:22.7pt;top:37pt;width:549.9pt;height:3pt;background:#9ecff0"></div>
 
+<sc-for list="{{ p.firstOnly }}" as="f" hint-placeholder-count="1">
 <div style="position:absolute;left:22pt;top:59.3pt;font-size:24pt;font-weight:700;line-height:1;letter-spacing:-.01em">Jump-Out Schedule</div>
+</sc-for>
 
-<sc-for list="{{ months }}" as="m" hint-placeholder-count="2">
+<sc-for list="{{ p.months }}" as="m" hint-placeholder-count="2">
 <div style="position:absolute;left:{{ m.left }};top:94.4pt;width:267.5pt">
 <div style="font-size:12pt;font-weight:700;line-height:1;letter-spacing:-.005em">{{ m.label }}</div>
 <div style="height:2pt;background:#2c2e35;margin-top:6.9pt"></div>
@@ -44,14 +47,14 @@ a:hover{color:#1b7fb4}
 </div>
 </sc-for>
 
-<div style="position:absolute;left:21.7pt;top:281pt;font-size:24pt;font-weight:700;line-height:1;letter-spacing:-.01em">Official Flat Trials</div>
+<div style="position:absolute;left:21.7pt;top:{{ p.trialsTitleTop }};font-size:24pt;font-weight:700;line-height:1;letter-spacing:-.01em">{{ p.trialsTitle }}</div>
 
-<sc-for list="{{ dividers }}" as="d" hint-placeholder-count="2">
-<div style="position:absolute;left:{{ d.left }};top:315pt;width:0.75pt;height:193pt;background:#2c2e35"></div>
+<sc-for list="{{ p.dividers }}" as="d" hint-placeholder-count="2">
+<div style="position:absolute;left:{{ d.left }};top:{{ p.rulesTop }};width:0.75pt;height:{{ p.rulesHeight }};background:#2c2e35"></div>
 </sc-for>
 
-<sc-for list="{{ meetings }}" as="t" hint-placeholder-count="3">
-<div style="position:absolute;left:{{ t.left }};top:311.85pt;width:126.5pt">
+<sc-for list="{{ p.meetings }}" as="t" hint-placeholder-count="3">
+<div style="position:absolute;left:{{ t.left }};top:{{ p.trialsTop }};width:126.5pt">
 <div style="height:3.5pt;background:#2c2e35"></div>
 <div style="margin-top:3.75pt;font-size:9.3pt;font-weight:700;line-height:1;letter-spacing:.01em">{{ t.venue }}</div>
 <div style="margin-top:3.8pt;font-size:8pt;font-weight:400;line-height:1;letter-spacing:.01em">{{ t.date }}</div>
@@ -62,23 +65,26 @@ a:hover{color:#1b7fb4}
 </div>
 </sc-for>
 
+<sc-for list="{{ p.firstOnly }}" as="f" hint-placeholder-count="1">
 <div style="position:absolute;left:20.7pt;top:543.6pt;font-size:20pt;font-weight:700;line-height:1;letter-spacing:-.01em">{{ policyHeading }}</div>
 <div style="position:absolute;left:22.7pt;top:567.2pt;width:549.9pt;height:3pt;background:#2c2e35"></div>
 <div style="position:absolute;left:22.7pt;top:582.2pt;width:545.3pt;font-size:8pt;line-height:9.6pt">
-<sc-for list="{{ policy }}" as="p" hint-placeholder-count="8">
-<div style="display:flex"><span style="width:8.5pt;flex:0 0 8.5pt">&bull;</span><span style="flex:1">{{ p.t }}</span></div>
+<sc-for list="{{ policy }}" as="q" hint-placeholder-count="8">
+<div style="display:flex"><span style="width:8.5pt;flex:0 0 8.5pt">&bull;</span><span style="flex:1">{{ q.t }}</span></div>
 </sc-for>
 </div>
+</sc-for>
 
 <div style="position:absolute;left:12.2pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1;letter-spacing:-.013em">{{ footer }}</div>
-<div style="position:absolute;right:12.3pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1">{{ pageNo }}</div>
+<div style="position:absolute;right:12.3pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1">{{ p.no }}</div>
 </section>
+</sc-for>
 
 </doc-page>
 </x-dc>
 <script type="text/x-dc" data-dc-script>
 class Component extends DCLogic {
-  state = { blocks: [], meetings: [], policy: [], settings: {} };
+  state = { blocks: [], meetings: [], policy: [], settings: {}, from: 0 };
 
   // page 50 sets four columns of 126.5pt on a 141.2pt pitch
   static COL = i => 22.7 + i * 141.2;
@@ -125,6 +131,32 @@ class Component extends DCLogic {
   componentDidUpdate() {
     const dp = document.querySelector('doc-page');
     if (dp && dp._measure) dp._measure();
+    if (this._reported || !this.state.meetings.length) return;
+    this._reported = true;
+    const n = this.pack().length;
+    import('./parsers/pagination.js').then(P => {
+      P.report('jumpouts', n);
+      const from = P.plan(this.state.settings).start.jumpouts;
+      this.setState({ from }, () => requestAnimationFrame(() => {
+        if (dp) dp.setAttribute('data-paged', String(n));
+      }));
+    });
+  }
+
+  /**
+   * Four trial meetings to the row. The opening page carries the jump-out
+   * schedule above them and the division-of-races policy below, so it takes
+   * one row; a month with more trials than that runs the rest onto further
+   * pages, four at a time, in the same treatment.
+   */
+  pack() {
+    const PER_PAGE = 4;
+    const all = this.state.meetings || [];
+    const pages = [{ first: true, meetings: all.slice(0, PER_PAGE) }];
+    for (let i = PER_PAGE; i < all.length; i += PER_PAGE) {
+      pages.push({ first: false, meetings: all.slice(i, i + PER_PAGE) });
+    }
+    return pages;
   }
 
   rows(text) {
@@ -151,16 +183,29 @@ class Component extends DCLogic {
       left1: b.left,
       right1: b.right
     }));
-    const meetings = this.state.meetings.map((m, i) => ({
-      left: C(i) + 'pt', venue: m.venue, date: m.date, races: m.races
-    }));
-    // one hairline in each gutter between adjacent trial columns
-    const dividers = meetings.slice(1).map((m, i) => ({ left: (C(i) + 126.5 + 6.6) + 'pt' }));
+    const from = this.state.from || 0;
+    const pages = this.pack().map((p, i) => {
+      const meetings = p.meetings.map((m, j) => ({
+        left: C(j) + 'pt', venue: m.venue, date: m.date, races: m.races
+      }));
+      return {
+        firstOnly: p.first ? [{}] : [],
+        months: p.first ? months : [],
+        meetings,
+        // one hairline in each gutter between adjacent trial columns
+        dividers: meetings.slice(1).map((m, j) => ({ left: (C(j) + 126.5 + 6.6) + 'pt' })),
+        trialsTitle: p.first ? 'Official Flat Trials' : 'Official Flat Trials continued',
+        trialsTitleTop: (p.first ? 281 : 59.3) + 'pt',
+        trialsTop: (p.first ? 311.85 : 94.4) + 'pt',
+        rulesTop: (p.first ? 315 : 97.5) + 'pt',
+        rulesHeight: (p.first ? 193 : 640) + 'pt',
+        no: from ? String(from + i) : ''
+      };
+    });
     return {
-      months, meetings, dividers,
+      pages,
       policy: this.state.policy,
       policyHeading: this.state.policyHeading || 'Division of Races Policy at Country TAB Race Meetings',
-      pageNo: s.page_jumpouts || '',
       footer: 'INSIDE RACING I ' + (s.edition || '')
     };
   }

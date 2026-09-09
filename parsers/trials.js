@@ -14,6 +14,8 @@ import { readSheet } from './xlsx.js';
 import { fetchDelimited, letterRows } from './tsv.js';
 
 const clean = v => String(v || '').replace(/\s+/g, ' ').trim();
+// Page 50 sets four columns across; more trials than that run onto a further
+// page rather than being dropped.
 const MAX_COLUMNS = 4;
 
 export async function loadTrials(url) {
@@ -62,12 +64,13 @@ export async function loadTrials(url) {
 
   meetings.forEach(m => {
     if (!m.races.length) warnings.push(m.venue + ' has no races.');
-    if (m.races.length > 9) warnings.push(m.venue + ' has ' + m.races.length + ' races — page 50 has room for about 9 per column.');
+    if (m.races.length > 9) warnings.push(m.venue + ' has ' + m.races.length + ' races \u2014 a trial column holds about 9, so this one will run deep.');
   });
-  if (meetings.length > MAX_COLUMNS) {
-    warnings.push(meetings.length + ' trial meetings, but page 50 fits ' + MAX_COLUMNS + ' across — the rest will not appear.');
+  const pages = Math.max(1, Math.ceil(meetings.length / MAX_COLUMNS));
+  if (pages > 1) {
+    warnings.push(meetings.length + ' trial meetings \u2014 four to a row, so the trials run to ' + pages + ' pages.');
   }
   if (!meetings.length) warnings.push('No trial meetings found in ' + url);
 
-  return { meetings: meetings.slice(0, MAX_COLUMNS), warnings };
+  return { meetings, warnings, pages };
 }

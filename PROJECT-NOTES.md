@@ -74,8 +74,16 @@ before baking.
 Folios are never typed into Edition Settings. `parsers/pagination.js` holds the
 printed running order and adds up the pages in front of each section. Fixed
 sections declare their extent; flowing sections (deadlines, chart, race
-programs, agents, notices) call `report(id, count)` after laying out, which
-caches to sessionStorage so other pages pick up the real count. Any `page_*`
+programs, agents, picnics, jump-outs and flat trials, race series, the
+industry notice and the stewards’ room) call `report(id, count)` after laying
+out, which caches to sessionStorage so other pages pick up the real count.
+
+No section clips. Copy or tables longer than the page run onto a further page:
+the trials go four meetings to a row, the series blocks alternate down two
+columns until both are full, and the two notice documents break between
+paragraphs with no heading left stranded at a page foot. Depth is estimated
+from each style’s printed metrics rather than measured, so the pages can be
+worked out before layout. Any `page_*`
 row left in the workbook is flagged as stale and overwritten.
 
 ## Conditional sections

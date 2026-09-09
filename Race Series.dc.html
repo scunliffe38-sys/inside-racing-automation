@@ -21,14 +21,17 @@ a:hover{color:#1b7fb4}
 </helmet>
 <doc-page size="a4">
 
-<section class="page" data-screen-label="51" style="position:relative;font-family:'Gotham Narrow',sans-serif;color:#2c2e35;background:#fff;padding:0;overflow:hidden">
+<sc-for list="{{ pages }}" as="p" hint-placeholder-count="1">
+<section class="page" data-screen-label="Race Series" style="position:relative;font-family:'Gotham Narrow',sans-serif;color:#2c2e35;background:#fff;padding:0;overflow:hidden">
 <div style="position:absolute;left:22.7pt;top:24pt;font-size:10pt;font-weight:400;line-height:1;letter-spacing:.019em">RACE SERIES</div>
 <div style="position:absolute;left:22.7pt;top:37pt;width:549.9pt;height:3pt;background:#9ecff0"></div>
+<sc-for list="{{ p.titleRow }}" as="t" hint-placeholder-count="1">
 <div style="position:absolute;left:22pt;top:50.6pt;font-size:22pt;font-weight:700;line-height:1;letter-spacing:-.01em">Victorian Race Series</div>
 <div style="position:absolute;left:22pt;top:73.1pt;width:549.9pt;height:2pt;background:#2c2e35"></div>
+</sc-for>
 
-<sc-for list="{{ columns }}" as="col" hint-placeholder-count="2">
-<div style="position:absolute;left:{{ col.left }};top:93.8pt;width:268.4pt">
+<sc-for list="{{ p.columns }}" as="col" hint-placeholder-count="2">
+<div style="position:absolute;left:{{ col.left }};top:{{ p.top }};width:268.4pt">
 <sc-for list="{{ col.blocks }}" as="b" hint-placeholder-count="3">
 <div style="margin-top:{{ b.gap }}">
 <div style="font-size:10pt;font-weight:700;line-height:1;letter-spacing:-.005em">{{ b.title }}</div>
@@ -54,14 +57,15 @@ a:hover{color:#1b7fb4}
 </sc-for>
 
 <div style="position:absolute;left:12.2pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1;letter-spacing:-.013em">{{ footer }}</div>
-<div style="position:absolute;right:12.3pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1">{{ pageNo }}</div>
+<div style="position:absolute;right:12.3pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1">{{ p.no }}</div>
 </section>
+</sc-for>
 
 </doc-page>
 </x-dc>
 <script type="text/x-dc" data-dc-script>
 class Component extends DCLogic {
-  state = { blocks: [], settings: {} };
+  state = { blocks: [], settings: {}, from: 0 };
 
   // measured from the printed edition: four-column series tables and the
   // three-column highweight schedule, as widths inside a 268.4pt column
@@ -111,6 +115,63 @@ class Component extends DCLogic {
   componentDidUpdate() {
     const dp = document.querySelector('doc-page');
     if (dp && dp._measure) dp._measure();
+    if (this._reported || !this.state.blocks.length) return;
+    this._reported = true;
+    const n = this.pack().length;
+    import('./parsers/pagination.js').then(P => {
+      P.report('series', n);
+      const from = P.plan(this.state.settings).start.series;
+      this.setState({ from }, () => requestAnimationFrame(() => {
+        if (dp) dp.setAttribute('data-paged', String(n));
+      }));
+    });
+  }
+
+  /**
+   * How deep a series block prints, from the metrics of its own parts: the
+   * heading and its rule, an optional note, the column heads and one line per
+   * heat. No measuring needed, so the pages can be worked out before layout.
+   */
+  static depth(b) {
+    const note = b.note ? 6.7 + Math.max(1, Math.ceil(String(b.note).length / 62)) * 9.05 + 6.2 : 0;
+    return 14.2 + note + 14.7 + (b.rows || []).length * 14.2;
+  }
+
+  /**
+   * Blocks alternate down the two columns, as the printed edition sets them,
+   * and run onto further pages when the two columns are full. The highweight
+   * schedule is printed last wherever that falls.
+   */
+  pack() {
+    const PAGE = 841.89, BOTTOM = 30, TOP_FIRST = 93.8, TOP_CONT = 57.9, GAP = 34;
+    const order = this.state.blocks.filter(b => !b.tail).concat(this.state.blocks.filter(b => b.tail));
+    const limitOf = first => PAGE - (first ? TOP_FIRST : TOP_CONT) - BOTTOM;
+
+    const pages = [];
+    let i = 0;
+    while (i < order.length) {
+      const first = pages.length === 0;
+      const limit = limitOf(first);
+      const cols = [{ used: 0, blocks: [] }, { used: 0, blocks: [] }];
+      let placed = false;
+      while (i < order.length) {
+        const b = order[i];
+        const d = Component.depth(b);
+        // the shallower column takes the next block, which keeps the
+        // alternation of the printed page while respecting the fit
+        const sides = cols[0].used <= cols[1].used ? [0, 1] : [1, 0];
+        const side = sides.find(x => cols[x].used + (cols[x].blocks.length ? GAP : 0) + d <= limit);
+        if (side === undefined) break;
+        cols[side].used += (cols[side].blocks.length ? GAP : 0) + d;
+        cols[side].blocks.push(b);
+        placed = true;
+        i++;
+      }
+      if (!placed) { cols[0].blocks.push(order[i]); i++; }   // a block taller than the page
+      pages.push({ first, cols });
+    }
+    if (!pages.length) pages.push({ first: true, cols: [{ blocks: [] }, { blocks: [] }] });
+    return pages;
   }
 
   renderVals() {
@@ -129,19 +190,18 @@ class Component extends DCLogic {
         note: b.note ? [{ t: b.note }] : []
       };
     };
-    // blocks alternate down the two columns, in document order
-    const tail = this.state.blocks.filter(b => b.tail);
-    const main = this.state.blocks.filter(b => !b.tail);
-    const columns = [21.7, 305].map((left, side) => ({
-      left: left + 'pt',
-      blocks: main
-        .filter((b, i) => i % 2 === side)
-        .concat(side === 1 ? tail : [])
-        .map((b, i) => ({ ...shape(b), gap: i === 0 ? '0pt' : '34pt' }))
+    const from = this.state.from || 0;
+    const pages = this.pack().map((p, i) => ({
+      top: (p.first ? 93.8 : 57.9) + 'pt',
+      titleRow: p.first ? [{}] : [],
+      columns: [21.7, 305].map((left, side) => ({
+        left: left + 'pt',
+        blocks: (p.cols[side] ? p.cols[side].blocks : []).map((b, j) => ({ ...shape(b), gap: j === 0 ? '0pt' : '34pt' }))
+      })),
+      no: from ? String(from + i) : ''
     }));
     return {
-      columns,
-      pageNo: s.page_series || '',
+      pages,
       footer: 'INSIDE RACING I ' + (s.edition || '')
     };
   }

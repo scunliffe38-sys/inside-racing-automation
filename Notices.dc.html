@@ -21,14 +21,17 @@ a:hover{color:#1b7fb4}
 </helmet>
 <doc-page size="a4">
 
-<section class="page" data-screen-label="52" style="position:relative;font-family:'Gotham Narrow',sans-serif;color:#2c2e35;background:#fff;padding:0;overflow:hidden">
+<sc-for list="{{ noticePages }}" as="p" hint-placeholder-count="1">
+<section class="page" data-screen-label="Industry Notice" style="position:relative;font-family:'Gotham Narrow',sans-serif;color:#2c2e35;background:#fff;padding:0;overflow:hidden">
 <div style="position:absolute;left:22.7pt;top:24pt;font-size:10pt;font-weight:400;line-height:1;letter-spacing:.019em">Notices | INTEGRITY SERVICES</div>
 <div style="position:absolute;left:22.7pt;top:37pt;width:549.9pt;height:3pt;background:#9ecff0"></div>
+<sc-for list="{{ p.titleRow }}" as="t" hint-placeholder-count="1">
 <div style="position:absolute;left:22pt;top:59.3pt;font-size:24pt;font-weight:700;line-height:1;letter-spacing:-.01em">INDUSTRY NOTICE</div>
 <div style="position:absolute;left:22.7pt;top:88pt;width:549.9pt;height:3pt;background:#2c2e35"></div>
+</sc-for>
 
-<div style="position:absolute;left:22.7pt;top:100pt;width:549.9pt">
-<sc-for list="{{ notice }}" as="b" hint-placeholder-count="8">
+<div style="position:absolute;left:22.7pt;top:{{ p.top }};width:549.9pt">
+<sc-for list="{{ p.blocks }}" as="b" hint-placeholder-count="8">
 <sc-if value="{{ b.isSubject }}" hint-placeholder-val="{{ true }}">
 <div style="margin-top:10pt;font-size:15pt;font-weight:700;line-height:17pt;letter-spacing:-.006em;text-wrap:pretty">{{ b.text }}</div>
 </sc-if>
@@ -57,17 +60,21 @@ a:hover{color:#1b7fb4}
 </div>
 
 <div style="position:absolute;left:12.2pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1;letter-spacing:-.013em">{{ footer }}</div>
-<div style="position:absolute;right:12.3pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1">{{ pageNotice }}</div>
+<div style="position:absolute;right:12.3pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1">{{ p.no }}</div>
 </section>
+</sc-for>
 
-<section class="page" data-screen-label="53" style="position:relative;font-family:'Gotham Narrow',sans-serif;color:#2c2e35;background:#fff;padding:0;overflow:hidden">
+<sc-for list="{{ stewardsPages }}" as="p" hint-placeholder-count="1">
+<section class="page" data-screen-label="Stewards Room" style="position:relative;font-family:'Gotham Narrow',sans-serif;color:#2c2e35;background:#fff;padding:0;overflow:hidden">
 <div style="position:absolute;left:22.7pt;top:24pt;font-size:10pt;font-weight:400;line-height:1;letter-spacing:.019em">INTEGRITY UPDATE</div>
 <div style="position:absolute;left:22.7pt;top:37pt;width:549.9pt;height:3pt;background:#9ecff0"></div>
+<sc-for list="{{ p.titleRow }}" as="t" hint-placeholder-count="1">
 <div style="position:absolute;left:22pt;top:59.3pt;font-size:24pt;font-weight:700;line-height:1;letter-spacing:-.01em">From the Stewards&rsquo; Room</div>
 <div style="position:absolute;left:22.7pt;top:88pt;width:549.9pt;height:3pt;background:#2c2e35"></div>
+</sc-for>
 
-<div style="position:absolute;left:22.7pt;top:100pt;width:549.9pt">
-<sc-for list="{{ stewards }}" as="b" hint-placeholder-count="8">
+<div style="position:absolute;left:22.7pt;top:{{ p.top }};width:549.9pt">
+<sc-for list="{{ p.blocks }}" as="b" hint-placeholder-count="8">
 <sc-if value="{{ b.isHeading }}" hint-placeholder-val="{{ true }}">
 <div style="margin-top:13pt;font-size:15pt;font-weight:700;line-height:17pt;letter-spacing:-.006em;text-wrap:pretty">{{ b.text }}</div>
 </sc-if>
@@ -90,8 +97,9 @@ a:hover{color:#1b7fb4}
 </div>
 
 <div style="position:absolute;left:12.2pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1;letter-spacing:-.013em">{{ footer }}</div>
-<div style="position:absolute;right:12.3pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1">{{ pageStewards }}</div>
+<div style="position:absolute;right:12.3pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1">{{ p.no }}</div>
 </section>
+</sc-for>
 
 <section class="page" data-screen-label="54" style="position:relative;font-family:'Gotham Narrow',sans-serif;color:#2c2e35;background:#fff;padding:0;overflow:hidden">
 <div style="position:absolute;left:22.7pt;top:24pt;font-size:10pt;font-weight:400;line-height:1;letter-spacing:.019em">Notices | INTEGRITY SERVICES</div>
@@ -127,7 +135,7 @@ a:hover{color:#1b7fb4}
 </x-dc>
 <script type="text/x-dc" data-dc-script>
 class Component extends DCLogic {
-  state = { settings: {}, notice: [], stewards: [], rules: [], loaded: false };
+  state = { settings: {}, notice: [], stewards: [], rules: [], loaded: false, noticeFrom: 0, stewardsFrom: 0, rulesFrom: 0 };
 
   componentDidMount() {
     const faces = document.fonts
@@ -173,20 +181,81 @@ class Component extends DCLogic {
   componentDidUpdate() {
     const dp = document.querySelector('doc-page');
     if (dp && dp._measure) dp._measure();
+    if (this._reported || !this.state.loaded) return;
+    this._reported = true;
+    const n = this.pack('notice').length;
+    const s = this.pack('stewards').length;
+    import('./parsers/pagination.js').then(P => {
+      P.report('notice', n);
+      P.report('stewards', s);
+      const start = P.plan(this.state.settings).start;
+      this.setState({ noticeFrom: start.notice, stewardsFrom: start.stewards, rulesFrom: start.rules },
+        () => requestAnimationFrame(() => {
+          if (dp) dp.setAttribute('data-paged', String(document.querySelectorAll('doc-page > .page').length));
+        }));
+    });
+  }
+
+  /**
+   * Breaks a document into pages. Depth is estimated from the printed metrics
+   * rather than measured: each paragraph style has a known gap above it, a
+   * known line height and a known number of characters to the line, which is
+   * accurate enough to page on and does not need a layout pass.
+   *
+   * A heading never sits alone at the foot of a page — it needs room for its
+   * first paragraph too, or it moves down with it.
+   */
+  pack(which) {
+    const PAGE = 841.89, BOTTOM = 30, TOP_FIRST = 100, TOP_CONT = 50;
+    const M = which === 'notice'
+      ? { isSubject: [10, 17, 60], isSubhead: [11, 11, 105], isPara: [7, 10.4, 118], isStep: [5, 10.4, 113], isClause: [4, 10.4, 115] }
+      : { isHeading: [13, 17, 60], isSubhead: [9, 11, 105], isPara: [6, 10.4, 118], isClause: [4, 10.4, 115] };
+    const HEADS = which === 'notice' ? ['isSubject', 'isSubhead'] : ['isHeading', 'isSubhead'];
+
+    const blocks = (this.state[which] || []).map(b => {
+      const kind = Object.keys(M).find(k => b[k]) || 'isPara';
+      const [gap, lh, cpl] = M[kind];
+      const lines = Math.max(1, Math.ceil(String(b.text || '').length / cpl));
+      return { block: b, depth: gap + lines * lh, head: HEADS.indexOf(kind) >= 0 };
+    });
+
+    const limitOf = first => PAGE - (first ? TOP_FIRST : TOP_CONT) - BOTTOM;
+    const pages = [];
+    let i = 0;
+    while (i < blocks.length) {
+      const first = pages.length === 0;
+      const limit = limitOf(first);
+      let used = 0;
+      const take = [];
+      while (i < blocks.length) {
+        const b = blocks[i];
+        // a heading has to bring its first paragraph with it
+        const need = b.depth + (b.head ? Math.min(40, (blocks[i + 1] || { depth: 0 }).depth) : 0);
+        if (used + need > limit && take.length) break;
+        used += b.depth; take.push(b.block); i++;
+      }
+      pages.push({ first, blocks: take });
+    }
+    if (!pages.length) pages.push({ first: true, blocks: [] });
+    return pages;
   }
 
   renderVals() {
     const s = this.state.settings;
+    const paged = (which, from) => this.pack(which).map((p, i) => ({
+      top: (p.first ? 100 : 50) + 'pt',
+      titleRow: p.first ? [{}] : [],
+      blocks: p.blocks,
+      no: from ? String(from + i) : ''
+    }));
     return {
-      notice: this.state.notice,
-      stewards: this.state.stewards,
+      noticePages: paged('notice', this.state.noticeFrom),
+      stewardsPages: paged('stewards', this.state.stewardsFrom),
       rules: this.state.rules,
       noticeEmpty: this.state.loaded && !this.state.notice.length,
       stewardsEmpty: this.state.loaded && !this.state.stewards.length,
       rulesEmpty: this.state.loaded && !this.state.rules.length,
-      pageNotice: s.page_notice || '',
-      pageStewards: s.page_stewards || '',
-      pageNotices: s.page_notices || '',
+      pageNotices: this.state.rulesFrom ? String(this.state.rulesFrom) : (s.page_notices || ''),
       footer: 'INSIDE RACING I ' + (s.edition || '')
     };
   }
