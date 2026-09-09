@@ -12,7 +12,12 @@ import { plan } from './pagination.js';
 import { loadPlacements, slotReport } from './ads.js';
 import { fetchDelimited, letterRows } from './tsv.js';
 
-const REQUIRED = ['edition', 'wins_as_at', 'agents_footnote', 'trials_intro'];
+// The two standing paragraphs (the agents footnote and the trials introduction)
+// are set in the page templates now, not here — they change with the design.
+const REQUIRED = ['edition', 'wins_as_at'];
+
+// Rows the workbook no longer needs.
+const RETIRED = ['agents_footnote', 'trials_intro'];
 
 // Yes/No switches for the sections that only run in some months.
 const FLAGS = ['jumps_included', 'picnics_included'];
@@ -23,12 +28,42 @@ async function sheet(url) {
   return readSheet(await res.blob());
 }
 
+// The four edition-level settings are set in the producer console now, not in a
+// workbook: the console writes them here and every page reads them from here.
+// A workbook is still read if one is present, and the console's values win.
+const STORE_KEY = 'ir-edition-settings';
+const MONTHS_FULL = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
+  'August', 'September', 'October', 'November', 'December'];
+
+export function chosen() {
+  let saved = null;
+  try { saved = JSON.parse(localStorage.getItem(STORE_KEY) || 'null'); } catch (e) { return null; }
+  if (!saved || !saved.month) return null;
+  const m = Number(String(saved.month).slice(5, 7)) - 1;
+  const y = String(saved.month).slice(0, 4);
+  const d = String(saved.wins || '').match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  return {
+    edition: (MONTHS_FULL[m] || '').toUpperCase() + ' EDITION ' + y,
+    wins_as_at: d ? d[3] + '/' + d[2] + '/' + d[1] : '',
+    jumps_included: saved.jumps ? 'Yes' : 'No',
+    picnics_included: saved.picnics ? 'Yes' : 'No'
+  };
+}
+
 export async function loadSettings(url) {
-  const rows = await sheet(url);
   const warnings = [];
-  const head = [String((rows[0] || {}).A || '').toLowerCase(), String((rows[0] || {}).B || '').toLowerCase()];
-  if (head[0] !== 'key' || head[1] !== 'value') {
-    warnings.push('Edition Settings: header row is "' + head.join(' | ') + '", expected Key | Value.');
+  const picked = chosen();
+  let rows = [];
+  try {
+    rows = await sheet(url);
+  } catch (e) {
+    if (!picked) throw e;   // no workbook and nothing set in the console
+  }
+  if (rows.length) {
+    const head = [String((rows[0] || {}).A || '').toLowerCase(), String((rows[0] || {}).B || '').toLowerCase()];
+    if (head[0] !== 'key' || head[1] !== 'value') {
+      warnings.push('Edition Settings: header row is "' + head.join(' | ') + '", expected Key | Value.');
+    }
   }
   const settings = {};
   rows.slice(1).forEach((r, i) => {
@@ -37,7 +72,8 @@ export async function loadSettings(url) {
     if (k in settings) warnings.push('Edition Settings: "' + k + '" appears twice — row ' + (i + 2) + ' wins.');
     settings[k] = String(r.B || '').trim();
   });
-  REQUIRED.forEach(k => { if (!settings[k]) warnings.push('Edition Settings: "' + k + '" is missing or blank.'); });
+  if (picked) Object.assign(settings, picked);
+  REQUIRED.forEach(k => { if (!settings[k]) warnings.push('Edition settings: "' + k + '" is not set \u2014 set it in the producer console.'); });
   if (settings.wins_as_at && !/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(settings.wins_as_at)) {
     warnings.push('Edition Settings: wins_as_at is "' + settings.wins_as_at + '", expected dd/mm/yyyy.');
   }
@@ -47,6 +83,10 @@ export async function loadSettings(url) {
 
   // Folios are worked out from the running order and this month's volumes, not
   // typed in. Any page_* row left in the workbook is stale and gets overwritten.
+  const retired = RETIRED.filter(k => k in settings);
+  if (retired.length) {
+    warnings.push('Edition Settings: ' + retired.join(', ') + ' can be deleted \u2014 those paragraphs are set in the page design now.');
+  }
   const stale = Object.keys(settings).filter(k => /^page_/.test(k));
   if (stale.length) {
     warnings.push('Edition Settings: ' + stale.join(', ') + ' can be deleted \u2014 page numbers are calculated from section lengths now.');
