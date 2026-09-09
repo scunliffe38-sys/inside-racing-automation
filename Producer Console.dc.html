@@ -484,7 +484,8 @@ class Component extends DCLogic {
         const full = m.fullPageCount(total, r);
         ctx.ads = { booked: (r.rows || []).length, full };
         return {
-          warnings: (ctx.setupWarnings || []).concat(r.warnings),
+          // the bookings are read twice — once for the page plan, once here
+          warnings: (ctx.setupWarnings || []).concat(r.warnings).filter((w, i, all) => all.indexOf(w) === i),
           summary: total + ' pages \u00b7 ' + (r.rows || []).length + ' booked slot(s), ' + full + ' full page(s) of advertising'
         };
       } }

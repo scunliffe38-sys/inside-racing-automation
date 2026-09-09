@@ -39,15 +39,15 @@ export async function loadTrials(url) {
     const line = 'row ' + (i + 2);
     const venue = clean(r.E);
     const date = clean(r.D);
+    const no = clean(r.G);
+    const title = clean(r.H);
+    if (!venue && !no && !title) return;      // a blank row in the export
     if (venue) {
       current = { venue: venue.toUpperCase(), date: date.toUpperCase(), races: [] };
       meetings.push(current);
       if (!date) warnings.push('No meeting date for ' + venue + ' — ' + line);
     }
     if (!current) { warnings.push('Race before any meeting heading — ' + line); return; }
-    const no = clean(r.G);
-    const title = clean(r.H);
-    if (!no && !title) return;
     if (!no) warnings.push('No race number — ' + line);
     if (!title) warnings.push('No race name — ' + line);
     if (!clean(r.J)) warnings.push('No distance — ' + line);
