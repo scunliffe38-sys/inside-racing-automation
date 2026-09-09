@@ -220,8 +220,8 @@ class Component extends DCLogic {
     return {
       permits, agents, trialCols,
       winsAsAt: s.wins_as_at || '',
-      trialsIntro: s.trials_intro || '',
-      agentsFootnote: s.agents_footnote || '',
+      trialsIntro: 'The following riders are eligible to ride in official trials to obtain a race riding permit:',
+      agentsFootnote: '*A reminder that, in order for the above information to be accurate in each edition of Inside Racing, any Rider Agent changes need to be communicated to Licensing at Racing Australia on 1800 954 143.',
       pagePermits: s.page_permits || '',
       pageAgents: s.page_agents || '',
       footer: 'INSIDE RACING I ' + (s.edition || '')

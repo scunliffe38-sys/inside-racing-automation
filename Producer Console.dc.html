@@ -28,13 +28,11 @@ a:hover{color:#2c9cd7}
 <div style="margin-top:18px;background:#fff;border:1px solid #dfe4e9;padding:16px 18px 18px">
 <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap">
 <div style="font-size:11px;letter-spacing:.08em;font-weight:700">1 &nbsp;WHERE THE INPUTS COME FROM</div>
-<div style="font-size:12px;color:{{ sourceNoteColour }}">{{ sourceNote }}</div>
+<div style="font-size:12px;color:#5b616e">{{ sourceNote }}</div>
 </div>
 <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
 <button onClick="{{ onPickFolder }}" style="font-family:inherit;font-size:12.5px;font-weight:700;padding:9px 14px;border:1px solid #2c2e35;background:#2c2e35;color:#fff;cursor:pointer" style-hover="background:#2c9cd7;border-color:#2c9cd7">Point at the input folder</button>
-<button onClick="{{ onPickUpload }}" style="font-family:inherit;font-size:12.5px;font-weight:700;padding:9px 14px;border:1px solid #c3cad2;background:#fff;color:#5b616e;cursor:pointer" style-hover="border-color:#2c9cd7;color:#2c9cd7">Or choose the folder&rsquo;s files&hellip;</button>
 <div style="display:flex;align-items:center;font-size:12.5px;color:#2c2e35;font-weight:700;min-height:34px">{{ folderLine }}</div>
-<input type="file" webkitdirectory="" directory="" multiple="" onChange="{{ onUpload }}" ref="{{ setUpload }}" style="display:none">
 <sc-if value="{{ needsReconnect }}" hint-placeholder-val="{{ false }}">
 <button onClick="{{ onReconnect }}" style="font-family:inherit;font-size:12.5px;font-weight:700;padding:9px 14px;border:1px solid #b06a00;background:#fff7ec;color:#b06a00;cursor:pointer">Reconnect {{ rememberedFolder }}</button>
 </sc-if>
@@ -113,9 +111,6 @@ a:hover{color:#2c9cd7}
 </sc-for>
 <div style="padding:10px 0 2px;font-size:12px;color:#5b616e">{{ calendarLine }}</div>
 <div style="padding:0 0 12px;font-size:12px;color:#8b929c">{{ suppliedNote }}</div>
-<sc-if value="{{ hasExtra }}" hint-placeholder-val="{{ false }}">
-<div style="padding:0 0 14px;font-size:12px;color:#b06a00;line-height:1.45">In the folder but not recognised &mdash; the name has to match exactly: <span style="font-weight:700">{{ extraLine }}</span></div>
-</sc-if>
 </div>
 
 <div style="margin-top:14px;background:#fff;border:1px solid #dfe4e9;padding:16px 18px 18px">
@@ -235,15 +230,12 @@ function ago(ms) {
 class Component extends DCLogic {
   state = {
     src: { mode: 'bundled', label: 'inputs/ beside the pages', ready: false, needsPermission: false, canPick: true },
-    remembered: '', rows: [], months: [], count: 0, choices: [], scanned: false, srcError: '',
+    remembered: '', rows: [], months: [], count: 0, choices: [], scanned: false,
     stages: [], running: false, ran: false, edition: '', pages: null, baked: null, error: ''
   };
 
   componentDidMount() {
-    import('./parsers/source.js').catch(e => {
-      this.setState({ srcError: 'parsers/source.js did not load: ' + String((e && e.message) || e) });
-      throw e;
-    }).then(async S => {
+    import('./parsers/source.js').then(async S => {
       this.S = S;
       let st;
       try { st = await S.restore(); } catch (e) { st = S.state(); }
@@ -279,11 +271,7 @@ class Component extends DCLogic {
       };
     });
     const listing = await S.listing().catch(() => []);
-    const known = new Set(S.EXPECTED.map(r => r.file.toLowerCase()));
-    const extra = listing
-      .filter(f => !known.has(f.name.toLowerCase()) && !/^vic calendar/i.test(f.name) && f.path.indexOf('/') < 0)
-      .map(f => f.name);
-    this.setState(s => ({ rows, months, count: listing.length, extra, scanned: true, edit: s.edit || this.loadEdit(null) }));
+    this.setState(s => ({ rows, months, count: listing.length, scanned: true, edit: s.edit || this.loadEdit(null) }));
   }
 
   /** The four controlled settings: remembered, else taken from the workbook. */
@@ -328,17 +316,14 @@ class Component extends DCLogic {
 
   handler(fn) {
     return async () => {
-      if (!this.S) { this.setState({ srcError: 'Still loading \u2014 try again in a moment.' }); return; }
       try {
         const st = await fn();
-        this.setState({ src: st, error: '', srcError: '', remembered: st.needsPermission ? st.label : '' });
+        this.setState({ src: st, error: '', remembered: st.needsPermission ? st.label : '' });
         const choices = st.mode === 'folder' ? await this.S.candidates().catch(() => []) : [];
         this.setState({ choices });
         this.scan();
       } catch (e) {
-        const name = (e && e.name) || '';
-        if (name === 'AbortError') return;          // the producer cancelled
-        this.setState({ srcError: (name ? name + ': ' : '') + String((e && e.message) || e) });
+        this.setState({ error: String((e && e.message) || e) });
       }
     };
   }
@@ -551,10 +536,7 @@ class Component extends DCLogic {
     const total = (st.pages && st.pages.total) || 0;
 
     return {
-      sourceNote: st.srcError ? st.srcError
-        : src.canPick ? 'Any folder on the machine \u2014 a local drive, a network drive or a synced OneDrive folder.'
-        : 'This browser has no folder picker \u2014 use \u201cchoose the folder\u2019s files\u201d instead.',
-      sourceNoteColour: st.srcError ? FAIL : '#5b616e',
+      sourceNote: src.canPick ? 'Any folder on the machine \u2014 a local drive, a network drive or a synced OneDrive folder.' : 'This browser has no folder picker \u2014 open the console in Edge or Chrome.',
       sourceModeLabel: src.mode,
       folderLine: src.ready ? src.label + '  \u00b7  ' + st.count + ' files' : 'No folder chosen yet',
       hasChoices: (st.choices || []).length > 1,
@@ -593,8 +575,6 @@ class Component extends DCLogic {
         : st.months.length
           ? 'Vic Calendar months in order: ' + st.months.map(m => m.name.replace('Vic Calendar - ', '').replace('.xlsx', '')).join(' \u2192 ')
           : 'No month-split Vic Calendar files found in this source.',
-      hasExtra: (st.extra || []).length > 0,
-      extraLine: (st.extra || []).join(', '),
       suppliedNote: !st.scanned ? '' : src.ready ? '' : 'Supplied dates and some sizes are blank here: the published copy of inputs/ does not report them. Point at a folder and they fill in.',
       stages,
       pct: st.stages.length ? Math.round((done / st.stages.length) * 100) : 0,
@@ -609,12 +589,6 @@ class Component extends DCLogic {
       groups,
       onPickFolder: this.handler(() => this.S.pickFolder()),
       onReconnect: this.handler(() => this.S.reconnect()),
-      onPickUpload: () => { if (this._up) this._up.click(); },
-      onUpload: e => {
-        const f = e.target.files;
-        if (f && f.length) this.handler(() => Promise.resolve(this.S.useFiles(f)))();
-      },
-      setUpload: el => { this._up = el; },
       onRun: () => {
         if (!set) { this.setState({ error: 'Set the edition month and the wins-as-at date in section 2 first.' }); return; }
         this.setState({ error: '' });
