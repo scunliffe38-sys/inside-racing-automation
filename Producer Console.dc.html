@@ -113,6 +113,9 @@ a:hover{color:#2c9cd7}
 </sc-for>
 <div style="padding:10px 0 2px;font-size:12px;color:#5b616e">{{ calendarLine }}</div>
 <div style="padding:0 0 12px;font-size:12px;color:#8b929c">{{ suppliedNote }}</div>
+<sc-if value="{{ hasExtra }}" hint-placeholder-val="{{ false }}">
+<div style="padding:0 0 14px;font-size:12px;color:#b06a00;line-height:1.45">In the folder but not recognised &mdash; the name has to match exactly: <span style="font-weight:700">{{ extraLine }}</span></div>
+</sc-if>
 </div>
 
 <div style="margin-top:14px;background:#fff;border:1px solid #dfe4e9;padding:16px 18px 18px">
@@ -276,7 +279,11 @@ class Component extends DCLogic {
       };
     });
     const listing = await S.listing().catch(() => []);
-    this.setState(s => ({ rows, months, count: listing.length, scanned: true, edit: s.edit || this.loadEdit(null) }));
+    const known = new Set(S.EXPECTED.map(r => r.file.toLowerCase()));
+    const extra = listing
+      .filter(f => !known.has(f.name.toLowerCase()) && !/^vic calendar/i.test(f.name) && f.path.indexOf('/') < 0)
+      .map(f => f.name);
+    this.setState(s => ({ rows, months, count: listing.length, extra, scanned: true, edit: s.edit || this.loadEdit(null) }));
   }
 
   /** The four controlled settings: remembered, else taken from the workbook. */
@@ -586,6 +593,8 @@ class Component extends DCLogic {
         : st.months.length
           ? 'Vic Calendar months in order: ' + st.months.map(m => m.name.replace('Vic Calendar - ', '').replace('.xlsx', '')).join(' \u2192 ')
           : 'No month-split Vic Calendar files found in this source.',
+      hasExtra: (st.extra || []).length > 0,
+      extraLine: (st.extra || []).join(', '),
       suppliedNote: !st.scanned ? '' : src.ready ? '' : 'Supplied dates and some sizes are blank here: the published copy of inputs/ does not report them. Point at a folder and they fill in.',
       stages,
       pct: st.stages.length ? Math.round((done / st.stages.length) * 100) : 0,
