@@ -28,11 +28,13 @@ a:hover{color:#2c9cd7}
 <div style="margin-top:18px;background:#fff;border:1px solid #dfe4e9;padding:16px 18px 18px">
 <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap">
 <div style="font-size:11px;letter-spacing:.08em;font-weight:700">1 &nbsp;WHERE THE INPUTS COME FROM</div>
-<div style="font-size:12px;color:#5b616e">{{ sourceNote }}</div>
+<div style="font-size:12px;color:{{ sourceNoteColour }}">{{ sourceNote }}</div>
 </div>
 <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
 <button onClick="{{ onPickFolder }}" style="font-family:inherit;font-size:12.5px;font-weight:700;padding:9px 14px;border:1px solid #2c2e35;background:#2c2e35;color:#fff;cursor:pointer" style-hover="background:#2c9cd7;border-color:#2c9cd7">Point at the input folder</button>
+<button onClick="{{ onPickUpload }}" style="font-family:inherit;font-size:12.5px;font-weight:700;padding:9px 14px;border:1px solid #c3cad2;background:#fff;color:#5b616e;cursor:pointer" style-hover="border-color:#2c9cd7;color:#2c9cd7">Or choose the folder&rsquo;s files&hellip;</button>
 <div style="display:flex;align-items:center;font-size:12.5px;color:#2c2e35;font-weight:700;min-height:34px">{{ folderLine }}</div>
+<input type="file" webkitdirectory="" directory="" multiple="" onChange="{{ onUpload }}" ref="{{ setUpload }}" style="display:none">
 <sc-if value="{{ needsReconnect }}" hint-placeholder-val="{{ false }}">
 <button onClick="{{ onReconnect }}" style="font-family:inherit;font-size:12.5px;font-weight:700;padding:9px 14px;border:1px solid #b06a00;background:#fff7ec;color:#b06a00;cursor:pointer">Reconnect {{ rememberedFolder }}</button>
 </sc-if>
@@ -109,8 +111,31 @@ a:hover{color:#2c9cd7}
 <div style="flex:0 0 80px;text-align:right;color:#5b616e">{{ r.size }}</div>
 </div>
 </sc-for>
-<div style="padding:10px 0 2px;font-size:12px;color:#5b616e">{{ calendarLine }}</div>
 <div style="padding:0 0 12px;font-size:12px;color:#8b929c">{{ suppliedNote }}</div>
+<sc-if value="{{ hasExtra }}" hint-placeholder-val="{{ false }}">
+<div style="padding:0 0 14px;font-size:12px;color:#b06a00;line-height:1.45">In the folder but not recognised &mdash; the name has to match exactly: <span style="font-weight:700">{{ extraLine }}</span></div>
+</sc-if>
+
+<div style="margin-top:8px;padding-top:15px;border-top:1px solid #dfe4e9">
+<div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap">
+<div style="font-size:11px;letter-spacing:.06em;font-weight:700;color:#5b616e">FOR THE FINAL DRAFT &mdash; BOOKED ADVERTISING</div>
+<div style="font-size:12px;color:#8b929c">{{ adsCount }}</div>
+</div>
+<div style="margin-top:7px;font-size:12px;color:#5b616e;max-width:820px">Not needed for a draft run: with nothing here every slot runs its house advertisement. Once the bookings are settled, add <span style="font-weight:700">Ad Placements.csv</span> to the input folder and put the artwork in a folder beside it called <span style="font-weight:700">ads</span>, then run again &mdash; a booked full page changes the page count.</div>
+<div style="display:flex;align-items:baseline;padding:11px 0 6px;margin-top:5px;border-bottom:1px solid #2c2e35;font-size:10.5px;letter-spacing:.05em;font-weight:700;color:#5b616e">
+<div style="flex:1 1 240px;min-width:0">AD PLACEMENTS.CSV</div>
+<div style="flex:0 0 96px;text-align:right;color:{{ placementsColour }}">{{ placementsStatus }}</div>
+<div style="flex:0 0 80px"></div>
+</div>
+<sc-for list="{{ adsFiles }}" as="a" hint-placeholder-count="0">
+<div style="display:flex;align-items:baseline;padding:6px 0;border-bottom:1px solid #eef1f4;font-size:12.5px">
+<div style="flex:1 1 240px;min-width:0">ads/{{ a.name }}</div>
+<div style="flex:0 0 96px;text-align:right;font-weight:700;color:#1f7a4d">found</div>
+<div style="flex:0 0 80px;text-align:right;color:#5b616e">{{ a.size }}</div>
+</div>
+</sc-for>
+<div style="padding:9px 0 4px;font-size:12px;color:#8b929c">{{ adsEmptyNote }}</div>
+</div>
 </div>
 
 <div style="margin-top:14px;background:#fff;border:1px solid #dfe4e9;padding:16px 18px 18px">
@@ -171,7 +196,6 @@ a:hover{color:#2c9cd7}
 </div>
 </div>
 
-<div style="margin-top:16px;font-size:11.5px;color:#8b929c;max-width:760px">This console is the test rig for the shared-folder pickup as well as the run. Pointing at a folder serves every <span style="font-weight:700">inputs/</span> request out of it; the section pages, the assembled edition and the print copy all read the same source in this browser tab.</div>
 
 </div>
 
@@ -230,12 +254,16 @@ function ago(ms) {
 class Component extends DCLogic {
   state = {
     src: { mode: 'bundled', label: 'inputs/ beside the pages', ready: false, needsPermission: false, canPick: true },
-    remembered: '', rows: [], months: [], count: 0, choices: [], scanned: false,
+    remembered: '', rows: [], months: [], count: 0, choices: [], scanned: false, srcError: '',
+    ads: [], placements: false,
     stages: [], running: false, ran: false, edition: '', pages: null, baked: null, error: ''
   };
 
   componentDidMount() {
-    import('./parsers/source.js').then(async S => {
+    import('./parsers/source.js').catch(e => {
+      this.setState({ srcError: 'parsers/source.js did not load: ' + String((e && e.message) || e) });
+      throw e;
+    }).then(async S => {
       this.S = S;
       let st;
       try { st = await S.restore(); } catch (e) { st = S.state(); }
@@ -252,26 +280,35 @@ class Component extends DCLogic {
     this.setState({ scanned: false });
     const months = await S.calendarMonths().catch(() => []);
     const stats = await Promise.all(S.EXPECTED.map(r => (r.pattern ? Promise.resolve(null) : S.stat(r.file).catch(() => null))));
-    const rows = S.EXPECTED.map((r, i) => {
+    const rows = S.EXPECTED.filter(r => r.file !== 'Ad Placements.csv').map((r, i) => {
       if (r.pattern) {
         const found = months.length > 0;
         return {
           file: 'Vic Calendar - <Mon YY>.xlsx',
-          extra: '  \u2014 one for each month to be published',
+          extra: found
+            ? '  \u2014 ' + months.map(m => m.name.replace('Vic Calendar - ', '').replace(/\.xlsx$/i, '')).join(', ')
+            : '  \u2014 one for each month to be published',
           section: r.section, size: '',
-          status: found ? 'found' : 'not found', colour: found ? OK : FAIL
+          found, status: found ? months.length + ' found' : 'not found', colour: found ? OK : FAIL
         };
       }
       const s = stats[i];
       return {
         file: r.file, extra: '', section: r.section,
-        size: s ? size(s.size) : '',
+        size: s ? size(s.size) : '', found: !!s,
         status: s ? 'found' : 'not found',
         colour: s ? OK : (r.required ? FAIL : MUTED)
       };
     });
     const listing = await S.listing().catch(() => []);
-    this.setState(s => ({ rows, months, count: listing.length, scanned: true, edit: s.edit || this.loadEdit(null) }));
+    const ads = listing.filter(f => /^ads\//i.test(f.path)).map(f => ({ name: f.name, size: size(f.size) }));
+    const placements = await S.stat('Ad Placements.csv').catch(() => null);
+    this.setState({ ads, placements: !!placements });
+    const known = new Set(S.EXPECTED.map(r => r.file.toLowerCase()));
+    const extra = listing
+      .filter(f => !known.has(f.name.toLowerCase()) && !/^vic calendar/i.test(f.name) && f.path.indexOf('/') < 0)
+      .map(f => f.name);
+    this.setState(s => ({ rows, months, count: listing.length, extra, scanned: true, edit: s.edit || this.loadEdit(null) }));
   }
 
   /** The four controlled settings: remembered, else taken from the workbook. */
@@ -316,14 +353,17 @@ class Component extends DCLogic {
 
   handler(fn) {
     return async () => {
+      if (!this.S) { this.setState({ srcError: 'Still loading \u2014 try again in a moment.' }); return; }
       try {
         const st = await fn();
-        this.setState({ src: st, error: '', remembered: st.needsPermission ? st.label : '' });
+        this.setState({ src: st, error: '', srcError: '', remembered: st.needsPermission ? st.label : '' });
         const choices = st.mode === 'folder' ? await this.S.candidates().catch(() => []) : [];
         this.setState({ choices });
         this.scan();
       } catch (e) {
-        this.setState({ error: String((e && e.message) || e) });
+        const name = (e && e.name) || '';
+        if (name === 'AbortError') return;          // the producer cancelled
+        this.setState({ srcError: (name ? name + ': ' : '') + String((e && e.message) || e) });
       }
     };
   }
@@ -527,16 +567,29 @@ class Component extends DCLogic {
       colour: s.status === 'fail' ? FAIL : WARN,
       items: s.warnings.map(w => ({ text: w }))
     }));
-    const missing = st.scanned ? st.rows.filter(r => r.status === 'not found' && r.colour === FAIL) : [];
     const checking = (this.S ? this.S.EXPECTED : []).map(r => ({
       file: r.file, extra: '', section: r.section, size: '', status: 'checking\u2026', colour: MUTED
     }));
+    // the two conditional sections: a missing file only matters when they run
+    const conditional = { 'Jumps program': !!(st.edit && st.edit.jumps), 'Picnic racing': !!(st.edit && st.edit.picnics) };
+    const catalogue = (st.scanned ? st.rows : checking).map(r => {
+      if (r.found || !(r.section in conditional)) return r;
+      const on = conditional[r.section];
+      return Object.assign({}, r, {
+        status: on ? 'not found \u2014 on' : 'not found \u2014 off',
+        colour: on ? FAIL : MUTED
+      });
+    });
+    const missing = st.scanned ? catalogue.filter(r => !r.found && r.colour === FAIL) : [];
     const warnCount = groups.reduce((a, g) => a + g.items.length, 0);
     const failed = st.stages.some(s => s.status === 'fail');
     const total = (st.pages && st.pages.total) || 0;
 
     return {
-      sourceNote: src.canPick ? 'Any folder on the machine \u2014 a local drive, a network drive or a synced OneDrive folder.' : 'This browser has no folder picker \u2014 open the console in Edge or Chrome.',
+      sourceNote: st.srcError ? st.srcError
+        : src.canPick ? 'Any folder on the machine \u2014 a local drive, a network drive or a synced OneDrive folder.'
+        : 'This browser has no folder picker \u2014 use \u201cchoose the folder\u2019s files\u201d instead.',
+      sourceNoteColour: st.srcError ? FAIL : '#5b616e',
       sourceModeLabel: src.mode,
       folderLine: src.ready ? src.label + '  \u00b7  ' + st.count + ' files' : 'No folder chosen yet',
       hasChoices: (st.choices || []).length > 1,
@@ -569,12 +622,20 @@ class Component extends DCLogic {
       onJumpsNo: () => this.saveEdit({ jumps: false }),
       onPicnicsYes: () => this.saveEdit({ picnics: true }),
       onPicnicsNo: () => this.saveEdit({ picnics: false }),
-      rows: st.scanned ? st.rows : checking,
+      rows: catalogue,
       calendarLine: !st.scanned
         ? 'Looking for the Vic Calendar months\u2026'
         : st.months.length
           ? 'Vic Calendar months in order: ' + st.months.map(m => m.name.replace('Vic Calendar - ', '').replace('.xlsx', '')).join(' \u2192 ')
           : 'No month-split Vic Calendar files found in this source.',
+      adsFiles: st.ads || [],
+      hasAdsFiles: (st.ads || []).length > 0,
+      adsCount: (st.ads || []).length + ' file' + ((st.ads || []).length === 1 ? '' : 's') + ' in the ads folder',
+      placementsStatus: st.placements ? 'found' : 'not supplied',
+      placementsColour: st.placements ? OK : MUTED,
+      adsEmptyNote: (st.ads || []).length ? '' : 'No ads folder in the input folder \u2014 every slot runs its house advertisement.',
+      hasExtra: (st.extra || []).length > 0,
+      extraLine: (st.extra || []).join(', '),
       suppliedNote: !st.scanned ? '' : src.ready ? '' : 'Supplied dates and some sizes are blank here: the published copy of inputs/ does not report them. Point at a folder and they fill in.',
       stages,
       pct: st.stages.length ? Math.round((done / st.stages.length) * 100) : 0,
@@ -589,6 +650,12 @@ class Component extends DCLogic {
       groups,
       onPickFolder: this.handler(() => this.S.pickFolder()),
       onReconnect: this.handler(() => this.S.reconnect()),
+      onPickUpload: () => { if (this._up) this._up.click(); },
+      onUpload: e => {
+        const f = e.target.files;
+        if (f && f.length) this.handler(() => Promise.resolve(this.S.useFiles(f)))();
+      },
+      setUpload: el => { this._up = el; },
       onRun: () => {
         if (!set) { this.setState({ error: 'Set the edition month and the wins-as-at date in section 2 first.' }); return; }
         this.setState({ error: '' });
