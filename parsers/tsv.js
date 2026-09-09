@@ -16,17 +16,49 @@ export async function fetchDelimited(url) {
 }
 
 /**
- * Splits tab-separated text into row objects keyed by the header row's own
- * column names. Trailing empty columns from the export are ignored.
+ * Most of these files are tab separated, but a few arrive from a spreadsheet as
+ * true comma-separated values. Decide from the header line: tabs win when there
+ * are any, since a tab-separated cell may legitimately contain a comma.
+ */
+function delimiter(line) {
+  return String(line || '').indexOf('\t') >= 0 ? '\t' : ',';
+}
+
+/** Split one line, honouring "quoted, cells" when the file uses commas. */
+function cells(line, d) {
+  const s = String(line || '');
+  if (d === '\t' || s.indexOf('"') < 0) return s.split(d);
+  const out = [];
+  let cur = '';
+  let quoted = false;
+  for (let i = 0; i < s.length; i++) {
+    const c = s[i];
+    if (quoted) {
+      if (c === '"') {
+        if (s[i + 1] === '"') { cur += '"'; i++; }
+        else quoted = false;
+      } else cur += c;
+    } else if (c === '"') quoted = true;
+    else if (c === d) { out.push(cur); cur = ''; }
+    else cur += c;
+  }
+  out.push(cur);
+  return out;
+}
+
+/**
+ * Splits the text into row objects keyed by the header row's own column names.
+ * Trailing empty columns from the export are ignored.
  */
 export function rows(text) {
   const lines = String(text || '').replace(/\r\n/g, '\n').replace(/\r/g, '\n').split('\n').filter(l => l.trim());
   if (!lines.length) return { head: [], body: [] };
-  const head = lines[0].split('\t').map(h => h.trim());
+  const d = delimiter(lines[0]);
+  const head = cells(lines[0], d).map(h => h.trim());
   const body = lines.slice(1).map(l => {
-    const cells = l.split('\t');
+    const cs = cells(l, d);
     const o = {};
-    head.forEach((h, i) => { if (h) o[h] = (cells[i] || '').trim(); });
+    head.forEach((h, i) => { if (h) o[h] = (cs[i] || '').trim(); });
     return o;
   });
   return { head, body };
@@ -49,9 +81,10 @@ export function letterRows(text) {
     for (i += 1; i > 0; i = Math.floor((i - 1) / 26)) s = String.fromCharCode(65 + ((i - 1) % 26)) + s;
     return s;
   };
+  const d = delimiter(lines[0]);
   return lines.map(l => {
     const o = {};
-    l.split('\t').forEach((c, i) => { o[letter(i)] = (c || '').trim(); });
+    cells(l, d).forEach((c, i) => { o[letter(i)] = (c || '').trim(); });
     return o;
   });
 }
