@@ -3,15 +3,23 @@ branch: main
 
 ## Last sync
 
-date: 2026-09-10
+date: 2026-09-10T05:20:00Z
 
 ### Updated in this project
+- Contents list compresses to fit above the "subject to change" note instead of colliding with it.
+- Official Flat Trials run continuously to the foot of every page; the Division of Races Policy follows them whole, on its own page when it will not fit under the last trial.
+- A short spill is pulled back into the page before it by tightening the day-block gap and the bottom clearance; a genuine spill sizes its own columns and offers the space beneath as a bookable ad slot.
+- Race Programs and Entry Deadlines wait for their measuring render rather than bailing, and each part file now renders only its own sections.
+
+## Sync history
+
+date: 2026-09-10
+
+### Updated in that sync
 - Picnic programs table prints its dollar signs again; each picnic meeting carries an ISO date.
 - Chart prizemoney is set unbreakable, so a long figure no longer splits mid-number.
 - Printed running order corrected to Jump-Outs, Race Series, Picnic; contents and body folios now agree.
 - Picnic meetings are matched out of Race Programs, jump-out columns sort by date and drop a stray month, and bulleted notice copy sets as bullets.
-
-## Sync history
 
 date: 2026-09-09
 

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+@font-face{font-family:'Gotham Narrow';src:url('fonts/GothamNarrow-Book.otf') format('opentype');font-weight:400;font-style:normal;font-display:block}
+doc-page:not(:defined){visibility:hidden}
+body{margin:0}
+a{color:#2c9cd7;text-decoration:none}
+a:hover{color:#1b7fb4}
+</style>
+<script src="./doc-page.js"></script>
+</helmet>
+<doc-page size="a4">
+
+<section class="page" data-screen-label="01 Test" style="position:relative;font-family:'Gotham Narrow',sans-serif;color:#2c2e35;background:#fff;overflow:hidden">
+<div style="position:absolute;left:22.7pt;top:24pt;font-size:10pt;line-height:1;letter-spacing:.019em">PRINT TEST — PAGE ONE</div>
+<div style="position:absolute;left:22.7pt;right:22.7pt;top:37pt;height:3pt;background:#9ecff0"></div>
+<div style="position:absolute;left:22.7pt;right:22.7pt;top:60pt;font-size:11pt;line-height:16pt;max-width:380pt">If this page comes through in the PDF, exporting a doc-page document works and the blank pages are about how the combined edition is assembled.<br><br>If this page is blank too, the problem is in printing itself and has nothing to do with the assembly.</div>
+<div style="position:absolute;left:22.7pt;bottom:24pt;font-size:9pt">Page one of two</div>
+</section>
+
+<section class="page" data-screen-label="02 Test" style="position:relative;font-family:'Gotham Narrow',sans-serif;color:#2c2e35;background:#edf6fb;overflow:hidden">
+<div style="position:absolute;left:22.7pt;top:24pt;font-size:10pt;line-height:1;letter-spacing:.019em">PRINT TEST — PAGE TWO</div>
+<div style="position:absolute;left:22.7pt;right:22.7pt;top:37pt;height:3pt;background:#2c2e35"></div>
+<div style="position:absolute;left:22.7pt;right:22.7pt;top:60pt;font-size:11pt;line-height:16pt;max-width:380pt">A second page, tinted so it is obvious. Two sheets, two colours, no data loaded and nothing assembled.</div>
+<div style="position:absolute;left:22.7pt;bottom:24pt;font-size:9pt">Page two of two</div>
+</section>
+
+</doc-page>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{}"></script>
+</body>
+</html>

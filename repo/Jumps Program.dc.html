@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+@font-face{font-family:'Gotham Narrow';src:url('fonts/GothamNarrow-Book.otf') format('opentype');font-weight:400;font-style:normal;font-display:block}
+@font-face{font-family:'Gotham XNarrow';src:url('fonts/GothamXNarrow-Book.ttf') format('truetype');font-weight:400;font-style:normal;font-display:block}
+@font-face{font-family:'Gotham XNarrow';src:url('fonts/GothamXNarrow-Bold.ttf') format('truetype');font-weight:700;font-style:normal;font-display:block}
+doc-page:not(:defined){visibility:hidden}
+body{margin:0}
+a{color:#2c9cd7;text-decoration:none}
+a:hover{color:#1b7fb4}
+</style>
+<script src="./doc-page.js"></script>
+</helmet>
+<doc-page size="a4">
+
+<section class="page" data-screen-label="49" style="position:relative;font-family:'Gotham Narrow',sans-serif;color:#2c2e35;background:#fff;padding:0;overflow:hidden">
+<div style="position:absolute;left:22.7pt;top:24pt;font-size:10pt;font-weight:400;line-height:1;letter-spacing:.019em">JUMPS RACING PROGRAM, JUMPS TRIALS AND JUMPS RACES PRIZEMONEY BREAKDOWNS</div>
+<div style="position:absolute;left:22.7pt;top:37pt;width:549.9pt;height:3pt;background:#9ecff0"></div>
+
+<div style="position:absolute;left:22pt;top:59.3pt;font-size:24pt;font-weight:700;line-height:1;letter-spacing:-.01em">Jumps Racing Program {{ month }}</div>
+
+<div id="jp-flow" style="position:absolute;left:22.7pt;top:90.7pt;width:549.9pt">
+
+<div style="border-top:0.75pt solid #2c2e35;border-left:0.75pt solid #2c2e35">
+<div style="display:flex;font-family:'Gotham XNarrow',sans-serif;font-size:6.2pt;font-weight:700;line-height:7pt;letter-spacing:.01em">
+<div style="width:42.4pt;flex:0 0 42.4pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;padding:6pt 3pt;display:flex;align-items:center">DATE</div>
+<div style="width:45.2pt;flex:0 0 45.2pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;padding:6pt 3pt;display:flex;align-items:center">VENUE</div>
+<div style="width:35.2pt;flex:0 0 35.2pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;padding:6pt 3pt;display:flex;align-items:center">MAIDEN HURDLE</div>
+<div style="width:35.4pt;flex:0 0 35.4pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;padding:6pt 3pt;display:flex;align-items:center">PRIZEMONEY</div>
+<div style="width:45.4pt;flex:0 0 45.4pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;padding:6pt 3pt;display:flex;align-items:center">RESTRICTED HURDLE</div>
+<div style="width:37.4pt;flex:0 0 37.4pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;padding:6pt 3pt;display:flex;align-items:center">PRIZEMONEY</div>
+<div style="width:72.9pt;flex:0 0 72.9pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;padding:6pt 3pt;display:flex;align-items:center">OPEN HURDLE</div>
+<div style="width:37.4pt;flex:0 0 37.4pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;padding:6pt 3pt;display:flex;align-items:center">PRIZEMONEY</div>
+<div style="width:46.9pt;flex:0 0 46.9pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;padding:6pt 3pt;display:flex;align-items:center">RESTRICTED STEEPLECHASE</div>
+<div style="width:37.9pt;flex:0 0 37.9pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;padding:6pt 3pt;display:flex;align-items:center">PRIZEMONEY</div>
+<div style="width:77.3pt;flex:0 0 77.3pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;padding:6pt 3pt;display:flex;align-items:center">OPEN STEEPLECHASE</div>
+<div style="width:36.4pt;flex:0 0 36.4pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;padding:6pt 3pt;display:flex;align-items:center">PRIZEMONEY</div>
+</div>
+
+<sc-for list="{{ meetings }}" as="m" hint-placeholder-count="3">
+<div style="display:flex;align-items:stretch;font-size:6.6pt;line-height:8pt">
+<div style="width:42.4pt;flex:0 0 42.4pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;padding:2.5pt 3pt;display:flex;align-items:center;font-weight:700;white-space:nowrap">{{ m.dateLabel }}</div>
+<div style="width:45.2pt;flex:0 0 45.2pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;padding:2.5pt 4pt;display:flex;align-items:center;font-weight:700">{{ m.venue }}</div>
+
+<div style="width:35.2pt;flex:0 0 35.2pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;background:#e6f2fa;display:flex;flex-direction:column">
+<sc-for list="{{ m.mh }}" as="e" hint-placeholder-count="1">
+<div style="flex:1;display:flex;align-items:center;padding:2.5pt 4pt;box-sizing:border-box;border-top:{{ e.rule }}">{{ e.t }}</div>
+</sc-for>
+</div>
+<div style="width:35.4pt;flex:0 0 35.4pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;flex-direction:column">
+<sc-for list="{{ m.mhp }}" as="e" hint-placeholder-count="1">
+<div style="flex:1;display:flex;align-items:center;padding:2.5pt 4pt;box-sizing:border-box;border-top:{{ e.rule }}">{{ e.t }}</div>
+</sc-for>
+</div>
+
+<div style="width:45.4pt;flex:0 0 45.4pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;background:#e6f2fa;display:flex;flex-direction:column">
+<sc-for list="{{ m.rh }}" as="e" hint-placeholder-count="1">
+<div style="flex:1;display:flex;align-items:center;padding:2.5pt 4pt;box-sizing:border-box;border-top:{{ e.rule }}">{{ e.t }}</div>
+</sc-for>
+</div>
+<div style="width:37.4pt;flex:0 0 37.4pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;flex-direction:column">
+<sc-for list="{{ m.rhp }}" as="e" hint-placeholder-count="1">
+<div style="flex:1;display:flex;align-items:center;padding:2.5pt 4pt;box-sizing:border-box;border-top:{{ e.rule }}">{{ e.t }}</div>
+</sc-for>
+</div>
+
+<div style="width:72.9pt;flex:0 0 72.9pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;background:#e6f2fa;display:flex;flex-direction:column;font-weight:700">
+<sc-for list="{{ m.oh }}" as="e" hint-placeholder-count="1">
+<div style="flex:1;display:flex;align-items:center;padding:2.5pt 4pt;box-sizing:border-box;border-top:{{ e.rule }}">{{ e.t }}</div>
+</sc-for>
+</div>
+<div style="width:37.4pt;flex:0 0 37.4pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;flex-direction:column;font-weight:700">
+<sc-for list="{{ m.ohp }}" as="e" hint-placeholder-count="1">
+<div style="flex:1;display:flex;align-items:center;padding:2.5pt 4pt;box-sizing:border-box;border-top:{{ e.rule }}">{{ e.t }}</div>
+</sc-for>
+</div>
+
+<div style="width:46.9pt;flex:0 0 46.9pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;background:#e6f2fa;display:flex;flex-direction:column">
+<sc-for list="{{ m.rs }}" as="e" hint-placeholder-count="1">
+<div style="flex:1;display:flex;align-items:center;padding:2.5pt 4pt;box-sizing:border-box;border-top:{{ e.rule }}">{{ e.t }}</div>
+</sc-for>
+</div>
+<div style="width:37.9pt;flex:0 0 37.9pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;flex-direction:column">
+<sc-for list="{{ m.rsp }}" as="e" hint-placeholder-count="1">
+<div style="flex:1;display:flex;align-items:center;padding:2.5pt 4pt;box-sizing:border-box;border-top:{{ e.rule }}">{{ e.t }}</div>
+</sc-for>
+</div>
+
+<div style="width:77.3pt;flex:0 0 77.3pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;background:#e6f2fa;display:flex;flex-direction:column;font-weight:700">
+<sc-for list="{{ m.os }}" as="e" hint-placeholder-count="1">
+<div style="flex:1;display:flex;align-items:center;padding:2.5pt 4pt;box-sizing:border-box;border-top:{{ e.rule }}">{{ e.t }}</div>
+</sc-for>
+</div>
+<div style="width:36.4pt;flex:0 0 36.4pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;flex-direction:column;font-weight:700">
+<sc-for list="{{ m.osp }}" as="e" hint-placeholder-count="1">
+<div style="flex:1;display:flex;align-items:center;padding:2.5pt 4pt;box-sizing:border-box;border-top:{{ e.rule }}">{{ e.t }}</div>
+</sc-for>
+</div>
+</div>
+</sc-for>
+</div>
+
+<div style="margin-top:27.6pt">
+<div style="margin-left:-0.7pt;font-size:24pt;font-weight:700;line-height:1;letter-spacing:-.01em">Jumps Trials</div>
+<div style="margin-top:5.2pt;display:flex;align-items:stretch">
+<sc-for list="{{ trialColumns }}" as="col" hint-placeholder-count="1">
+<div style="width:133.1pt;flex:0 0 133.1pt;box-sizing:border-box;padding-right:6.6pt;border-right:{{ col.rule }}">
+<div style="width:126.5pt">
+<sc-for list="{{ col.groups }}" as="g" hint-placeholder-count="1">
+<div style="margin-top:{{ g.gap }}">
+<sc-for list="{{ g.head }}" as="hd" hint-placeholder-count="1">
+<div style="height:3.5pt;background:#2c2e35"></div>
+<div style="margin-top:3.2pt;font-size:8.6pt;font-weight:700;line-height:1;letter-spacing:.01em;color:#37ac49">{{ hd.venue }}</div>
+<div style="margin-top:3.2pt;font-size:7.4pt;font-weight:700;line-height:1;letter-spacing:.01em;color:#37ac49">{{ hd.date }}</div>
+</sc-for>
+<sc-for list="{{ g.races }}" as="r" hint-placeholder-count="8">
+<div style="margin-top:2.6pt;display:flex;justify-content:space-between;gap:5pt;background:#d8d9da;height:8.5pt;box-sizing:border-box;padding:1.4pt 3pt 0;font-size:6.2pt;line-height:7pt;font-weight:700"><span>{{ r.cond }}</span><span style="text-align:right">{{ r.dist }}</span></div>
+<div style="margin-top:1.5pt;font-size:6.6pt;font-weight:700;line-height:7.6pt">{{ r.title }}</div>
+</sc-for>
+</div>
+</sc-for>
+</div>
+</div>
+</sc-for>
+</div>
+</div>
+
+<div style="margin-top:27pt">
+<div style="margin-left:-0.7pt;font-size:24pt;font-weight:700;line-height:1;letter-spacing:-.01em">Jumps Races Prizemoney Breakdowns</div>
+<div style="margin-top:5.2pt;height:2pt;background:#2c2e35"></div>
+<div style="margin-top:7pt;display:flex;gap:8pt">
+<sc-for list="{{ tierColumns }}" as="col" hint-placeholder-count="2">
+<div style="flex:1;font-size:7.5pt;line-height:9.1pt">
+<sc-for list="{{ col.tiers }}" as="t" hint-placeholder-count="4">
+<div style="margin-top:3pt"><span style="font-weight:700">{{ t.amount }}</span> {{ t.breakdown }}</div>
+</sc-for>
+</div>
+</sc-for>
+</div>
+</div>
+
+<sc-for list="{{ ottPanel }}" as="o" hint-placeholder-count="1">
+<div style="position:relative;margin-top:29pt;height:96pt;background:#edf6fb;box-sizing:border-box;padding:10pt 12pt">
+<div style="font-size:20.6pt;font-weight:700;line-height:1;letter-spacing:-.01em">Transition Pathway Programs</div>
+<div style="margin-top:7pt;font-size:8pt;line-height:10.5pt;width:330pt">There are many and varied options for your horse when it retires from racing. Visit ottcommunity.com.au to access RV&rsquo;s easy-to-follow transition guide.</div>
+<img src="assets/photos/off-the-track-handler.png" alt="" style="position:absolute;right:0;top:0;width:130pt;height:96pt;object-fit:cover" />
+</div>
+</sc-for>
+</div>
+
+<div style="position:absolute;left:12.2pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1;letter-spacing:-.013em">{{ footer }}</div>
+<div style="position:absolute;right:12.3pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1">{{ pageNo }}</div>
+</section>
+
+</doc-page>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { meetings: [], trials: [], tiers: [], settings: {} };
+
+  componentDidMount() {
+    const faces = document.fonts
+      ? Promise.all([
+          document.fonts.load('400 6.6pt "Gotham Narrow"'),
+          document.fonts.load('400 8pt "Gotham Narrow"'),
+          document.fonts.load('400 10pt "Gotham Narrow"'),
+          document.fonts.load('700 6.2pt "Gotham XNarrow"'),
+          document.fonts.load('700 6.2pt "Gotham Narrow"'),
+          document.fonts.load('700 6.6pt "Gotham Narrow"'),
+          document.fonts.load('700 7.4pt "Gotham Narrow"'),
+          document.fonts.load('700 8.6pt "Gotham Narrow"'),
+          document.fonts.load('700 24pt "Gotham Narrow"'),
+          document.fonts.load('400 7pt "Gotham XNarrow"')
+        ]).then(() => document.fonts.ready)
+      : Promise.resolve();
+
+    import('./parsers/settings.js')
+      .then(m => m.loadSettings('inputs/Edition Settings.xlsx'))
+      .then(cfg => {
+        const settings = cfg.settings;
+        return Promise.all([import('./parsers/jumps.js'), faces]).then(([J]) =>
+          J.loadJumps('inputs/', settings.edition).then(jp => {
+            const warnings = cfg.warnings.concat(jp.warnings);
+            if (warnings.length) console.warn('Jumps Program — ' + warnings.length + ' to check:\n' + warnings.join('\n'));
+            this.setState({
+              settings,
+              meetings: jp.meetings,
+              trials: jp.trials,
+              tiers: jp.tiers
+            }, () => requestAnimationFrame(() => {
+              const dp0 = document.querySelector('doc-page');
+              if (dp0) dp0.setAttribute('data-paged', String(document.querySelectorAll('doc-page > .page').length));
+            }));
+          })
+        );
+      })
+      .catch(e => console.error('Jumps Program — could not build the page: ' + (e.message || e)));
+  }
+
+  componentDidUpdate() {
+    const dp = document.querySelector('doc-page');
+    if (dp && dp._measure) dp._measure();
+  }
+
+  /**
+   * The trials fill the page top to bottom, then left to right, and a meeting
+   * carries on into the next column rather than being kept whole. Every block
+   * is a fixed height, so the columns can be worked out without measuring.
+   *
+   *   depth  how deep a column may run, in points
+   */
+  packTrials(depth) {
+    const HEAD = 29;      // rule, venue, date
+    const RACE = 20.2;    // gap, conditions bar, title
+    const GAP = 8;        // between one meeting and the next in a column
+    const items = [];
+    (this.state.trials || []).forEach(m => {
+      items.push({ head: 1, venue: m.venue, date: m.date });
+      m.races.forEach(r => items.push({ head: 0, cond: r.cond, dist: r.dist, title: r.title }));
+    });
+
+    const cols = [{ items: [], used: 0 }];
+    items.forEach(it => {
+      const col = cols[cols.length - 1];
+      const first = col.items.length === 0;
+      const gap = first ? 0 : (it.head ? GAP : 0);
+      const h = gap + (it.head ? HEAD : RACE);
+      // never leave a venue heading stranded at the foot of a column
+      const need = it.head ? h + RACE : h;
+      if (!first && col.used + need > depth) {
+        cols.push({ items: [it], used: it.head ? HEAD : RACE });
+        return;
+      }
+      col.items.push(it);
+      col.used += h;
+    });
+
+    // regroup each column so a heading and the races under it render together
+    return cols.filter(c => c.items.length).map(col => {
+      const groups = [];
+      col.items.forEach(it => {
+        if (it.head || !groups.length) {
+          groups.push({
+            gap: groups.length ? '8pt' : '0pt',
+            head: it.head ? [{ venue: it.venue.toUpperCase(), date: String(it.date || '').toUpperCase() }] : [],
+            races: it.head ? [] : [it]
+          });
+        } else {
+          groups[groups.length - 1].races.push(it);
+        }
+      });
+      return { groups, depth: col.used };
+    });
+  }
+
+  renderVals() {
+    const s = this.state.settings || {};
+    const edition = s.edition || '';
+    // "AUGUST EDITION 2026" -> "August", for the section title
+    const w = edition.trim().split(/\s+/)[0] || '';
+    const monthWord = w ? w[0].toUpperCase() + w.slice(1).toLowerCase() : '';
+
+    // Two races of one class in a meeting split the cell, and the prizemoney
+    // cell beside it splits with them. The divider is the same rule as the
+    // table's, so the two halves read as their own rows.
+    const RULE = '0.75pt solid #2c2e35';
+    const split = list => (list || []).map((e, i) => ({ t: e.desc, rule: i ? RULE : 'none' }));
+    const splitPrize = list => (list || []).map((e, i) => ({ t: e.prize, rule: i ? RULE : 'none' }));
+    const meetings = this.state.meetings.map(m => ({
+      dateLabel: m.dateLabel,
+      venue: m.venue,
+      mh: split(m.cells.mh), mhp: splitPrize(m.cells.mh),
+      rh: split(m.cells.rh), rhp: splitPrize(m.cells.rh),
+      oh: split(m.cells.oh), ohp: splitPrize(m.cells.oh),
+      rs: split(m.cells.rs), rsp: splitPrize(m.cells.rs),
+      os: split(m.cells.os), osp: splitPrize(m.cells.os)
+    }));
+
+    // eight tiers set as two columns of four, reading down then across
+    const tiers = this.state.tiers;
+    const half = Math.ceil(tiers.length / 2);
+    const tierColumns = tiers.length
+      ? [{ tiers: tiers.slice(0, half) }, { tiers: tiers.slice(half) }]
+      : [];
+
+    // What is left for the trials once the program and the breakdowns have
+    // taken theirs. The Off The Track panel is discretionary: it runs when the
+    // trials leave room and is dropped when they need it.
+    const FLOW = 790 - 90.7;
+    const program = 26 + meetings.length * 37;
+    const heading = 27.6 + 29.2;
+    const breakdowns = 27 + 24 + 5.2 + 2 + 7 + Math.ceil(tiers.length / 2) * 21.2;
+    const spare = FLOW - program - heading - breakdowns;
+
+    const PANEL = 29 + 96;
+    let cols = this.packTrials(spare - PANEL);
+    let ottPanel = [{}];
+    if (cols.length > 4) {
+      cols = this.packTrials(spare);
+      ottPanel = [];
+    }
+    // Second test, on what the page actually came to rather than what the
+    // trials were allowed: a long program pushes everything down too, so the
+    // panel goes whenever the foot of the page cannot hold it.
+    const trialsDepth = Math.max(0, ...cols.slice(0, 4).map(c => c.depth));
+    const settled = 90.7 + program + heading + trialsDepth + breakdowns;
+    if (ottPanel.length && settled + PANEL > 790) ottPanel = [];
+    if (cols.length > 4 && !this._warnedCols) {
+      this._warnedCols = true;
+      console.warn('Jumps Trials: the races fill ' + cols.length + ' columns against the four page 49 sets'
+        + ' — ' + (cols.length - 4) + ' will not print. Reduce the races listed, or the section needs a second page.');
+    }
+    if (settled > 790 && !this._warnedDepth) {
+      this._warnedDepth = true;
+      console.warn('Jumps Program: the page comes to about ' + Math.round(settled) + 'pt against 790pt of usable'
+        + ' depth, with the advertisement already dropped — the section needs a second page.');
+    }
+    // a hairline sits in the gutter after every column but the fourth, so a
+    // single-column month still carries the rule the published page shows
+    const trialColumns = cols.slice(0, 4).map((c, i) => ({
+      groups: c.groups,
+      rule: i < 3 ? '0.5pt solid #a7a9ac' : 'none'
+    }));
+
+    return {
+      meetings, tierColumns, ottPanel, trialColumns,
+      month: monthWord,
+      pageNo: s.page_jumps || '',
+      footer: 'INSIDE RACING I ' + edition
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,337 @@
+
+
+===================== Permits and Riders Agents.dc.html =====================
+state = { permits: [], trials: [], agents: [], settings: {} };
+
+  componentDidMount() {
+    const faces = document.fonts
+      ? Promise.all([
+          document.fonts.load('400 5.4pt "Gotham Narrow"'),
+          document.fonts.load('400 6.5pt "Gotham Narrow"'),
+          document.fonts.load('400 10pt "Gotham Narrow"'),
+          document.fonts.load('700 15pt "Gotham Narrow"'),
+          document.fonts.load('700 20pt "Gotham Narrow"'),
+          document.fonts.load('400 7pt "Gotham XNarrow"')
+        ]).then(() => document.fonts.ready)
+      : Promise.resolve();
+    const get = f => fetch('inputs/' + f).then(r => r.text());
+    Promise.all([
+      import('./parsers/permits.js').then(m => m.loadPermits('inputs/Permits to Ride.xlsx')),
+      get('Eligible to Ride in Trials.csv'),
+      import('./parsers/settings.js').then(m => m.loadAgents('inputs/Riders Agents.csv')),
+      import('./parsers/settings.js').then(m => m.loadSettings('inputs/Edition Settings.xlsx')),
+      faces
+    ]).then(([p, t, a, s]) => {
+      const warnings = p.warnings.concat(a.warnings, s.warnings);
+      if (warnings.length) console.warn('Pages 47–48 — ' + p.count + ' apprentices, ' + a.count + ' agents, ' + warnings.length + ' to check:\n' + warnings.join('\n'));
+      this.setState({ permits: p.permits, trials: this.tsv(t), agents: a.agents, settings: s.settings }, () => requestAnimationFrame(() => {
+        const dp0 = document.querySelector('doc-page');
+        if (dp0) dp0.setAttribute('data-paged', String(document.querySelectorAll('doc-page > .page').length));
+      }));
+    });
+  }
+
+  tsv(text) {
+    const rows = String(text || '').replace(/\r/g, '').split('\n').filter(l => l.trim());
+    if (!rows.length) return [];
+    const head = rows[0].split('\t').map(h => h.trim());
+    return rows.slice(1).map(l => {
+      const c = l.split('\t');
+      const o = {};
+      head.forEach((h, i) => { o[h] = (c[i] || '').trim(); });
+      return o;
+    });
+  }
+
+  riderColumns(list) {
+    const base = Math.floor(list.length / 3);
+    const extra = list.length % 3;
+    const out = [];
+    let at = 0;
+    for (let i = 0; i < 3; i++) {
+      const take = base + (i < extra ? 1 : 0);
+      out.push(list.slice(at, at + take).join('\n'));
+      at += take;
+    }
+    return out;
+  }
+
+  renderVals() {
+    const s = this.state.settings;
+    const permits = this.state.permits.map(p => ({
+      name: p.Apprentice, wgt: p.Wgt, cat: p.Cat, master: p.Master,
+      aPhone: p.ApprenticePhone ? '(A) ' + p.ApprenticePhone : '',
+      mPhone: p.MasterPhone ? '(M) ' + p.MasterPhone : '',
+      rPhone: p.AgentPhone ? '(R) ' + p.AgentPhone : '',
+      exp: p.ExpDate,
+      aM: p.AllowMetro, aP: p.AllowProv, aO: p.AllowOther,
+      wM: p.WinsMetro, wP: p.WinsProv, wO: p.WinsOther, wT: p.WinsTotal
+    }));
+    const agents = this.state.agents.map((a, i) => {
+      const cols = this.riderColumns((a.Riders || '').split(';').map(x => x.trim()).filter(Boolean));
+      return {
+        agent: a.Agent, c1: cols[0], c2: cols[1], c3: cols[2],
+        contact: (a.Contact || '').split(';').map(x => x.trim()).join('\n'),
+        bg: i % 2 ? '#e2f0fa' : '#fbfbfb'
+      };
+    });
+    // five columns across the foot of page 47, two entries deep, as the print edition sets them
+    const lefts = [24.7, 121, 207.7, 311.8, 398.5];
+    const t = this.state.trials.map(x => ({ name: x.Name, phone: x.Phone, cat: x.Category }));
+    const trialCols = lefts.map((l, i) => ({
+      left: l + 'pt',
+      top: t[i * 2] ? [t[i * 2]] : [],
+      bottom: t[i * 2 + 1] ? [t[i * 2 + 1]] : []
+    }));
+    return {
+      permits, agents, trialCols,
+      winsAsAt: s.wins_as_at || '',
+      trialsIntro: s.trials_intro || '',
+      agentsFootnote: s.agents_footnote || '',
+      pagePermits: s.page_permits || '',
+      pageAgents: s.page_agents || '',
+      footer: 'INSIDE RACING I ' + (s.edition || '')
+    };
+  }
+
+
+===================== Jumps Program.dc.html =====================
+state = { settings: {} };
+
+  componentDidMount() {
+    const faces = document.fonts
+      ? Promise.all([
+          document.fonts.load('400 7.5pt "Gotham Narrow"'),
+          document.fonts.load('400 10pt "Gotham Narrow"'),
+          document.fonts.load('700 9pt "Gotham Narrow"'),
+          document.fonts.load('700 24pt "Gotham Narrow"'),
+          document.fonts.load('400 7pt "Gotham XNarrow"')
+        ]).then(() => document.fonts.ready)
+      : Promise.resolve();
+    Promise.all([import('./parsers/settings.js').then(m => m.loadSettings('inputs/Edition Settings.xlsx')), faces]).then(([cfg]) => {
+      const settings = cfg.settings;
+      if (cfg.warnings.length) console.warn('Edition Settings — ' + cfg.warnings.length + ' to check:\n' + cfg.warnings.join('\n'));
+      this.setState({ settings }, () => requestAnimationFrame(() => {
+        const dp0 = document.querySelector('doc-page');
+        if (dp0) dp0.setAttribute('data-paged', String(document.querySelectorAll('doc-page > .page').length));
+      }));
+    });
+  }
+
+  renderVals() {
+    const s = this.state.settings;
+    const edition = s.edition || '';
+    return {
+      month: (edition.split(' ')[0] || '').replace(/^(\w)(\w*)$/, (m, a, b) => a + b.toLowerCase()),
+      programFile: 'inputs/Jumps Program.xlsx',
+      trialsFile: 'inputs/Jumps Trials.xlsx',
+      breakdownFile: 'inputs/Jumps Prizemoney Breakdowns.csv',
+      programCols: ['DATE', 'VENUE', 'MAIDEN HURDLE', 'RESTRICTED HURDLE', 'OPEN HURDLE', 'RESTRICTED STEEPLECHASE', 'OPEN STEEPLECHASE'].map(t => ({ t })),
+      pageJumpouts: s.page_jumpouts || '',
+      pageNo: s.page_jumps || '',
+      footer: 'INSIDE RACING I ' + edition
+    };
+  }
+
+
+===================== Jump Outs and Flat Trials.dc.html =====================
+state = { blocks: [], meetings: [], policy: [], settings: {} };
+
+  componentDidMount() {
+    const faces = document.fonts
+      ? Promise.all([
+          document.fonts.load('400 7pt "Gotham Narrow"'),
+          document.fonts.load('400 8pt "Gotham Narrow"'),
+          document.fonts.load('400 6.5pt "Gotham Narrow"'),
+          document.fonts.load('400 10pt "Gotham Narrow"'),
+          document.fonts.load('700 9.3pt "Gotham Narrow"'),
+          document.fonts.load('700 12pt "Gotham Narrow"'),
+          document.fonts.load('700 20pt "Gotham Narrow"'),
+          document.fonts.load('700 24pt "Gotham Narrow"'),
+          document.fonts.load('400 7pt "Gotham XNarrow"')
+        ]).then(() => document.fonts.ready)
+      : Promise.resolve();
+    const text = f => fetch('inputs/' + f).then(r => r.text());
+    Promise.all([
+      import('./parsers/jumpouts.js').then(m => m.loadJumpOuts('inputs/Jump Outs.xlsx')),
+      import('./parsers/trials.js').then(m => m.loadTrials('inputs/Official Flat Trials.csv')),
+      import('./parsers/notices.js').then(m => m.loadPolicy('inputs/Division of Races Policy.docx'))
+        .catch(e => ({ heading: '', bullets: [], warnings: ['Division of Races Policy: could not read the document: ' + (e.message || e)] })),
+      import('./parsers/settings.js').then(m => m.loadSettings('inputs/Edition Settings.xlsx')),
+      faces
+    ]).then(([j, t, pol, s]) => {
+      const settings = s.settings;
+      const warnings = j.warnings.concat(t.warnings, pol.warnings || [], s.warnings);
+      if (warnings.length) console.warn('Jump-outs and flat trials — ' + warnings.length + ' to check:\n' + warnings.join('\n'));
+      this.setState({
+        blocks: j.blocks,
+        meetings: t.meetings,
+        policy: (pol.bullets || []).map(t2 => ({ t: t2 })),
+        policyHeading: pol.heading || 'Division of Races Policy at Country TAB Race Meetings',
+        settings
+      }, () => requestAnimationFrame(() => {
+        const dp0 = document.querySelector('doc-page');
+        if (dp0) dp0.setAttribute('data-paged', String(document.querySelectorAll('doc-page > .page').length));
+      }));
+    });
+  }
+
+  rows(text) {
+    const lines = String(text || '').replace(/\r/g, '').split('\n').filter(l => l.trim());
+    if (!lines.length) return [];
+    const head = lines[0].split('\t').map(h => h.trim());
+    return lines.slice(1).map(l => {
+      const c = l.split('\t');
+      const o = {};
+      head.forEach((h, i) => { o[h] = (c[i] || '').trim(); });
+      return o;
+    });
+  }
+
+  renderVals() {
+    const C = Component.COL;
+    const s = this.state.settings;
+    // the two month blocks each own two of the four columns
+    const months = this.state.blocks.slice(0, 2).map((b, i) => ({
+      label: b.label,
+      left: (i === 0 ? 22.2 : 305.1) + 'pt',
+      colA: C(i * 2) + 0.3 + 'pt',
+      colB: C(i * 2 + 1) + 0.3 + 'pt',
+      left1: b.left,
+      right1: b.right
+    }));
+    const meetings = this.state.meetings.map((m, i) => ({
+      left: C(i) + 'pt', venue: m.venue, date: m.date, races: m.races
+    }));
+    // one hairline in each gutter between adjacent trial columns
+    const dividers = meetings.slice(1).map((m, i) => ({ left: (C(i) + 126.5 + 6.6) + 'pt' }));
+    return {
+      months, meetings, dividers,
+      policy: this.state.policy,
+      policyHeading: this.state.policyHeading || 'Division of Races Policy at Country TAB Race Meetings',
+      pageNo: s.page_jumpouts || '',
+      footer: 'INSIDE RACING I ' + (s.edition || '')
+    };
+  }
+
+
+===================== Race Series.dc.html =====================
+state = { blocks: [], settings: {} };
+
+  componentDidMount() {
+    const faces = document.fonts
+      ? Promise.all([
+          document.fonts.load('400 7pt "Gotham Narrow"'),
+          document.fonts.load('400 6.5pt "Gotham Narrow"'),
+          document.fonts.load('400 10pt "Gotham Narrow"'),
+          document.fonts.load('700 8pt "Gotham Narrow"'),
+          document.fonts.load('700 10pt "Gotham Narrow"'),
+          document.fonts.load('700 22pt "Gotham Narrow"'),
+          document.fonts.load('400 7pt "Gotham XNarrow"')
+        ]).then(() => document.fonts.ready)
+      : Promise.resolve();
+    Promise.all([
+      import('./parsers/series.js').then(m => m.loadSeries('inputs/Race Series.docx')),
+      import('./parsers/settings.js').then(m => m.loadSettings('inputs/Edition Settings.xlsx')),
+      faces
+    ]).then(([s, cfg]) => {
+      const settings = (cfg && cfg.settings) || {};
+      const warnings = s.warnings.concat((cfg && cfg.warnings) || []);
+      if (warnings.length) console.warn('Race Series — ' + s.count + ' blocks, ' + warnings.length + ' to check:\n' + warnings.join('\n'));
+      this.setState({ blocks: s.blocks, settings }, () => requestAnimationFrame(() => {
+        const dp0 = document.querySelector('doc-page');
+        if (dp0) dp0.setAttribute('data-paged', String(document.querySelectorAll('doc-page > .page').length));
+      }));
+    });
+  }
+
+  renderVals() {
+    const s = this.state.settings;
+    const shape = b => {
+      const grid = b.columns.length === 3 ? Component.THREE : Component.FOUR;
+      const cell = (t, i) => ({
+        t, w: grid[i].w + 'pt', pad: grid[i].pad + 'pt',
+        // the printed edition sets the venue a half point smaller than the rest
+        size: (grid === Component.FOUR && i === 1 ? 6.5 : 7) + 'pt'
+      });
+      return {
+        title: b.title,
+        head: b.columns.map((c, i) => ({ t: c, w: grid[i].w + 'pt', pad: grid[i].pad + 'pt' })),
+        rows: b.rows.map(r => ({ cells: grid.map((g, i) => cell(r[i] || '', i)) })),
+        note: b.note ? [{ t: b.note }] : []
+      };
+    };
+    // blocks alternate down the two columns, in document order
+    const columns = [21.7, 305].map((left, side) => ({
+      left: left + 'pt',
+      blocks: this.state.blocks
+        .filter((b, i) => i % 2 === side)
+        .map((b, i) => ({ ...shape(b), gap: i === 0 ? '0pt' : '34pt' }))
+    }));
+    return {
+      columns,
+      pageNo: s.page_series || '',
+      footer: 'INSIDE RACING I ' + (s.edition || '')
+    };
+  }
+
+
+===================== Notices.dc.html =====================
+state = { settings: {}, notice: [], stewards: [], rules: [], loaded: false };
+
+  componentDidMount() {
+    const faces = document.fonts
+      ? Promise.all([
+          document.fonts.load('400 7.5pt "Gotham Narrow"'),
+          document.fonts.load('400 8pt "Gotham Narrow"'),
+          document.fonts.load('700 9pt "Gotham Narrow"'),
+          document.fonts.load('700 15pt "Gotham Narrow"'),
+          document.fonts.load('700 24pt "Gotham Narrow"'),
+          document.fonts.load('400 10pt "Gotham Narrow"'),
+          document.fonts.load('400 7pt "Gotham XNarrow"')
+        ]).then(() => document.fonts.ready)
+      : Promise.resolve();
+
+    const N = import('./parsers/notices.js');
+    const fail = key => e => { const o = { warnings: ['could not read the document: ' + (e.message || e)], empty: true, count: 0 }; o[key] = []; return o; };
+    Promise.all([
+      import('./parsers/settings.js').then(m => m.loadSettings('inputs/Edition Settings.xlsx')),
+      N.then(m => m.loadNotice('inputs/Industry Notice.docx')).catch(fail('blocks')),
+      N.then(m => m.loadStewards('inputs/Stewards Room.docx')).catch(fail('blocks')),
+      N.then(m => m.loadRules('inputs/Rules Extracts.docx')).catch(fail('groups')),
+      faces
+    ]).then(([cfg, n, s, r]) => {
+      const settings = cfg.settings;
+      if (cfg.warnings.length) console.warn('Edition Settings — ' + cfg.warnings.length + ' to check:\n' + cfg.warnings.join('\n'));
+      this.report('Industry Notice (page 52)', n);
+      this.report('Stewards Room (page 53)', s);
+      this.report('Rules Extracts (page 54)', r);
+      this.setState({ settings, notice: n.blocks || [], stewards: s.blocks || [], rules: r.groups || [], loaded: true }, () => requestAnimationFrame(() => {
+        const dp0 = document.querySelector('doc-page');
+        if (dp0) dp0.setAttribute('data-paged', String(document.querySelectorAll('doc-page > .page').length));
+      }));
+    });
+  }
+
+  report(label, r) {
+    const unit = r.groups ? ' rule blocks' : ' paragraphs';
+    if (r.empty) console.warn(label + ' — no copy supplied. The page will print an awaiting-copy panel.');
+    else if (r.warnings && r.warnings.length) console.warn(label + ' — ' + r.count + unit + ', ' + r.warnings.length + ' to check:\n' + r.warnings.join('\n'));
+    else console.info(label + ' — ' + r.count + unit + ', no warnings.');
+  }
+
+  renderVals() {
+    const s = this.state.settings;
+    return {
+      notice: this.state.notice,
+      stewards: this.state.stewards,
+      rules: this.state.rules,
+      noticeEmpty: this.state.loaded && !this.state.notice.length,
+      stewardsEmpty: this.state.loaded && !this.state.stewards.length,
+      rulesEmpty: this.state.loaded && !this.state.rules.length,
+      pageNotice: s.page_notice || '',
+      pageStewards: s.page_stewards || '',
+      pageNotices: s.page_notices || '',
+      footer: 'INSIDE RACING I ' + (s.edition || '')
+    };
+  }

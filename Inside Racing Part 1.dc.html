@@ -52,7 +52,7 @@ a:hover{color:#1b7fb4}
 
 <sc-for list="{{ frontPages }}" as="fp" hint-placeholder-count="1">
 <section class="page" data-screen-label="01 Cover" style="position:relative;font-family:'Gotham Narrow',sans-serif;color:#2c2e35;background:#fff;overflow:hidden">
-<sc-for list="{{ coverPhoto }}" as="c" hint-placeholder-count="1">
+<sc-for list="{{ coverPhoto }}" as="c" hint-placeholder-count="0">
 <img src="{{ c.art }}" alt="" style="position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;object-position:50% 50%;display:block" />
 </sc-for>
 <sc-if value="{{ coverMissing }}" hint-placeholder-val="{{ false }}">
@@ -80,7 +80,7 @@ a:hover{color:#1b7fb4}
 
 <div style="position:absolute;left:22.7pt;width:549.9pt;top:198.4pt">
 <sc-for list="{{ contentsRows }}" as="r" hint-placeholder-count="11">
-<div style="position:relative;height:30pt">
+<div style="position:relative;height:{{ contentsRowH }}">
 <div style="display:flex;align-items:baseline;gap:12pt;font-size:12pt;line-height:12pt">
 <div style="flex:1;letter-spacing:-.004em">{{ r.label }}</div>
 <div style="font-weight:700;letter-spacing:-.004em;white-space:nowrap">{{ r.pages }}</div>
@@ -111,14 +111,14 @@ a:hover{color:#1b7fb4}
 <div style="font-size:8pt;line-height:9.2pt;color:#2c2e35;margin-top:7pt">Any information listed regarding nominations and acceptances for interstate races is provided as a guide only. It is compiled from information appearing elsewhere in <span style="font-style:italic">Inside Racing</span>.</div>
 <div style="font-size:8pt;line-height:9.2pt;color:#2c2e35;margin-top:7pt">Riders for all picnic meetings are to be declared no later than 12 noon on the day of acceptances.</div>
 </div>
-<div style="position:absolute;left:158.5pt;top:95pt;height:714pt;border-left:0.75pt dotted #9a9c9f"></div>
-<div style="position:absolute;left:299.5pt;top:95pt;height:714pt;border-left:0.75pt dotted #9a9c9f"></div>
-<div style="position:absolute;left:440.5pt;top:95pt;height:714pt;border-left:0.75pt dotted #9a9c9f"></div>
+<div style="position:absolute;left:158.5pt;top:95pt;height:{{ pg.ruleH }};border-left:0.75pt dotted #9a9c9f"></div>
+<div style="position:absolute;left:299.5pt;top:95pt;height:{{ pg.ruleH }};border-left:0.75pt dotted #9a9c9f"></div>
+<div style="position:absolute;left:440.5pt;top:95pt;height:{{ pg.ruleH }};border-left:0.75pt dotted #9a9c9f"></div>
 </sc-if>
 <sc-if value="{{ pg.cont }}" hint-placeholder-val="{{ false }}">
-<div style="position:absolute;left:158.5pt;top:61.4pt;height:748pt;border-left:0.75pt dotted #9a9c9f"></div>
-<div style="position:absolute;left:299.5pt;top:61.4pt;height:748pt;border-left:0.75pt dotted #9a9c9f"></div>
-<div style="position:absolute;left:440.5pt;top:61.4pt;height:748pt;border-left:0.75pt dotted #9a9c9f"></div>
+<div style="position:absolute;left:158.5pt;top:61.4pt;height:{{ pg.ruleH }};border-left:0.75pt dotted #9a9c9f"></div>
+<div style="position:absolute;left:299.5pt;top:61.4pt;height:{{ pg.ruleH }};border-left:0.75pt dotted #9a9c9f"></div>
+<div style="position:absolute;left:440.5pt;top:61.4pt;height:{{ pg.ruleH }};border-left:0.75pt dotted #9a9c9f"></div>
 </sc-if>
 <div style="position:absolute;left:23pt;right:19pt;top:61.4pt;display:flex;gap:11pt;align-items:flex-start">
 <sc-for list="{{ pg.cols }}" as="col" hint-placeholder-count="4">
@@ -126,7 +126,7 @@ a:hover{color:#1b7fb4}
 <sc-if value="{{ col.pad }}" hint-placeholder-val="{{ false }}"><div style="height:33.6pt"></div></sc-if>
 <sc-if value="{{ col.padNote }}" hint-placeholder-val="{{ false }}"><div style="height:{{ dlNoteGap }}"></div></sc-if>
 <sc-for list="{{ col.blocks }}" as="b" hint-placeholder-count="3">
-<div style="margin-bottom:11pt">
+<div style="margin-bottom:{{ pg.blockGap }}">
 <sc-for list="{{ b.dayRow }}" as="d" hint-placeholder-count="1">
 <div style="border-top:1pt solid #2c2e35"></div>
 <div style="font-size:8.5pt;font-weight:700;line-height:10.5pt;padding-top:1.5pt;color:#2c9cd7">{{ d.text }}</div>
@@ -1353,10 +1353,30 @@ class Component extends DCLogic {
     if (!this.state.meetings || this.state.rpPages || this._rpPacked) return;
     const els = Array.from(document.querySelectorAll('[data-atom]'));
     const all = this.rpAtoms();
-    if (els.length !== all.length) return;
+    // The measuring render has to be in the DOM before it can be read. Wait
+    // for it — woken by the fonts settling or by a poll — but never wait so
+    // long that the section is left as one unbroken page: an estimated break
+    // can be re-cut, a section that never breaks cannot.
+    if (els.length !== all.length && (this._rpWaited || 0) < 8000) {
+      if (!this._rpTimer) {
+        this._rpTimer = setTimeout(() => {
+          this._rpTimer = null;
+          this._rpWaited = (this._rpWaited || 0) + 100;
+          this.packPrograms();
+          this._flush();
+        }, 100);
+      }
+      if (document.fonts && !this._rpFontWake) {
+        this._rpFontWake = true;
+        document.fonts.ready.then(() => requestAnimationFrame(() => { this.packPrograms(); this._flush(); }));
+      }
+      return;
+    }
     this._rpPacked = true;
     const toPt = px => px * 72 / 96;
-    const h = els.map(e => toPt(e.getBoundingClientRect().height));
+    const seen = els.map(e => toPt(e.getBoundingClientRect().height));
+    const mean = seen.length ? seen.reduce((a, b) => a + b, 0) / seen.length : 20;
+    const h = all.map((a, k) => seen[k] || mean);
     const LIMIT = 841.89 - 55.1 - 30;
     const GAP = 13;
     const cols = [];
@@ -1386,6 +1406,16 @@ class Component extends DCLogic {
     this._pending = Object.assign(this._pending || {}, patch);
   }
 
+  /** Commit what the packers have staged. componentDidUpdate does this at the
+   * end of its pass; a packer that finishes later — waiting on the measuring
+   * render — has to call it itself or its pages sit staged and never appear. */
+  _flush() {
+    if (!this._pending) return;
+    const patch = this._pending;
+    this._pending = null;
+    this.setState(patch, () => requestAnimationFrame(() => this.reportExtent()));
+  }
+
   componentDidUpdate() {
     const sc = this.scope();
     // Pass 2: the sections measure and pack in this one update and commit
@@ -1394,12 +1424,7 @@ class Component extends DCLogic {
     // truncated export back.
     if (sc.early) { this.packDeadlines(); this.packChart(); }
     if (sc.programs) this.packPrograms();
-    if (this._pending) {
-      const patch = this._pending;
-      this._pending = null;
-      this.setState(patch, () => requestAnimationFrame(() => this.reportExtent()));
-      return;
-    }
+    if (this._pending) { this._flush(); return; }
     const dp = document.querySelector('doc-page');
     if (dp && dp._measure) dp._measure();
     this.markFillers();
@@ -1446,6 +1471,30 @@ class Component extends DCLogic {
     const counts = { day: 0, head: 0, item: 0 };
     rows.forEach(r => counts[r.kind]++);
     if (['day', 'head', 'item'].some(k => measured[k].length !== counts[k])) return;
+    // The rig has to have laid out before it is read. A host with no layout
+    // yet measures zero, every row costs nothing, and the whole section packs
+    // into one overflowing column. Wait for it — woken by the fonts settling
+    // or by a poll that keeps one timer alive at a time — but never wait so
+    // long that the section is left unset: a page packed on rough numbers can
+    // be re-cut, a page that never arrives cannot.
+    const noteProbe = host.querySelector('[data-note]');
+    const rigReady = noteProbe && noteProbe.getBoundingClientRect().height >= 40
+      && measured.item.some(el => el.getBoundingClientRect().height > 0);
+    if (!rigReady && (this._packWaited || 0) < 8000) {
+      if (!this._packTimer) {
+        this._packTimer = setTimeout(() => {
+          this._packTimer = null;
+          this._packWaited = (this._packWaited || 0) + 100;
+          this.packDeadlines();
+          this._flush();
+        }, 100);
+      }
+      if (document.fonts && !this._packFontWake) {
+        this._packFontWake = true;
+        document.fonts.ready.then(() => requestAnimationFrame(() => { this.packDeadlines(); this._flush(); }));
+      }
+      return;
+    }
     this._dlPacked = true;
 
     const toPt = px => px * 72 / 96;
@@ -1456,35 +1505,64 @@ class Component extends DCLogic {
       r.h = toPt(el.getBoundingClientRect().height + parseFloat(cs.marginTop || 0) + parseFloat(cs.marginBottom || 0));
     });
 
-    const PAGE_H = 841.89, BOTTOM = 30, GAP = 11;
+    const PAGE_H = 841.89, BOTTOM = 30, FLOOR = 16, GAP = 11, PULLBACK = 150;
     const noteEl = host.querySelector('[data-note]');
     const noteBottom = 93.9 + (noteEl ? toPt(noteEl.getBoundingClientRect().height) : 165) + 12;
     // The spacer that holds column one clear of the Trainers' Note has to be
     // measured, not assumed: a constant here silently disagrees with limits.note
     // the moment the note's copy changes, and the first day heading lands wrong.
     this._dlNoteGap = (noteBottom - 61.4).toFixed(1) + 'pt';
-    const limits = { full: PAGE_H - 95 - BOTTOM, cont: PAGE_H - 61.4 - BOTTOM, note: PAGE_H - noteBottom - BOTTOM };
 
     // Greedy line-level fill; a day block may continue into the next column.
-    const colRuns = [];
-    let i = 0, ci = 0;
-    while (i < rows.length) {
-      const first = ci < 4;
-      const limit = ci === 0 ? limits.note : (first ? limits.full : limits.cont);
-      let used = 0;
-      const start = i;
+    // The bottom clearance is a parameter so a short spill can be pulled back
+    // into the page before it by tightening the whole section a little.
+    const runsFor = (bottom, gap) => {
+      const limits = { full: PAGE_H - 95 - bottom, cont: PAGE_H - 61.4 - bottom, note: PAGE_H - noteBottom - bottom };
+      const runs = [];
+      let i = 0, ci = 0;
       while (i < rows.length) {
-        const r = rows[i];
-        const cost = (r.kind === 'day' && i > start ? GAP : 0) + r.h;
-        if (used + cost > limit && i > start) break;
-        used += cost; i++;
+        const first = ci < 4;
+        const limit = ci === 0 ? limits.note : (first ? limits.full : limits.cont);
+        let used = 0;
+        const start = i;
+        while (i < rows.length) {
+          const r = rows[i];
+          const cost = (r.kind === 'day' && i > start ? gap : 0) + r.h;
+          if (used + cost > limit && i > start) break;
+          used += cost; i++;
+        }
+        // never end a column on a day heading or a group header
+        while (i > start + 1 && (rows[i - 1].kind === 'day' || rows[i - 1].kind === 'head')) i--;
+        // never end a column on a day heading and a lone header/item pair
+        if (i > start + 2 && rows[i - 1].kind === 'item' && rows[i - 2].kind === 'head' && rows[i - 3].kind === 'day') i -= 3;
+        runs.push(rows.slice(start, i));
+        ci++;
       }
-      // never end a column on a day heading or a group header
-      while (i > start + 1 && (rows[i - 1].kind === 'day' || rows[i - 1].kind === 'head')) i--;
-      // never end a column on a day heading and a lone header/item pair
-      if (i > start + 2 && rows[i - 1].kind === 'item' && rows[i - 2].kind === 'head' && rows[i - 3].kind === 'day') i -= 3;
-      colRuns.push(rows.slice(start, i));
-      ci++;
+      return runs;
+    };
+    const depthOf = (run, gap) => run.reduce((n, r, k) => n + (r.kind === 'day' && k ? gap : 0) + r.h, 0);
+
+    // A stub of a column stranded on a page of its own reads as a mistake.
+    // Hand the columns before it as much of the bottom clearance back as
+    // FLOOR allows — the most that can go without the last line reaching the
+    // folio — and keep it only if that pulls the stub up. A spill with content
+    // is left to spill, and the page it lands on sells the space underneath.
+    let colRuns = runsFor(BOTTOM, GAP), blockGap = GAP;
+    if (colRuns.length > 4 && colRuns.length % 4 === 1
+        && depthOf(colRuns[colRuns.length - 1], GAP) <= PULLBACK) {
+      const was = Math.ceil(colRuns.length / 4);
+      // two levers, gentlest first: the space between day blocks, then the
+      // bottom clearance down to FLOOR. Each column that picks up one more
+      // line hands the same room to the next, so a few points across eight
+      // columns is enough to carry a whole day block up off the last page.
+      search:
+      for (let g = GAP; g >= GAP - 2; g -= 0.5) {
+        for (let bo = BOTTOM; bo >= FLOOR; bo -= 2) {
+          if (g === GAP && bo === BOTTOM) continue;
+          const t = runsFor(bo, g);
+          if (Math.ceil(t.length / 4) < was) { colRuns = t; blockGap = g; break search; }
+        }
+      }
     }
 
     const toBlocks = run => {
@@ -1508,11 +1586,17 @@ class Component extends DCLogic {
     for (let p = 0; p * 4 < colRuns.length; p++) {
       const first = p === 0;
       const cols = [];
+      let deep = 0;
       for (let c = 0; c < 4; c++) {
         const run = colRuns[p * 4 + c] || [];
+        const lead = first ? (c === 0 ? noteBottom - 61.4 : 33.6) : 0;
+        deep = Math.max(deep, lead + depthOf(run, blockGap));
         cols.push({ blocks: toBlocks(run), pad: first && c !== 0, padNote: first && c === 0 });
       }
-      pages.push({ first, cont: !first, cols, no: 0 });
+      // the dotted rules stop at the deepest column, so a page that came out
+      // short reads as short and the space under it can be measured and sold
+      const ruleH = Math.min(first ? 714 : 748, Math.max(80, deep - (first ? 33.6 : 0) + 10));
+      pages.push({ first, cont: !first, cols, ruleH: ruleH.toFixed(1) + 'pt', blockGap: blockGap + 'pt', no: 0 });
     }
     this._stage({ dlPages: pages });
   }
@@ -1721,11 +1805,13 @@ class Component extends DCLogic {
 
   /**
    * Four trial meetings to the row. The opening page carries the jump-out
-   * schedule above and the division-of-races policy below, so it takes one
-   * row; more trials than that run on, four at a time.
+   * schedule above it, so the trials start lower there; from then on they run
+   * continuously, filling each page to the foot. The division-of-races policy
+   * follows the last trial — under it when the page has the depth, otherwise
+   * whole on a page of its own.
    */
   joPack() {
-    const BOTTOM = 811.89, TOP_FIRST = 311.85, TOP_CONT = 94.4, GAP = 9, COLS = 4;
+    const BOTTOM = 811.89, TOP_FIRST = 311.85, TOP_CONT = 94.4, GAP = 9, COLS = 4, STUB = 150;
     const HEAD = 28.35, RACE = 14.25, LINE = 8.1, CPL = 34;
     const atoms = [];
     (this.state.joMeetings || []).forEach(m => {
@@ -1739,7 +1825,8 @@ class Component extends DCLogic {
     const policy = bullets.length
       ? 20 + 3.6 + 11 + bullets.reduce((n, b) => n + Math.max(1, Math.ceil(String(b.t || '').length / 118)) * 9.6, 0)
       : 0;
-    const limitOf = first => (first ? BOTTOM - TOP_FIRST - (policy ? policy + 22 : 0) : BOTTOM - TOP_CONT);
+    // trials run continuously to the foot of every page; the policy follows them
+    const limitOf = first => (first ? BOTTOM - TOP_FIRST : BOTTOM - TOP_CONT);
 
     const fill = (from, target) => {
       const cols = [[], [], [], []];
@@ -1753,13 +1840,23 @@ class Component extends DCLogic {
         used[c] += gap + a.depth;
         k++;
       }
+      // a column never ends on a venue heading: it moves to the top of the
+      // next one, and whatever no longer fits there is pushed on in turn, so
+      // no column is left running past the foot of the page
       for (let j = 0; j < COLS; j++) {
         const last = cols[j][cols[j].length - 1];
         if (!last || !last.isHead) continue;
         cols[j].pop();
         used[j] -= last.depth;
-        if (j + 1 < COLS) { cols[j + 1].unshift(Object.assign({}, last, { gap: '0pt' })); used[j + 1] += last.depth; }
-        else k--;
+        if (j + 1 < COLS) {
+          while (cols[j + 1].length && used[j + 1] + last.depth > target) {
+            const drop = cols[j + 1].pop();
+            used[j + 1] -= drop.depth + (parseFloat(drop.gap) || 0);
+            k--;
+          }
+          cols[j + 1].unshift(Object.assign({}, last, { gap: '0pt' }));
+          used[j + 1] += last.depth;
+        } else k--;
       }
       return { cols, next: k, height: Math.max.apply(null, used) };
     };
@@ -1772,10 +1869,37 @@ class Component extends DCLogic {
       // fill each column to the page's depth and carry on into the next, so
       // the trials read continuously: three full columns and a part-full last
       let r = fill(i, limit);
-      pages.push({ first, cols: r.cols, height: r.height, policyOn: first && !!policy });
+      // Filling greedily leaves the fourth column short, which can strand a
+      // few races on a page of their own. Setting the columns to a shallower
+      // common depth spreads the same races wider and takes more of them, so
+      // when only a stub would be left over, take the deepest such setting
+      // that swallows it whole.
+      if (r.next < atoms.length
+          && atoms.slice(r.next).reduce((n, a) => n + a.depth, 0) <= STUB) {
+        for (let tgt = limit - 4; tgt >= limit / 2; tgt -= 4) {
+          const t = fill(i, tgt);
+          if (t.next >= atoms.length) { r = t; break; }
+        }
+      }
+      // the same lever again on the last page, this time to clear the depth
+      // the policy needs under the trials rather than to pick up a stub
+      if (r.next >= atoms.length && policy && r.height + 22 + policy > limit) {
+        for (let tgt = limit - 4; tgt >= 60; tgt -= 4) {
+          const t = fill(i, tgt);
+          if (t.next >= atoms.length && t.height + 22 + policy <= limit) { r = t; break; }
+        }
+      }
+      pages.push({ first, cols: r.cols, height: r.height, policyOn: false, limit });
       i = r.next;
     }
-    if (!pages.length) pages.push({ first: true, cols: [[], [], [], []], height: 0, policyOn: !!policy });
+    if (!pages.length) pages.push({ first: true, cols: [[], [], [], []], height: 0, policyOn: false, limit: limitOf(true) });
+    // the policy sits under the last trials page when it fits whole; when it
+    // does not, the whole section moves to a page of its own
+    if (policy) {
+      const last = pages[pages.length - 1];
+      if (last.height + 22 + policy <= last.limit) last.policyOn = true;
+      else pages.push({ first: false, cols: [[], [], [], []], height: 0, policyOn: true, policyOnly: true, limit: limitOf(false) });
+    }
     return pages;
   }
 
@@ -1933,14 +2057,16 @@ class Component extends DCLogic {
     let n = sc.firstFolio;
     const dlPages = this.state.dlPages.map(p => ({ ...p, no: n++, eyebrow: p.first ? range : 'ENTRY DEADLINES' }));
     // before packing, the chart renders every row on one page so it can be measured
+    // the one-page measuring render, only in the part that lays the chart out
     const ch = this.state.chPages
-      || (this.state.chart ? [{ rows: this.chBuildRows(), titleRow: [{ text: this.chTitle() }] }] : []);
+      || (sc.early && this.state.chart ? [{ rows: this.chBuildRows(), titleRow: [{ text: this.chTitle() }] }] : []);
     const chPages = ch.map(p => ({ ...p, no: n++ }));
 
     // the key page is page one of Race Programs, then the packed pages follow
     const rpKeyNo = sc.programs ? String(n++) : '';
+    // the one-page measuring render, only in the part that lays programs out
     const rp = this.state.rpPages
-      || (this.state.meetings ? [{ cols: [{ atoms: this.rpAtoms() }, { atoms: [] }, { atoms: [] }, { atoms: [] }] }] : []);
+      || (sc.programs && this.state.meetings ? [{ cols: [{ atoms: this.rpAtoms() }, { atoms: [] }, { atoms: [] }, { atoms: [] }] }] : []);
     const rpPages = rp.map(p => ({ ...p, no: n++ }));
     const M = ['JANUARY','FEBRUARY','MARCH','APRIL','MAY','JUNE','JULY','AUGUST','SEPTEMBER','OCTOBER','NOVEMBER','DECEMBER'];
     const ms = this.rpPrinted();
@@ -1971,8 +2097,11 @@ class Component extends DCLogic {
     const cPermits = span(1);
     const cAgents = span(1);
     const cJumps = yes(cs.jumps_included) ? span(1) : '';
-    const cJumpouts = span(joPacked.length);   // the division policy rides on its first page
-    const cPolicy = String(cJumpouts).split('-')[0];
+    // the policy follows the trials, on the last trials page or one of its own
+    const joTrialPages = joPacked.filter(p => !p.policyOnly).length || 1;
+    const joPolicyPages = joPacked.length - joTrialPages;
+    const cJumpouts = span(joTrialPages);
+    const cPolicy = joPolicyPages ? span(joPolicyPages) : String(cJumpouts).split('-').pop();
     const cSeries = span(rsPacked.length);
     const cPicnics = pcOn ? span(pcPacked.length || 1) : '';
     const cNotice = span(ntNoticePacked.length);
@@ -2002,6 +2131,7 @@ class Component extends DCLogic {
     const edMonth = (edWords[0] || '').replace(/^(\w)(\w*)$/, (m0, a0, b0) => a0 + b0.toLowerCase());
     const edYear = edWords[edWords.length - 1] || '';
     const contentsHeader = 'INSIDE RACING | ' + String(this.state.edition || '');
+    const contentsRowH = Math.min(30, 322 / Math.max((contentsRows || []).length, 1)).toFixed(2) + 'pt';
     const contentsNote = edMonth
       ? 'Data within Inside Racing is accurate as of 1 ' + edMonth + ' ' + edYear + ' and subject to change.'
       : '';
@@ -2099,13 +2229,13 @@ class Component extends DCLogic {
     const joPages = joPacked.map((p, i) => {
       const top = p.first ? 311.85 : 94.4;
       const filled = p.cols.filter(c => c.length).length;
-      const policyTop = top + p.height + 22;
+      const policyTop = p.policyOnly ? 94.4 : top + p.height + 22;
       return {
         firstOnly: p.first ? [{}] : [],
         months: p.first ? joMonths : [],
         columns: p.cols.map((atoms, j) => ({ left: JO_COL(j) + 'pt', atoms })),
         dividers: Array.from({ length: Math.max(0, filled - 1) }, (u, j) => ({ left: (JO_COL(j) + 126.5 + 6.6) + 'pt' })),
-        trialsTitle: p.first ? 'Official Flat Trials' : 'Official Flat Trials continued',
+        trialsTitle: p.policyOnly ? '' : (p.first ? 'Official Flat Trials' : 'Official Flat Trials continued'),
         trialsTitleTop: (p.first ? 281 : 59.3) + 'pt',
         trialsTop: top + 'pt',
         rulesTop: (top + 3.15) + 'pt',
@@ -2230,11 +2360,12 @@ class Component extends DCLogic {
       adPanelHouse,
       adPanelArt,
       contentsRows,
+      contentsRowH,
       contentsNote,
       contentsHeader,
       backPages: sc.tail ? [{}] : [],
       rpKeyNo,
-      rpPages,
+      rpPages: sc.programs ? rpPages : [],
       rpEyebrow,
       paPermits,
       paAgents,
@@ -2255,13 +2386,13 @@ class Component extends DCLogic {
       jpPageNo,
       jpPageJumpouts: joPageNo,
       joMonths,
-      joPages,
+      joPages: sc.tail ? joPages : [],
       joPolicy: this.state.policy,
       joPolicyHeading: this.state.policyHeading || 'Division of Races Policy at Country TAB Race Meetings',
       joPageNo,
-      rsPages,
-      ntNoticePages,
-      ntStewardsPages,
+      rsPages: sc.tail ? rsPages : [],
+      ntNoticePages: sc.tail ? ntNoticePages : [],
+      ntStewardsPages: sc.tail ? ntStewardsPages : [],
       ntRules: this.state.rules,
       ntNoticeEmpty: this.state.tailLoaded && !this.state.notice.length,
       ntStewardsEmpty: this.state.tailLoaded && !this.state.stewards.length,
@@ -2279,8 +2410,8 @@ class Component extends DCLogic {
       dlHeadRows: dlRows.filter(r => r.kind === 'head'),
       dlItemRows: dlRows.filter(r => r.kind === 'item'),
       dlNoteGap: this._dlNoteGap || '209.6pt',
-      dlPages,
-      chPages,
+      dlPages: sc.early ? dlPages : [],
+      chPages: sc.early ? chPages : [],
       chHeaderRest: this.state.chart ? this.state.chart.header.slice(1).map(t => ({ text: t.toUpperCase() })) : []
     };
   }

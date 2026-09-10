@@ -53,14 +53,14 @@ a:hover{color:#1b7fb4}
 <div style="font-size:8pt;line-height:9.2pt;color:#2c2e35;margin-top:7pt">Any information listed regarding nominations and acceptances for interstate races is provided as a guide only. It is compiled from information appearing elsewhere in <span style="font-style:italic">Inside Racing</span>.</div>
 <div style="font-size:8pt;line-height:9.2pt;color:#2c2e35;margin-top:7pt">Riders for all picnic meetings are to be declared no later than 12 noon on the day of acceptances.</div>
 </div>
-<div style="position:absolute;left:158.5pt;top:95pt;height:714pt;border-left:0.75pt dotted #9a9c9f"></div>
-<div style="position:absolute;left:299.5pt;top:95pt;height:714pt;border-left:0.75pt dotted #9a9c9f"></div>
-<div style="position:absolute;left:440.5pt;top:95pt;height:714pt;border-left:0.75pt dotted #9a9c9f"></div>
+<div style="position:absolute;left:158.5pt;top:95pt;height:{{ pg.ruleH }};border-left:0.75pt dotted #9a9c9f"></div>
+<div style="position:absolute;left:299.5pt;top:95pt;height:{{ pg.ruleH }};border-left:0.75pt dotted #9a9c9f"></div>
+<div style="position:absolute;left:440.5pt;top:95pt;height:{{ pg.ruleH }};border-left:0.75pt dotted #9a9c9f"></div>
 </sc-if>
 <sc-if value="{{ pg.cont }}" hint-placeholder-val="{{ false }}">
-<div style="position:absolute;left:158.5pt;top:61.4pt;height:748pt;border-left:0.75pt dotted #9a9c9f"></div>
-<div style="position:absolute;left:299.5pt;top:61.4pt;height:748pt;border-left:0.75pt dotted #9a9c9f"></div>
-<div style="position:absolute;left:440.5pt;top:61.4pt;height:748pt;border-left:0.75pt dotted #9a9c9f"></div>
+<div style="position:absolute;left:158.5pt;top:61.4pt;height:{{ pg.ruleH }};border-left:0.75pt dotted #9a9c9f"></div>
+<div style="position:absolute;left:299.5pt;top:61.4pt;height:{{ pg.ruleH }};border-left:0.75pt dotted #9a9c9f"></div>
+<div style="position:absolute;left:440.5pt;top:61.4pt;height:{{ pg.ruleH }};border-left:0.75pt dotted #9a9c9f"></div>
 </sc-if>
 <div style="position:absolute;left:23pt;right:19pt;top:61.4pt;display:flex;gap:11pt;align-items:flex-start">
 <sc-for list="{{ pg.cols }}" as="col" hint-placeholder-count="4">
@@ -68,7 +68,7 @@ a:hover{color:#1b7fb4}
 <sc-if value="{{ col.pad }}" hint-placeholder-val="{{ false }}"><div style="height:33.6pt"></div></sc-if>
 <sc-if value="{{ col.padNote }}" hint-placeholder-val="{{ false }}"><div style="height:{{ noteGap }}"></div></sc-if>
 <sc-for list="{{ col.blocks }}" as="b" hint-placeholder-count="3">
-<div style="margin-bottom:11pt">
+<div style="margin-bottom:{{ pg.blockGap }}">
 <sc-for list="{{ b.dayRow }}" as="d" hint-placeholder-count="1">
 <div style="border-top:1pt solid #2c2e35"></div>
 <div style="font-size:8.5pt;font-weight:700;line-height:10.5pt;padding-top:1.5pt;color:#2c9cd7">{{ d.text }}</div>
@@ -149,6 +149,29 @@ class Component extends DCLogic {
     const counts = { day: 0, head: 0, item: 0 };
     rows.forEach(r => counts[r.kind]++);
     if (['day', 'head', 'item'].some(k => measured[k].length !== counts[k])) return;
+    // The rig has to have laid out before it is read. A host with no layout
+    // yet measures zero, every row costs nothing, and the whole section packs
+    // into one overflowing column. Wait for it — woken by the fonts settling
+    // or by a poll that keeps one timer alive at a time — but never wait so
+    // long that the section is left unset: a page packed on rough numbers can
+    // be re-cut, a page that never arrives cannot.
+    const noteProbe = host.querySelector('[data-note]');
+    const rigReady = noteProbe && noteProbe.getBoundingClientRect().height >= 40
+      && measured.item.some(el => el.getBoundingClientRect().height > 0);
+    if (!rigReady && (this._packWaited || 0) < 8000) {
+      if (!this._packTimer) {
+        this._packTimer = setTimeout(() => {
+          this._packTimer = null;
+          this._packWaited = (this._packWaited || 0) + 100;
+          this.pack();
+        }, 100);
+      }
+      if (document.fonts && !this._packFontWake) {
+        this._packFontWake = true;
+        document.fonts.ready.then(() => requestAnimationFrame(() => this.pack()));
+      }
+      return;
+    }
     this._packed = true;
 
     const toPt = px => px * 72 / 96;
@@ -159,33 +182,62 @@ class Component extends DCLogic {
       r.h = toPt(el.getBoundingClientRect().height + parseFloat(cs.marginTop || 0) + parseFloat(cs.marginBottom || 0));
     });
 
-    const PAGE_H = 841.89, BOTTOM = 30, GAP = 11;
+    const PAGE_H = 841.89, BOTTOM = 30, FLOOR = 22, GAP = 11, PULLBACK = 150;
     const noteEl = host.querySelector('[data-note]');
     const noteBottom = 93.9 + (noteEl ? toPt(noteEl.getBoundingClientRect().height) : 165) + 12;
     this._noteGap = (noteBottom - 61.4).toFixed(1) + 'pt';
-    const limits = { full: PAGE_H - 95 - BOTTOM, cont: PAGE_H - 61.4 - BOTTOM, note: PAGE_H - noteBottom - BOTTOM };
 
     // Greedy line-level fill; a day block may continue into the next column.
-    const colRuns = [];
-    let i = 0, ci = 0;
-    while (i < rows.length) {
-      const first = ci < 4;
-      const c = ci % 4;
-      const limit = ci === 0 ? limits.note : (first ? limits.full : limits.cont);
-      let used = 0;
-      const start = i;
+    // The bottom clearance is a parameter so a short spill can be pulled back
+    // into the page before it by tightening the whole section a little.
+    const runsFor = (bottom, gap) => {
+      const limits = { full: PAGE_H - 95 - bottom, cont: PAGE_H - 61.4 - bottom, note: PAGE_H - noteBottom - bottom };
+      const runs = [];
+      let i = 0, ci = 0;
       while (i < rows.length) {
-        const r = rows[i];
-        const cost = (r.kind === 'day' && i > start ? GAP : 0) + r.h;
-        if (used + cost > limit && i > start) break;
-        used += cost; i++;
+        const first = ci < 4;
+        const c = ci % 4;
+        const limit = ci === 0 ? limits.note : (first ? limits.full : limits.cont);
+        let used = 0;
+        const start = i;
+        while (i < rows.length) {
+          const r = rows[i];
+          const cost = (r.kind === 'day' && i > start ? gap : 0) + r.h;
+          if (used + cost > limit && i > start) break;
+          used += cost; i++;
+        }
+        // never end a column on a day heading or a group header
+        while (i > start + 1 && (rows[i - 1].kind === 'day' || rows[i - 1].kind === 'head')) i--;
+        // never end a column on a day heading + single header pair
+        if (i > start + 2 && rows[i - 1].kind === 'item' && rows[i - 2].kind === 'head' && rows[i - 3].kind === 'day') i -= 3;
+        runs.push(rows.slice(start, i));
+        ci++;
       }
-      // never end a column on a day heading or a group header
-      while (i > start + 1 && (rows[i - 1].kind === 'day' || rows[i - 1].kind === 'head')) i--;
-      // never end a column on a day heading + single header pair
-      if (i > start + 2 && rows[i - 1].kind === 'item' && rows[i - 2].kind === 'head' && rows[i - 3].kind === 'day') i -= 3;
-      colRuns.push(rows.slice(start, i));
-      ci++;
+      return runs;
+    };
+    const depthOf = (run, gap) => run.reduce((n, r, k) => n + (r.kind === 'day' && k ? gap : 0) + r.h, 0);
+
+    // A stub of a column stranded on a page of its own reads as a mistake.
+    // Hand the columns before it as much of the bottom clearance back as
+    // FLOOR allows — the most that can go without the last line reaching the
+    // folio — and keep it only if that pulls the stub up. A spill with content
+    // is left to spill, and the page it lands on sells the space underneath.
+    let colRuns = runsFor(BOTTOM, GAP), blockGap = GAP;
+    if (colRuns.length > 4 && colRuns.length % 4 === 1
+        && depthOf(colRuns[colRuns.length - 1], GAP) <= PULLBACK) {
+      const was = Math.ceil(colRuns.length / 4);
+      // two levers, gentlest first: the space between day blocks, then the
+      // bottom clearance down to FLOOR. Each column that picks up one more
+      // line hands the same room to the next, so a few points across eight
+      // columns is enough to carry a whole day block up off the last page.
+      search:
+      for (let g = GAP; g >= GAP - 2; g -= 0.5) {
+        for (let bo = BOTTOM; bo >= FLOOR; bo -= 2) {
+          if (g === GAP && bo === BOTTOM) continue;
+          const t = runsFor(bo, g);
+          if (Math.ceil(t.length / 4) < was) { colRuns = t; blockGap = g; break search; }
+        }
+      }
     }
 
     const toBlocks = run => {
@@ -209,11 +261,17 @@ class Component extends DCLogic {
     for (let p = 0; p * 4 < colRuns.length; p++) {
       const first = p === 0;
       const cols = [];
+      let deep = 0;
       for (let c = 0; c < 4; c++) {
         const run = colRuns[p * 4 + c] || [];
+        const lead = first ? (c === 0 ? noteBottom - 61.4 : 33.6) : 0;
+        deep = Math.max(deep, lead + depthOf(run, blockGap));
         cols.push({ blocks: toBlocks(run), pad: first && c !== 0, padNote: first && c === 0 });
       }
-      pages.push({ first, cont: !first, cols, no: 0 });
+      // the dotted rules stop at the deepest column, so a page that came out
+      // short reads as short and the space under it can be measured and sold
+      const ruleH = Math.min(first ? 714 : 748, Math.max(80, deep - (first ? 33.6 : 0) + 10));
+      pages.push({ first, cont: !first, cols, ruleH: ruleH.toFixed(1) + 'pt', blockGap: blockGap + 'pt', no: 0 });
     }
     // pagination is the authority on folios; tell it how long this section ran
     import('./parsers/pagination.js').then(P => {

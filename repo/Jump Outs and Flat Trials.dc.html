@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+@font-face{font-family:'Gotham Narrow';src:url('fonts/GothamNarrow-Book.otf') format('opentype');font-weight:400;font-style:normal;font-display:block}
+@font-face{font-family:'Gotham XNarrow';src:url('fonts/GothamXNarrow-Book.ttf') format('truetype');font-weight:400;font-style:normal;font-display:block}
+@font-face{font-family:'Gotham XNarrow';src:url('fonts/GothamXNarrow-Bold.ttf') format('truetype');font-weight:700;font-style:normal;font-display:block}
+doc-page:not(:defined){visibility:hidden}
+body{margin:0}
+a{color:#2c9cd7;text-decoration:none}
+a:hover{color:#1b7fb4}
+</style>
+<script src="./doc-page.js"></script>
+</helmet>
+<doc-page size="a4">
+
+<sc-for list="{{ pages }}" as="p" hint-placeholder-count="1">
+<section class="page" data-screen-label="Jump-Outs and Flat Trials" style="position:relative;font-family:'Gotham Narrow',sans-serif;color:#2c2e35;background:#fff;padding:0;overflow:hidden">
+<div style="position:absolute;left:22.7pt;top:24pt;font-size:10pt;font-weight:400;line-height:1;letter-spacing:.019em">JUMP-OUTS AND OFFICIAL FLAT TRIALS</div>
+<div style="position:absolute;left:22.7pt;top:37pt;width:549.9pt;height:3pt;background:#9ecff0"></div>
+
+<sc-for list="{{ p.firstOnly }}" as="f" hint-placeholder-count="1">
+<div style="position:absolute;left:22pt;top:59.3pt;font-size:24pt;font-weight:700;line-height:1;letter-spacing:-.01em">Jump-Out Schedule</div>
+</sc-for>
+
+<sc-for list="{{ p.months }}" as="m" hint-placeholder-count="2">
+<div style="position:absolute;left:{{ m.left }};top:94.4pt;width:267.5pt">
+<div style="font-size:12pt;font-weight:700;line-height:1;letter-spacing:-.005em">{{ m.label }}</div>
+<div style="height:2pt;background:#2c2e35;margin-top:6.9pt"></div>
+</div>
+<div style="position:absolute;left:{{ m.colA }};top:115.65pt;width:126.5pt;font-size:7pt">
+<sc-for list="{{ m.left1 }}" as="e" hint-placeholder-count="13">
+<div style="display:flex;justify-content:space-between;gap:6pt;padding-top:2pt;line-height:8pt;box-shadow:inset 0 -0.25pt 0 #2c2e35"><span style="white-space:nowrap">{{ e.date }}</span><span style="text-align:right">{{ e.venue }}</span></div>
+</sc-for>
+</div>
+<div style="position:absolute;left:{{ m.colB }};top:115.65pt;width:126.5pt;font-size:7pt">
+<sc-for list="{{ m.right1 }}" as="e" hint-placeholder-count="13">
+<div style="display:flex;justify-content:space-between;gap:6pt;padding-top:2pt;line-height:8pt;box-shadow:inset 0 -0.25pt 0 #2c2e35"><span style="white-space:nowrap">{{ e.date }}</span><span style="text-align:right">{{ e.venue }}</span></div>
+</sc-for>
+</div>
+</sc-for>
+
+<div style="position:absolute;left:21.7pt;top:{{ p.trialsTitleTop }};font-size:24pt;font-weight:700;line-height:1;letter-spacing:-.01em">{{ p.trialsTitle }}</div>
+
+<sc-for list="{{ p.dividers }}" as="d" hint-placeholder-count="2">
+<div style="position:absolute;left:{{ d.left }};top:{{ p.rulesTop }};width:0.75pt;height:{{ p.rulesHeight }};background:#2c2e35"></div>
+</sc-for>
+
+<sc-for list="{{ p.columns }}" as="c" hint-placeholder-count="4">
+<div style="position:absolute;left:{{ c.left }};top:{{ p.trialsTop }};width:126.5pt">
+<sc-for list="{{ c.atoms }}" as="a" hint-placeholder-count="9">
+<sc-if value="{{ a.isHead }}" hint-placeholder-val="{{ true }}">
+<div style="margin-top:{{ a.gap }};height:3.5pt;background:#2c2e35"></div>
+<div style="margin-top:3.75pt;font-size:9.3pt;font-weight:700;line-height:1;letter-spacing:.01em">{{ a.venue }}</div>
+<div style="margin-top:3.8pt;font-size:8pt;font-weight:400;line-height:1;letter-spacing:.01em">{{ a.date }}</div>
+</sc-if>
+<sc-if value="{{ a.isRace }}" hint-placeholder-val="{{ false }}">
+<div style="margin-top:3.5pt;display:flex;justify-content:space-between;gap:5pt;background:#d8d9da;height:9pt;box-sizing:border-box;padding:1.6pt 3pt 0;font-size:6.3pt;line-height:6.8pt"><span>{{ a.cond }}</span><span style="text-align:right">{{ a.dist }}</span></div>
+<div style="margin-top:1.75pt;font-size:6.8pt;line-height:8.1pt">{{ a.title }}</div>
+</sc-if>
+</sc-for>
+</div>
+</sc-for>
+
+<sc-for list="{{ p.policyRow }}" as="f" hint-placeholder-count="1">
+<div style="position:absolute;left:20.7pt;top:{{ p.policyTop }};font-size:20pt;font-weight:700;line-height:1;letter-spacing:-.01em">{{ policyHeading }}</div>
+<div style="position:absolute;left:22.7pt;top:{{ p.policyRuleTop }};width:549.9pt;height:3pt;background:#2c2e35"></div>
+<div style="position:absolute;left:22.7pt;top:{{ p.policyTextTop }};width:545.3pt;font-size:8pt;line-height:9.6pt">
+<sc-for list="{{ policy }}" as="q" hint-placeholder-count="8">
+<div style="display:flex"><span style="width:8.5pt;flex:0 0 8.5pt">&bull;</span><span style="flex:1">{{ q.t }}</span></div>
+</sc-for>
+</div>
+</sc-for>
+
+<div style="position:absolute;left:12.2pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1;letter-spacing:-.013em">{{ footer }}</div>
+<div style="position:absolute;right:12.3pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1">{{ p.no }}</div>
+</section>
+</sc-for>
+
+</doc-page>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { blocks: [], meetings: [], policy: [], settings: {}, from: 0 };
+
+  // page 50 sets four columns of 126.5pt on a 141.2pt pitch
+  static COL = i => 22.7 + i * 141.2;
+
+  componentDidMount() {
+    const faces = document.fonts
+      ? Promise.all([
+          document.fonts.load('400 7pt "Gotham Narrow"'),
+          document.fonts.load('400 8pt "Gotham Narrow"'),
+          document.fonts.load('400 6.5pt "Gotham Narrow"'),
+          document.fonts.load('400 10pt "Gotham Narrow"'),
+          document.fonts.load('700 9.3pt "Gotham Narrow"'),
+          document.fonts.load('700 12pt "Gotham Narrow"'),
+          document.fonts.load('700 20pt "Gotham Narrow"'),
+          document.fonts.load('700 24pt "Gotham Narrow"'),
+          document.fonts.load('400 7pt "Gotham XNarrow"')
+        ]).then(() => document.fonts.ready)
+      : Promise.resolve();
+    const text = f => fetch('inputs/' + f).then(r => r.text());
+    Promise.all([
+      import('./parsers/jumpouts.js').then(m => m.loadJumpOuts('inputs/Jump Outs.xlsx')),
+      import('./parsers/trials.js').then(m => m.loadTrials('inputs/Official Flat Trials.csv')),
+      import('./parsers/notices.js').then(m => m.loadPolicy('inputs/Division of Races Policy.docx'))
+        .catch(e => ({ heading: '', bullets: [], warnings: ['Division of Races Policy: could not read the document: ' + (e.message || e)] })),
+      import('./parsers/settings.js').then(m => m.loadSettings('inputs/Edition Settings.xlsx')),
+      faces
+    ]).then(([j, t, pol, s]) => {
+      const settings = s.settings;
+      const warnings = j.warnings.concat(t.warnings, pol.warnings || [], s.warnings);
+      if (warnings.length) console.warn('Jump-outs and flat trials — ' + warnings.length + ' to check:\n' + warnings.join('\n'));
+      this.setState({
+        blocks: j.blocks,
+        meetings: t.meetings,
+        policy: (pol.bullets || []).map(t2 => ({ t: t2 })),
+        policyHeading: pol.heading || 'Division of Races Policy at Country TAB Race Meetings',
+        settings
+      }, () => requestAnimationFrame(() => {
+        const dp0 = document.querySelector('doc-page');
+        if (dp0) dp0.setAttribute('data-paged', String(document.querySelectorAll('doc-page > .page').length));
+      }));
+    });
+  }
+
+  componentDidUpdate() {
+    const dp = document.querySelector('doc-page');
+    if (dp && dp._measure) dp._measure();
+    if (this._reported || !this.state.meetings.length) return;
+    this._reported = true;
+    const n = this.pack().length;
+    import('./parsers/pagination.js').then(P => {
+      P.report('jumpouts', n);
+      const from = P.plan(this.state.settings).start.jumpouts;
+      this.setState({ from }, () => requestAnimationFrame(() => {
+        if (dp) dp.setAttribute('data-paged', String(n));
+      }));
+    });
+  }
+
+  /**
+   * The trials run down four columns and across, so a meeting carries on in
+   * the next column rather than each meeting owning one. The columns on a page
+   * are filled to a common depth, which leaves the last one shortest, and the
+   * division-of-races policy sits under whatever depth that came to.
+   *
+   * Depth is worked out from the printed metrics of each part, so the page can
+   * be planned without laying it out first.
+   */
+  static trialAtoms(meetings) {
+    const HEAD = 28.35, RACE = 14.25, LINE = 8.1, CPL = 34;
+    const out = [];
+    (meetings || []).forEach(m => {
+      out.push({ isHead: true, venue: m.venue, date: m.date, depth: HEAD });
+      (m.races || []).forEach(r => {
+        const lines = Math.max(1, Math.ceil(String(r.title || '').length / CPL));
+        out.push({ isRace: true, cond: r.cond, dist: r.dist, title: r.title, depth: RACE + lines * LINE });
+      });
+    });
+    return out;
+  }
+
+  /** How deep the policy block prints, heading and rule included. */
+  policyDepth() {
+    const bullets = this.state.policy || [];
+    if (!bullets.length) return 0;
+    return 20 + 3.6 + 11 + bullets.reduce((n, b) =>
+      n + Math.max(1, Math.ceil(String(b.t || '').length / 118)) * 9.6, 0);
+  }
+
+  pack() {
+    const BOTTOM = 811.89, TOP_FIRST = 311.85, TOP_CONT = 94.4, GAP = 9, COLS = 4;
+    const atoms = Component.trialAtoms(this.state.meetings);
+    const policy = this.policyDepth();
+    const limitOf = first => (first ? BOTTOM - TOP_FIRST - (policy ? policy + 22 : 0) : BOTTOM - TOP_CONT);
+
+    // fill four columns to a common depth; returns where it got to
+    const fill = (from, target) => {
+      const cols = [[], [], [], []];
+      const used = [0, 0, 0, 0];
+      let c = 0, k = from;
+      while (k < atoms.length && c < COLS) {
+        const a = atoms[k];
+        const gap = a.isHead && cols[c].length ? GAP : 0;
+        if (used[c] + gap + a.depth > target && cols[c].length) { c++; continue; }
+        cols[c].push(Object.assign({}, a, { gap: gap + 'pt' }));
+        used[c] += gap + a.depth;
+        k++;
+      }
+      // a venue heading never sits alone at the foot of a column
+      for (let j = 0; j < COLS; j++) {
+        const last = cols[j][cols[j].length - 1];
+        if (!last || !last.isHead) continue;
+        cols[j].pop();
+        used[j] -= last.depth;
+        if (j + 1 < COLS) { cols[j + 1].unshift(Object.assign({}, last, { gap: '0pt' })); used[j + 1] += last.depth; }
+        else k--;
+      }
+      return { cols, next: k, height: Math.max(...used) };
+    };
+
+    const pages = [];
+    let i = 0;
+    while (i < atoms.length) {
+      const first = pages.length === 0;
+      const limit = limitOf(first);
+      // fill each column to the page's depth and carry on into the next, so
+      // the trials read continuously: three full columns and a part-full last
+      let r = fill(i, limit);
+      pages.push({ first, cols: r.cols, height: r.height, policyOn: first && !!policy });
+      i = r.next;
+    }
+    if (!pages.length) pages.push({ first: true, cols: [[], [], [], []], height: 0, policyOn: !!policy });
+    return pages;
+  }
+
+  rows(text) {
+    const lines = String(text || '').replace(/\r/g, '').split('\n').filter(l => l.trim());
+    if (!lines.length) return [];
+    const head = lines[0].split('\t').map(h => h.trim());
+    return lines.slice(1).map(l => {
+      const c = l.split('\t');
+      const o = {};
+      head.forEach((h, i) => { o[h] = (c[i] || '').trim(); });
+      return o;
+    });
+  }
+
+  renderVals() {
+    const C = Component.COL;
+    const s = this.state.settings;
+    // the two month blocks each own two of the four columns
+    const months = this.state.blocks.slice(0, 2).map((b, i) => ({
+      label: b.label,
+      left: (i === 0 ? 22.2 : 305.1) + 'pt',
+      colA: C(i * 2) + 0.3 + 'pt',
+      colB: C(i * 2 + 1) + 0.3 + 'pt',
+      left1: b.left,
+      right1: b.right
+    }));
+    const from = this.state.from || 0;
+    const pages = this.pack().map((p, i) => {
+      const top = p.first ? 311.85 : 94.4;
+      const filled = p.cols.filter(c => c.length).length;
+      const policyTop = top + p.height + 22;
+      return {
+        firstOnly: p.first ? [{}] : [],
+        months: p.first ? months : [],
+        columns: p.cols.map((atoms, j) => ({ left: C(j) + 'pt', atoms })),
+        // one hairline in each gutter between adjacent columns that carry trials
+        dividers: Array.from({ length: Math.max(0, filled - 1) }, (u, j) => ({ left: (C(j) + 126.5 + 6.6) + 'pt' })),
+        trialsTitle: p.first ? 'Official Flat Trials' : 'Official Flat Trials continued',
+        trialsTitleTop: (p.first ? 281 : 59.3) + 'pt',
+        trialsTop: top + 'pt',
+        rulesTop: (top + 3.15) + 'pt',
+        rulesHeight: Math.max(0, p.height - 3.15) + 'pt',
+        policyRow: p.policyOn ? [{}] : [],
+        policyTop: policyTop + 'pt',
+        policyRuleTop: (policyTop + 23.6) + 'pt',
+        policyTextTop: (policyTop + 38.6) + 'pt',
+        no: from ? String(from + i) : ''
+      };
+    });
+    return {
+      pages,
+      policy: this.state.policy,
+      policyHeading: this.state.policyHeading || 'Division of Races Policy at Country TAB Race Meetings',
+      footer: 'INSIDE RACING I ' + (s.edition || '')
+    };
+  }
+}
+</script>
+</body>
+</html>

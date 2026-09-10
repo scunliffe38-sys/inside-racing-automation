@@ -1,0 +1,199 @@
+=== Entry Deadlines.dc.html::rows ===
+  rows() {
+    const out = [];
+    (this.state.days || []).forEach((d, di) => {
+      out.push({ kind: 'day', text: d.day, di });
+      d.groups.forEach((g, gi) => {
+        out.push({ kind: 'head', text: g.header, di, gi });
+        g.items.forEach(it => out.push({ kind: 'item', text: it, di, gi }));
+      });
+    });
+    return out;
+  }
+
+=== Entry Deadlines.dc.html::pack ===
+  pack() {
+    const host = this.measureEl;
+    if (!host || !this.state.days || this._packed) return;
+    const rows = this.rows();
+    const measured = { day: [], head: [], item: [] };
+    ['day', 'head', 'item'].forEach(k => {
+      measured[k] = Array.from(host.querySelectorAll('[data-r="' + k + '"]'));
+    });
+    const counts = { day: 0, head: 0, item: 0 };
+    rows.forEach(r => counts[r.kind]++);
+    if (['day', 'head', 'item'].some(k => measured[k].length !== counts[k])) return;
+    this._packed = true;
+
+    const toPt = px => px * 72 / 96;
+    const idx = { day: 0, head: 0, item: 0 };
+    rows.forEach(r => {
+      const el = measured[r.kind][idx[r.kind]++];
+      const cs = getComputedStyle(el);
+      r.h = toPt(el.getBoundingClientRect().height + parseFloat(cs.marginTop || 0) + parseFloat(cs.marginBottom || 0));
+    });
+
+    const PAGE_H = 841.89, BOTTOM = 30, GAP = 11;
+    const noteEl = host.querySelector('[data-note]');
+    const noteBottom = 93.9 + (noteEl ? toPt(noteEl.getBoundingClientRect().height) : 165) + 12;
+    this._noteGap = (noteBottom - 61.4).toFixed(1) + 'pt';
+    const limits = { full: PAGE_H - 95 - BOTTOM, cont: PAGE_H - 61.4 - BOTTOM, note: PAGE_H - noteBottom - BOTTOM };
+
+    // Greedy line-level fill; a day block may continue into the next column.
+    const colRuns = [];
+    let i = 0, ci = 0;
+    while (i < rows.length) {
+      const first = ci < 4;
+      const c = ci % 4;
+      const limit = ci === 0 ? limits.note : (first ? limits.full : limits.cont);
+      let used = 0;
+      const start = i;
+      while (i < rows.length) {
+        const r = rows[i];
+        const cost = (r.kind === 'day' && i > start ? GAP : 0) + r.h;
+        if (used + cost > limit && i > start) break;
+        used += cost; i++;
+      }
+      // never end a column on a day heading or a group header
+      while (i > start + 1 && (rows[i - 1].kind === 'day' || rows[i - 1].kind === 'head')) i--;
+      // never end a column on a day heading + single header pair
+      if (i > start + 2 && rows[i - 1].kind === 'item' && rows[i - 2].kind === 'head' && rows[i - 3].kind === 'day') i -= 3;
+      colRuns.push(rows.slice(start, i));
+      ci++;
+    }
+
+    const toBlocks = run => {
+      const blocks = [];
+      run.forEach(r => {
+        if (r.kind === 'day') blocks.push({ dayRow: [{ text: r.text }], groups: [] });
+        else {
+          if (!blocks.length) blocks.push({ dayRow: [], groups: [] });
+          const b = blocks[blocks.length - 1];
+          if (r.kind === 'head') b.groups.push({ headRow: [{ text: r.text }], items: [] });
+          else {
+            if (!b.groups.length) b.groups.push({ headRow: [], items: [] });
+            b.groups[b.groups.length - 1].items.push(r.text);
+          }
+        }
+      });
+      return blocks;
+    };
+
+    const pages = [];
+    for (let p = 0; p * 4 < colRuns.length; p++) {
+      const first = p === 0;
+      const cols = [];
+      for (let c = 0; c < 4; c++) {
+        const run = colRuns[p * 4 + c] || [];
+        cols.push({ blocks: toBlocks(run), pad: first && c !== 0, padNote: first && c === 0 });
+      }
+      pages.push({ first, cont: !first, cols, no: 0 });
+    }
+    // pagination is the authority on folios; tell it how long this section ran
+    import('./parsers/pagination.js').then(P => {
+      P.report('deadlines', pages.length);
+      const from = P.plan({}).start.deadlines;
+      pages.forEach((pg, i) => { pg.no = from + i; });
+      const announce = () => {
+        const dp0 = document.querySelector('doc-page');
+        if (dp0) dp0.setAttribute('data-paged', String(pages.length));
+      };
+      this.setState({ pages }, () => {
+        requestAnimationFrame(() => {
+          const dp = document.querySelector('doc-page');
+          if (dp && dp._measure) dp._measure();
+          announce();
+        });
+      });
+    });
+  }
+
+=== Programs Summary Chart.dc.html::classify ===
+  classify(runs, isMeeting) {
+    const empty = () => ({ n: [], b: [], rd: [], dt: [], vm: [], vc: [], sep: [] });
+    const bucket = (r, i) => {
+      if (isMeeting && i === 0) return 'dt';
+      if (isMeeting && r.s === 9 && r.c === '#FF0040') return 'vm';
+      if (isMeeting && r.s === 9 && r.c === '#00B0F0') return 'vc';
+      if (r.b && r.c === '#FF0040') return 'rd';
+      if (r.b) return 'b';
+      return 'n';
+    };
+    // A rule of dashes divides two entries inside one cell. Left as ordinary
+    // text in a 34pt column it breaks over four lines, which ran the chart five
+    // pages long. It usually sits inside a larger run rather than being a run of
+    // its own, so every run is split on its dashes and the dashes are set on one
+    // line and clipped to the cell.
+    const out = [];
+    runs.forEach((r, i) => {
+      const key = bucket(r, i);
+      const text = key === 'dt' ? String(r.t).toUpperCase() : String(r.t);
+      text.split(/([-\u2013\u2014]{3,})/).forEach(part => {
+        if (!part) return;
+        const o = empty();
+        if (/^[-\u2013\u2014]{3,}$/.test(part)) o.sep.push({ t: part });
+        else o[key].push({ t: part });
+        out.push(o);
+      });
+    });
+    return out;
+  }
+
+=== Programs Summary Chart.dc.html::title ===
+  title() {
+    const d = this.state.data;
+    if (!d || !d.rows.length) return 'Programs Summary Chart';
+    const M = { Jan: 'January', Feb: 'February', Mar: 'March', Apr: 'April', May: 'May', Jun: 'June', Jul: 'July', Aug: 'August', Sep: 'September', Oct: 'October', Nov: 'November', Dec: 'December' };
+    const mon = row => {
+      const t = (row.cells[0][0] || {}).t || '';
+      const m = t.match(/-([A-Za-z]{3})-/);
+      return m ? M[m[1]] : '';
+    };
+    const a = mon(d.rows[0]), b = mon(d.rows[d.rows.length - 1]);
+    return 'Programs Summary Chart ' + (a === b ? a : a + ' - ' + b);
+  }
+
+=== Programs Summary Chart.dc.html::buildRows ===
+  buildRows() {
+    const d = this.state.data;
+    if (!d) return [];
+    return d.rows.map((row, i) => ({
+      a: this.classify(row.cells[0], true),
+      rest: row.cells.slice(1).map(c => ({ runs: this.classify(c, false) }))
+    }));
+  }
+
+=== Programs Summary Chart.dc.html::pack ===
+  pack() {
+    if (!this.state.data || this.state.pages || this._packed) return;
+    const els = Array.from(document.querySelectorAll('[data-row]'));
+    if (els.length !== this.state.data.rows.length) return;
+    this._packed = true;
+    const toPt = px => px * 72 / 96;
+    const h = els.map(e => toPt(e.getBoundingClientRect().height));
+    const all = this.buildRows();
+    const LIMIT_FIRST = 841.89 - (89.1 + 26.4) - 30;
+    const LIMIT_CONT = 841.89 - (57.9 + 26.4) - 30;
+    const pages = [];
+    let i = 0, p = 0;
+    while (i < all.length) {
+      const limit = p === 0 ? LIMIT_FIRST : LIMIT_CONT;
+      let used = 0;
+      const rows = [];
+      while (i < all.length && (used + h[i] <= limit || !rows.length)) {
+        used += h[i]; rows.push(all[i]); i++;
+      }
+      pages.push({ rows, titleRow: p === 0 ? [{ text: this.title() }] : [], no: 0 });
+      p++;
+    }
+    import('./parsers/pagination.js').then(P => {
+      P.report('chart', pages.length);
+      const from = P.plan({}).start.chart;
+      pages.forEach((pg, i) => { pg.no = from + i; });
+      const announce = () => {
+        const dp0 = document.querySelector('doc-page');
+        if (dp0) dp0.setAttribute('data-paged', String(pages.length));
+      };
+      this.setState({ pages, from }, () => requestAnimationFrame(announce));
+    });
+  }

@@ -178,10 +178,11 @@ class Component extends DCLogic {
   }
 
   pack() {
-    const BOTTOM = 811.89, TOP_FIRST = 311.85, TOP_CONT = 94.4, GAP = 9, COLS = 4;
+    const BOTTOM = 811.89, TOP_FIRST = 311.85, TOP_CONT = 94.4, GAP = 9, COLS = 4, STUB = 150;
     const atoms = Component.trialAtoms(this.state.meetings);
     const policy = this.policyDepth();
-    const limitOf = first => (first ? BOTTOM - TOP_FIRST - (policy ? policy + 22 : 0) : BOTTOM - TOP_CONT);
+    // trials run continuously to the foot of every page; the policy follows them
+    const limitOf = first => (first ? BOTTOM - TOP_FIRST : BOTTOM - TOP_CONT);
 
     // fill four columns to a common depth; returns where it got to
     const fill = (from, target) => {
@@ -197,13 +198,23 @@ class Component extends DCLogic {
         k++;
       }
       // a venue heading never sits alone at the foot of a column
+      // a column never ends on a venue heading: it moves to the top of the
+      // next one, and whatever no longer fits there is pushed on in turn, so
+      // no column is left running past the foot of the page
       for (let j = 0; j < COLS; j++) {
         const last = cols[j][cols[j].length - 1];
         if (!last || !last.isHead) continue;
         cols[j].pop();
         used[j] -= last.depth;
-        if (j + 1 < COLS) { cols[j + 1].unshift(Object.assign({}, last, { gap: '0pt' })); used[j + 1] += last.depth; }
-        else k--;
+        if (j + 1 < COLS) {
+          while (cols[j + 1].length && used[j + 1] + last.depth > target) {
+            const drop = cols[j + 1].pop();
+            used[j + 1] -= drop.depth + (parseFloat(drop.gap) || 0);
+            k--;
+          }
+          cols[j + 1].unshift(Object.assign({}, last, { gap: '0pt' }));
+          used[j + 1] += last.depth;
+        } else k--;
       }
       return { cols, next: k, height: Math.max(...used) };
     };
@@ -216,10 +227,37 @@ class Component extends DCLogic {
       // fill each column to the page's depth and carry on into the next, so
       // the trials read continuously: three full columns and a part-full last
       let r = fill(i, limit);
-      pages.push({ first, cols: r.cols, height: r.height, policyOn: first && !!policy });
+      // Filling greedily leaves the fourth column short, which can strand a
+      // few races on a page of their own. Setting the columns to a shallower
+      // common depth spreads the same races wider and takes more of them, so
+      // when only a stub would be left over, take the deepest such setting
+      // that swallows it whole.
+      if (r.next < atoms.length
+          && atoms.slice(r.next).reduce((n, a) => n + a.depth, 0) <= STUB) {
+        for (let tgt = limit - 4; tgt >= limit / 2; tgt -= 4) {
+          const t = fill(i, tgt);
+          if (t.next >= atoms.length) { r = t; break; }
+        }
+      }
+      // the same lever again on the last page, this time to clear the depth
+      // the policy needs under the trials rather than to pick up a stub
+      if (r.next >= atoms.length && policy && r.height + 22 + policy > limit) {
+        for (let tgt = limit - 4; tgt >= 60; tgt -= 4) {
+          const t = fill(i, tgt);
+          if (t.next >= atoms.length && t.height + 22 + policy <= limit) { r = t; break; }
+        }
+      }
+      pages.push({ first, cols: r.cols, height: r.height, policyOn: false, limit });
       i = r.next;
     }
-    if (!pages.length) pages.push({ first: true, cols: [[], [], [], []], height: 0, policyOn: !!policy });
+    if (!pages.length) pages.push({ first: true, cols: [[], [], [], []], height: 0, policyOn: false, limit: limitOf(true) });
+    // the policy sits under the last trials page when it fits whole; when it
+    // does not, the whole section moves to a page of its own
+    if (policy) {
+      const last = pages[pages.length - 1];
+      if (last.height + 22 + policy <= last.limit) last.policyOn = true;
+      else pages.push({ first: false, cols: [[], [], [], []], height: 0, policyOn: true, policyOnly: true, limit: limitOf(false) });
+    }
     return pages;
   }
 
@@ -251,14 +289,14 @@ class Component extends DCLogic {
     const pages = this.pack().map((p, i) => {
       const top = p.first ? 311.85 : 94.4;
       const filled = p.cols.filter(c => c.length).length;
-      const policyTop = top + p.height + 22;
+      const policyTop = p.policyOnly ? 94.4 : top + p.height + 22;
       return {
         firstOnly: p.first ? [{}] : [],
         months: p.first ? months : [],
         columns: p.cols.map((atoms, j) => ({ left: C(j) + 'pt', atoms })),
         // one hairline in each gutter between adjacent columns that carry trials
         dividers: Array.from({ length: Math.max(0, filled - 1) }, (u, j) => ({ left: (C(j) + 126.5 + 6.6) + 'pt' })),
-        trialsTitle: p.first ? 'Official Flat Trials' : 'Official Flat Trials continued',
+        trialsTitle: p.policyOnly ? '' : (p.first ? 'Official Flat Trials' : 'Official Flat Trials continued'),
         trialsTitleTop: (p.first ? 281 : 59.3) + 'pt',
         trialsTop: top + 'pt',
         rulesTop: (top + 3.15) + 'pt',
