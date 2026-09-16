@@ -112,6 +112,10 @@ export async function loadBake() {
 // wise report last edition's files and sizes. Every probe and read of inputs/
 // carries a token minted when the page loads: fresh on each reload, shared by
 // every request in that load.
+// Bumped by hand whenever this file changes, so the console can show which copy
+// of it the browser actually loaded. A stale cache shows a stale build.
+export const VERSION = '2026-09-17a';
+
 const BUST = 'ir=' + Date.now();
 
 function busted(path) {
