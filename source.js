@@ -319,10 +319,12 @@ export async function restore() {
   dir = handle;
   root = (saved.root || []).slice();
   label = folderLabel();
-  let perm = 'prompt';
-  try { perm = await handle.queryPermission({ mode: 'readwrite' }); } catch (e) { /* older shape */ }
-  if (perm === 'granted') { mode = 'folder'; needsPermission = false; install(); }
-  else { mode = 'bundled'; needsPermission = true; }
+  // A reload starts from the published inputs/ every time. The folder is only
+  // remembered by name: re-attaching it silently made a reload show the folder
+  // picked on an earlier visit, which is the wrong answer when that folder has
+  // moved on. The producer reconnects it with a click.
+  mode = 'bundled';
+  needsPermission = true;
   return state();
 }
 
