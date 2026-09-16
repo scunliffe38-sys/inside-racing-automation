@@ -108,6 +108,22 @@ export async function loadBake() {
 
 // ---- the fetch wrapper ------------------------------------------------------
 
+// A hosted copy is served with ordinary HTTP caching, so a reload would other-
+// wise report last edition's files and sizes. Every probe and read of inputs/
+// carries a token minted when the page loads: fresh on each reload, shared by
+// every request in that load.
+const BUST = 'ir=' + Date.now();
+
+function busted(path) {
+  try {
+    const u = new URL(path, location.href);
+    u.searchParams.set('ir', BUST.slice(3));
+    return u.pathname + u.search;
+  } catch (e) { return path + (path.indexOf('?') < 0 ? '?' : '&') + BUST; }
+}
+
+const NO_STORE = { cache: 'no-store' };
+
 /** 'inputs/ads/Stableline.png' -> 'ads/stableline.png'; anything else -> null */
 function under(url) {
   let s = typeof url === 'string' ? url : (url && url.url) || '';
@@ -187,6 +203,12 @@ function install() {
   installed = true;
   origFetch = window.fetch.bind(window);
   window.fetch = async function (input, init) {
+    if (mode === 'bundled') {
+      const path = under(input);
+      if (path != null) {
+        return origFetch(busted('inputs/' + path), Object.assign({}, NO_STORE, init));
+      }
+    }
     if (mode !== 'bundled') {
       const path = under(input);
       if (path != null) {
@@ -297,10 +319,12 @@ export async function restore() {
   dir = handle;
   root = (saved.root || []).slice();
   label = folderLabel();
-  let perm = 'prompt';
-  try { perm = await handle.queryPermission({ mode: 'readwrite' }); } catch (e) { /* older shape */ }
-  if (perm === 'granted') { mode = 'folder'; needsPermission = false; install(); }
-  else { mode = 'bundled'; needsPermission = true; }
+  // A reload starts from the published inputs/ every time. The folder is only
+  // remembered by name: re-attaching it silently made a reload show the folder
+  // picked on an earlier visit, which is the wrong answer when that folder has
+  // moved on. The producer reconnects it with a click.
+  mode = 'bundled';
+  needsPermission = true;
   return state();
 }
 
@@ -382,7 +406,7 @@ async function head(name) {
   const f = origFetch || window.fetch.bind(window);
   const at = 'inputs/' + name;
   try {
-    const res = await f(at, { method: 'HEAD' });
+    const res = await f(busted(at), Object.assign({ method: 'HEAD' }, NO_STORE));
     if (res.ok) {
       return {
         size: Number(res.headers.get('content-length')) || 0,
@@ -391,7 +415,7 @@ async function head(name) {
     }
   } catch (e) { /* try a range request */ }
   try {
-    const res = await f(at, { headers: { Range: 'bytes=0-0' } });
+    const res = await f(busted(at), Object.assign({ headers: { Range: 'bytes=0-0' } }, NO_STORE));
     if (!res.ok && res.status !== 206) return null;
     const cr = res.headers.get('content-range') || '';
     const total = Number((cr.match(/\/(\d+)$/) || [])[1]) || 0;
@@ -420,3 +444,7 @@ export async function calendarMonths() {
     .filter(Boolean)
     .sort((a, b) => a.year - b.year || a.month - b.month);
 }
+
+// The wrapper reads `mode` at call time, so installing it now costs nothing in
+// folder or upload mode and keeps the hosted copy from reading a cached input.
+install();  // bundled reads go out uncached from the first page load
