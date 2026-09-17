@@ -1,0 +1,23 @@
+# Working detritus — not part of the edition
+scraps/
+uploads/
+screenshots/
+.thumbnail
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editors
+.vscode/
+.idea/
+
+# Node (for the runner, once added)
+node_modules/
+npm-debug.log*
+
+# Generated output
+out/
+*.pdf
+!inputs/**/*.pdf

@@ -36,9 +36,16 @@ a:hover{color:#2c9cd7}
 <div style="display:flex;align-items:center;font-size:12.5px;color:#2c2e35;font-weight:700;min-height:34px">{{ folderLine }}</div>
 <input type="file" webkitdirectory="" directory="" multiple="" onChange="{{ onUpload }}" ref="{{ setUpload }}" style="display:none">
 <sc-if value="{{ needsReconnect }}" hint-placeholder-val="{{ false }}">
-<button onClick="{{ onReconnect }}" style="font-family:inherit;font-size:12.5px;font-weight:700;padding:9px 14px;border:1px solid #b06a00;background:#fff7ec;color:#b06a00;cursor:pointer">Reconnect {{ rememberedFolder }}</button>
+<button onClick="{{ onReconnect }}" style="font-family:inherit;font-size:12.5px;font-weight:700;padding:9px 14px;border:1px solid #b06a00;background:#fff7ec;color:#b06a00;cursor:pointer">Reconnect most recent folder</button>
 </sc-if>
 </div>
+<sc-if value="{{ connectedPath }}" hint-placeholder-val="{{ false }}">
+<div style="margin-top:12px;padding-top:11px;border-top:1px solid #eef1f4;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap">
+<div style="font-size:11px;letter-spacing:.06em;font-weight:700;color:#5b616e;white-space:nowrap">CONNECTED TO</div>
+<div style="font-family:inherit;font-size:12px;font-weight:700;color:#2c2e35;word-break:break-all">{{ connectedPath }}</div>
+</div>
+<div style="font-size:11.5px;color:#5b616e;margin-top:6px">{{ connectedNote }}</div>
+</sc-if>
 <sc-if value="{{ hasChoices }}" hint-placeholder-val="{{ false }}">
 <div style="margin-top:12px;padding-top:11px;border-top:1px solid #eef1f4">
 <div style="font-size:12px;color:#5b616e">Folders inside that pick that hold inputs &mdash; a month each, if the pick was the parent:</div>
@@ -88,6 +95,35 @@ a:hover{color:#2c9cd7}
 <button onClick="{{ onPicnicsNo }}" style="font-family:inherit;font-size:12.5px;font-weight:700;padding:7px 18px;cursor:pointer;border:1px solid {{ picnicsNoBorder }};background:{{ picnicsNoBg }};color:{{ picnicsNoInk }}">No</button>
 </div>
 <div style="margin-top:7px;font-size:11.5px;line-height:1.35;color:#8b929c">Yes from September to March by default. Set to No and the section takes no pages &mdash; the sections after it move up.</div>
+</div>
+
+<div style="border:1px solid #e5eaee;padding:10px 12px 11px;display:flex;flex-direction:column;gap:11px">
+<div style="font-size:10.5px;letter-spacing:.05em;font-weight:700;color:#5b616e">NOTICES AND RULES</div>
+<div style="display:flex;align-items:center;gap:10px;justify-content:space-between">
+<div style="font-size:12.5px;font-weight:700;color:#2c2e35">Industry Notice</div>
+<div style="display:flex;gap:6px">
+<button onClick="{{ onNoticeYes }}" style="font-family:inherit;font-size:12px;font-weight:700;padding:5px 14px;cursor:pointer;border:1px solid {{ noticeYesBorder }};background:{{ noticeYesBg }};color:{{ noticeYesInk }}">Yes</button>
+<button onClick="{{ onNoticeNo }}" style="font-family:inherit;font-size:12px;font-weight:700;padding:5px 14px;cursor:pointer;border:1px solid {{ noticeNoBorder }};background:{{ noticeNoBg }};color:{{ noticeNoInk }}">No</button>
+</div>
+</div>
+<div style="font-size:11.5px;line-height:1.35;color:#8b929c">Off for a month with no notice to run.</div>
+<div style="display:flex;align-items:center;gap:10px;justify-content:space-between">
+<div style="font-size:12.5px;font-weight:700;color:#2c2e35">From the Stewards’ Room</div>
+<div style="display:flex;gap:6px">
+<button onClick="{{ onStewardsYes }}" style="font-family:inherit;font-size:12px;font-weight:700;padding:5px 14px;cursor:pointer;border:1px solid {{ stewardsYesBorder }};background:{{ stewardsYesBg }};color:{{ stewardsYesInk }}">Yes</button>
+<button onClick="{{ onStewardsNo }}" style="font-family:inherit;font-size:12px;font-weight:700;padding:5px 14px;cursor:pointer;border:1px solid {{ stewardsNoBorder }};background:{{ stewardsNoBg }};color:{{ stewardsNoInk }}">No</button>
+</div>
+</div>
+<div style="font-size:11.5px;line-height:1.35;color:#8b929c">Off for a month with no integrity update.</div>
+<div style="display:flex;align-items:center;gap:10px;justify-content:space-between">
+<div style="font-size:12.5px;font-weight:700;color:#2c2e35">Rules and Notices</div>
+<div style="display:flex;gap:6px">
+<button onClick="{{ onRulesYes }}" style="font-family:inherit;font-size:12px;font-weight:700;padding:5px 14px;cursor:pointer;border:1px solid {{ rulesYesBorder }};background:{{ rulesYesBg }};color:{{ rulesYesInk }}">Yes</button>
+<button onClick="{{ onRulesNo }}" style="font-family:inherit;font-size:12px;font-weight:700;padding:5px 14px;cursor:pointer;border:1px solid {{ rulesNoBorder }};background:{{ rulesNoBg }};color:{{ rulesNoInk }}">No</button>
+</div>
+</div>
+<div style="font-size:11.5px;line-height:1.35;color:#8b929c">Standing content. Off only when the page is being held.</div>
+<div style="font-size:11.5px;line-height:1.35;color:#8b929c">These three normally run, so they start at Yes. Set one to No and it takes no pages &mdash; the sections after it move up and the contents drops the row.</div>
 </div>
 
 </div>
@@ -258,17 +294,21 @@ function ago(ms) {
 class Component extends DCLogic {
   state = {
     src: { mode: 'bundled', label: 'inputs/ beside the pages', ready: false, needsPermission: false, canPick: true },
-    remembered: '', rows: [], months: [], count: 0, choices: [], scanned: false, srcError: '',
+    remembered: '', rows: [], months: [], count: 0, choices: [], scanned: false, srcError: '', build: '',
     ads: [], placements: false,
     stages: [], running: false, ran: false, edition: '', pages: null, baked: null, error: ''
   };
 
   componentDidMount() {
-    import('./parsers/source.js').catch(e => {
+    // Versioned specifier: GitHub Pages and the browser both hold modules for a
+    // while, and a hard refresh does not always revalidate an import. Bump this
+    // with VERSION in parsers/source.js.
+    import('./parsers/source.js?v=2026-09-17a').catch(e => {
       this.setState({ srcError: 'parsers/source.js did not load: ' + String((e && e.message) || e) });
       throw e;
     }).then(async S => {
       this.S = S;
+      this.setState({ build: S.VERSION || 'unversioned' });
       let st;
       try { st = await S.restore(); } catch (e) { st = S.state(); }
       this.setState({ src: st, remembered: st.needsPermission ? st.label : '' });
@@ -321,11 +361,14 @@ class Component extends DCLogic {
     this.setState(s => ({ rows, months, count: listing.length, extra, scanned: true, edit: s.edit || this.loadEdit(null) }));
   }
 
-  /** The four controlled settings: remembered, else taken from the workbook. */
+  /** The controlled settings: remembered, else taken from the workbook. */
   loadEdit(cfg) {
     let saved = null;
     try { saved = JSON.parse(localStorage.getItem(STORE_KEY) || 'null'); } catch (e) { /* ignore */ }
-    if (saved && saved.month) return saved;
+    if (saved && saved.month) {
+      ['notice', 'stewards', 'rules'].forEach(k => { if (saved[k] === undefined) saved[k] = true; });
+      return saved;
+    }
     const c = cfg || {};
     const parsed = parseEdition(c.edition);
     const now = new Date();
@@ -335,7 +378,11 @@ class Component extends DCLogic {
       month: year + '-' + pad(month + 1),
       wins: parseWins(c.wins_as_at) || (now.getFullYear() + '-' + pad(now.getMonth() + 1) + '-' + pad(now.getDate())),
       jumps: c.jumps_included ? isYes(c.jumps_included) : jumpsFor(month),
-      picnics: c.picnics_included ? isYes(c.picnics_included) : picnicsFor(month)
+      picnics: c.picnics_included ? isYes(c.picnics_included) : picnicsFor(month),
+      // these three run in most months, so a missing setting means Yes
+      notice: c.notice_included ? isYes(c.notice_included) : true,
+      stewards: c.stewards_included ? isYes(c.stewards_included) : true,
+      rules: c.rules_included ? isYes(c.rules_included) : true
     };
   }
 
@@ -355,7 +402,10 @@ class Component extends DCLogic {
       edition: (MONTHS_FULL[m] || '').toUpperCase() + ' EDITION ' + y,
       wins_as_at: printWins(e.wins),
       jumps_included: e.jumps ? 'Yes' : 'No',
-      picnics_included: e.picnics ? 'Yes' : 'No'
+      picnics_included: e.picnics ? 'Yes' : 'No',
+      notice_included: e.notice === false ? 'No' : 'Yes',
+      stewards_included: e.stewards === false ? 'No' : 'Yes',
+      rules_included: e.rules === false ? 'No' : 'Yes'
     };
   }
 
@@ -390,6 +440,10 @@ class Component extends DCLogic {
     const pages = F.plan(r.settings, r.settings.$placements || { rows: [], bySlot: {} });
     ctx.settings = r.settings; ctx.pages = pages; ctx.edition = r.settings.edition || '';
     ctx.jumps = F.flag(r.settings.jumps_included); ctx.picnics = F.flag(r.settings.picnics_included);
+    const tailOn = v => { const raw = String(v == null ? '' : v).trim(); return raw ? F.flag(raw) : true; };
+    ctx.noticeOn = tailOn(r.settings.notice_included);
+    ctx.stewardsOn = tailOn(r.settings.stewards_included);
+    ctx.rulesOn = tailOn(r.settings.rules_included);
     ctx.setupWarnings = r.warnings.concat((pages.warnings || []).filter(w => r.warnings.indexOf(w) < 0));
     this.setState({ edition: ctx.edition, pages });
   }
@@ -413,14 +467,18 @@ class Component extends DCLogic {
         const m = await P('./parsers/programs.js');
         const r = await m.loadPrograms('inputs/Race Programs.csv', ctx.edition);
         ctx.meetings = r.meetings;
-        return { warnings: r.warnings, summary: r.count + ' meetings, ' + r.races + ' races' };
+        return { warnings: r.warnings, notes: r.notes, summary: r.count + ' meetings, ' + r.races + ' races' };
       } },
       { name: 'Race series', fn: async ctx => {
         const m = await P('./parsers/series.js');
         const a = await m.loadSeries('inputs/Race Series.docx');
-        const b = await m.loadSeries('inputs/Highweights.docx').catch(e => ({ blocks: [], count: 0, warnings: ['Highweight Schedule: ' + ((e && e.message) || e)] }));
+        const b = await m.loadSeries('inputs/Highweights.docx').catch(e => ({ blocks: [], count: 0, warnings: ['Highweight Schedule: ' + ((e && e.message) || e)], notes: [] }));
         ctx.seriesBlocks = a.blocks.concat(b.blocks.map(x => Object.assign({}, x, { tail: true })));
-        return { warnings: a.warnings.concat(b.warnings), summary: a.count + ' series, ' + b.count + ' highweight block(s)' };
+        return {
+          warnings: a.warnings.concat(b.warnings),
+          notes: (a.notes || []).concat(b.notes || []),
+          summary: a.count + ' series, ' + b.count + ' highweight block(s)'
+        };
       } },
       { name: 'Permits to ride', fn: async ctx => {
         const m = await P('./parsers/permits.js');
@@ -446,21 +504,27 @@ class Component extends DCLogic {
         const m = await P('./parsers/trials.js');
         const r = await m.loadTrials('inputs/Official Flat Trials.csv');
         ctx.joMeetings = r.meetings;
-        return { warnings: r.warnings, summary: (r.meetings || []).length + ' trial meeting(s)' };
+        return { warnings: r.warnings, notes: r.notes, summary: (r.meetings || []).length + ' trial meeting(s)' };
       } },
       { name: 'Notices and rules', fn: async ctx => {
         const m = await P('./parsers/notices.js');
-        const [n, s, r, pol] = await Promise.all([
-          m.loadNotice('inputs/Industry Notice.docx'),
-          m.loadStewards('inputs/Stewards Room.docx'),
-          m.loadRules('inputs/Rules Extracts.docx'),
+        // The Division of Races Policy always runs; the other three are
+        // toggleable, and an empty result is the correct read for one that is
+        // out — no file is looked for and no awaiting-copy warning is raised.
+        const none = { blocks: [], groups: [], warnings: [], count: 0 };
+        const [n, sw, r, pol] = await Promise.all([
+          ctx.noticeOn ? m.loadNotice('inputs/Industry Notice.docx') : none,
+          ctx.stewardsOn ? m.loadStewards('inputs/Stewards Room.docx') : none,
+          ctx.rulesOn ? m.loadRules('inputs/Rules Extracts.docx') : none,
           m.loadPolicy('inputs/Division of Races Policy.docx')
         ]);
-        ctx.notice = n.blocks; ctx.stewards = s.blocks; ctx.rules = r.groups;
+        ctx.noticeBlocks = n.blocks; ctx.stewards = sw.blocks; ctx.rules = r.groups;
         ctx.policy = pol.bullets; ctx.policyHeading = pol.heading;
+        const part = (on, k, label) => (on ? k + ' ' + label : label + ' out');
         return {
-          warnings: [].concat(n.warnings, s.warnings, r.warnings, pol.warnings),
-          summary: n.count + ' notice, ' + s.count + ' stewards, ' + r.count + ' rules block(s)'
+          warnings: [].concat(n.warnings, sw.warnings, r.warnings, pol.warnings),
+          summary: [part(ctx.noticeOn, n.count, 'notice'), part(ctx.stewardsOn, sw.count, 'stewards'),
+            part(ctx.rulesOn, r.count, 'rules block(s)')].join(', ')
         };
       } },
       { name: 'Jumps program', fn: async ctx => {
@@ -527,7 +591,7 @@ class Component extends DCLogic {
     const plan = this.plan();
     this.setState({
       running: true, ran: false, baked: null,
-      stages: plan.map(p => ({ name: p.name, status: 'waiting', summary: '', warnings: [], ms: 0 }))
+      stages: plan.map(p => ({ name: p.name, status: 'waiting', summary: '', warnings: [], notes: [], ms: 0 }))
     });
     const ctx = {};
     try {
@@ -543,11 +607,11 @@ class Component extends DCLogic {
         const ws = r.warnings || [];
         this.mark(i, {
           status: r.skip ? 'skip' : (ws.length ? 'warn' : 'ok'),
-          summary: r.summary || '', warnings: ws, ms: Math.round(performance.now() - t0)
+          summary: r.summary || '', warnings: ws, notes: r.notes || [], ms: Math.round(performance.now() - t0)
         });
       } catch (e) {
         const msg = String((e && e.message) || e);
-        this.mark(i, { status: 'fail', summary: msg, warnings: [msg], ms: Math.round(performance.now() - t0) });
+        this.mark(i, { status: 'fail', summary: msg, warnings: [msg], notes: [], ms: Math.round(performance.now() - t0) });
       }
     }
     this.ctx = ctx;
@@ -559,15 +623,24 @@ class Component extends DCLogic {
     const c = this.ctx;
     if (!c) return;
     const warnings = {};
-    this.state.stages.forEach(s => { if ((s.warnings || []).length) warnings[s.name] = s.warnings; });
+    const notes = {};
+    this.state.stages.forEach(s => {
+      if ((s.warnings || []).length) warnings[s.name] = s.warnings;
+      if ((s.notes || []).length) notes[s.name] = s.notes;
+    });
     const payload = {
-      bakedAt: new Date().toISOString(), warnings,
+      bakedAt: new Date().toISOString(), warnings, notes,
       settings: c.settings || {}, edition: c.edition || '', cover: c.cover || '',
       days: c.days || [], chart: c.chart || { header: [], rows: [] }, chartMonths: c.chartMonths || [],
       meetings: c.meetings || [], permits: c.permits || [], trialsText: c.trialsText || '', agents: c.agents || [],
       joBlocks: c.joBlocks || [], joMeetings: c.joMeetings || [],
-      policy: c.policy || [], policyHeading: c.policyHeading || '',
-      seriesBlocks: c.seriesBlocks || [], notice: c.notice || [], stewards: c.stewards || [], rules: c.rules || [],
+      // The pages print each bullet as {t}. loadPolicy hands back plain
+      // strings, so the shape is settled here rather than left for every page
+      // to cope with — a bake of bare strings printed the October policy as a
+      // heading over eight empty bullets.
+      policy: (c.policy || []).map(x => (typeof x === 'string' ? { t: x } : x)),
+      policyHeading: c.policyHeading || '',
+      seriesBlocks: c.seriesBlocks || [], notice: c.noticeBlocks || [], stewards: c.stewards || [], rules: c.rules || [],
       jpMeetings: c.jpMeetings || [], jpTrials: c.jpTrials || [], jpTiers: c.jpTiers || [],
       pcMeetings: c.pcMeetings || [], pcNotes: c.pcNotes || [], pcRange: c.pcRange || ''
     };
@@ -590,30 +663,48 @@ class Component extends DCLogic {
   renderVals() {
     const st = this.state;
     const src = st.src || {};
-    const edit = st.edit || { month: '', wins: '', jumps: false, picnics: false };
+    const edit = st.edit || { month: '', wins: '', jumps: false, picnics: false, notice: true, stewards: true, rules: true };
     const over = st.edit ? this.overrides() : {};
     const ready = !!st.edit;
     const set = ready && !!edit.month && !!edit.wins;
     const jy = seg(ready && !!edit.jumps), jn = seg(ready && !edit.jumps);
     const py = seg(ready && !!edit.picnics), pn = seg(ready && !edit.picnics);
-    const stages = (st.stages.length ? st.stages : this.plan().map(p => ({ name: p.name, status: 'waiting', summary: '', warnings: [], ms: 0 }))).map(s => ({
+    const nOn = edit.notice !== false, sOn = edit.stewards !== false, rOn = edit.rules !== false;
+    const ny = seg(ready && nOn), nn = seg(ready && !nOn);
+    const sy = seg(ready && sOn), sn = seg(ready && !sOn);
+    const ry = seg(ready && rOn), rn = seg(ready && !rOn);
+    const stages = (st.stages.length ? st.stages : this.plan().map(p => ({ name: p.name, status: 'waiting', summary: '', warnings: [], notes: [], ms: 0 }))).map(s => ({
       name: s.name,
       summary: s.summary || (s.status === 'waiting' ? 'waiting' : ''),
-      statusLabel: { waiting: '', running: 'reading', ok: 'clean', warn: (s.warnings || []).length + ' to check', fail: 'failed', skip: 'skipped' }[s.status] || '',
+      statusLabel: { waiting: '', running: 'reading', ok: (s.notes || []).length ? 'clean · ' + s.notes.length + ' note(s)' : 'clean', warn: (s.warnings || []).length + ' to check', fail: 'failed', skip: 'skipped' }[s.status] || '',
       colour: { waiting: WAIT, running: RUN, ok: OK, warn: WARN, fail: FAIL, skip: MUTED }[s.status] || WAIT,
       time: s.ms ? s.ms + ' ms' : ''
     }));
     const done = st.stages.filter(s => s.status !== 'waiting' && s.status !== 'running').length;
-    const groups = st.stages.filter(s => (s.warnings || []).length).map(s => ({
-      name: s.name, count: s.warnings.length + (s.status === 'fail' ? ' \u2014 failed' : ''),
-      colour: s.status === 'fail' ? FAIL : WARN,
-      items: s.warnings.map(w => ({ text: w }))
-    }));
+    // warnings are gaps to go and fix; notes record what the parser did with the
+    // input and sit under the same section heading, muted and counted apart
+    const groups = [];
+    st.stages.forEach(s => {
+      if ((s.warnings || []).length) groups.push({
+        name: s.name, count: s.warnings.length + (s.status === 'fail' ? ' \u2014 failed' : ''),
+        colour: s.status === 'fail' ? FAIL : WARN,
+        items: s.warnings.map(w => ({ text: w }))
+      });
+      if ((s.notes || []).length) groups.push({
+        name: s.name + ' \u2014 for information',
+        count: s.notes.length + ' note(s)',
+        colour: '#5b616e', note: true,
+        items: s.notes.map(w => ({ text: w }))
+      });
+    });
     const checking = (this.S ? this.S.EXPECTED : []).map(r => ({
       file: r.file, extra: '', section: r.section, size: '', status: 'checking\u2026', colour: MUTED
     }));
     // the two conditional sections: a missing file only matters when they run
-    const conditional = { 'Jumps program': !!(st.edit && st.edit.jumps), 'Picnic racing': !!(st.edit && st.edit.picnics) };
+    const conditional = { 'Jumps program': !!(st.edit && st.edit.jumps), 'Picnic racing': !!(st.edit && st.edit.picnics),
+      'Industry Notice': !st.edit || st.edit.notice !== false,
+      'From the Stewards’ Room': !st.edit || st.edit.stewards !== false,
+      'Rules and Notices': !st.edit || st.edit.rules !== false };
     const catalogue = (st.scanned ? st.rows : checking).map(r => {
       if (r.found || !(r.section in conditional)) return r;
       const on = conditional[r.section];
@@ -623,7 +714,8 @@ class Component extends DCLogic {
       });
     });
     const missing = st.scanned ? catalogue.filter(r => !r.found && r.colour === FAIL) : [];
-    const warnCount = groups.reduce((a, g) => a + g.items.length, 0);
+    const warnCount = groups.filter(g => !g.note).reduce((a, g) => a + g.items.length, 0);
+    const noteCount = groups.filter(g => g.note).reduce((a, g) => a + g.items.length, 0);
     const failed = st.stages.some(s => s.status === 'fail');
     const total = (st.pages && st.pages.total) || 0;
 
@@ -632,7 +724,13 @@ class Component extends DCLogic {
         : src.canPick ? 'Any folder on the machine \u2014 a local drive, a network drive or a synced OneDrive folder.'
         : 'This browser has no folder picker \u2014 use \u201cchoose the folder\u2019s files\u201d instead.',
       sourceNoteColour: st.srcError ? FAIL : '#5b616e',
-      sourceModeLabel: src.mode,
+      sourceModeLabel: st.build ? src.mode + '  \u00b7  build ' + st.build : src.mode,
+      connectedPath: src.mode === 'bundled' ? ''
+        : src.mode === 'upload' ? (src.label || '')
+        : '\u2026\\' + String(src.label || '').split('/').join('\\'),
+      connectedNote: src.mode === 'upload'
+        ? 'A one-off copy of those files, held in the browser for this visit only.'
+        : 'Shown the way an address reads. The browser withholds everything before the folder itself, so the drive and user part cannot be displayed.',
       folderLine: src.ready ? src.label + '  \u00b7  ' + st.count + ' files' : 'No folder chosen yet',
       hasChoices: (st.choices || []).length > 1,
       choices: (st.choices || []).map(c => {
@@ -649,6 +747,18 @@ class Component extends DCLogic {
       editionName: over.edition || '',
       winsDate: edit.wins || '',
       winsPrinted: over.wins_as_at ? 'Prints as ' + over.wins_as_at : '',
+      noticeYesBorder: ny.border, noticeYesBg: ny.bg, noticeYesInk: ny.ink,
+      noticeNoBorder: nn.border, noticeNoBg: nn.bg, noticeNoInk: nn.ink,
+      stewardsYesBorder: sy.border, stewardsYesBg: sy.bg, stewardsYesInk: sy.ink,
+      stewardsNoBorder: sn.border, stewardsNoBg: sn.bg, stewardsNoInk: sn.ink,
+      rulesYesBorder: ry.border, rulesYesBg: ry.bg, rulesYesInk: ry.ink,
+      rulesNoBorder: rn.border, rulesNoBg: rn.bg, rulesNoInk: rn.ink,
+      onNoticeYes: () => this.saveEdit({ notice: true }),
+      onNoticeNo: () => this.saveEdit({ notice: false }),
+      onStewardsYes: () => this.saveEdit({ stewards: true }),
+      onStewardsNo: () => this.saveEdit({ stewards: false }),
+      onRulesYes: () => this.saveEdit({ rules: true }),
+      onRulesNo: () => this.saveEdit({ rules: false }),
       jumpsYesBorder: jy.border, jumpsYesBg: jy.bg, jumpsYesInk: jy.ink,
       jumpsNoBorder: jn.border, jumpsNoBg: jn.bg, jumpsNoInk: jn.ink,
       picnicsYesBorder: py.border, picnicsYesBg: py.bg, picnicsYesInk: py.ink,
@@ -690,7 +800,7 @@ class Component extends DCLogic {
       runNote: st.error || st.bakeError
         || (st.baked ? 'Run complete at ' + st.baked.slice(11, 16) + ' \u2014 the edition and the PDF now show this run.'
           : 'Every section is read from the source above, in the order it prints.'),
-      checksSummary: st.ran ? (warnCount ? warnCount + ' item(s)' : 'nothing flagged') : '',
+      checksSummary: st.ran ? (warnCount ? warnCount + ' item(s)' + (noteCount ? ' \u00b7 ' + noteCount + ' note(s)' : '') : (noteCount ? 'nothing flagged \u00b7 ' + noteCount + ' note(s)' : 'nothing flagged')) : '',
       noChecks: !groups.length,
       checksEmpty: st.ran ? 'Nothing flagged. Every input parsed as expected.' : 'Run the edition and anything doubtful appears here, by section.',
       groups,

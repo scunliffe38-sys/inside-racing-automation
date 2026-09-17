@@ -18,10 +18,12 @@
 // up. Until a section has been opened once, its FALLBACK is used and the
 // console says so.
 //
-// Two sections are conditional: the Jumps Program and Picnic Racing come in
-// some months and not others. Edition Settings carries jumps_included and
-// picnics_included; when a flag is No the section takes no pages and
-// everything after it moves up.
+// Five sections are conditional. The Jumps Program and Picnic Racing come in
+// some months and not others, and default OUT unless a flag says otherwise.
+// The Industry Notice, From the Stewards' Room and Rules and Notices normally
+// run, so they default IN and are switched off for the months that carry no
+// copy. Either way, when a section is out it takes no pages and everything
+// after it moves up.
 
 import { fullPages } from './ads.js';
 
@@ -39,9 +41,9 @@ export const SPINE = [
   { id: 'jumpouts', label: 'Jump-Outs, Flat Trials, Division of Races', flowing: true, fallback: 1 },
   { id: 'series', label: 'Victorian Race Series', flowing: true, fallback: 1 },
   { id: 'picnics', label: 'Picnic Racing', flowing: true, fallback: 2, flag: 'picnics_included' },
-  { id: 'notice', label: 'Industry Notice', flowing: true, fallback: 1 },
-  { id: 'stewards', label: 'From the Stewards\u2019 Room', flowing: true, fallback: 1 },
-  { id: 'rules', label: 'Rules and Notices', flowing: true, fallback: 1 },
+  { id: 'notice', label: 'Industry Notice', flowing: true, fallback: 1, flag: 'notice_included', defaultOn: true },
+  { id: 'stewards', label: 'From the Stewards\u2019 Room', flowing: true, fallback: 1, flag: 'stewards_included', defaultOn: true },
+  { id: 'rules', label: 'Rules and Notices', flowing: true, fallback: 1, flag: 'rules_included', defaultOn: true },
   { id: 'fullpage', label: 'Full-page advertising', fixed: 1, artwork: true, ads: true },
   { id: 'backcover', label: 'Back cover', fixed: 1, artwork: true }
 ];
@@ -85,7 +87,10 @@ export function plan(settings, placements) {
   let page = 1;
 
   SPINE.forEach(sec => {
-    const included = !sec.flag || flag(s[sec.flag]);
+    const raw = String(s[sec.flag] || '').trim();
+    // A defaultOn section is in unless the flag actually says No; the others
+    // are out unless it says Yes.
+    const included = !sec.flag || (raw ? flag(raw) : !!sec.defaultOn);
     let n = 0;
     if (included) {
       if (sec.flowing) {
@@ -153,8 +158,9 @@ export function plan(settings, placements) {
   }
   SPINE.filter(x => x.flag).forEach(x => {
     const raw = String(s[x.flag] || '').trim();
-    if (!raw) warnings.push('Edition Settings: "' + x.flag + '" is blank \u2014 ' + x.label + ' is left out of this edition.');
-    else if (!/^(yes|no|y|n|true|false|1|0)$/i.test(raw)) {
+    if (!raw) {
+      if (!x.defaultOn) warnings.push('Edition Settings: "' + x.flag + '" is blank \u2014 ' + x.label + ' is left out of this edition.');
+    } else if (!/^(yes|no|y|n|true|false|1|0)$/i.test(raw)) {
       warnings.push('Edition Settings: "' + x.flag + '" is "' + raw + '", expected Yes or No.');
     }
   });

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&display=swap" rel="stylesheet" />
+<style>
+doc-page:not(:defined){visibility:hidden}
+body{margin:0}
+a{color:#8a2b23;text-decoration:none;border-bottom:1px solid rgba(138,43,35,.35)}
+a:hover{color:#5d1a15;border-bottom-color:#5d1a15}
+</style>
+<script src="./doc-page.js"></script>
+</helmet>
+<doc-page margin="0.8in">
+<div style="font-family:'Newsreader',Georgia,serif;color:#1b1d21;font-size:15.5px;line-height:1.6">
+
+<div style="display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px solid #10233f;padding-bottom:8px;margin-bottom:26px;font-family:'Archivo',sans-serif;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#10233f">
+<span>Inside Racing — architecture and handover</span>
+<span style="color:#6b6f76">{{ statusLine }}</span>
+</div>
+
+<h1 style="font-family:'Archivo',sans-serif;font-weight:700;font-size:33px;line-height:1.1;letter-spacing:-.02em;color:#10233f;margin:0 0 14px">What has been built, and where it should live</h1>
+
+<p style="font-size:18px;line-height:1.5;color:#3d424a;margin:0 0 26px;max-width:44em">Fifty-odd pages of the monthly edition now build themselves from a folder of files. This sets out the three layers that do it, where each one physically runs today, and the move that turns it from a working prototype into something the production team runs without help.</p>
+
+<h2 style="font-family:'Archivo',sans-serif;font-weight:600;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:#8a2b23;margin:34px 0 10px">1. The shape of the system</h2>
+
+<p style="margin:0 0 16px">Three layers, in one direction. Files land in a folder, parsers read and validate them, page components lay them out, and the edition is written out as a PDF. Nothing is transcribed between layers and no page number is typed anywhere.</p>
+
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin:0 0 10px">
+<div style="border-top:2px solid #10233f;padding:10px 0 0;break-inside:avoid"><div style="font-family:'Archivo',sans-serif;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#10233f;margin-bottom:5px">Inputs</div><div style="font-size:13.5px;color:#3d424a;line-height:1.45">Fifteen files under <span style="font-family:'Archivo',sans-serif;font-size:12px">inputs/</span>, stable filenames, overwritten each month.</div></div>
+<div style="border-top:2px solid #10233f;padding:10px 0 0;break-inside:avoid"><div style="font-family:'Archivo',sans-serif;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#10233f;margin-bottom:5px">Parsers</div><div style="font-size:13.5px;color:#3d424a;line-height:1.45">Thirteen modules that read, validate and reshape. One per section, plus shared readers.</div></div>
+<div style="border-top:2px solid #10233f;padding:10px 0 0;break-inside:avoid"><div style="font-family:'Archivo',sans-serif;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#10233f;margin-bottom:5px">Pages</div><div style="font-size:13.5px;color:#3d424a;line-height:1.45">Section components that pack columns until they run out of room, then report their extent.</div></div>
+<div style="border-top:2px solid #10233f;padding:10px 0 0;break-inside:avoid"><div style="font-family:'Archivo',sans-serif;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#10233f;margin-bottom:5px">Output</div><div style="font-size:13.5px;color:#3d424a;line-height:1.45">One PDF of the whole edition, plus a list of everything the parsers thought was doubtful.</div></div>
+</div>
+
+<h2 style="font-family:'Archivo',sans-serif;font-weight:600;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:#8a2b23;margin:34px 0 10px">2. Inputs</h2>
+
+<p style="margin:0 0 14px">Every input has a fixed name and a fixed home. The production team overwrites a file and the section that reads it changes; nothing else does. Two arrive in shapes worth noting: the Victorian calendar comes as one workbook per month and is read as a continuous run in date order, and the cover photograph arrives at full camera resolution and is reduced to a working derivative before any page loads it.</p>
+
+<table style="width:100%;border-collapse:collapse;font-family:'Archivo',sans-serif;font-size:11.5px;margin:0 0 8px">
+<thead>
+<tr style="background:#10233f;color:#fff;text-align:left">
+<th style="padding:7px 8px;font-weight:600">File in inputs/</th>
+<th style="padding:7px 8px;font-weight:600;width:78px">Format</th>
+<th style="padding:7px 8px;font-weight:600">Feeds</th>
+</tr>
+</thead>
+<tbody>
+<tr style="border-bottom:1px solid #e2ded6"><td style="padding:6px 8px">Edition Settings.xlsx</td><td style="padding:6px 8px">Workbook</td><td style="padding:6px 8px">Month, wins-as-at date, standing paragraphs, Jumps and Picnic switches — read by every page</td></tr>
+<tr style="border-bottom:1px solid #e2ded6;background:#faf8f4"><td style="padding:6px 8px">Entry Deadlines.csv</td><td style="padding:6px 8px">Delimited</td><td style="padding:6px 8px">Dates for entries, acceptances and riders</td></tr>
+<tr style="border-bottom:1px solid #e2ded6"><td style="padding:6px 8px">Vic Calendar - mmm yy.xlsx</td><td style="padding:6px 8px">Workbook ×n</td><td style="padding:6px 8px">Programs Summary Chart — one workbook per month, read in date order</td></tr>
+<tr style="border-bottom:1px solid #e2ded6;background:#faf8f4"><td style="padding:6px 8px">Race Programs.csv</td><td style="padding:6px 8px">Delimited</td><td style="padding:6px 8px">Race Programs, metro and country</td></tr>
+<tr style="border-bottom:1px solid #e2ded6"><td style="padding:6px 8px">Permits to Ride.xlsx</td><td style="padding:6px 8px">Workbook</td><td style="padding:6px 8px">Permits to Ride</td></tr>
+<tr style="border-bottom:1px solid #e2ded6;background:#faf8f4"><td style="padding:6px 8px">Eligible to Ride in Trials.csv</td><td style="padding:6px 8px">Delimited</td><td style="padding:6px 8px">Eligible to Ride in Trials</td></tr>
+<tr style="border-bottom:1px solid #e2ded6"><td style="padding:6px 8px">Riders Agents.csv</td><td style="padding:6px 8px">Delimited</td><td style="padding:6px 8px">Riders&rsquo; Agents</td></tr>
+<tr style="border-bottom:1px solid #e2ded6;background:#faf8f4"><td style="padding:6px 8px">Jump Outs.xlsx</td><td style="padding:6px 8px">Workbook</td><td style="padding:6px 8px">Jump-Outs schedule</td></tr>
+<tr style="border-bottom:1px solid #e2ded6"><td style="padding:6px 8px">Official Flat Trials.csv</td><td style="padding:6px 8px">Delimited</td><td style="padding:6px 8px">Official Flat Trials</td></tr>
+<tr style="border-bottom:1px solid #e2ded6;background:#faf8f4"><td style="padding:6px 8px">Race Series.docx</td><td style="padding:6px 8px">Document</td><td style="padding:6px 8px">Victorian Race Series</td></tr>
+<tr style="border-bottom:1px solid #e2ded6"><td style="padding:6px 8px">Industry Notice.docx</td><td style="padding:6px 8px">Document</td><td style="padding:6px 8px">Industry Notice</td></tr>
+<tr style="border-bottom:1px solid #e2ded6;background:#faf8f4"><td style="padding:6px 8px">Stewards Room.docx</td><td style="padding:6px 8px">Document</td><td style="padding:6px 8px">From the Stewards&rsquo; Room</td></tr>
+<tr style="border-bottom:1px solid #e2ded6"><td style="padding:6px 8px">Rules Extracts.docx</td><td style="padding:6px 8px">Document</td><td style="padding:6px 8px">Rules and Notices</td></tr>
+<tr style="border-bottom:1px solid #e2ded6;background:#faf8f4"><td style="padding:6px 8px">Division of Races Policy.docx</td><td style="padding:6px 8px">Document</td><td style="padding:6px 8px">Division of Races — carried forward until policy changes</td></tr>
+<tr style="border-bottom:1px solid #e2ded6"><td style="padding:6px 8px">Cover.jpg</td><td style="padding:6px 8px">Photograph</td><td style="padding:6px 8px">Cover — reduced to an 1800px derivative before use</td></tr>
+</tbody>
+</table>
+<p style="font-size:12.5px;color:#6b6f76;font-family:'Archivo',sans-serif;margin:0 0 4px">Advertising is deliberately not an input. House ads recur, so the artwork and the placement rules live with the code.</p>
+
+<h2 style="font-family:'Archivo',sans-serif;font-weight:600;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:#8a2b23;margin:34px 0 10px">3. Processing</h2>
+
+<p style="margin:0 0 14px">Two shared readers sit underneath everything: one for workbooks, one for delimited exports, which handles the UTF-16 tab-separated files the reporting tool produces without a conversion step. Above them, one module per section, each of which validates as it reads and names the file and row number of anything doubtful.</p>
+
+<table style="width:100%;border-collapse:collapse;font-family:'Archivo',sans-serif;font-size:11.5px;margin:0 0 14px">
+<thead>
+<tr style="background:#10233f;color:#fff;text-align:left">
+<th style="padding:7px 8px;font-weight:600;width:120px">Module</th>
+<th style="padding:7px 8px;font-weight:600">Responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr style="border-bottom:1px solid #e2ded6"><td style="padding:6px 8px">xlsx.js, tsv.js</td><td style="padding:6px 8px">Read a workbook or a delimited export into rows. Encoding, separators and column positions are handled here so no section has to care.</td></tr>
+<tr style="border-bottom:1px solid #e2ded6;background:#faf8f4"><td style="padding:6px 8px">settings.js</td><td style="padding:6px 8px">The edition&rsquo;s furniture, and the riders&rsquo; agents register. Checks the required settings are present and the date format is right.</td></tr>
+<tr style="border-bottom:1px solid #e2ded6"><td style="padding:6px 8px">pagination.js</td><td style="padding:6px 8px">The printed running order. Adds up what sits in front of a section to get its first folio, drops conditional sections, and grows the advertising to reach a multiple of four.</td></tr>
+<tr style="border-bottom:1px solid #e2ded6;background:#faf8f4"><td style="padding:6px 8px">ads.js</td><td style="padding:6px 8px">The house-ad library and where each may run: a panel in unused space, a filler under a short page, a whole page before the back cover.</td></tr>
+<tr style="border-bottom:1px solid #e2ded6"><td style="padding:6px 8px">chart.js</td><td style="padding:6px 8px">Finds the monthly calendars, sorts them chronologically, warns on a gap, and pivots the meetings into the thirteen class bands.</td></tr>
+<tr style="border-bottom:1px solid #e2ded6;background:#faf8f4"><td style="padding:6px 8px">deadlines.js, programs.js</td><td style="padding:6px 8px">The two other projections of the same race record set — deadlines regrouped by the day they fall due, and the full conditions meeting by meeting.</td></tr>
+<tr style="border-bottom:1px solid #e2ded6"><td style="padding:6px 8px">permits.js, trials.js, jumpouts.js, series.js, notices.js</td><td style="padding:6px 8px">One each for the register extracts, the trials and jump-out schedules, the series heats and the three written sections.</td></tr>
+</tbody>
+</table>
+
+<div style="border:1px solid #d8d3c8;background:#faf8f4;padding:16px 18px;margin:0 0 16px;break-inside:avoid;orphans:3;widows:3">
+<p style="margin:0 0 8px;font-family:'Archivo',sans-serif;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#10233f">Pagination is an output</p>
+<p style="margin:0;font-size:14.5px;color:#3d424a">Sections that flow — deadlines, the chart, race programs, agents, the written sections — can only be counted by laying them out. Each reports the number of pages it produced, and every other page picks that up. Fixed sections declare their extent. Conditional sections take no pages when their switch is off and everything after them moves up. Nobody types a folio, and any page number left in the settings workbook is flagged as stale.</p>
+</div>
+
+<h2 style="font-family:'Archivo',sans-serif;font-weight:600;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:#8a2b23;margin:34px 0 10px">4. Outputs</h2>
+
+<p style="margin:0 0 14px">One file that matters and one that should. <span style="font-family:'Archivo',sans-serif;font-size:14px">Inside Racing Edition</span> assembles every section into a single document and exports the whole edition in one pass — every input resolves before anything commits, the three flowing sections measure together, and off-screen pages skip layout. The edition settles in under four seconds. Three part-files remain as a fallback if a future month grows the extent past what one pass can hold.</p>
+
+<p style="margin:0 0 14px">The second output is the validation. Every parser already reports what it found doubtful — a missing expiry date, a row shifted a column, a contact number in an unusual form, a gap in the calendar sequence — but it reports to the browser console, where it is only seen by someone who knows to look. Turning that into a written report the producer reads is the single largest gap between what exists and what can be handed over.</p>
+
+<h2 style="font-family:'Archivo',sans-serif;font-weight:600;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:#8a2b23;margin:34px 0 10px">5. Where all of this runs today</h2>
+
+<p style="margin:0 0 14px">In one place: this project, in a browser, with me in the loop.</p>
+
+<div style="display:grid;grid-template-columns:150px 1fr;gap:10px 16px;margin:0 0 16px;font-size:14.5px">
+<div style="font-family:'Archivo',sans-serif;font-size:11.5px;font-weight:600;color:#10233f;padding-top:2px">Files</div><div style="color:#3d424a">Uploaded here by hand each time an input changes.</div>
+<div style="font-family:'Archivo',sans-serif;font-size:11.5px;font-weight:600;color:#10233f;padding-top:2px">Code</div><div style="color:#3d424a">Parsers and page components live in the project. There is no version history beyond the project itself, and no review step before a change takes effect.</div>
+<div style="font-family:'Archivo',sans-serif;font-size:11.5px;font-weight:600;color:#10233f;padding-top:2px">Build</div><div style="color:#3d424a">Someone opens the edition page and waits for it to settle.</div>
+<div style="font-family:'Archivo',sans-serif;font-size:11.5px;font-weight:600;color:#10233f;padding-top:2px">PDF</div><div style="color:#3d424a">Printed from the browser by hand.</div>
+<div style="font-family:'Archivo',sans-serif;font-size:11.5px;font-weight:600;color:#10233f;padding-top:2px">Checks</div><div style="color:#3d424a">Read from the browser console by someone who knows to open it.</div>
+<div style="font-family:'Archivo',sans-serif;font-size:11.5px;font-weight:600;color:#10233f;padding-top:2px">Archive</div><div style="color:#3d424a">None. Last month&rsquo;s inputs are overwritten by this month&rsquo;s.</div>
+</div>
+
+<p style="margin:0 0 14px">That is the right arrangement for building the thing and the wrong one for running it. Four limits matter. The production team cannot start a month without me. A mistake in the code is discovered in the output rather than in review. There is no record of what September was built from once October overwrites it. And the one step that most needs to be mechanical — reading the validation before signing off a proof — is the step most easily skipped.</p>
+
+<h2 style="font-family:'Archivo',sans-serif;font-weight:600;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:#8a2b23;margin:34px 0 10px">6. Recommended: code in GitHub, the month in OneDrive</h2>
+
+<p style="margin:0 0 16px">Split the two things that change at different rates. The parsers, page templates, house ads and fonts change a few times a year and need review and history, so they belong in a repository. The month&rsquo;s files change every month and belong where the production team already works. A small runner joins them, and the producer never sees the repository at all.</p>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:0 0 18px">
+<div style="border:1px solid #d8d3c8;padding:14px 16px;break-inside:avoid"><div style="font-family:'Archivo',sans-serif;font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#10233f;margin-bottom:7px">GitHub — the system</div><div style="font-size:14px;color:#3d424a;line-height:1.5">Parsers, page components, the pagination spine, the house-ad library, licensed fonts, and the standing artwork. Changes are reviewed before they ship and every edition can be traced to the exact version that produced it.</div></div>
+<div style="border:1px solid #d8d3c8;padding:14px 16px;break-inside:avoid"><div style="font-family:'Archivo',sans-serif;font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#10233f;margin-bottom:7px">OneDrive — the month</div><div style="font-size:14px;color:#3d424a;line-height:1.5">One folder per edition, holding that month&rsquo;s inputs and its outputs. September stays intact when October is built, so an edition can always be reproduced or a query answered after the fact.</div></div>
+</div>
+
+<div style="border-left:3px solid #10233f;padding:4px 0 4px 14px;margin:0 0 18px">
+<p style="margin:0 0 6px;font-family:'Archivo',sans-serif;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#10233f">A month, from the producer&rsquo;s side</p>
+<p style="margin:0 0 10px;font-size:14.5px;color:#3d424a">Copy this month&rsquo;s files into <span style="font-family:'Archivo',sans-serif;font-size:13px">Inside Racing / 2026-09 / inputs</span>. Double-click <span style="font-family:'Archivo',sans-serif;font-size:13px">Build Edition</span>. Read the check report it writes beside the PDF. Open the PDF. None of that requires knowing what a parser is.</p>
+<p style="margin:0;font-size:14.5px;color:#3d424a">It is a loop, not a single event. Inputs are stable by the 10th of the preceding month and the first draft is produced that day; corrections are then made to the inputs and the build re-run until the producer passes it. So drafts never overwrite each other &mdash; the run takes the next number itself &mdash; and each draft keeps a copy of the inputs that produced it. That costs nothing, fifteen small files, and it earns the report its most useful line: what changed since the last draft. At draft two the producer is not asking whether the edition is right, but whether their corrections landed and nothing else moved.</p>
+</div>
+
+<p style="margin:0 0 14px">The production team has no GitHub account, so the producer&rsquo;s machine never authenticates to anything. Code is published from the repository into the OneDrive folder when a change ships, and the runner uses the copy it finds there. GitHub stays the place changes are reviewed and versioned; OneDrive holds the current published copy alongside the months.</p>
+
+<p style="margin:0 0 14px">What the runner does, in order: takes the published code, reduces the cover photograph to its working derivative, loads the edition against the month&rsquo;s folder, waits for the flowing sections to settle, writes the PDF, and collects every warning the parsers raised into a plain report naming the file and the row. A failed input stops the run and says which file and which row, rather than printing a page with a hole in it.</p>
+
+<p style="margin:0 0 14px">Five things in the code have to change to get there, and none is large. Input paths are currently fixed to a folder inside the project and need to point at the month&rsquo;s folder. Warnings need collecting into a report rather than going to the console. The runner needs to drive a single-pass build, which the whole-edition file already does. Cover derivative generation needs to move out of my hands and into the run. And the licensed fonts need to sit in the repository so every machine renders identically — until they do, bold copy is synthesised by the browser and the column packing cannot be trusted to the millimetre.</p>
+
+<h2 style="font-family:'Archivo',sans-serif;font-weight:600;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:#8a2b23;margin:34px 0 10px">7. Getting there</h2>
+
+<div style="display:grid;grid-template-columns:1fr;gap:10px;margin:0 0 16px">
+<div style="display:grid;grid-template-columns:118px 1fr;gap:14px;border-left:3px solid #10233f;padding:8px 0 8px 12px;break-inside:avoid"><div style="font-family:'Archivo',sans-serif;font-size:11.5px;font-weight:600;color:#10233f;line-height:1.4">First<br /><span style="font-weight:400;color:#6b6f76">Local runner</span></div><div>A folder and a shortcut, run by one person on one machine. Proves the build works unattended and produces the check report. Nothing about it is thrown away later.</div></div>
+<div style="display:grid;grid-template-columns:118px 1fr;gap:14px;border-left:3px solid #10233f;padding:8px 0 8px 12px;break-inside:avoid"><div style="font-family:'Archivo',sans-serif;font-size:11.5px;font-weight:600;color:#10233f;line-height:1.4">Then<br /><span style="font-weight:400;color:#6b6f76">Code to GitHub</span></div><div>The same runner, now working from a published copy rather than whatever happens to be on that machine. Changes are reviewed before they ship, fixes reach everyone without touching anybody&rsquo;s PC, and each edition is tied to a known version.</div></div>
+<div style="display:grid;grid-template-columns:118px 1fr;gap:14px;border-left:3px solid #10233f;padding:8px 0 8px 12px;break-inside:avoid"><div style="font-family:'Archivo',sans-serif;font-size:11.5px;font-weight:600;color:#10233f;line-height:1.4">Later, if wanted<br /><span style="font-weight:400;color:#6b6f76">Hosted</span></div><div>Upload the files to a page, press Build, download the PDF. Nothing installed anywhere. This needs an owner inside IT and should only be started once the process has run a few months unattended.</div></div>
+</div>
+
+<p style="margin:0 0 14px">The producer&rsquo;s experience is identical at each step, which is the point: the move from the first to the second costs them nothing.</p>
+
+<h2 style="font-family:'Archivo',sans-serif;font-weight:600;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:#8a2b23;margin:34px 0 10px">8. Testing</h2>
+
+<p style="margin:0 0 14px">Two tests, doing different jobs. One proves the system is right before it is handed over. The other proves a month is right before it goes out, and runs forever.</p>
+
+<div style="border-left:3px solid #10233f;padding:4px 0 4px 14px;margin:0 0 16px">
+<p style="margin:0 0 6px;font-family:'Archivo',sans-serif;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#10233f">Build and compare, against two known editions</p>
+<p style="margin:0;font-size:14.5px;color:#3d424a">August and September 2026 have both been produced by hand. Rebuilding each from the files that made it, and comparing against the published PDF, is a genuine regression test: the answer is already known. Two editions rather than one matters, because a single month can be matched by accident.</p>
+</div>
+
+<p style="margin:0 0 12px">Comparison is not eyeballing two PDFs. Four things, in order:</p>
+
+<div style="display:grid;grid-template-columns:1fr;gap:8px;margin:0 0 16px;font-size:14.5px">
+<div style="display:grid;grid-template-columns:14px 1fr;gap:10px;break-inside:avoid"><div style="color:#8a2b23">&bull;</div><div><span style="font-family:'Archivo',sans-serif;font-size:13px;font-weight:600;color:#10233f">Extent.</span> Total pages, and the length of every section.</div></div>
+<div style="display:grid;grid-template-columns:14px 1fr;gap:10px;break-inside:avoid"><div style="color:#8a2b23">&bull;</div><div><span style="font-family:'Archivo',sans-serif;font-size:13px;font-weight:600;color:#10233f">Folios.</span> Every section starting on the page the published contents says it does.</div></div>
+<div style="display:grid;grid-template-columns:14px 1fr;gap:10px;break-inside:avoid"><div style="color:#8a2b23">&bull;</div><div><span style="font-family:'Archivo',sans-serif;font-size:13px;font-weight:600;color:#10233f">Breaks.</span> The flowing sections turning the page at the same meetings. This is the sensitive one: a fractional difference in leading moves a break, and a moved break moves everything after it.</div></div>
+<div style="display:grid;grid-template-columns:14px 1fr;gap:10px;break-inside:avoid"><div style="color:#8a2b23">&bull;</div><div><span style="font-family:'Archivo',sans-serif;font-size:13px;font-weight:600;color:#10233f">Content.</span> Counts first — meetings, races, agents, permits — then the first and last row of each section, then a sample through the middle.</div></div>
+</div>
+
+<div style="border:1px solid #d8d3c8;background:#faf8f4;padding:16px 18px;margin:0 0 16px;break-inside:avoid;orphans:3;widows:3">
+<p style="margin:0 0 8px;font-family:'Archivo',sans-serif;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#10233f">Accepted differences are written down</p>
+<p style="margin:0;font-size:14.5px;color:#3d424a">Some differences are known and deliberate. The published edition carries a permits row whose wins do not add up; the race programs export mixes in jump-outs and trials. Each accepted difference is recorded once, with the reason, so it is not re-argued every time the test runs. Anything not on that list is a failure until it is explained.</p>
+</div>
+
+<p style="margin:0 0 14px">After handover the test changes shape, because from October on there is nothing to compare against. A month passes when the check report is clean, the counts match what the producer expected to see, and the producer passes the output. That last step is not a formality and does not go away: automation moves where the judgement happens, it does not remove the need for it. The producer knows the content better than any validation rule, which is why the report leads with counts they can judge rather than with technical detail they cannot.</p>
+
+<h2 style="font-family:'Archivo',sans-serif;font-weight:600;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:#8a2b23;margin:34px 0 10px">9. Open questions</h2>
+
+<p style="margin:0 0 12px">None of these stop work continuing on the sections. All of them shape the runner, so they need answers before it is built. Answers are recorded against the question as they come in.</p>
+
+<sc-for list="{{ open }}" as="q" hint-placeholder-count="9">
+<div style="display:grid;grid-template-columns:14px 1fr;gap:10px;padding:7px 0;border-bottom:1px solid #e2ded6;break-inside:avoid;font-size:14.5px">
+<div style="font-family:'Archivo',sans-serif;font-size:12px;font-weight:700;padding-top:3px;color:{{ q.colour }}">{{ q.n }}</div>
+<div><span style="font-family:'Archivo',sans-serif;font-size:13px;font-weight:600;color:#10233f">{{ q.head }}</span> <span style="color:#3d424a">{{ q.body }}</span>
+<sc-if value="{{ q.answered }}" hint-placeholder-val="{{ false }}">
+<div style="margin-top:6px;border-left:2px solid #10233f;padding:2px 0 2px 10px;font-size:13.5px;line-height:1.5;color:#3d424a"><span style="font-family:'Archivo',sans-serif;font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#10233f">Answered</span> {{ q.answer }}</div>
+</sc-if>
+</div>
+</div>
+</sc-for>
+
+<h2 style="font-family:'Archivo',sans-serif;font-weight:600;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:#8a2b23;margin:34px 0 10px">10. Still to build</h2>
+
+<p style="margin:0 0 12px">Separate from the handover, and small against what is done.</p>
+
+<div style="display:grid;grid-template-columns:1fr;gap:8px;margin:0 0 8px;font-size:14.5px">
+<div style="display:grid;grid-template-columns:14px 1fr;gap:10px;break-inside:avoid"><div style="color:#8a2b23">&bull;</div><div><span style="font-family:'Archivo',sans-serif;font-size:13px;font-weight:600;color:#10233f">The build review step.</span> The run has to end by telling the producer what it thought was wrong with the inputs. Two kinds. <span style="font-style:italic">Missing or malformed</span> is already detected by the parsers &mdash; blank required fields, a row shifted a column, a date in the wrong format, a gap in the calendar sequence &mdash; and only needs surfacing in the report instead of the console. <span style="font-style:italic">Abnormal</span> is new, and is the more valuable of the two: a value that is present and well-formed but wrong. A prizemoney figure an order of magnitude out, a venue that has never appeared before, forty per cent fewer meetings than last month, an agent with twice the usual riders. That needs a baseline to compare against, which the per-month folders provide once a few editions have run. Until then it compares against the two rebuilt editions.</div></div>
+<div style="display:grid;grid-template-columns:14px 1fr;gap:10px;break-inside:avoid"><div style="color:#8a2b23">&bull;</div><div><span style="font-family:'Archivo',sans-serif;font-size:13px;font-weight:600;color:#10233f">Jumps Racing Program.</span> The page is reserved and the folios after it are correct, but it has no input and no layout. Needs the program, the jumps trials and the prizemoney breakdown.</div></div>
+<div style="display:grid;grid-template-columns:14px 1fr;gap:10px;break-inside:avoid"><div style="color:#8a2b23">&bull;</div><div><span style="font-family:'Archivo',sans-serif;font-size:13px;font-weight:600;color:#10233f">Picnic Racing.</span> Same position — reserved by its switch, not yet built.</div></div>
+<div style="display:grid;grid-template-columns:14px 1fr;gap:10px;break-inside:avoid"><div style="color:#8a2b23">&bull;</div><div><span style="font-family:'Archivo',sans-serif;font-size:13px;font-weight:600;color:#10233f">Back cover.</span> Standing artwork, not yet placed.</div></div>
+<div style="display:grid;grid-template-columns:14px 1fr;gap:10px;break-inside:avoid"><div style="color:#8a2b23">&bull;</div><div><span style="font-family:'Archivo',sans-serif;font-size:13px;font-weight:600;color:#10233f">Race Programs runs one page long.</span> Twenty-two pages against the published twenty-one, printing 124 meetings against 122. The export is a full year and mixes in jump-outs and trials, which are excluded by having no prizemoney; the remaining two meetings need chasing.</div></div>
+<div style="display:grid;grid-template-columns:14px 1fr;gap:10px;break-inside:avoid"><div style="color:#8a2b23">&bull;</div><div><span style="font-family:'Archivo',sans-serif;font-size:13px;font-weight:600;color:#10233f">Licensed Gotham bold cuts.</span> Bold copy across the programs, the chart and three page titles is browser-synthesised. Real bold will shift the column packing, so the fit needs re-checking once supplied.</div></div>
+</div>
+
+</div>
+</doc-page>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;statusLine&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Draft 1 · for review&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    const open = [
+      ['Can Node be installed on the production machine?', 'Decides whether a local runner is possible at all, or whether the build has to happen somewhere else.', 'Tested 8 September on a production machine. Node 24 runs from a user folder with no administrator rights, so no IT request is needed. Edge, already installed, renders a page and writes a PDF headlessly — the runner drives it rather than downloading a browser of its own. The package registry is reachable once Node is told to use the Windows certificate store, which the network re-signs; the runner sets that option itself. Two things to design around: certificate inspection, and folder redirection into OneDrive, which means no path may assume the standard Desktop or Documents location.'],
+      ['Does the production team have GitHub access, or only you?', 'If only you, the repository holds the code and the team never touches it — which is the recommended arrangement anyway.', 'Only the author and the IT team. The production team has no account, so the producer\u2019s machine cannot pull from a private repository and must not hold a credential. The code is therefore published from the repository into the OneDrive folder rather than fetched by the runner. The repository is private from the outset: the licensed fonts and the artwork cannot be redistributed publicly. It can start in a personal account and transfer to the RV organisation later with history intact, though the transfer should not be left long. An account for the producer is available and worth having for raising issues, but is deliberately kept out of the build path: a private pull needs a login and two-factor on the production machine, and the failure mode of an expired credential is a build that stops on deadline. A missed publish, by contrast, only means building with last month\u2019s code. The month\u2019s data stays in OneDrive rather than the repository in either case, so that personal information in the exports remains inside RV\u2019s tenancy \u2014 a point to put to IT rather than assume.'],
+      ['Is the drop location a personal OneDrive or a SharePoint / Teams library?', 'A shared library survives someone leaving. A personal OneDrive does not.', 'A shared library, not a personal OneDrive \u2014 so the folder outlives whoever set it up and permissions are IT-managed. It must be synced to each production machine so the runner reads it as an ordinary folder path; a library reachable only through the browser cannot be read by a local build. One folder per edition, holding that month\u2019s inputs and outputs, with the published code alongside.'],
+      ['Who runs it month to month, and how technical are they?', 'Sets how much the check report has to explain and how much can be assumed.', 'A subject expert who cannot fix a build, with a stand-in of the same kind. They know the content better than any validation rule does, so the check report is built around that: what was built, in counts they can judge against what they expect; what to fix in the inputs, naming the file, the row and the meeting or person it refers to; and what to send on, with the technical detail in a block they can forward without reading. The run either finishes or stops with a plain sentence \u2014 it never half-succeeds and never asks a question part-way through.'],
+      ['What must a run produce besides the whole-edition PDF?', 'Per-section PDFs for checking, files the printer takes directly, or a web version.', 'The whole edition as one PDF, and a PDF per section for checking, named by folio and section so one can be sent on without the rest. Both come out of the same run.'],
+      ['What does the printer need to receive?', 'A browser produces RGB with no crop marks or bleed, so a press specification would have been a gap.', 'Nothing \u2014 the edition is not printed. It is distributed as a browser-produced PDF, so no press specification, colour conversion, crop marks or bleed apply. This raises a separate choice: the pagination pads the edition to a multiple of four with advertising, which came from saddle-stitching. With no stitching that rule is inherited rather than required. It is kept: the PDF reads correctly as spreads, it stays consistent with every past edition, and what it pads with is house advertising rather than blank paper. It can be switched off later without affecting anything else.'],
+      ['What counts as a passing month, and who signs the proof?', 'Matching the published edition page for page, a clean check report, a named sign-off, or all three.', 'Before handover: rebuild August and September 2026, both already produced, and compare against the published editions. After handover: a clean check report, counts that match what was expected, and the producer passing the output, every month. Still needed to run the September test \u2014 the published September PDF and the exact input files that produced it.'],
+      ['Are the licensed Gotham files available?', 'Without them bold copy is synthesised and the column fit is approximate.', 'Being obtained. Two are blocking: Gotham Narrow Bold, used for bold body copy through Race Programs and the venue names in the chart, and regular-width Gotham Bold, used for the page titles on Permits, Riders\u2019 Agents and Race Series, which currently render 14\u201318% too narrow. Gotham Book and Gotham Narrow Medium are worth collecting at the same time. OTF or TTF; the licence needs to permit embedding in a PDF, since that is the output. Already held: Gotham Narrow Book, Gotham XNarrow Book, Gotham XNarrow Bold. Real bold is wider than the synthesised version, so the column packing shifts when these land and both rebuild tests need re-running afterwards.'],
+      ['Which outstanding builds are in scope now?', 'The Jumps Racing Program, Picnic Racing and the back cover, or productionise what exists first.', 'All of them, immediately after this planning exercise and before the runner is built \u2014 the Jumps Racing Program, Picnic Racing and the back cover. Building them first means the two rebuild tests run against a complete edition rather than one with reserved gaps in it.'],
+      ['When in the month are the inputs stable, and when does the edition go out?', 'Fixes the window the run has to fit inside.', 'Inputs are stable by the 10th of the preceding month, and a first draft is produced that day. Edits are then made to the inputs and the build re-run, repeating until the producer passes it. Publication is the 1st of the relevant month, or the nearest business day, giving about three weeks between first draft and release. That window is comfortable, which moves the risk: it is not that a run is too slow, but that a build fails late with nobody able to fix it. The draft on the 10th therefore doubles as the smoke test \u2014 if something is broken there are three weeks to resolve it rather than an afternoon. The run is therefore a loop rather than a single event: drafts never overwrite each other, each snapshots the inputs that produced it, and the report can say what changed since the previous draft \u2014 which is the producer\u2019s actual question at draft two.']
+    ];
+    return {
+      statusLine: this.props.statusLine ?? 'Draft 1 · for review',
+      open: open.map(([head, body, answer], i) => ({
+        n: String(i + 1),
+        head,
+        body,
+        answer: answer || '',
+        answered: !!answer,
+        colour: answer ? '#10233f' : '#8a2b23'
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>

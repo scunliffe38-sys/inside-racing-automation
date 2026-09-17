@@ -29,9 +29,9 @@ a:hover{color:#1b7fb4}
 </div>
 <sc-for list="{{ dayRows }}" as="r" hint-placeholder-count="0">
 <div data-r="day">
-<div style="border-top:1pt solid #2c2e35"></div>
+<div style="border-top:0.5pt solid #2c2e35"></div>
 <div style="font-size:8.5pt;font-weight:700;line-height:10.5pt;padding-top:1.5pt;color:#2c9cd7">{{ r.text }}</div>
-<div style="border-top:0.75pt dotted #2c2e35;margin-top:1.5pt;margin-bottom:1.5pt"></div>
+<div style="border-top:0.4pt dotted #9a9c9f;margin-top:1.5pt;margin-bottom:1.5pt"></div>
 </div>
 </sc-for>
 <sc-for list="{{ headRows }}" as="r" hint-placeholder-count="0">
@@ -70,13 +70,13 @@ a:hover{color:#1b7fb4}
 <sc-for list="{{ col.blocks }}" as="b" hint-placeholder-count="3">
 <div style="margin-bottom:{{ pg.blockGap }}">
 <sc-for list="{{ b.dayRow }}" as="d" hint-placeholder-count="1">
-<div style="border-top:1pt solid #2c2e35"></div>
+<div style="border-top:0.5pt solid #2c2e35"></div>
 <div style="font-size:8.5pt;font-weight:700;line-height:10.5pt;padding-top:1.5pt;color:#2c9cd7">{{ d.text }}</div>
-<div style="border-top:0.75pt dotted #2c2e35;margin-top:1.5pt;margin-bottom:1.5pt"></div>
+<div style="border-top:0.4pt dotted #9a9c9f;margin-top:1.5pt;margin-bottom:1.5pt"></div>
 </sc-for>
 <sc-for list="{{ b.groups }}" as="g" hint-placeholder-count="3">
 <sc-for list="{{ g.headRow }}" as="hd" hint-placeholder-count="1">
-<div style="font-size:7pt;font-weight:700;line-height:8pt;margin-top:2pt;color:#2c2e35">{{ hd.text }}</div>
+<div style="font-size:7.5pt;font-weight:700;line-height:8.4pt;margin-top:2.5pt;letter-spacing:.04em;color:#2c2e35">{{ hd.text }}</div>
 </sc-for>
 <sc-for list="{{ g.items }}" as="it" hint-placeholder-count="2">
 <div style="font-size:7pt;font-weight:400;line-height:8pt;color:#2c2e35">{{ it }}</div>

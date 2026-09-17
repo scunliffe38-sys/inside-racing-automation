@@ -6,6 +6,11 @@
 //   three columns Date | Venue | Race          (the highweight schedule)
 // Where a heading carries trailing explanatory text after a run of spaces, that
 // tail is printed as a note under the block's table.
+//
+// A table need not name its columns. Many of the series tables arrive without a
+// heading row, so the layout is taken from the column count — three columns are
+// the highweight shape, four the series shape — and the blocks read that way go
+// back as a note. It is the ordinary shape of the input, not a fault.
 
 import { unzip } from './xlsx.js';
 
@@ -31,6 +36,8 @@ export async function loadSeries(url) {
   const xml = new TextDecoder().decode(files['word/document.xml']);
   const body = (xml.match(/<w:body>([\s\S]*)<\/w:body>/) || [])[1] || '';
   const warnings = [];
+  const notes = [];
+  const assumed = [];
 
   const nodes = [...body.matchAll(/<w:(p|tbl)\b[\s\S]*?<\/w:\1>/g)].map(m => ({ kind: m[1], xml: m[0] }));
   const blocks = [];
@@ -56,7 +63,7 @@ export async function loadSeries(url) {
     const first = rows[0].map(c => c.toLowerCase());
     const hasHead = first[0] === 'heat' || first[0] === 'date';
     const columns = (hasHead ? rows[0] : (rows[0].length === 3 ? ['Date', 'Venue', 'Race'] : ['Heat', 'Venue', 'Date', 'Race'])).map(c => c.toUpperCase());
-    if (!hasHead) warnings.push('"' + pending.title + '" has no heading row — assuming ' + columns.join(' / ') + '.');
+    if (!hasHead) assumed.push({ title: pending.title, columns: columns.join(' / ') });
 
     const data = (hasHead ? rows.slice(1) : rows).filter(r => r.some(c => c));
     data.forEach((r, i) => {
@@ -75,6 +82,17 @@ export async function loadSeries(url) {
   if (pending) warnings.push('"' + pending.title + '" has a heading but no table.');
   if (!blocks.length) warnings.push('No series found in ' + url);
 
+  // one note for the lot, grouped by the layout each was read as
+  if (assumed.length) {
+    const byCols = {};
+    assumed.forEach(a => { (byCols[a.columns] = byCols[a.columns] || []).push('“' + a.title + '”'); });
+    Object.keys(byCols).forEach(cols => {
+      const list = byCols[cols];
+      notes.push(list.length + ' table(s) name no columns and were read as ' + cols
+        + ' from the column count: ' + list.join(', ') + '.');
+    });
+  }
+
   // Two columns of 718pt on the opening page. The page itself does the real
   // packing; this only says how many pages the section will take, so the
   // producer knows before opening it.
@@ -87,5 +105,5 @@ export async function loadSeries(url) {
     warnings.push(blocks.length + ' blocks, about ' + Math.round(depth) + 'pt of tables \u2014 the section runs to ' + pages + ' pages.');
   }
 
-  return { blocks, warnings, count: blocks.length, depth, pages };
+  return { blocks, warnings, notes, count: blocks.length, depth, pages };
 }

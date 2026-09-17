@@ -157,7 +157,7 @@ class Component extends DCLogic {
    * schedule is printed last wherever that falls.
    */
   pack() {
-    const PAGE = 841.89, BOTTOM = 30, TOP_FIRST = 93.8, TOP_CONT = 57.9, GAP = 34;
+    const PAGE = 841.89, BOTTOM = 30, TOP_FIRST = 93.8, TOP_CONT = 57.9, GAP = 20;
     const order = this.state.blocks.filter(b => !b.tail).concat(this.state.blocks.filter(b => b.tail));
     const limitOf = first => PAGE - (first ? TOP_FIRST : TOP_CONT) - BOTTOM;
 
@@ -213,7 +213,7 @@ class Component extends DCLogic {
       titleRow: p.first ? [{}] : [],
       columns: [21.7, 305].map((left, side) => ({
         left: left + 'pt',
-        blocks: (p.cols[side] ? p.cols[side].blocks : []).map((b, j) => ({ ...shape(b), gap: j === 0 ? '0pt' : '34pt' }))
+        blocks: (p.cols[side] ? p.cols[side].blocks : []).map((b, j) => ({ ...shape(b), gap: j === 0 ? '0pt' : '20pt' }))
       })),
       no: from ? String(from + i) : ''
     }));

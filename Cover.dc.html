@@ -23,7 +23,7 @@ a:hover{color:#1b7fb4}
 
 <section class="page" data-screen-label="01 Cover" style="position:relative;font-family:'Gotham Narrow',sans-serif;color:#2c2e35;background:#fff;overflow:hidden">
 
-<img src="assets/photos/cover.jpg" alt="" style="position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;object-position:50% 50%;display:block" />
+<img src="assets/photos/cover.jpg" alt="" ref="{{ setCover }}" style="position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;object-position:50% 50%;display:block" />
 <div style="position:absolute;left:0;right:0;top:0;height:37.3pt;background:#0086bf"></div>
 <div style="position:absolute;left:21.3pt;top:15.1pt;font-family:'Gotham XNarrow',sans-serif;font-size:16pt;font-weight:700;line-height:1;letter-spacing:.03em;color:#fff">{{ coverDate }}</div>
 <div style="position:absolute;right:22.7pt;top:17.7pt;font-size:9pt;line-height:1;letter-spacing:.01em;text-align:right;color:#fff">VICTORIAN THOROUGHBRED RACING INDUSTRY OFFICIAL PUBLICATION</div>
@@ -39,7 +39,7 @@ a:hover{color:#1b7fb4}
 </section>
 </doc-page>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;coverAutoFrame&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Cover photograph&quot;},&quot;coverZoom&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:1.2,&quot;min&quot;:1,&quot;max&quot;:1.6,&quot;step&quot;:0.05,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Cover photograph&quot;}}">
 // Cover (page 1).
 //
 // The photograph is supplied as artwork, so the page carries a slot for it and
@@ -50,6 +50,46 @@ a:hover{color:#1b7fb4}
 
 class Component extends DCLogic {
   state = { edition: '' };
+
+  // A4 in points, and the fractions of its height the masthead and the teaser
+  // strip already cover. The auto-framing aims the subject between them.
+  PAGE = { w: 595.3, h: 841.9 };
+  SAFE = { top: 0.172, bottom: 0.895 };
+
+  setCover = el => {
+    this._img = el;
+    this.applyFrame();
+  };
+
+  /** Put the measured framing on the element, and keep it through re-renders. */
+  applyFrame() {
+    const f = this._frame;
+    if (!f || !this._img) return;
+    const b = f.box || { width: '100%', height: '100%', left: '0%', top: '0%' };
+    this._img.style.width = b.width;
+    this._img.style.height = b.height;
+    this._img.style.left = b.left;
+    this._img.style.top = b.top;
+    this._img.style.objectPosition = f.objectPosition;
+  }
+
+  componentDidUpdate() { this.applyFrame(); }
+
+  frameCoverPhoto() {
+    const zoom = this.props.coverZoom == null ? 1.2 : this.props.coverZoom;
+    if (this.props.coverAutoFrame === false) return;
+    import('./parsers/cover-frame.js')
+      .then(m => m.frameCover('assets/photos/cover.jpg', this.PAGE, this.SAFE, zoom))
+      .then(f => {
+        this._frame = f;
+        console.info('Cover \u2014 framing: ' + f.objectPosition
+          + (f.scale > 1.001 ? ', zoomed ' + Math.round((f.scale - 1) * 100) + '%' : '')
+          + ' \u2014 ' + f.note);
+        this.applyFrame();
+        if (this._paged) requestAnimationFrame(() => this._paged(0));
+      })
+      .catch(e => console.warn('Cover \u2014 could not frame the photograph: ' + (e.message || e)));
+  }
 
   componentDidMount() {
     // doc-page only enters paged mode in its own measure pass, and the element
@@ -79,6 +119,7 @@ class Component extends DCLogic {
       requestAnimationFrame(() => paged(0));
     }
     this._paged = paged;
+    this.frameCoverPhoto();
     const faces = document.fonts
       ? Promise.all([
           document.fonts.load('400 54pt "Gotham XNarrow"'),
@@ -103,7 +144,7 @@ class Component extends DCLogic {
   renderVals() {
     // "AUGUST EDITION 2026" -> "AUGUST 2026"
     const e = String(this.state.edition || '').replace(/\s*edition\s*/i, ' ').replace(/\s+/g, ' ').trim();
-    return { coverDate: e.toUpperCase() };
+    return { coverDate: e.toUpperCase(), setCover: this.setCover };
   }
 }
 </script>

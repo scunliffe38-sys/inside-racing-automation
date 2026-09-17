@@ -19,6 +19,10 @@
 // Only race meetings belong in this section — jump-outs and trials are printed on
 // page 50 from their own exports — so a meeting is kept when at least one of its
 // races carries prizemoney, and the rest are counted in a console note.
+//
+// Setting those aside is the normal course of a run, not a fault, so the count
+// goes back as a note rather than a warning: notes describe what the parser did,
+// warnings are for gaps in the input that somebody has to go and fix.
 
 import { fetchDelimited, rows } from './tsv.js';
 
@@ -106,10 +110,23 @@ function whenOf(dateText, filterValue, order) {
   return null;
 }
 
+/** "September 2026" or "September to November 2026" for a set of meetings. */
+function spanOf(list) {
+  const keys = list.map(m => m.when).filter(Boolean).map(w => w.y * 12 + w.m).sort((a, b) => a - b);
+  if (!keys.length) return '';
+  const lo = keys[0], hi = keys[keys.length - 1];
+  const month = k => MONTH_LABEL[k % 12];
+  const year = k => Math.floor(k / 12);
+  if (lo === hi) return month(lo) + ' ' + year(lo);
+  // the year rides on the end unless the span crosses into another one
+  return month(lo) + (year(lo) === year(hi) ? '' : ' ' + year(lo)) + ' to ' + month(hi) + ' ' + year(hi);
+}
+
 export async function loadPrograms(url, edition) {
   const { text } = await fetchDelimited(url);
   const { head, body } = rows(text);
   const warnings = [];
+  const notes = [];
 
   const missing = [C.dateKey, C.venueKey, C.no, C.name, C.dist, C.cond].filter(c => !head.includes(c));
   if (missing.length) warnings.push('Export is missing expected columns: ' + missing.join(', '));
@@ -180,10 +197,15 @@ export async function loadPrograms(url, edition) {
       const w = whenOf(m.date, m.key.split('|')[0], order);
       return w && window.some(x => x.m === w.m && x.y === w.y);
     }).length;
+    const dropped = meetings.filter(m => m.when).length - printed.length;
     if (printed.length !== meetings.length || setAside.length) {
-      warnings.push('Export holds a full year: ' + (meetings.length + setAside.length) + ' meetings, of which '
-        + setAside.length + ' are jump-outs or trials with no prizemoney. Printing the ' + printed.length
-        + ' race meetings in ' + label + (asideInWindow ? ' and leaving ' + asideInWindow + ' jump-out/trial meeting(s) in that window to page 50' : '') + '.');
+      const span = spanOf(meetings.concat(setAside));
+      notes.push('Export holds ' + (meetings.length + setAside.length) + ' meetings'
+        + (span && span !== label ? ' (' + span + ')' : '') + '. Printing the ' + printed.length + ' race meetings in ' + label
+        + (dropped > 0 ? '; ' + dropped + ' race meeting(s) fall outside that window' : '')
+        + (setAside.length ? '; ' + setAside.length + ' jump-out/trial meeting(s) set aside'
+          + (asideInWindow && asideInWindow !== setAside.length ? ' (' + asideInWindow + ' of them in the window)' : '')
+          + ' — those print on page 50 from their own exports' : '') + '.');
     }
     if (!printed.length) {
       warnings.push('No meetings fall in ' + label + ' — check the edition name in Edition Settings against the export.');
@@ -215,5 +237,5 @@ export async function loadPrograms(url, edition) {
   if (!meetings.length) warnings.push('No meetings found in ' + url);
 
   const races = meetings.reduce((n, m) => n + m.races.length, 0);
-  return { meetings, warnings, count: meetings.length, races };
+  return { meetings, warnings, notes, count: meetings.length, races };
 }

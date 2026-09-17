@@ -50,7 +50,7 @@ DETAILS</div>
 <div style="position:absolute;top:0;bottom:0;left:530.8pt;width:38.6pt;background:#edf6fb"></div>
 <sc-for list="{{ pg.rows }}" as="row" hint-placeholder-count="8">
 <div data-row="1" lang="en" style="display:flex;position:relative;border-left:0.25pt solid #2c2e35">
-<div style="position:relative;width:67.6pt;flex:0 0 67.6pt;box-sizing:border-box;padding:3.5pt 2pt;border-right:0.25pt solid #2c2e35;border-bottom:0.25pt solid #2c2e35;font-size:6.5pt;line-height:6.3pt;color:#2c2e35;white-space:pre-wrap;hyphens:auto;overflow-wrap:break-word">
+<div style="position:relative;width:67.6pt;flex:0 0 67.6pt;box-sizing:border-box;padding:3.5pt 2pt;border-right:0.25pt solid #2c2e35;border-bottom:0.25pt solid #2c2e35;font-size:6.5pt;line-height:6.3pt;color:#2c2e35;white-space:pre-wrap;hyphens:manual;overflow-wrap:break-word">
 <sc-for list="{{ row.a }}" as="r" hint-placeholder-count="4">
 <sc-for list="{{ r.dt }}" as="v" hint-placeholder-count="0"><span style="font-size:8pt;font-weight:700;line-height:9pt;letter-spacing:-.03em">{{ v.t }}</span></sc-for>
 <sc-for list="{{ r.vm }}" as="v" hint-placeholder-count="0"><span style="font-size:8pt;font-weight:700;line-height:9pt;letter-spacing:-.03em;color:#ff0040">{{ v.t }}</span></sc-for>
@@ -58,16 +58,18 @@ DETAILS</div>
 <sc-for list="{{ r.n }}" as="v" hint-placeholder-count="0"><span>{{ v.t }}</span></sc-for>
 <sc-for list="{{ r.b }}" as="v" hint-placeholder-count="0"><span style="font-weight:700">{{ v.t }}</span></sc-for>
 <sc-for list="{{ r.rd }}" as="v" hint-placeholder-count="0"><span style="font-weight:700;color:#ff0040">{{ v.t }}</span></sc-for>
-<sc-for list="{{ r.sep }}" as="v" hint-placeholder-count="0"><span style="display:inline-block;max-width:100%;overflow:hidden;white-space:pre;vertical-align:top">{{ v.t }}</span></sc-for>
+<sc-for list="{{ r.vo }}" as="v" hint-placeholder-count="0"><span style="display:block;line-height:6.3pt">{{ v.t }}</span></sc-for>
+<sc-for list="{{ r.sep }}" as="v" hint-placeholder-count="0"><span style="display:inline-block;max-width:100%;overflow:hidden;white-space:pre;vertical-align:top;line-height:6.3pt">{{ v.t }}</span></sc-for>
 </sc-for>
 </div>
 <sc-for list="{{ row.rest }}" as="c" hint-placeholder-count="13">
-<div style="position:relative;width:38.6pt;flex:0 0 38.6pt;box-sizing:border-box;padding:3.5pt 2pt;border-right:0.25pt solid #2c2e35;border-bottom:0.25pt solid #2c2e35;font-size:6.5pt;line-height:6.3pt;color:#2c2e35;white-space:pre-wrap;hyphens:auto;overflow-wrap:break-word">
+<div style="position:relative;width:38.6pt;flex:0 0 38.6pt;box-sizing:border-box;padding:3.5pt 2pt;border-right:0.25pt solid #2c2e35;border-bottom:0.25pt solid #2c2e35;font-size:6.5pt;line-height:6.3pt;color:#2c2e35;white-space:pre-wrap;hyphens:manual;overflow-wrap:break-word">
 <sc-for list="{{ c.runs }}" as="r" hint-placeholder-count="3">
 <sc-for list="{{ r.n }}" as="v" hint-placeholder-count="1"><span>{{ v.t }}</span></sc-for>
 <sc-for list="{{ r.b }}" as="v" hint-placeholder-count="0"><span style="font-weight:700">{{ v.t }}</span></sc-for>
 <sc-for list="{{ r.rd }}" as="v" hint-placeholder-count="0"><span style="font-weight:700;color:#ff0040">{{ v.t }}</span></sc-for>
-<sc-for list="{{ r.sep }}" as="v" hint-placeholder-count="0"><span style="display:inline-block;max-width:100%;overflow:hidden;white-space:pre;vertical-align:top">{{ v.t }}</span></sc-for>
+<sc-for list="{{ r.vo }}" as="v" hint-placeholder-count="0"><span style="display:block;line-height:6.3pt">{{ v.t }}</span></sc-for>
+<sc-for list="{{ r.sep }}" as="v" hint-placeholder-count="0"><span style="display:inline-block;max-width:100%;overflow:hidden;white-space:pre;vertical-align:top;line-height:6.3pt">{{ v.t }}</span></sc-for>
 </sc-for>
 </div>
 </sc-for>
@@ -122,12 +124,45 @@ class Component extends DCLogic {
     if (dp && dp._measure) dp._measure();
   }
 
+  /**
+   * Keeps a class label whole across a line break. The chart's columns are
+   * 38.6pt wide, which is narrower than "0-56/BM 56", so the browser used to
+   * break it after the hyphen and print "0-" over "56". A word joiner is a
+   * zero-width character with no glyph of its own, so it removes the break
+   * opportunity without changing a printed character; a space inside a label
+   * becomes non-breaking for the same reason. Spacing as typed is preserved.
+   */
+  atomic(t) {
+    const WJ = '\u2060';
+    return String(t)
+      .replace(/[ \t]*(\r?\n)[ \t\r\n]*/g, '\n')
+      .replace(/(\d)(\s*)-(\s*)(\d)/g, (m, a, s1, s2, b) =>
+        a + (s1 ? '\u00a0' : '') + '-' + WJ + (s2 ? '\u00a0' : '') + b)
+      .replace(/\b(BM|CL|Cl)(\s+)(\d)/g, (m, k, sp, d) => k + '\u00a0' + d)
+      .replace(/\bF(\s*)&(\s*)M\b/g, (m, s1, s2) =>
+        'F' + (s1 ? '\u00a0' : '') + '&' + WJ + (s2 ? '\u00a0' : '') + 'M');
+  }
+
+  /**
+   * The time-of-day qualifier after a venue prints in capitals, the way the
+   * venue does: CRANBOURNE (NIGHT), not CRANBOURNE (Night).
+   */
+  capsQualifier(t) {
+    return String(t).replace(/\((night|twilight|evening|day|afternoon|day\/night|twlight)\)/gi,
+      (m, w) => '(' + w.toUpperCase() + ')');
+  }
+
   classify(runs, isMeeting) {
-    const empty = () => ({ n: [], b: [], rd: [], dt: [], vm: [], vc: [], sep: [] });
+    const empty = () => ({ n: [], b: [], rd: [], dt: [], vm: [], vc: [], vo: [], sep: [] });
     const bucket = (r, i) => {
       if (isMeeting && i === 0) return 'dt';
-      if (isMeeting && r.s === 9 && r.c === '#FF0040') return 'vm';
-      if (isMeeting && r.s === 9 && r.c === '#00B0F0') return 'vc';
+      // The venue is identified by its colour alone. The calendar export sets
+      // the venue run at 8pt in some months and 9pt in others, and keying on
+      // the size dropped a whole month's colour and scale — December 2026 came
+      // through at 8pt and printed flat. The printed size is set by the
+      // template below, so the workbook's own size is never needed here.
+      if (isMeeting && r.c === '#FF0040') return 'vm';
+      if (isMeeting && r.c === '#00B0F0') return 'vc';
       if (r.b && r.c === '#FF0040') return 'rd';
       if (r.b) return 'b';
       return 'n';
@@ -137,16 +172,35 @@ class Component extends DCLogic {
     // pages long. It usually sits inside a larger run rather than being a run of
     // its own, so every run is split on its dashes and the dashes are set on one
     // line and clipped to the cell.
+    // A VOBIS label always starts a line of its own, so it is pulled out of
+    // whatever run carried it and set as a block.
+    const VOBIS = /(VOBIS\s+(?:Silver|Gold|Platinum)(?:\s*&\s*(?:VOBIS\s+)?(?:Silver|Gold|Platinum))*)/i;
     const out = [];
     runs.forEach((r, i) => {
       const key = bucket(r, i);
-      const text = key === 'dt' ? String(r.t).toUpperCase() : String(r.t);
+      let text = key === 'dt' ? String(r.t).toUpperCase() : String(r.t);
+      if (isMeeting) text = this.capsQualifier(text);
       text.split(/([-\u2013\u2014]{3,})/).forEach(part => {
         if (!part) return;
-        const o = empty();
-        if (/^[-\u2013\u2014]{3,}$/.test(part)) o.sep.push({ t: part });
-        else o[key].push({ t: part });
-        out.push(o);
+        if (/^[-\u2013\u2014]{3,}$/.test(part)) {
+          const o = empty();
+          o.sep.push({ t: part });
+          out.push(o);
+          return;
+        }
+        // VOBIS labels only break out of ordinary runs — a coloured venue run
+        // or the date run is left as it is.
+        const pieces = (key === 'n' || key === 'b') ? part.split(VOBIS) : [part];
+        pieces.forEach(piece => {
+          if (!piece) return;
+          const o = empty();
+          if (VOBIS.test(piece) && piece.trim().toUpperCase().startsWith('VOBIS')) {
+            o.vo.push({ t: this.atomic(piece.trim()) });
+          } else {
+            o[key].push({ t: this.atomic(piece) });
+          }
+          out.push(o);
+        });
       });
     });
     return out;
@@ -182,8 +236,12 @@ class Component extends DCLogic {
     const toPt = px => px * 72 / 96;
     const h = els.map(e => toPt(e.getBoundingClientRect().height));
     const all = this.buildRows();
-    const LIMIT_FIRST = 841.89 - (89.1 + 26.4) - 30;
-    const LIMIT_CONT = 841.89 - (57.9 + 26.4) - 30;
+    // The footer sits 14pt off the foot and is 7pt type, so the last rule of
+    // the grid has to stop above 21pt. Reserving 40pt keeps a clear band
+    // between the table and the footer on every page.
+    const FOOTER_RESERVE = 40;
+    const LIMIT_FIRST = 841.89 - (89.1 + 26.4) - FOOTER_RESERVE;
+    const LIMIT_CONT = 841.89 - (57.9 + 26.4) - FOOTER_RESERVE;
     const pages = [];
     let i = 0, p = 0;
     while (i < all.length) {
@@ -210,7 +268,11 @@ class Component extends DCLogic {
 
   renderVals() {
     const d = this.state.data;
-    const headerRest = d ? d.header.slice(1).map(t => ({ text: t.toUpperCase() })) : [];
+    // "OPEN 1701 AND OVER" prints as 1701M, like every other distance in the
+    // head. The workbook is left alone; this is a printing standard.
+    const headText = t => this.atomic(String(t).toUpperCase()
+      .replace(/(\d{3,4})(\s+AND OVER)/g, '$1M$2'));
+    const headerRest = d ? d.header.slice(1).map(t => ({ text: headText(t) })) : [];
     const pages = this.state.pages
       ? this.state.pages
       : (d ? [{ rows: this.buildRows(), titleRow: [{ text: this.title() }], no: this.state.from || 0 }] : []);

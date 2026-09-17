@@ -37,9 +37,9 @@ a:hover{color:#1b7fb4}
 </div>
 <sc-for list="{{ dlDayRows }}" as="r" hint-placeholder-count="0">
 <div data-r="day">
-<div style="border-top:1pt solid #2c2e35"></div>
+<div style="border-top:0.5pt solid #2c2e35"></div>
 <div style="font-size:8.5pt;font-weight:700;line-height:10.5pt;padding-top:1.5pt;color:#2c9cd7">{{ r.text }}</div>
-<div style="border-top:0.75pt dotted #2c2e35;margin-top:1.5pt;margin-bottom:1.5pt"></div>
+<div style="border-top:0.4pt dotted #9a9c9f;margin-top:1.5pt;margin-bottom:1.5pt"></div>
 </div>
 </sc-for>
 <sc-for list="{{ dlHeadRows }}" as="r" hint-placeholder-count="0">
@@ -53,7 +53,9 @@ a:hover{color:#1b7fb4}
 <sc-for list="{{ frontPages }}" as="fp" hint-placeholder-count="1">
 <section class="page" data-screen-label="01 Cover" style="position:relative;font-family:'Gotham Narrow',sans-serif;color:#2c2e35;background:#fff;overflow:hidden">
 <sc-for list="{{ coverPhoto }}" as="c" hint-placeholder-count="0">
+<sc-if value="{{ c.hasArt }}" hint-placeholder-val="{{ false }}">
 <img src="{{ c.art }}" alt="" style="position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;object-position:50% 50%;display:block" />
+</sc-if>
 </sc-for>
 <sc-if value="{{ coverMissing }}" hint-placeholder-val="{{ false }}">
 <div style="position:absolute;left:0;top:0;width:100%;height:100%;background:#eceff2;display:flex;align-items:center;justify-content:center">
@@ -85,7 +87,7 @@ a:hover{color:#1b7fb4}
 <div style="flex:1;letter-spacing:-.004em">{{ r.label }}</div>
 <div style="font-weight:700;letter-spacing:-.004em;white-space:nowrap">{{ r.pages }}</div>
 </div>
-<div style="position:absolute;left:0;right:0;top:14.8pt;border-top:0.25pt dotted #2c2e35"></div>
+<div style="position:absolute;left:0;right:0;top:14.8pt;border-top:0.25pt dotted #9a9c9f"></div>
 </div>
 </sc-for>
 </div>
@@ -128,13 +130,13 @@ a:hover{color:#1b7fb4}
 <sc-for list="{{ col.blocks }}" as="b" hint-placeholder-count="3">
 <div style="margin-bottom:{{ pg.blockGap }}">
 <sc-for list="{{ b.dayRow }}" as="d" hint-placeholder-count="1">
-<div style="border-top:1pt solid #2c2e35"></div>
+<div style="border-top:0.5pt solid #2c2e35"></div>
 <div style="font-size:8.5pt;font-weight:700;line-height:10.5pt;padding-top:1.5pt;color:#2c9cd7">{{ d.text }}</div>
-<div style="border-top:0.75pt dotted #2c2e35;margin-top:1.5pt;margin-bottom:1.5pt"></div>
+<div style="border-top:0.4pt dotted #9a9c9f;margin-top:1.5pt;margin-bottom:1.5pt"></div>
 </sc-for>
 <sc-for list="{{ b.groups }}" as="g" hint-placeholder-count="3">
 <sc-for list="{{ g.headRow }}" as="hd" hint-placeholder-count="1">
-<div style="font-size:7pt;font-weight:700;line-height:8pt;margin-top:2pt;color:#2c2e35">{{ hd.text }}</div>
+<div style="font-size:7.5pt;font-weight:700;line-height:8.4pt;margin-top:2.5pt;letter-spacing:.04em;color:#2c2e35">{{ hd.text }}</div>
 </sc-for>
 <sc-for list="{{ g.items }}" as="it" hint-placeholder-count="2">
 <div style="font-size:7pt;font-weight:400;line-height:8pt;color:#2c2e35">{{ it }}</div>
@@ -180,7 +182,7 @@ DETAILS</div>
 <div style="position:absolute;top:0;bottom:0;left:530.8pt;width:38.6pt;background:#edf6fb"></div>
 <sc-for list="{{ pg.rows }}" as="row" hint-placeholder-count="6">
 <div data-row="1" lang="en" style="display:flex;position:relative;border-left:0.25pt solid #2c2e35">
-<div style="position:relative;width:67.6pt;flex:0 0 67.6pt;box-sizing:border-box;padding:3.5pt 2pt;border-right:0.25pt solid #2c2e35;border-bottom:0.25pt solid #2c2e35;font-size:6.5pt;line-height:6.3pt;color:#2c2e35;white-space:pre-wrap;hyphens:auto;overflow-wrap:break-word">
+<div style="position:relative;width:67.6pt;flex:0 0 67.6pt;box-sizing:border-box;padding:3.5pt 2pt;border-right:0.25pt solid #2c2e35;border-bottom:0.25pt solid #2c2e35;font-size:6.5pt;line-height:6.3pt;color:#2c2e35;white-space:pre-wrap;hyphens:manual;overflow-wrap:break-word">
 <sc-for list="{{ row.a }}" as="r" hint-placeholder-count="4">
 <sc-for list="{{ r.dt }}" as="v" hint-placeholder-count="0"><span style="font-size:8pt;font-weight:700;line-height:9pt;letter-spacing:-.03em">{{ v.t }}</span></sc-for>
 <sc-for list="{{ r.vm }}" as="v" hint-placeholder-count="0"><span style="font-size:8pt;font-weight:700;line-height:9pt;letter-spacing:-.03em;color:#ff0040">{{ v.t }}</span></sc-for>
@@ -190,18 +192,20 @@ DETAILS</div>
 <sc-for list="{{ r.rd }}" as="v" hint-placeholder-count="0"><span style="font-weight:700;color:#ff0040">{{ v.t }}</span></sc-for>
 <sc-for list="{{ r.mn }}" as="v" hint-placeholder-count="0"><span style="white-space:nowrap">{{ v.t }}</span></sc-for>
 <sc-for list="{{ r.mb }}" as="v" hint-placeholder-count="0"><span style="font-weight:700;white-space:nowrap">{{ v.t }}</span></sc-for>
-<sc-for list="{{ r.sep }}" as="v" hint-placeholder-count="0"><span style="display:inline-block;max-width:100%;overflow:hidden;white-space:pre;vertical-align:top">{{ v.t }}</span></sc-for>
+<sc-for list="{{ r.vo }}" as="v" hint-placeholder-count="0"><span style="display:block;line-height:6.3pt">{{ v.t }}</span></sc-for>
+<sc-for list="{{ r.sep }}" as="v" hint-placeholder-count="0"><span style="display:inline-block;max-width:100%;overflow:hidden;white-space:pre;vertical-align:top;line-height:6.3pt">{{ v.t }}</span></sc-for>
 </sc-for>
 </div>
 <sc-for list="{{ row.rest }}" as="c" hint-placeholder-count="13">
-<div style="position:relative;width:38.6pt;flex:0 0 38.6pt;box-sizing:border-box;padding:3.5pt 2pt;border-right:0.25pt solid #2c2e35;border-bottom:0.25pt solid #2c2e35;font-size:6.5pt;line-height:6.3pt;color:#2c2e35;white-space:pre-wrap;hyphens:auto;overflow-wrap:break-word">
+<div style="position:relative;width:38.6pt;flex:0 0 38.6pt;box-sizing:border-box;padding:3.5pt 2pt;border-right:0.25pt solid #2c2e35;border-bottom:0.25pt solid #2c2e35;font-size:6.5pt;line-height:6.3pt;color:#2c2e35;white-space:pre-wrap;hyphens:manual;overflow-wrap:break-word">
 <sc-for list="{{ c.runs }}" as="r" hint-placeholder-count="3">
 <sc-for list="{{ r.n }}" as="v" hint-placeholder-count="1"><span>{{ v.t }}</span></sc-for>
 <sc-for list="{{ r.b }}" as="v" hint-placeholder-count="0"><span style="font-weight:700">{{ v.t }}</span></sc-for>
 <sc-for list="{{ r.rd }}" as="v" hint-placeholder-count="0"><span style="font-weight:700;color:#ff0040">{{ v.t }}</span></sc-for>
 <sc-for list="{{ r.mn }}" as="v" hint-placeholder-count="0"><span style="white-space:nowrap">{{ v.t }}</span></sc-for>
 <sc-for list="{{ r.mb }}" as="v" hint-placeholder-count="0"><span style="font-weight:700;white-space:nowrap">{{ v.t }}</span></sc-for>
-<sc-for list="{{ r.sep }}" as="v" hint-placeholder-count="0"><span style="display:inline-block;max-width:100%;overflow:hidden;white-space:pre;vertical-align:top">{{ v.t }}</span></sc-for>
+<sc-for list="{{ r.vo }}" as="v" hint-placeholder-count="0"><span style="display:block;line-height:6.3pt">{{ v.t }}</span></sc-for>
+<sc-for list="{{ r.sep }}" as="v" hint-placeholder-count="0"><span style="display:inline-block;max-width:100%;overflow:hidden;white-space:pre;vertical-align:top;line-height:6.3pt">{{ v.t }}</span></sc-for>
 </sc-for>
 </div>
 </sc-for>
@@ -224,7 +228,7 @@ DETAILS</div>
 <span style="display:flex;align-items:center;gap:3pt"><span style="width:7pt;height:7pt;background:#ff2f1a;display:inline-block"></span>Metropolitan</span>
 <span style="display:flex;align-items:center;gap:3pt"><span style="width:7pt;height:7pt;background:#2c9cd7;display:inline-block"></span>Country</span>
 </div>
-<div style="position:absolute;left:23.2pt;top:91.2pt;width:124.8pt;bottom:30pt;background:#ebf4f9;box-sizing:border-box;padding:8pt 7.5pt"><div style="height:2.5pt;border-radius:1.25pt;background:#2c2e35;margin:0 0 4pt"></div><div style="font-size:8.6pt;font-weight:700;line-height:10.2pt;color:#2c9cd7;margin:0 0 3pt">Welfare contribution from total prizemoney</div><div style="border-top:0.75pt dotted #6f7175;margin:0 0 4pt"></div><div style="font-size:7.4pt;font-weight:700;line-height:8.9pt;color:#2c2e35">As of 1 August 2025, 3.5% of all prizemoney payments will be deducted as an industry contribution to horse and participant welfare.</div><div style="height:9pt"></div><div style="height:2.5pt;border-radius:1.25pt;background:#2c2e35;margin:0 0 4pt"></div><div style="font-size:8.6pt;font-weight:700;line-height:10.2pt;color:#2c9cd7;margin:0 0 3pt">Nomination fees</div><div style="border-top:0.75pt dotted #6f7175;margin:0 0 4pt"></div><div style="font-size:7.4pt;font-weight:400;line-height:8.9pt;color:#2c2e35">Unless stated otherwise in the conditions of the race, all nomination fees are as below.</div><div style="height:9pt"></div><div style="height:2.5pt;border-radius:1.25pt;background:#2c2e35;margin:0 0 4pt"></div><div style="font-size:8.6pt;font-weight:700;line-height:10.2pt;color:#2c9cd7;margin:0 0 3pt">Scratching Fee on all races excluding Group and Listed and Picnic races</div><div style="border-top:0.75pt dotted #6f7175;margin:0 0 4pt"></div><div style="font-size:7.4pt;font-weight:700;line-height:8.9pt;color:#2c2e35">Nomination: Free</div><div style="font-size:7.4pt;font-weight:700;line-height:8.9pt;color:#2c2e35">Scratching fee:</div><div style="display:flex;gap:3pt;font-size:7.4pt;font-weight:400;line-height:8.9pt;color:#2c2e35"><span>•</span><span>Scratching with a rider declared - $274.25 (ex GST)</span></div><div style="display:flex;gap:3pt;font-size:7.4pt;font-weight:400;line-height:8.9pt;color:#2c2e35"><span>•</span><span>Scratching without a rider declared - $100 (ex GST)</span></div><div style="display:flex;gap:3pt;font-size:7.4pt;font-weight:400;line-height:8.9pt;color:#2c2e35"><span>•</span><span>Scratching with a veterinary certificate - $120 (ex GST)</span></div><div style="display:flex;gap:3pt;font-size:7.4pt;font-weight:400;line-height:8.9pt;color:#2c2e35"><span>•</span><span>Scratching with a veterinary certificate &amp; 30-day stand down – Free</span></div><div style="height:9pt"></div><div style="height:2.5pt;border-radius:1.25pt;background:#2c2e35;margin:0 0 4pt"></div><div style="font-size:8.6pt;font-weight:700;line-height:10.2pt;color:#2c9cd7;margin:0 0 3pt">Scratching fee on picnic races</div><div style="border-top:0.75pt dotted #6f7175;margin:0 0 4pt"></div><div style="font-size:7.4pt;font-weight:700;line-height:8.9pt;color:#2c2e35">Scratching fee:</div><div style="font-size:7.4pt;font-weight:400;line-height:8.9pt;color:#2c2e35">$10 (ex GST)</div><div style="height:9pt"></div><div style="height:2.5pt;border-radius:1.25pt;background:#2c2e35;margin:0 0 4pt"></div><div style="font-size:8.6pt;font-weight:700;line-height:10.2pt;color:#2c9cd7;margin:0 0 3pt">Group and Listed races</div><div style="border-top:0.75pt dotted #6f7175;margin:0 0 4pt"></div><div style="font-size:7.4pt;font-weight:700;line-height:8.9pt;color:#2c2e35">Nomination: $110 Listed</div><div style="font-size:7.4pt;font-weight:700;line-height:8.9pt;color:#2c2e35">Nomination: $165 Group Three</div><div style="font-size:7.4pt;font-weight:700;line-height:8.9pt;color:#2c2e35">Nomination: $220 Group Two</div><div style="font-size:7.4pt;font-weight:700;line-height:8.9pt;color:#2c2e35">Nomination: $330 Group One</div><div style="font-size:7.4pt;font-weight:400;line-height:8.9pt;color:#2c2e35">Acceptance or scratching fee: 0.5% (excluding GST) of the prizemoney or as advertised in the race conditions. All group Handicap and group SW&amp;P Races in which horses older than three may run. All Group 2 &amp; 3 WFA Races: 0.75% (ex GST).</div><div style="font-size:7.4pt;font-weight:700;line-height:8.9pt;color:#2c2e35">All Group 1 WFA/SWP Races: 1% (ex GST)</div><div style="font-size:7.4pt;font-weight:700;line-height:8.9pt;color:#2c2e35">Scratching fee on veterinary advice FREE</div><div style="font-size:7.4pt;font-weight:400;line-height:8.9pt;color:#2c2e35">(Subject to a veterinary certificate supplied no later than 5pm on the second business day following the day of the running of the race from which the horse was withdrawn. A veterinary clearance will need to be forwarded to Stewards before the horse can compete in another race).</div><div style="font-size:6pt;font-style:italic;line-height:7.5pt;color:#2c2e35;margin-top:3pt">*All fees include GST</div><div style="height:9pt"></div><div style="height:2.5pt;border-radius:1.25pt;background:#2c2e35;margin:0 0 4pt"></div><div style="font-size:8.6pt;font-weight:700;line-height:10.2pt;color:#2c9cd7;margin:0 0 3pt">Set Weights and Penalty Races</div><div style="border-top:0.75pt dotted #6f7175;margin:0 0 4pt"></div><div style="font-size:7.4pt;font-weight:700;line-height:8.9pt;color:#2c2e35">Penalties based on wins in Internationally Recognised Group and Listed races.</div></div>
+<div style="position:absolute;left:23.2pt;top:91.2pt;width:124.8pt;bottom:30pt;background:#ebf4f9;box-sizing:border-box;padding:8pt 7.5pt"><div style="height:2.5pt;border-radius:1.25pt;background:#2c2e35;margin:0 0 4pt"></div><div style="font-size:8.6pt;font-weight:700;line-height:10.2pt;color:#2c9cd7;margin:0 0 3pt">Welfare contribution from total prizemoney</div><div style="border-top:0.75pt dotted #6f7175;margin:0 0 4pt"></div><div style="font-size:7.4pt;font-weight:700;line-height:8.9pt;color:#2c2e35">As of 1 August 2025, 3.5% of all prizemoney payments will be deducted as an industry contribution to horse and participant welfare.</div><div style="height:9pt"></div><div style="height:2.5pt;border-radius:1.25pt;background:#2c2e35;margin:0 0 4pt"></div><div style="font-size:8.6pt;font-weight:700;line-height:10.2pt;color:#2c9cd7;margin:0 0 3pt">Nomination fees</div><div style="border-top:0.75pt dotted #6f7175;margin:0 0 4pt"></div><div style="font-size:7.4pt;font-weight:400;line-height:8.9pt;color:#2c2e35">Unless stated otherwise in the conditions of the race, all nomination fees are as below.</div><div style="height:9pt"></div><div style="height:2.5pt;border-radius:1.25pt;background:#2c2e35;margin:0 0 4pt"></div><div style="font-size:8.6pt;font-weight:700;line-height:10.2pt;color:#2c9cd7;margin:0 0 3pt">Scratching Fee on all races excluding Group and Listed and Picnic races</div><div style="border-top:0.75pt dotted #6f7175;margin:0 0 4pt"></div><div style="font-size:7.4pt;font-weight:700;line-height:8.9pt;color:#2c2e35">Nomination: Free</div><div style="font-size:7.4pt;font-weight:700;line-height:8.9pt;color:#2c2e35">Scratching fee:</div><div style="display:flex;gap:3pt;font-size:7.4pt;font-weight:400;line-height:8.9pt;color:#2c2e35"><span>•</span><span>Scratching with a rider declared - $283.50 (ex GST)</span></div><div style="display:flex;gap:3pt;font-size:7.4pt;font-weight:400;line-height:8.9pt;color:#2c2e35"><span>•</span><span>Scratching without a rider declared - $100 (ex GST)</span></div><div style="display:flex;gap:3pt;font-size:7.4pt;font-weight:400;line-height:8.9pt;color:#2c2e35"><span>•</span><span>Scratching with a veterinary certificate - $120 (ex GST)</span></div><div style="display:flex;gap:3pt;font-size:7.4pt;font-weight:400;line-height:8.9pt;color:#2c2e35"><span>•</span><span>Scratching with a veterinary certificate &amp; 30-day stand down – Free</span></div><div style="height:9pt"></div><div style="height:2.5pt;border-radius:1.25pt;background:#2c2e35;margin:0 0 4pt"></div><div style="font-size:8.6pt;font-weight:700;line-height:10.2pt;color:#2c9cd7;margin:0 0 3pt">Scratching fee on picnic races</div><div style="border-top:0.75pt dotted #6f7175;margin:0 0 4pt"></div><div style="font-size:7.4pt;font-weight:700;line-height:8.9pt;color:#2c2e35">Scratching fee:</div><div style="font-size:7.4pt;font-weight:400;line-height:8.9pt;color:#2c2e35">$10 (ex GST)</div><div style="height:9pt"></div><div style="height:2.5pt;border-radius:1.25pt;background:#2c2e35;margin:0 0 4pt"></div><div style="font-size:8.6pt;font-weight:700;line-height:10.2pt;color:#2c9cd7;margin:0 0 3pt">Group and Listed races</div><div style="border-top:0.75pt dotted #6f7175;margin:0 0 4pt"></div><div style="font-size:7.4pt;font-weight:700;line-height:8.9pt;color:#2c2e35">Nomination: $110 Listed</div><div style="font-size:7.4pt;font-weight:700;line-height:8.9pt;color:#2c2e35">Nomination: $165 Group Three</div><div style="font-size:7.4pt;font-weight:700;line-height:8.9pt;color:#2c2e35">Nomination: $220 Group Two</div><div style="font-size:7.4pt;font-weight:700;line-height:8.9pt;color:#2c2e35">Nomination: $330 Group One</div><div style="font-size:7.4pt;font-weight:400;line-height:8.9pt;color:#2c2e35">Acceptance or scratching fee: 0.5% (excluding GST) of the prizemoney or as advertised in the race conditions. All group Handicap and group SW&amp;P Races in which horses older than three may run. All Group 2 &amp; 3 WFA Races: 0.75% (ex GST).</div><div style="font-size:7.4pt;font-weight:700;line-height:8.9pt;color:#2c2e35">All Group 1 WFA/SWP Races: 1% (ex GST)</div><div style="font-size:7.4pt;font-weight:700;line-height:8.9pt;color:#2c2e35">Scratching fee on veterinary advice FREE</div><div style="font-size:7.4pt;font-weight:400;line-height:8.9pt;color:#2c2e35">(Subject to a veterinary certificate supplied no later than 5pm on the second business day following the day of the running of the race from which the horse was withdrawn. A veterinary clearance will need to be forwarded to Stewards before the horse can compete in another race).</div><div style="font-size:6pt;font-style:italic;line-height:7.5pt;color:#2c2e35;margin-top:3pt">*All fees include GST</div><div style="height:9pt"></div><div style="height:2.5pt;border-radius:1.25pt;background:#2c2e35;margin:0 0 4pt"></div><div style="font-size:8.6pt;font-weight:700;line-height:10.2pt;color:#2c9cd7;margin:0 0 3pt">Set Weights and Penalty Races</div><div style="border-top:0.75pt dotted #6f7175;margin:0 0 4pt"></div><div style="font-size:7.4pt;font-weight:700;line-height:8.9pt;color:#2c2e35">Penalties based on wins in Internationally Recognised Group and Listed races.</div></div>
 <div style="position:absolute;left:155.5pt;top:91.2pt;bottom:30pt;border-left:0.75pt dotted #9a9c9f"></div>
 <div style="position:absolute;left:163.4pt;top:88pt;width:419pt">
 <div style="font-family:'Gotham XNarrow',sans-serif;font-size:12.5pt;font-weight:700;line-height:14pt;color:#2c2e35;margin:0 0 2.5pt">Flat Races Prizemoney Breakdowns</div><div style="height:1.5pt;background:#2c2e35;margin:0 0 5pt"></div>
@@ -282,7 +286,7 @@ DETAILS</div>
 </sc-for>
 <sc-for list="{{ a.bar }}" as="r" hint-placeholder-count="1">
 <div style="height:2pt"></div>
-<div style="display:flex;justify-content:space-between;gap:4pt;background:#d8d9da;padding:0 2pt;margin-bottom:2pt;font-size:6.5pt;font-weight:700;line-height:8.8pt;color:#2c2e35">
+<div style="display:flex;justify-content:space-between;gap:4pt;background:#d8d9da;padding:0.8pt 2pt 0;margin-bottom:2pt;font-size:6.5pt;font-weight:700;line-height:8.8pt;color:#2c2e35">
 <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ r.cond }}</span>
 <span style="flex:0 0 auto;text-align:right">{{ r.dist }}</span>
 </div>
@@ -368,14 +372,14 @@ DETAILS</div>
 <sc-for list="{{ paTrialCols }}" as="c" hint-placeholder-count="5">
 <div style="position:absolute;left:{{ c.left }};top:762.3pt;width:100pt;font-size:6pt;line-height:8.8pt">
 <sc-for list="{{ c.top }}" as="t" hint-placeholder-count="1">
-<div>{{ t.name }}</div>
+<div style="font-weight:700">{{ t.name }}</div>
 <div>{{ t.phone }}</div>
 <div>{{ t.cat }}</div>
 </sc-for>
 </div>
 <div style="position:absolute;left:{{ c.left }};top:796.9pt;width:100pt;font-size:6pt;line-height:8.8pt">
 <sc-for list="{{ c.bottom }}" as="t" hint-placeholder-count="1">
-<div>{{ t.name }}</div>
+<div style="font-weight:700">{{ t.name }}</div>
 <div>{{ t.phone }}</div>
 <div>{{ t.cat }}</div>
 </sc-for>
@@ -410,7 +414,7 @@ DETAILS</div>
 </sc-for>
 </div>
 
-<div style="position:absolute;left:22.7pt;top:796.2pt;width:549.9pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1;letter-spacing:.041em">{{ paAgentsFootnote }}</div>
+<div style="position:absolute;left:22.7pt;top:806pt;width:549.9pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1;letter-spacing:.041em">{{ paAgentsFootnote }}</div>
 
 <div style="position:absolute;left:12.2pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1;letter-spacing:-.013em">{{ footer }}</div>
 <div style="position:absolute;right:12.3pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1">{{ paPageAgents }}</div>
@@ -598,9 +602,9 @@ DETAILS</div>
 <div style="position:absolute;left:{{ c.left }};top:{{ tp.trialsTop }};width:126.5pt">
 <sc-for list="{{ c.atoms }}" as="a" hint-placeholder-count="9">
 <sc-if value="{{ a.isHead }}" hint-placeholder-val="{{ true }}">
-<div style="margin-top:{{ a.gap }};height:3.5pt;background:#2c2e35"></div>
-<div style="margin-top:3.75pt;font-size:9.3pt;font-weight:700;line-height:1;letter-spacing:.01em">{{ a.venue }}</div>
-<div style="margin-top:3.8pt;font-size:8pt;font-weight:400;line-height:1;letter-spacing:.01em">{{ a.date }}</div>
+<div style="margin-top:{{ a.gap }};height:3.5pt;background:#00843d"></div>
+<div style="margin-top:3.75pt;font-size:9.3pt;font-weight:700;line-height:1;letter-spacing:.01em;color:#00843d">{{ a.venue }}</div>
+<div style="margin-top:3.8pt;font-size:8pt;font-weight:400;line-height:1;letter-spacing:.01em;color:#00843d">{{ a.date }}</div>
 </sc-if>
 <sc-if value="{{ a.isRace }}" hint-placeholder-val="{{ false }}">
 <div style="margin-top:3.5pt;display:flex;justify-content:space-between;gap:5pt;background:#d8d9da;height:9pt;box-sizing:border-box;padding:1.6pt 3pt 0;font-size:6.3pt;line-height:6.8pt"><span>{{ a.cond }}</span><span style="text-align:right">{{ a.dist }}</span></div>
@@ -855,7 +859,7 @@ DETAILS</div>
 </section>
 </sc-for>
 
-<sc-for list="{{ tailPages }}" as="tp" hint-placeholder-count="1">
+<sc-for list="{{ ntRulesPages }}" as="tp" hint-placeholder-count="1">
 <section class="page" data-screen-label="Notices" style="position:relative;font-family:'Gotham Narrow',sans-serif;color:#2c2e35;background:#fff;padding:0;overflow:hidden">
 <div style="position:absolute;left:22.7pt;top:24pt;font-size:10pt;font-weight:400;line-height:1;letter-spacing:.019em">Notices | INTEGRITY SERVICES</div>
 <div style="position:absolute;left:22.7pt;top:37pt;width:549.9pt;height:3pt;background:#9ecff0"></div>
@@ -889,7 +893,9 @@ DETAILS</div>
 
 <sc-for list="{{ adPages }}" as="ad" hint-placeholder-count="0">
 <section class="page" data-screen-label="Full-page advertising" style="position:relative;font-family:'Gotham Narrow',sans-serif;color:#fff;background:#1668dc;overflow:hidden">
-<sc-if value="{{ ad.art }}" hint-placeholder-val="{{ false }}"><img src="{{ ad.art }}" alt="" style="position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover" /></sc-if>
+<sc-if value="{{ ad.art }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ ad.hasArt }}" hint-placeholder-val="{{ false }}">
+<img src="{{ ad.art }}" alt="" style="position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover" />
+</sc-if></sc-if>
 <sc-if value="{{ ad.live }}" hint-placeholder-val="{{ true }}">
 <div style="position:absolute;left:48pt;top:120pt;width:400pt;font-family:'Gotham XNarrow',sans-serif;font-size:38pt;font-weight:700;line-height:1.04;letter-spacing:-.015em;text-wrap:pretty">{{ ad.headline }}</div>
 <div style="position:absolute;left:48pt;top:330pt;width:330pt;font-size:11pt;line-height:16pt;text-wrap:pretty">{{ ad.body }}</div>
@@ -916,7 +922,6 @@ DETAILS</div>
 <div style="position:absolute;left:0;right:0;top:300pt;display:flex;flex-direction:column;align-items:center;gap:13pt">
 <div style="position:relative;width:150pt;height:44pt">
 <div style="position:absolute;left:0;top:0;width:100%;height:100%;box-sizing:border-box;border:0.5pt dashed rgba(255,255,255,.45);display:flex;align-items:center;justify-content:center;font-size:6.5pt;letter-spacing:.08em;color:rgba(255,255,255,.6)">RACING VICTORIA LOGO</div>
-<img src="assets/rv-logo.png" alt="" style="position:absolute;left:0;top:0;width:100%;height:100%;object-fit:contain" />
 </div>
 <div style="text-align:center;line-height:1.5">
 <div style="font-size:10pt;font-weight:700;letter-spacing:.01em">Racing Victoria Limited</div>
@@ -1310,6 +1315,7 @@ class Component extends DCLogic {
   }
 
   rpAtoms() {
+    let raceId = 0;
     const nl = t => String(t || '').replace(/(NEWLINECHAR)+/g, '\n').replace(/[ \t]+/g, ' ').replace(/ ?\n ?/g, '\n').trim();
     const one = t => { const v = nl(t); return v ? [{ t: v }] : []; };
     const paras = t => nl(t).split('\n').filter(Boolean).map(v => [{ t: v }]);
@@ -1322,21 +1328,37 @@ class Component extends DCLogic {
       };
       out.push({
         head: 1,
+        race: 0,
         hm: m.metro ? [head] : [], hc: m.metro ? [] : [head],
         bar: [], title: [], claim: [], bonus: [], prize: [], fees: [],
         penH: [], pen: [], balH: [], bal: [], other: [], nomH: [], nom: [], accH: [], acc: []
       });
       const blank = { head: 0, hm: [], hc: [], bar: [], title: [], claim: [], bonus: [], prize: [], fees: [], penH: [], pen: [], balH: [], bal: [], other: [], nomH: [], nom: [], accH: [], acc: [] };
       m.races.forEach(r => {
+        // Every atom of a race carries the same id, so the packer can tell when
+        // a column boundary falls inside one race and how much is left over.
+        raceId += 1;
+        const rid = raceId;
         out.push({
           ...blank,
+          race: rid,
           bar: [{ cond: r.cond || '', dist: (r.dist || '').replace(/\s+/g, '') }],
           title: one(join(r.no + '.', r.name).toUpperCase()),
           claim: one(join(r.claim, r.group)),
           bonus: one(join(r.bonus, r.notation))
         });
-        const push = part => { if (Object.values(part).some(v => v && v.length)) out.push({ ...blank, ...part }); };
-        push({ prize: one(join(r.prize, r.weight)) });
+        const push = part => { if (Object.values(part).some(v => v && v.length)) out.push({ ...blank, race: rid, ...part }); };
+        // The column is 130pt at 7pt, which holds about 44 characters, so a
+        // breakdown longer than that wraps and the weight goes on its own line.
+        const PRIZE_CPL = 44;
+        const prizeText = String(r.prize || '').trim();
+        const weightText = String(r.weight || '').trim();
+        if (weightText && prizeText.length > PRIZE_CPL) {
+          push({ prize: one(prizeText) });
+          push({ prize: one(weightText) });
+        } else {
+          push({ prize: one(join(r.prize, r.weight)) });
+        }
         push({ fees: one(join(r.nomFee, r.accFee, r.decl)) });
         [['penH', 'pen'], ['balH', 'bal'], [null, 'other'], ['nomH', 'nom'], ['accH', 'acc']].forEach(([hk, bk]) => {
           const body = paras(r[bk]);
@@ -1390,6 +1412,22 @@ class Component extends DCLogic {
         used += cost; atoms.push(all[i]); i++;
       }
       while (atoms.length > 1 && atoms[atoms.length - 1].head) { atoms.pop(); i--; }
+      // No single line of a race carried over on its own. When the boundary
+      // leaves exactly one atom of a race for the next column, one more atom is
+      // handed forward so the remainder reads as a block rather than a stray
+      // line under the next column's heading. If that would empty the column,
+      // it is left alone — a column has to hold something.
+      if (i < all.length && atoms.length) {
+        const carried = all[i].race;
+        if (carried) {
+          let ahead = 0;
+          for (let k = i; k < all.length && all[k].race === carried; k++) ahead++;
+          if (ahead === 1 && atoms.length > 1 && atoms[atoms.length - 1].race === carried) {
+            atoms.pop();
+            i--;
+          }
+        }
+      }
       cols.push({ atoms: atoms.map((a, k) => (a.head && k > 0 ? { ...a, gap: [{}] } : { ...a, gap: [] })) });
     }
     const pages = [];
@@ -1610,20 +1648,53 @@ class Component extends DCLogic {
    * ordinary text in a 34pt column, breaks over four lines and ran the chart
    * five pages long, so it is set on one line and clipped.
    */
+  /**
+   * Keeps a class label whole across a line break. The columns are 38.6pt,
+   * narrower than "0-56/BM 56", so the browser used to break after the hyphen
+   * and print "0-" over "56". A word joiner is zero-width with no glyph, so it
+   * removes the break opportunity without changing a printed character; a space
+   * inside a label becomes non-breaking for the same reason.
+   */
+  chAtomic(t) {
+    const WJ = '\u2060';
+    return String(t)
+      .replace(/[ \t]*(\r?\n)[ \t\r\n]*/g, '\n')
+      .replace(/(\d)(\s*)-(\s*)(\d)/g, (m, a, s1, s2, b) =>
+        a + (s1 ? '\u00a0' : '') + '-' + WJ + (s2 ? '\u00a0' : '') + b)
+      .replace(/\b(BM|CL|Cl)(\s+)(\d)/g, (m, k, sp, d) => k + '\u00a0' + d)
+      .replace(/\bF(\s*)&(\s*)M\b/g, (m, s1, s2) =>
+        'F' + (s1 ? '\u00a0' : '') + '&' + WJ + (s2 ? '\u00a0' : '') + 'M');
+  }
+
+  /** CRANBOURNE (NIGHT), not CRANBOURNE (Night) — the qualifier takes caps. */
+  chCapsQualifier(t) {
+    return String(t).replace(/\((night|twilight|evening|day|afternoon|day\/night|twlight)\)/gi,
+      (m, w) => '(' + w.toUpperCase() + ')');
+  }
+
   chClassify(runs, isMeeting) {
-    const empty = () => ({ n: [], b: [], rd: [], dt: [], vm: [], vc: [], mn: [], mb: [], sep: [] });
+    const empty = () => ({ n: [], b: [], rd: [], dt: [], vm: [], vc: [], mn: [], mb: [], vo: [], sep: [] });
     const bucket = (r, i) => {
       if (isMeeting && i === 0) return 'dt';
-      if (isMeeting && r.s === 9 && r.c === '#FF0040') return 'vm';
-      if (isMeeting && r.s === 9 && r.c === '#00B0F0') return 'vc';
+      // The venue is identified by its colour alone. The calendar export sets
+      // the venue run at 8pt in some months and 9pt in others, and keying on
+      // the size dropped a whole month's colour and scale — December 2026 came
+      // through at 8pt and printed flat. The printed size is set by the
+      // template below, so the workbook's own size is never needed here.
+      if (isMeeting && r.c === '#FF0040') return 'vm';
+      if (isMeeting && r.c === '#00B0F0') return 'vc';
       if (r.b && r.c === '#FF0040') return 'rd';
       if (r.b) return 'b';
       return 'n';
     };
+    // A VOBIS label always starts a line of its own, so it is pulled out of
+    // whatever run carried it and set as a block.
+    const VOBIS = /(VOBIS\s+(?:Silver|Gold|Platinum)(?:\s*&\s*(?:VOBIS\s+)?(?:Silver|Gold|Platinum))*)/i;
     const out = [];
     (runs || []).forEach((r, i) => {
       const key = bucket(r, i);
-      const text = key === 'dt' ? String(r.t).toUpperCase() : String(r.t);
+      let text = key === 'dt' ? String(r.t).toUpperCase() : String(r.t);
+      if (isMeeting) text = this.chCapsQualifier(text);
       text.split(/([-\u2013\u2014]{3,})/).forEach(part => {
         if (!part) return;
         if (/^[-\u2013\u2014]{3,}$/.test(part)) {
@@ -1632,15 +1703,25 @@ class Component extends DCLogic {
           out.push(o);
           return;
         }
-        // prizemoney is split off so it can be set unbreakable: the cell is
-        // narrow enough that break-word was splitting $10,200,000 after the
-        // second comma
-        part.split(/(\$\d[\d,]*)/).forEach(bit => {
-          if (!bit) return;
-          const o = empty();
-          if (/^\$\d/.test(bit) && (key === 'n' || key === 'b')) o[key === 'b' ? 'mb' : 'mn'].push({ t: bit });
-          else o[key].push({ t: bit });
-          out.push(o);
+        const chunks = (key === 'n' || key === 'b') ? part.split(VOBIS) : [part];
+        chunks.forEach(chunk => {
+          if (!chunk) return;
+          if (VOBIS.test(chunk) && chunk.trim().toUpperCase().startsWith('VOBIS')) {
+            const o = empty();
+            o.vo.push({ t: this.chAtomic(chunk.trim()) });
+            out.push(o);
+            return;
+          }
+          // prizemoney is split off so it can be set unbreakable: the cell is
+          // narrow enough that break-word was splitting $10,200,000 after the
+          // second comma
+          chunk.split(/(\$\d[\d,]*)/).forEach(bit => {
+            if (!bit) return;
+            const o = empty();
+            if (/^\$\d/.test(bit) && (key === 'n' || key === 'b')) o[key === 'b' ? 'mb' : 'mn'].push({ t: bit });
+            else o[key].push({ t: this.chAtomic(bit) });
+            out.push(o);
+          });
         });
       });
     });
@@ -1678,8 +1759,11 @@ class Component extends DCLogic {
     const toPt = px => px * 72 / 96;
     const h = els.map(e => toPt(e.getBoundingClientRect().height));
     const all = this.chBuildRows();
-    const LIMIT_FIRST = 841.89 - (89.1 + 26.4) - 30;
-    const LIMIT_CONT = 841.89 - (57.9 + 26.4) - 30;
+    // The footer sits 14pt off the foot in 7pt type, so the last rule of the
+    // grid has to stop above 21pt. 40pt keeps a clear band on every page.
+    const FOOTER_RESERVE = 40;
+    const LIMIT_FIRST = 841.89 - (89.1 + 26.4) - FOOTER_RESERVE;
+    const LIMIT_CONT = 841.89 - (57.9 + 26.4) - FOOTER_RESERVE;
     const pages = [];
     let i = 0, p = 0;
     while (i < all.length) {
@@ -1881,6 +1965,16 @@ class Component extends DCLogic {
           if (t.next >= atoms.length) { r = t; break; }
         }
       }
+      // On the last page, spread what is left across all four columns rather
+      // than filling one or two to the foot: the shallowest common depth that
+      // still takes every remaining race. This is what stops a short last page
+      // reading as a column of trials beside three empty ones.
+      if (r.next >= atoms.length) {
+        for (let tgt = 60; tgt < limit; tgt += 4) {
+          const t = fill(i, tgt);
+          if (t.next >= atoms.length) { r = t; break; }
+        }
+      }
       // the same lever again on the last page, this time to clear the depth
       // the policy needs under the trials rather than to pick up a stub
       if (r.next >= atoms.length && policy && r.height + 22 + policy > limit) {
@@ -1908,7 +2002,7 @@ class Component extends DCLogic {
    * both are full. Depth comes from the block's own parts, so no measuring.
    */
   rsPack() {
-    const PAGE = 841.89, BOTTOM = 30, TOP_FIRST = 93.8, TOP_CONT = 57.9, GAP = 34;
+    const PAGE = 841.89, BOTTOM = 30, TOP_FIRST = 93.8, TOP_CONT = 57.9, GAP = 20;
     const depth = b => {
       const note = b.note ? 6.7 + Math.max(1, Math.ceil(String(b.note).length / 62)) * 9.05 + 6.2 : 0;
       return 14.2 + note + 14.7 + (b.rows || []).length * 14.2;
@@ -2086,11 +2180,18 @@ class Component extends DCLogic {
     const span = k => { const from = cn; cn += k; return k > 1 ? from + '-' + (cn - 1) : String(from); };
     const pcOn = yes(cs.picnics_included);
     const pcPacked = pcOn ? this.pcPack() : [];
+    // Three more sections a month may or may not carry. Unlike jumps and
+    // picnics these normally run, so a blank setting counts as Yes rather than
+    // silently dropping them from an edition built before the toggles existed.
+    const on = (v, dflt) => { const raw = String(v == null ? '' : v).trim(); return raw ? yes(raw) : dflt; };
+    const ntOn = on(cs.notice_included, true);
+    const stOn = on(cs.stewards_included, true);
+    const ruOn = on(cs.rules_included, true);
     // the flowing tail sections, packed here so the contents can count them
     const joPacked = this.joPack();
     const rsPacked = this.rsPack();
-    const ntNoticePacked = this.ntPack('notice');
-    const ntStewardsPacked = this.ntPack('stewards');
+    const ntNoticePacked = ntOn ? this.ntPack('notice') : [];
+    const ntStewardsPacked = stOn ? this.ntPack('stewards') : [];
     const cDeadlines = span(len(this.state.dlPages, STANDING.deadlines));
     const cChart = span(len(this.state.chPages, STANDING.chart));
     const cPrograms = span(1 + len(this.state.rpPages, STANDING.programs - 1));
@@ -2104,9 +2205,24 @@ class Component extends DCLogic {
     const cPolicy = joPolicyPages ? span(joPolicyPages) : String(cJumpouts).split('-').pop();
     const cSeries = span(rsPacked.length);
     const cPicnics = pcOn ? span(pcPacked.length || 1) : '';
-    const cNotice = span(ntNoticePacked.length);
-    const cStewards = span(ntStewardsPacked.length);
-    const cRules = span(1);
+    // "Programs for 2026-2027 Picnic meetings" — the season is read off the
+    // first meeting printed. A picnic season runs July to June, so a January
+    // meeting belongs to the season that began the previous July, and a range
+    // crossing the boundary needs no edit. iso is used rather than date because
+    // the bake turns a Date into a string on the way through edition.json.
+    const pcFirstISO = ((this.state.pcMeetings || [])[0] || {}).iso || '';
+    const pcSeasonLabel = (() => {
+      const m = String(pcFirstISO).match(/^(\d{4})-(\d{2})/);
+      if (!m) return '';
+      const start = Number(m[2]) >= 7 ? Number(m[1]) : Number(m[1]) - 1;
+      return start + '-' + (start + 1);
+    })();
+    const pcContentsLabel = pcSeasonLabel
+      ? 'Programs for ' + pcSeasonLabel + ' Picnic meetings'
+      : 'Programs for Picnic meetings';
+    const cNotice = ntOn ? span(ntNoticePacked.length) : '';
+    const cStewards = stOn ? span(ntStewardsPacked.length) : '';
+    const cRules = ruOn ? span(1) : '';
     // a month can carry two notices; each is listed
     const noticeSubjects = (this.state.notice || []).filter(b => b.isSubject).map(b => b.text);
     const noticeRows = (noticeSubjects.length ? noticeSubjects : ['']).map(s => ({
@@ -2122,7 +2238,7 @@ class Component extends DCLogic {
       { label: 'Jump-Outs Schedule, Official Flat Trials', pages: cJumpouts },
       { label: 'Division of Races Policy at Country TAB Race Meetings', pages: cPolicy },
       { label: 'Victorian Race Series', pages: cSeries },
-      { label: 'Picnic Racing', pages: cPicnics },
+      { label: pcContentsLabel, pages: cPicnics },
       ...noticeRows,
       { label: 'From the Stewards\u2019 Room (incorporating rule updates)', pages: cStewards },
       { label: 'Rules and Notices', pages: cRules }
@@ -2153,7 +2269,7 @@ class Component extends DCLogic {
     const pcFolios = pcPacked.map(() => tailNo());
     const ntNoticeFolios = ntNoticePacked.map(() => tailNo());
     const ntStewardsFolios = ntStewardsPacked.map(() => tailNo());
-    const ntPageNotices = tailNo();
+    const ntPageNotices = ruOn ? tailNo() : '';
 
 
     // Whole-page advertising. One page always runs before the back cover; the
@@ -2180,10 +2296,10 @@ class Component extends DCLogic {
       ? Array.from({ length: 1 + adShort }, (unused, i) => {
           const slot = 'fullpage-' + (i + 1);
           const b = adBooked[slot];
-          if (b && !b.enabled) return { id: slot, name: '', art: null, live: false, open: false };
-          if (b && b.artwork) return { id: slot, name: b.caption || '', art: b.artwork, live: false, open: false };
-          if (i === 0) return Object.assign({ live: true, open: false }, AD_STOCK[0]);
-          return { id: slot, name: '', art: null, live: false, open: true, slotName: slot, size: '210 \u00d7 297 mm  \u00b7  2480 \u00d7 3508 px at 300dpi' };
+          if (b && !b.enabled) return { id: slot, name: '', art: null, hasArt: false, live: false, open: false };
+          if (b && b.artwork) return { id: slot, name: b.caption || '', art: b.artwork, hasArt: true, live: false, open: false };
+          if (i === 0) return Object.assign({ live: true, open: false, hasArt: !!AD_STOCK[0].art }, AD_STOCK[0]);
+          return { id: slot, name: '', art: null, hasArt: false, live: false, open: true, slotName: slot, size: '210 \u00d7 297 mm  \u00b7  2480 \u00d7 3508 px at 300dpi' };
         })
       : [];
     const adPanelBooking = adBooked['contents-panel'];
@@ -2266,7 +2382,7 @@ class Component extends DCLogic {
       titleRow: p.first ? [{}] : [],
       columns: [21.7, 305].map((left, side) => ({
         left: left + 'pt',
-        blocks: (p.cols[side] ? p.cols[side].blocks : []).map((b, j) => ({ ...rsShape(b), gap: j === 0 ? '0pt' : '34pt' }))
+        blocks: (p.cols[side] ? p.cols[side].blocks : []).map((b, j) => ({ ...rsShape(b), gap: j === 0 ? '0pt' : '20pt' }))
       })),
       no: rsFolios[i] || ''
     }));
@@ -2393,6 +2509,7 @@ class Component extends DCLogic {
       rsPages: sc.tail ? rsPages : [],
       ntNoticePages: sc.tail ? ntNoticePages : [],
       ntStewardsPages: sc.tail ? ntStewardsPages : [],
+      ntRulesPages: sc.tail && ruOn ? [{}] : [],
       ntRules: this.state.rules,
       ntNoticeEmpty: this.state.tailLoaded && !this.state.notice.length,
       ntStewardsEmpty: this.state.tailLoaded && !this.state.stewards.length,
@@ -2401,7 +2518,7 @@ class Component extends DCLogic {
       // the run makes a 1800px derivative from the producer's Cover.jpg; with
       // no cover supplied the page prints an awaiting-artwork panel rather
       // than last month's photograph
-      coverPhoto: this.state.cover ? [{ art: this.state.cover }] : [],
+      coverPhoto: this.state.cover ? [{ art: this.state.cover, hasArt: true }] : [],
       coverMissing: !this.state.cover,
       coverDate: e.toUpperCase(),
       footer: 'INSIDE RACING I ' + (this.state.edition || ''),
@@ -2412,7 +2529,13 @@ class Component extends DCLogic {
       dlNoteGap: this._dlNoteGap || '209.6pt',
       dlPages: sc.early ? dlPages : [],
       chPages: sc.early ? chPages : [],
-      chHeaderRest: this.state.chart ? this.state.chart.header.slice(1).map(t => ({ text: t.toUpperCase() })) : []
+      // "OPEN 1701 AND OVER" prints as 1701M, like every other distance in
+      // the head. The workbook is left alone; this is a printing standard.
+      chHeaderRest: this.state.chart
+        ? this.state.chart.header.slice(1).map(t => ({
+            text: this.chAtomic(String(t).toUpperCase().replace(/(\d{3,4})(\s+AND OVER)/g, '$1M$2'))
+          }))
+        : []
     };
   }
 }

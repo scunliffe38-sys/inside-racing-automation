@@ -57,9 +57,9 @@ a:hover{color:#1b7fb4}
 <div style="position:absolute;left:{{ c.left }};top:{{ p.trialsTop }};width:126.5pt">
 <sc-for list="{{ c.atoms }}" as="a" hint-placeholder-count="9">
 <sc-if value="{{ a.isHead }}" hint-placeholder-val="{{ true }}">
-<div style="margin-top:{{ a.gap }};height:3.5pt;background:#2c2e35"></div>
-<div style="margin-top:3.75pt;font-size:9.3pt;font-weight:700;line-height:1;letter-spacing:.01em">{{ a.venue }}</div>
-<div style="margin-top:3.8pt;font-size:8pt;font-weight:400;line-height:1;letter-spacing:.01em">{{ a.date }}</div>
+<div style="margin-top:{{ a.gap }};height:3.5pt;background:#00843d"></div>
+<div style="margin-top:3.75pt;font-size:9.3pt;font-weight:700;line-height:1;letter-spacing:.01em;color:#00843d">{{ a.venue }}</div>
+<div style="margin-top:3.8pt;font-size:8pt;font-weight:400;line-height:1;letter-spacing:.01em;color:#00843d">{{ a.date }}</div>
 </sc-if>
 <sc-if value="{{ a.isRace }}" hint-placeholder-val="{{ false }}">
 <div style="margin-top:3.5pt;display:flex;justify-content:space-between;gap:5pt;background:#d8d9da;height:9pt;box-sizing:border-box;padding:1.6pt 3pt 0;font-size:6.3pt;line-height:6.8pt"><span>{{ a.cond }}</span><span style="text-align:right">{{ a.dist }}</span></div>
@@ -235,6 +235,16 @@ class Component extends DCLogic {
       if (r.next < atoms.length
           && atoms.slice(r.next).reduce((n, a) => n + a.depth, 0) <= STUB) {
         for (let tgt = limit - 4; tgt >= limit / 2; tgt -= 4) {
+          const t = fill(i, tgt);
+          if (t.next >= atoms.length) { r = t; break; }
+        }
+      }
+      // On the last page, spread what is left across all four columns rather
+      // than filling one or two to the foot: the shallowest common depth that
+      // still takes every remaining race. This is what stops a short last page
+      // reading as a column of trials beside three empty ones.
+      if (r.next >= atoms.length) {
+        for (let tgt = 60; tgt < limit; tgt += 4) {
           const t = fill(i, tgt);
           if (t.next >= atoms.length) { r = t; break; }
         }

@@ -3,13 +3,13 @@ branch: main
 
 ## Last sync
 
-date: 2026-09-10T05:20:00Z
+date: 2026-09-17
 
 ### Updated in this project
-- Contents list compresses to fit above the "subject to change" note instead of colliding with it.
-- Official Flat Trials run continuously to the foot of every page; the Division of Races Policy follows them whole, on its own page when it will not fit under the last trial.
-- A short spill is pulled back into the page before it by tightening the day-block gap and the bottom clearance; a genuine spill sizes its own columns and offers the space beneath as a bookable ad slot.
-- Race Programs and Entry Deadlines wait for their measuring render rather than bailing, and each part file now renders only its own sections.
+- October review actioned: nineteen of the twenty-two marked-up comments are in the templates.
+- Three new Yes/No toggles — Industry Notice, From the Stewards' Room, Rules and Notices — on the console and in pagination, all defaulting in.
+- Notices parser reads a heading set bold by hand, not only one styled Heading 1, which is how all four Word documents actually arrive.
+- Summary chart identifies a venue by its colour rather than an exact point size, so a month exported at 8pt keeps its metro/country colour and scale.
 
 ## Sync history
 
@@ -37,17 +37,19 @@ date: 2026-09-09
 
 | Screen | Repo files |
 |---|---|
+| index.html | Checklist.html, Producer Console.dc.html |
 | Producer Console.dc.html | parsers/source.js, parsers/settings.js, parsers/pagination.js, parsers/ads.js |
+| Inside Racing Input Checklist.dc.html | Checklist.html |
 | Inside Racing Edition.dc.html | Inside Racing Part 1-3.dc.html, parsers/pagination.js, data/edition.json |
 | Inside Racing Edition-print.dc.html | Inside Racing Edition.dc.html, doc-page.js |
-| Cover.dc.html | assets/cover-masthead.svg, assets/photos/cover.jpg |
+| Cover.dc.html | parsers/cover-frame.js, assets/cover-masthead.svg, assets/photos/cover.jpg |
 | Entry Deadlines.dc.html | parsers/deadlines.js, inputs/Entry Deadlines.csv |
 | Programs Summary Chart.dc.html | parsers/chart.js, inputs/Vic Calendar - *.xlsx |
 | Race Programs.dc.html | parsers/programs.js, inputs/Race Programs.csv |
 | Race Series.dc.html | parsers/series.js, inputs/Race Series.docx |
 | Jumps Program.dc.html | parsers/jumps.js, inputs/Jumps Racing Program.xlsx, inputs/Jumps Trials.csv |
 | Picnic Racing.dc.html | parsers/picnics.js, inputs/Picnic Program.xlsx |
-| Jump Outs and Flat Trials.dc.html | parsers/jumpouts.js, parsers/trials.js |
+| Jump Outs and Flat Trials.dc.html | parsers/jumpouts.js, parsers/trials.js, parsers/notices.js |
 | Permits and Riders Agents.dc.html | parsers/permits.js, inputs/Permits to Ride.xlsx, inputs/Riders Agents.csv |
-| Notices.dc.html | parsers/notices.js, inputs/Industry Notice.docx |
+| Notices.dc.html | parsers/notices.js, inputs/Industry Notice.docx, inputs/Stewards Room.docx, inputs/Rules Extracts.docx |
 | Advertising | parsers/ads.js, inputs/Ad Placements.csv, assets/ads/ |

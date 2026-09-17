@@ -19,6 +19,14 @@
 // An unstyled paragraph is treated as body copy. A document with no paragraphs
 // is a legitimate state — it means no copy was supplied — and the page then
 // prints an awaiting-copy panel rather than inventing content.
+//
+// In practice the copy does not always arrive styled. Integrity Services and
+// the Stewards write these documents in Word with the headings simply set bold,
+// which leaves the whole document Normal and every topic heading invisible to a
+// style test. So a paragraph that is bold end to end, short, and not punctuated
+// as a sentence is read as a heading as well, and a warning says the document
+// would be safer styled. Judging headings by appearance is a fallback, never a
+// replacement: an explicit Heading 1 always wins.
 
 import { unzip } from './xlsx.js';
 
@@ -32,6 +40,27 @@ const textOf = xml => unescapeXml(
 ).replace(/\s+/g, ' ').trim();
 
 const styleOf = xml => ((String(xml).match(/<w:pStyle\s+w:val="([^"]+)"/) || [])[1] || 'Normal');
+
+// Bold end to end: every run carrying text is bold, either in its own run
+// properties or inherited from the paragraph mark. Word writes <w:b/> bare and
+// <w:b w:val="0"/> to switch it off again, so both forms have to be read.
+const runIsBold = run => {
+  const rPr = (String(run).match(/<w:rPr>[\s\S]*?<\/w:rPr>/) || [''])[0];
+  const b = rPr.match(/<w:b(\s+w:val="([^"]*)")?\s*\/?>/);
+  return !!b && !/^(0|false|off)$/i.test(b[2] || '1');
+};
+function allBold(xml) {
+  const runs = [...String(xml).matchAll(/<w:r(?:\s[^>]*)?>[\s\S]*?<\/w:r>/g)]
+    .map(m => m[0])
+    .filter(r => /<w:t(?:\s[^>]*)?>[\s\S]*?<\/w:t>/.test(r));
+  return runs.length > 0 && runs.every(runIsBold);
+}
+
+// A heading the author set by hand rather than by style. Length and punctuation
+// keep an emphasised sentence of body copy out: headings are short and are not
+// written as sentences.
+const HEADINGISH = 90;
+const looksLikeHeading = b => b.bold && b.text.length <= HEADINGISH && !/[.:;,]$/.test(b.text.trim());
 
 // How deep the copy runs, in points, from the printed metrics of each paragraph
 // style: the gap above it, its line height, and how many characters fit on a
@@ -69,11 +98,25 @@ async function paragraphs(url) {
   const xml = new TextDecoder().decode(files['word/document.xml']);
   const body = (xml.match(/<w:body>([\s\S]*)<\/w:body>/) || [])[1] || '';
   return [...body.matchAll(/<w:p\b[^>]*>[\s\S]*?<\/w:p>|<w:p\b[^>]*\/>/g)]
-    .map(m => ({ style: styleOf(m[0]), text: textOf(m[0]) }))
+    .map(m => ({ style: styleOf(m[0]), text: textOf(m[0]), bold: allBold(m[0]) }))
     .filter(b => b.text);
 }
 
 const isH1 = s => /^Heading1$|^Title$/i.test(s);
+// Styled first, appearance second — and never for a list paragraph, which is a
+// bullet that happens to be bold.
+const heads = b => isH1(b.style) || (b.style !== 'ListParagraph' && b.style !== 'IRBullet'
+  && b.style !== 'IRStep' && b.style !== 'IRClause' && !isH2(b.style) && looksLikeHeading(b));
+
+/** Says so once when the headings had to be inferred from bold. */
+function noteInferred(paras, warnings, label) {
+  const inferred = paras.filter(b => !isH1(b.style) && heads(b)).length;
+  if (inferred) {
+    warnings.push(label + ': ' + inferred + ' heading' + (inferred > 1 ? 's were' : ' was')
+      + ' recognised from bold text rather than the Heading 1 style, and printed as headings. '
+      + 'Styling them Heading 1 in Word makes this certain.');
+  }
+}
 // Word carries a bullet either as the IR Bullet style, as a list paragraph, or
 // as a typed glyph. All three set as bullets; the glyph is the layout's.
 const BULLET_GLYPH = /^[\u2022\u25cf\u25aa\u00b7\u2013-]\s+/;
@@ -93,15 +136,16 @@ export async function loadNotice(url) {
   const warnings = [];
   const paras = await paragraphs(url);
   flagUnknown(paras, warnings, 'Industry Notice');
+  noteInferred(paras, warnings, 'Industry Notice');
 
   let step = 0;
   const blocks = paras.map(b => {
-    if (isH1(b.style) || isH2(b.style)) step = 0;
+    if (heads(b) || isH2(b.style)) step = 0;
     if (b.style === 'IRStep') step += 1;
-    const head = isH1(b.style) || isH2(b.style);
+    const head = heads(b) || isH2(b.style);
     const bullet = !head && b.style !== 'IRStep' && b.style !== 'IRClause' && isBulletPara(b);
     return {
-      isSubject: isH1(b.style),
+      isSubject: heads(b),
       isSubhead: isH2(b.style),
       isStep: b.style === 'IRStep',
       isClause: b.style === 'IRClause',
@@ -113,7 +157,7 @@ export async function loadNotice(url) {
   });
 
   const subjects = blocks.filter(b => b.isSubject).length;
-  if (blocks.length && !subjects) warnings.push('Industry Notice: no Heading 1 — the notice will print without a subject heading.');
+  if (blocks.length && !subjects) warnings.push('Industry Notice: no heading, styled or bold — the notice will print without a subject heading.');
   if (subjects > 2) warnings.push('Industry Notice: ' + subjects + ' Heading 1 paragraphs. Page 52 is built for one notice, occasionally two.');
   blocks.filter(b => b.isStep).forEach(b => {
     if (/^\d+[.)]\s/.test(b.text)) warnings.push('Industry Notice: a step begins with its own number ("' + b.text.slice(0, 30) + '…"). Numbering is applied by the layout — remove it to avoid "1. 1.".');
@@ -134,12 +178,13 @@ export async function loadStewards(url) {
   const warnings = [];
   const paras = await paragraphs(url);
   flagUnknown(paras, warnings, 'Stewards Room');
+  noteInferred(paras, warnings, 'Stewards Room');
 
   const blocks = paras.map(b => {
-    const head = isH1(b.style) || isH2(b.style);
+    const head = heads(b) || isH2(b.style);
     const bullet = !head && b.style !== 'IRClause' && isBulletPara(b);
     return {
-      isHeading: isH1(b.style),
+      isHeading: heads(b),
       isSubhead: isH2(b.style),
       isClause: b.style === 'IRClause',
       isBullet: bullet,
@@ -149,7 +194,7 @@ export async function loadStewards(url) {
   });
 
   const topics = blocks.filter(b => b.isHeading).length;
-  if (blocks.length && !topics) warnings.push('Stewards Room: no Heading 1 — every topic needs one.');
+  if (blocks.length && !topics) warnings.push('Stewards Room: no topic heading found, styled or bold — every topic needs one.');
   if (blocks.length && !blocks[0].isHeading) warnings.push('Stewards Room: the document does not open with a topic heading.');
   if (topics > 4) warnings.push('Stewards Room: ' + topics + ' topics \u2014 two or three is the usual shape for this page.');
   const lines = blocks.reduce((n, b) => n + Math.ceil(b.text.length / 118), 0);
@@ -168,10 +213,11 @@ export async function loadRules(url) {
   const warnings = [];
   const paras = await paragraphs(url);
   flagUnknown(paras, warnings, 'Rules Extracts');
+  noteInferred(paras, warnings, 'Rules Extracts');
 
   const groups = [];
   paras.forEach(b => {
-    if (isH1(b.style)) {
+    if (heads(b)) {
       const ref = (b.text.match(/^((?:AR|LR)\s*\d+[A-Z]?)/i) || [])[1] || '';
       groups.push({ heading: b.text, ref: ref.trim(), blocks: [] });
       return;
@@ -205,11 +251,12 @@ export async function loadPolicy(url) {
   const paras = await paragraphs(url);
   flagUnknown(paras, warnings, 'Division of Races Policy');
 
-  const heading = (paras.find(b => isH1(b.style)) || {}).text || '';
-  const bullets = paras.filter(b => !isH1(b.style)).map(b => b.text);
-  const unstyled = paras.filter(b => !isH1(b.style) && b.style !== 'IRBullet').length;
+  const head = paras.find(b => heads(b));
+  const heading = (head || {}).text || '';
+  const bullets = paras.filter(b => b !== head).map(b => b.text);
+  const unstyled = paras.filter(b => b !== head && b.style !== 'IRBullet').length;
 
-  if (!heading) warnings.push('Division of Races Policy: no Heading 1 — page 50 will fall back to its printed title.');
+  if (!heading) warnings.push('Division of Races Policy: no heading, styled or bold — page 50 will fall back to its printed title.');
   if (!bullets.length) warnings.push('Division of Races Policy: no bullets — the page prints the heading over empty space.');
   if (bullets.filter(t => !String(t).trim()).length) {
     warnings.push('Division of Races Policy: some bullets have no text.');

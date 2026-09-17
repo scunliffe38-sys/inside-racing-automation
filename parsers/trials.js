@@ -8,7 +8,9 @@
 //   G race_number          J race_distance     K race_conditions
 //   H name_race_full
 //
-// Page 50 sets four columns across, so more than four meetings will not fit.
+// Page 50 sets four columns across. Meetings are packed continuously down and
+// across those columns and onto further pages, so a meeting deeper than one
+// column is not a problem — it simply carries on in the next one.
 
 import { readSheet } from './xlsx.js';
 import { fetchDelimited, letterRows } from './tsv.js';
@@ -29,6 +31,7 @@ export async function loadTrials(url) {
     rows = await readSheet(await res.blob());
   }
   const warnings = [];
+  const notes = [];
 
   const head = rows[0] || {};
   if (clean(head.E).toLowerCase() !== 'meet_day_venue_name' || clean(head.K).toLowerCase() !== 'race_conditions') {
@@ -68,13 +71,13 @@ export async function loadTrials(url) {
 
   meetings.forEach(m => {
     if (!m.races.length) warnings.push(m.venue + ' has no races.');
-    if (m.races.length > 9) warnings.push(m.venue + ' has ' + m.races.length + ' races \u2014 a trial column holds about 9, so this one will run deep.');
   });
   const pages = Math.max(1, Math.ceil(meetings.length / MAX_COLUMNS));
   if (pages > 1) {
-    warnings.push(meetings.length + ' trial meetings \u2014 four to a row, so the trials run to ' + pages + ' pages.');
+    notes.push(meetings.length + ' trial meetings \u2014 four columns to a page, so the trials run to about '
+      + pages + ' pages. The page reports its real count once it has packed.');
   }
   if (!meetings.length) warnings.push('No trial meetings found in ' + url);
 
-  return { meetings, warnings, pages };
+  return { meetings, warnings, notes, pages };
 }

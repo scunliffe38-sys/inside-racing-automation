@@ -19,8 +19,12 @@ const REQUIRED = ['edition', 'wins_as_at'];
 // Rows the workbook no longer needs.
 const RETIRED = ['agents_footnote', 'trials_intro'];
 
-// Yes/No switches for the sections that only run in some months.
+// Yes/No switches for the sections that only run in some months. A missing row
+// matters for the first two, which default OUT: without a row nobody has said
+// whether jumps or picnics run. The last three default IN, so a missing row is
+// the normal state and is not worth a warning — see parsers/pagination.js.
 const FLAGS = ['jumps_included', 'picnics_included'];
+const FLAGS_DEFAULT_ON = ['notice_included', 'stewards_included', 'rules_included'];
 
 async function sheet(url) {
   const res = await fetch(url);
@@ -46,7 +50,12 @@ export function chosen() {
     edition: (MONTHS_FULL[m] || '').toUpperCase() + ' EDITION ' + y,
     wins_as_at: d ? d[3] + '/' + d[2] + '/' + d[1] : '',
     jumps_included: saved.jumps ? 'Yes' : 'No',
-    picnics_included: saved.picnics ? 'Yes' : 'No'
+    picnics_included: saved.picnics ? 'Yes' : 'No',
+    // undefined in a console setting saved before these toggles existed, which
+    // has to read as Yes: these sections normally run.
+    notice_included: saved.notice === false ? 'No' : 'Yes',
+    stewards_included: saved.stewards === false ? 'No' : 'Yes',
+    rules_included: saved.rules === false ? 'No' : 'Yes'
   };
 }
 
@@ -79,6 +88,12 @@ export async function loadSettings(url) {
   }
   FLAGS.forEach(k => {
     if (!(k in settings)) warnings.push('Edition Settings: "' + k + '" row is missing \u2014 add it and set Yes or No.');
+  });
+  FLAGS_DEFAULT_ON.forEach(k => {
+    const v = settings[k];
+    if (v && !/^(yes|no|y|n|true|false|1|0)$/i.test(v)) {
+      warnings.push('Edition Settings: "' + k + '" is "' + v + '", expected Yes or No. Reading it as Yes.');
+    }
   });
 
   // Folios are worked out from the running order and this month's volumes, not

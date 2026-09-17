@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+@font-face{font-family:'Gotham Narrow';src:url('fonts/GothamNarrow-Book.otf') format('opentype');font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'Gotham XNarrow';src:url('fonts/GothamXNarrow-Book.ttf') format('truetype');font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'Gotham XNarrow';src:url('fonts/GothamXNarrow-Bold.ttf') format('truetype');font-weight:700;font-style:normal;font-display:swap}
+body{margin:0;background:#f4f6f8}
+a{color:#2c2e35;text-decoration:none;border-bottom:1px solid #9ecff0}
+a:hover{color:#2c9cd7}
+@media print{body{background:#fff}}
+</style>
+</helmet>
+
+<template id="__bundler_thumbnail" data-bg-color="#2c9cd7">
+<svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="0" width="1200" height="800" fill="#2c9cd7"></rect>
+<g transform="translate(360,240)">
+<rect x="0" y="0" width="70" height="70" rx="8" fill="#ffffff"></rect>
+<path d="M16 38 l14 14 l26 -30" fill="none" stroke="#2c9cd7" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"></path>
+<rect x="110" y="24" width="370" height="22" rx="11" fill="#ffffff"></rect>
+<rect x="0" y="120" width="70" height="70" rx="8" fill="#ffffff" opacity=".45"></rect>
+<rect x="110" y="144" width="290" height="22" rx="11" fill="#ffffff" opacity=".45"></rect>
+<rect x="0" y="240" width="70" height="70" rx="8" fill="#ffffff" opacity=".45"></rect>
+<rect x="110" y="264" width="330" height="22" rx="11" fill="#ffffff" opacity=".45"></rect>
+</g>
+</svg>
+</template>
+
+<div style="max-width:1000px;margin:0 auto;padding:26px 22px 70px;font-family:'Gotham Narrow',sans-serif;color:#2c2e35;font-size:13px;line-height:1.45">
+
+<div>
+<div style="font-family:'Gotham XNarrow',sans-serif;font-size:26px;letter-spacing:.03em;font-weight:700;line-height:1.1">INSIDE RACING — INPUT CHECKLIST</div>
+<div style="height:3px;background:#9ecff0;margin:7px 0 0"></div>
+</div>
+
+<div style="margin-top:18px;background:#fff;border:1px solid #dfe4e9;padding:16px 18px 18px">
+<div style="display:flex;gap:22px;flex-wrap:wrap;align-items:flex-end">
+<div>
+<div style="font-size:10.5px;letter-spacing:.05em;font-weight:700;color:#5b616e">EDITION</div>
+<input type="month" value="{{ month }}" onChange="{{ onMonth }}" style="margin-top:6px;font-family:inherit;font-size:14px;font-weight:700;color:#2c2e35;padding:6px 8px;border:1px solid #c3cad2;background:#fff" />
+<div style="margin-top:5px;font-size:11.5px;color:#8b929c">Ticks are kept per edition, in this browser.</div>
+</div>
+<div style="flex:1 1 260px;min-width:200px">
+<div style="font-size:12.5px;font-weight:700">{{ progressLine }}</div>
+<div style="height:8px;background:#eef1f4;overflow:hidden;margin-top:6px"><div style="height:8px;background:#2c9cd7;width:{{ pct }}%"></div></div>
+<div style="margin-top:6px;font-size:12px;color:{{ verdictColour }};font-weight:700">{{ verdict }}</div>
+</div>
+<div style="flex:1 1 200px;min-width:170px">
+<div style="font-size:12.5px;font-weight:700">{{ adLine }}</div>
+<div style="height:8px;background:#eef1f4;overflow:hidden;margin-top:6px"><div style="height:8px;background:#9ecff0;width:{{ adPct }}%"></div></div>
+<div style="margin-top:6px;font-size:12px;color:#8b929c">Final step, not needed for a first draft.</div>
+</div>
+</div>
+<div style="margin-top:14px;padding-top:12px;border-top:1px solid #eef1f4;font-size:12.5px;color:#5b616e;max-width:760px">Every file goes in the month&rsquo;s input folder under the name shown, spelled exactly as printed here &mdash; the console matches on the name and reports anything it does not recognise. Overwrite last month&rsquo;s file rather than adding a dated copy.</div>
+</div>
+
+<div style="margin-top:14px;background:#fff;border:1px solid #dfe4e9;padding:14px 18px 8px">
+<div style="display:flex;justify-content:flex-end">
+<button onClick="{{ onReset }}" style="font-family:inherit;font-size:12.5px;font-weight:700;padding:8px 13px;border:1px solid #c3cad2;background:#fff;color:#5b616e;cursor:pointer" style-hover="border-color:#2c2e35;color:#2c2e35">Clear all ticks</button>
+</div>
+<div style="margin-top:12px">
+<sc-for list="{{ rows }}" as="r" hint-placeholder-count="21">
+<label style="display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px solid #eef1f4;cursor:pointer;opacity:{{ r.opacity }}">
+<input type="checkbox" checked="{{ r.done }}" disabled="{{ r.off }}" onChange="{{ r.toggle }}" style="width:17px;height:17px;margin:1px 0 0;accent-color:#2c9cd7;flex:0 0 17px;cursor:pointer" />
+<div style="flex:1 1 auto;min-width:0">
+<div style="display:flex;gap:8px;align-items:baseline;flex-wrap:wrap">
+<span style="font-size:13.5px;font-weight:700;text-decoration:{{ r.strike }}">{{ r.file }}</span>
+<sc-if value="{{ r.hasTag }}" hint-placeholder-val="{{ true }}"><span style="font-size:10.5px;letter-spacing:.04em;font-weight:700;color:#5b616e;background:#eef1f4;padding:2px 6px">{{ r.tag }}</span></sc-if>
+</div>
+<div style="margin-top:3px;font-size:12.5px;color:#5b616e">{{ r.note }}</div>
+</div>
+<div style="flex:0 0 150px;text-align:right;font-size:12px;color:#8b929c">{{ r.section }}</div>
+</label>
+</sc-for>
+</div>
+</div>
+
+<div style="margin-top:14px;background:#fff;border:1px solid #dfe4e9;padding:16px 18px 18px">
+<div style="font-size:11px;letter-spacing:.08em;font-weight:700">BEFORE YOU HAND IT TO THE CONSOLE</div>
+<div style="margin-top:10px;display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;font-size:12.5px;color:#5b616e">
+<div><span style="font-weight:700;color:#2c2e35">One folder, one month.</span> Everything sits together at the top level of the folder, with the booked artwork in a folder beside them called <span style="font-weight:700;color:#2c2e35">ads</span>.</div>
+<div><span style="font-weight:700;color:#2c2e35">Calendars in sequence.</span> Supply a Vic Calendar workbook for every month the chart runs through, with no month missing in the middle.</div>
+<div><span style="font-weight:700;color:#2c2e35">Exports go in as they come out.</span> The tab-separated files arrive as UTF-16 and are read as-is &mdash; no saving down to another format.</div>
+<div><span style="font-weight:700;color:#2c2e35">Then run the console.</span> It lists what it found, parses each input and reports anything doubtful by section before the edition is assembled.</div>
+</div>
+</div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;jumpsIncluded&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;This edition&quot;},&quot;picnicsIncluded&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;This edition&quot;},&quot;noticeIncluded&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;This edition&quot;},&quot;stewardsIncluded&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;This edition&quot;},&quot;rulesIncluded&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;This edition&quot;}}">
+class Component extends DCLogic {
+  state = { month: '', ticks: {} };
+
+  KEY = 'ir-input-checklist-v1';
+
+  componentDidMount() {
+    const now = new Date();
+    const month = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0');
+    this.setState({ month, ticks: this.read()[month] || {} });
+  }
+
+  read() {
+    try { return JSON.parse(localStorage.getItem(this.KEY) || '{}'); } catch (e) { return {}; }
+  }
+
+  write(month, ticks) {
+    const all = this.read();
+    all[month] = ticks;
+    try { localStorage.setItem(this.KEY, JSON.stringify(all)); } catch (e) {}
+  }
+
+  toggle(file) {
+    const ticks = Object.assign({}, this.state.ticks);
+    if (ticks[file]) delete ticks[file]; else ticks[file] = true;
+    this.write(this.state.month, ticks);
+    this.setState({ ticks });
+  }
+
+  spec() {
+    const jumps = this.props.jumpsIncluded !== false;
+    const picnics = this.props.picnicsIncluded !== false;
+    const notice = this.props.noticeIncluded !== false;
+    const stewards = this.props.stewardsIncluded !== false;
+    const rules = this.props.rulesIncluded !== false;
+    return [
+      { title: 'A \u00a0 EVERY MONTH \u2014 SYSTEM EXPORTS',
+        note: 'The reporting exports and workbooks the bulk of the edition is built from. All of these are needed every month.',
+        rows: [
+          ['Entry Deadlines.csv', 'Entry deadlines', 'required', 'One row per race day, carrying the entry, acceptance and riders times.'],
+          ['Vic Calendar - mmm yy.xlsx', 'Programs summary chart', 'required', 'One workbook per month, named with the month suffix \u2014 Vic Calendar - Sep 26.xlsx. Supply every month the chart covers.'],
+          ['Race Programs.csv', 'Race programs', 'required', 'The full program export. The run keeps the edition\u2019s horizon and drops jump-outs and trials.'],
+          ['Permits to Ride.xlsx', 'Permits to ride', 'required', 'Win tallies need to be current to the wins-as-at date set in the console.'],
+          ['Riders Agents.csv', 'Riders\u2019 agents', 'required', 'Agent names, riders represented and contact numbers.'],
+          ['Jump Outs.xlsx', 'Jump outs', 'required', 'Jump-out dates by venue for the month ahead.'],
+          ['Official Flat Trials.csv', 'Flat trials', 'required', 'One row per trial meeting.']
+        ] },
+      { title: 'B \u00a0 EVERY MONTH \u2014 WRITTEN OR SELECTED',
+        note: 'The authored pages. These are the only parts of the edition that are written rather than exported.',
+        rows: [
+          ['Industry Notice.docx', 'Industry notice', notice ? 'required' : 'not this edition', 'Plain paragraphs and headings. Breaks across pages on its own.'],
+          ['Stewards Room.docx', 'Stewards\u2019 room', stewards ? 'required' : 'not this edition', 'Same shape as the industry notice.'],
+          ['Rules Extracts.docx', 'Rules extracts', rules ? 'required' : 'not this edition', 'The rule texts printed with the notices.'],
+          ['Race Series.docx', 'Race series', 'required', 'The series schedules, one block per series.'],
+          ['Highweights.docx', 'Race series', 'optional', 'The highweight schedule, printed after the series blocks.'],
+          ['Cover.jpg', 'Cover', 'required', 'The month\u2019s cover photograph. Full camera resolution is fine \u2014 the run makes the print derivative.']
+        ] },
+      { title: 'C \u00a0 REPLACED YEARLY, OR WHEN THEY CHANGE',
+        note: 'Carried forward from month to month. Only tick these if you have checked the copy in the folder is the current one.',
+        rows: [
+          ['Jumps Racing Program.xlsx', 'Jumps program', jumps ? 'yearly' : 'not this edition', 'The whole jumps season, one row per meeting. Replaced once a year.'],
+          ['Jumps Trials.csv', 'Jumps program', jumps ? 'monthly' : 'not this edition', 'The individual trial races, one row each. Edited by hand.'],
+          ['Jumps Prizemoney Breakdowns.csv', 'Jumps program', jumps ? 'rarely' : 'not this edition', 'The standing prizemoney tiers. Edited by hand, changes rarely.'],
+          ['Picnic Program.xlsx', 'Picnic racing', picnics ? 'yearly' : 'not this edition', 'One worksheet per season. Past seasons drop out on their own.'],
+          ['Eligible to Ride in Trials.csv', 'Flat trials', 'rarely', 'The eligibility list printed with the permits.'],
+          ['Division of Races Policy.docx', 'Division of races', 'rarely', 'The standing policy printed under the trials page.']
+        ] },
+      { title: 'D \u00a0 FOR THE FINAL DRAFT \u2014 BOOKED ADVERTISING',
+        note: 'Not needed for a draft run: with nothing here every slot runs its house advertisement. A booked full page changes the page count, so the console is run again once these are in.',
+        rows: [
+          ['Ad Placements.csv', 'Advertising', 'optional', 'One row per booked slot. A slot with no row keeps its house ad.'],
+          ['ads/ \u2014 the booked artwork', 'Advertising', 'optional', 'A folder beside the inputs holding the artwork named in the placements file.']
+        ] }
+    ];
+  }
+
+  renderVals() {
+    const TAG = {
+      required: ['#8f1d13', '#fdeceb'],
+      optional: ['#5b616e', '#eef1f4'],
+      monthly: ['#1f6b96', '#e8f4fb'],
+      yearly: ['#1f6b96', '#e8f4fb'],
+      rarely: ['#5b616e', '#eef1f4'],
+      'not this edition': ['#8b929c', '#f4f6f8']
+    };
+    const ticks = this.state.ticks || {};
+    let need = 0, have = 0, adTotal = 0, adHave = 0;
+    const rows = [];
+    this.spec().forEach(g => {
+      g.rows.forEach(([file, section, tag, note]) => {
+        const off = tag === 'not this edition';
+        const done = !!ticks[file] && !off;
+        const isAd = file === 'Ad Placements.csv' || file.indexOf('ads/') === 0;
+        if (isAd) { adTotal++; if (done) adHave++; }
+        else if (!off) { need++; if (done) have++; }
+        const label = isAd ? 'final step (not first draft)' : '';
+        rows.push({
+          file, section, note, done, off,
+          tag: label, hasTag: !!label,
+          tagInk: '#5b616e', tagBg: '#eef1f4',
+          opacity: off ? '.45' : '1',
+          strike: off ? 'line-through' : 'none',
+          toggle: off ? () => {} : () => this.toggle(file)
+        });
+      });
+    });
+    const pct = need ? Math.round((have / need) * 100) : 0;
+    return {
+      rows, pct,
+      month: this.state.month,
+      progressLine: have + ' of ' + need + ' input files ready',
+      adLine: adHave + ' of ' + adTotal + ' advertising files ready',
+      adPct: adTotal ? Math.round((adHave / adTotal) * 100) : 0,
+      verdict: have === need ? 'Every input is in. Run the console.' : (need - have) + ' still to come before a run is worth doing.',
+      verdictColour: have === need ? '#1f7a4d' : '#5b616e',
+      onMonth: e => {
+        const month = e.target.value;
+        this.setState({ month, ticks: this.read()[month] || {} });
+      },
+      onReset: () => {
+        this.write(this.state.month, {});
+        this.setState({ ticks: {} });
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+@font-face{font-family:'Gotham Narrow';src:url('fonts/GothamNarrow-Book.otf') format('opentype');font-weight:400;font-style:normal;font-display:block}
+@font-face{font-family:'Gotham XNarrow';src:url('fonts/GothamXNarrow-Book.ttf') format('truetype');font-weight:400;font-style:normal;font-display:block}
+@font-face{font-family:'Gotham XNarrow';src:url('fonts/GothamXNarrow-Bold.ttf') format('truetype');font-weight:700;font-style:normal;font-display:block}
+doc-page:not(:defined){visibility:hidden}
+body{margin:0}
+a{color:#2c2e35;text-decoration:none}
+a:hover{color:#2c9cd7}
+</style>
+<script src="./doc-page.js"></script>
+</helmet>
+<doc-page size="a4">
+
+<div data-screen-label="Checks guide" style="font-family:'Gotham Narrow',sans-serif;color:#2c2e35">
+
+<div style="font-size:10pt;line-height:1;letter-spacing:.019em">READING THE CHECKS</div>
+<div style="height:3pt;background:#9ecff0;margin-top:5pt"></div>
+<div style="margin-top:13pt;font-size:22pt;font-weight:700;line-height:1.05;letter-spacing:-.01em">What the Producer Console is telling you</div>
+<div style="margin-top:8pt;font-size:9pt;line-height:12.5pt;max-width:430pt;text-wrap:pretty">Every input is read and checked on each run. Nothing is ever dropped silently: anything the build left out is named with its row number. What appears under Checks falls into two kinds, and only one of them needs you to do something.</div>
+
+<div style="height:2pt;background:#2c2e35;margin-top:16pt"></div>
+
+<div style="display:flex;gap:18pt;margin-top:9pt">
+<div style="flex:1">
+<div style="font-size:9pt;font-weight:700;line-height:1;color:#5b616e">Notes &mdash; for information</div>
+<div style="margin-top:5pt;font-size:8pt;line-height:11pt;text-wrap:pretty">Grey, counted apart, and the section still reads <span style="font-weight:700">clean</span>. A note records what the parser did with the input where the input has more than one legitimate shape. Read it once to confirm it matches what you expect, then move on. No action.</div>
+</div>
+<div style="flex:1">
+<div style="font-size:9pt;font-weight:700;line-height:1;color:#b06a00">Warnings &mdash; to check</div>
+<div style="margin-top:5pt;font-size:8pt;line-height:11pt;text-wrap:pretty">Amber, counted as <span style="font-weight:700">N to check</span>. Something in the input needs a person: a gap to fill, a cell to correct, or a decision only the production team can make. Work through these before exporting the PDF.</div>
+</div>
+<div style="flex:1">
+<div style="font-size:9pt;font-weight:700;line-height:1;color:#2c2e35">The rule going forward</div>
+<div style="margin-top:5pt;font-size:8pt;line-height:11pt;text-wrap:pretty">If a check describes what the build did and asks nothing of anybody, it belongs in notes. If it needs a decision or a correction, it stays a warning. New checks follow the same test, so the amber count stays worth reading.</div>
+</div>
+</div>
+
+<div style="height:2pt;background:#2c2e35;margin-top:18pt"></div>
+<div style="margin-top:8pt;font-size:11pt;font-weight:700;line-height:1">Notes you will see most months</div>
+
+<div style="display:flex;font-weight:700;font-size:7pt;letter-spacing:.04em;line-height:8pt;padding:8pt 0 3pt">
+<div style="width:92pt;flex:0 0 92pt">SECTION</div>
+<div style="flex:1">WHAT IT SAYS, AND WHY</div>
+</div>
+
+<div style="display:flex;font-size:8pt;line-height:10.5pt;padding:5pt 0;box-shadow:inset 0 -0.25pt 0 #2c2e35">
+<div style="width:92pt;flex:0 0 92pt;padding-right:8pt;box-sizing:border-box;font-weight:700">Race programs</div>
+<div style="flex:1;text-wrap:pretty"><span style="font-weight:700">&ldquo;Export holds 155 meetings. Printing the 134 race meetings in September to November 2026; 21 jump-out/trial meeting(s) set aside.&rdquo;</span> The programs export carries jump-outs and official trials alongside the race meetings. They are recognised by having no prizemoney on any race and left out here, because they print on page 50 from their own exports. Printing them in both places would duplicate them.</div>
+</div>
+
+<div style="display:flex;font-size:8pt;line-height:10.5pt;padding:5pt 0;box-shadow:inset 0 -0.25pt 0 #2c2e35">
+<div style="width:92pt;flex:0 0 92pt;padding-right:8pt;box-sizing:border-box;font-weight:700">Race series</div>
+<div style="flex:1;text-wrap:pretty"><span style="font-weight:700">&ldquo;3 table(s) name no columns and were read as HEAT / VENUE / DATE / RACE from the column count.&rdquo;</span> Most series tables arrive without a heading row. The layout is taken from the number of columns &mdash; four is the series shape, three the highweight shape &mdash; and the headings are printed for them. This is the ordinary shape of the document, not a fault.</div>
+</div>
+
+<div style="display:flex;font-size:8pt;line-height:10.5pt;padding:5pt 0;box-shadow:inset 0 -0.25pt 0 #2c2e35">
+<div style="width:92pt;flex:0 0 92pt;padding-right:8pt;box-sizing:border-box;font-weight:700">Official flat trials</div>
+<div style="flex:1;text-wrap:pretty"><span style="font-weight:700">&ldquo;7 trial meetings &mdash; four columns to a page, so the trials run to about 2 pages.&rdquo;</span> An estimate made before layout so the folios can be worked out early. The page reports its real count once it has packed. Meetings pack continuously down and across the four columns and onto further pages, so a meeting deeper than one column is fine &mdash; it carries on in the next.</div>
+</div>
+
+<div style="height:2pt;background:#2c2e35;margin-top:18pt"></div>
+<div style="margin-top:8pt;font-size:11pt;font-weight:700;line-height:1">Warnings, and what to do with them</div>
+
+<div style="display:flex;font-weight:700;font-size:7pt;letter-spacing:.04em;line-height:8pt;padding:8pt 0 3pt">
+<div style="width:92pt;flex:0 0 92pt">SECTION</div>
+<div style="flex:1">WHAT IT MEANS</div>
+<div style="width:150pt;flex:0 0 150pt">WHAT TO DO</div>
+</div>
+
+<div style="display:flex;font-size:8pt;line-height:10.5pt;padding:5pt 0;box-shadow:inset 0 -0.25pt 0 #2c2e35">
+<div style="width:92pt;flex:0 0 92pt;padding-right:8pt;box-sizing:border-box;font-weight:700">Race programs<div style="font-weight:400;color:#5b616e;font-size:7.2pt;line-height:9pt;margin-top:1pt">No conditions &mdash; row 298</div></div>
+<div style="flex:1;padding-right:8pt;box-sizing:border-box;text-wrap:pretty">The named row has no <span style="font-weight:700">race_conditions</span> in the export. In September 2026 all eight were feature races &mdash; Cups and named trophies &mdash; carrying prizemoney and entry dates but no conditions, and in most cases no entry weight or group either. Reads like conditions not yet loaded at the source rather than anything lost in the read.</div>
+<div style="width:150pt;flex:0 0 150pt;text-wrap:pretty">Check the row in the export. If the field is genuinely empty, ask for it to be populated and re-run. Left as is, the race prints with an empty conditions cell and the distance still shown.</div>
+</div>
+
+<div style="display:flex;font-size:8pt;line-height:10.5pt;padding:5pt 0;box-shadow:inset 0 -0.25pt 0 #2c2e35">
+<div style="width:92pt;flex:0 0 92pt;padding-right:8pt;box-sizing:border-box;font-weight:700">Official flat trials<div style="font-weight:400;color:#5b616e;font-size:7.2pt;line-height:9pt;margin-top:1pt">Race before any meeting heading</div></div>
+<div style="flex:1;padding-right:8pt;box-sizing:border-box;text-wrap:pretty">A race row appears with no venue and date above it, so there is no meeting to attach it to. The row is left out of the printed schedule.</div>
+<div style="width:150pt;flex:0 0 150pt;text-wrap:pretty">Open the export at that row. Usually the meeting&rsquo;s heading row is missing and needs restoring, after which the races appear under their venue.</div>
+</div>
+
+<div style="display:flex;font-size:8pt;line-height:10.5pt;padding:5pt 0;box-shadow:inset 0 -0.25pt 0 #2c2e35">
+<div style="width:92pt;flex:0 0 92pt;padding-right:8pt;box-sizing:border-box;font-weight:700">Jump outs<div style="font-weight:400;color:#5b616e;font-size:7.2pt;line-height:9pt;margin-top:1pt">Entry from another month</div></div>
+<div style="flex:1;padding-right:8pt;box-sizing:border-box;text-wrap:pretty">The month&rsquo;s column holds a date outside that month &mdash; 31-Aug-26 sitting in the September column. It is named and left out of the printed schedule.</div>
+<div style="width:150pt;flex:0 0 150pt;text-wrap:pretty">Correct the workbook if it is a slip, or confirm it should stay out. Either way the entry does not print.</div>
+</div>
+
+<div style="display:flex;font-size:8pt;line-height:10.5pt;padding:5pt 0;box-shadow:inset 0 -0.25pt 0 #2c2e35">
+<div style="width:92pt;flex:0 0 92pt;padding-right:8pt;box-sizing:border-box;font-weight:700">Permits to ride<div style="font-weight:400;color:#5b616e;font-size:7.2pt;line-height:9pt;margin-top:1pt">Not in strict alphabetical order</div></div>
+<div style="flex:1;padding-right:8pt;box-sizing:border-box;text-wrap:pretty">Two names sit out of alphabetical sequence in the sheet. The page prints the order supplied rather than re-sorting, so whatever is in the sheet is what appears.</div>
+<div style="width:150pt;flex:0 0 150pt;text-wrap:pretty">Decide whether the order is intended. If not, sort the sheet and re-run.</div>
+</div>
+
+<div style="display:flex;font-size:8pt;line-height:10.5pt;padding:5pt 0;box-shadow:inset 0 -0.25pt 0 #2c2e35">
+<div style="width:92pt;flex:0 0 92pt;padding-right:8pt;box-sizing:border-box;font-weight:700">Picnic racing<div style="font-weight:400;color:#5b616e;font-size:7.2pt;line-height:9pt;margin-top:1pt">Malformed cell, with its row</div></div>
+<div style="flex:1;padding-right:8pt;box-sizing:border-box;text-wrap:pretty">A cell in the workbook does not read cleanly: two distances in one entry, a doubled bracket, or prizemoney written as &ldquo;,5000 1200m&rdquo;. The row is named so it can be found.</div>
+<div style="width:150pt;flex:0 0 150pt;text-wrap:pretty">Correct the cell in <span style="font-weight:700">Picnic Program.xlsx</span> and re-run. These are source typing errors, not reading errors.</div>
+</div>
+
+<div style="display:flex;font-size:8pt;line-height:10.5pt;padding:5pt 0;box-shadow:inset 0 -0.25pt 0 #2c2e35">
+<div style="width:92pt;flex:0 0 92pt;padding-right:8pt;box-sizing:border-box;font-weight:700">Notices and rules<div style="font-weight:400;color:#5b616e;font-size:7.2pt;line-height:9pt;margin-top:1pt">Heading repeated</div></div>
+<div style="flex:1;padding-right:8pt;box-sizing:border-box;text-wrap:pretty">The same heading appears twice in the rules extract. It can be deliberate, as in August, where the LR 74A preamble and the rule itself both carry the heading.</div>
+<div style="width:150pt;flex:0 0 150pt;text-wrap:pretty">Confirm the repeat is intended. If not, remove the duplicate heading from the source document.</div>
+</div>
+
+<div style="display:flex;font-size:8pt;line-height:10.5pt;padding:5pt 0;box-shadow:inset 0 -0.25pt 0 #2c2e35">
+<div style="width:92pt;flex:0 0 92pt;padding-right:8pt;box-sizing:border-box;font-weight:700">Notices and rules<div style="font-weight:400;color:#5b616e;font-size:7.2pt;line-height:9pt;margin-top:1pt">Unusual topic count</div></div>
+<div style="flex:1;padding-right:8pt;box-sizing:border-box;text-wrap:pretty">The Stewards Room has more topics than the page usually carries &mdash; five where two or three is the shape.</div>
+<div style="width:150pt;flex:0 0 150pt;text-wrap:pretty">Check nothing has been pasted in twice, then accept the longer page.</div>
+</div>
+
+<div style="display:flex;font-size:8pt;line-height:10.5pt;padding:5pt 0;box-shadow:inset 0 -0.25pt 0 #2c2e35">
+<div style="width:92pt;flex:0 0 92pt;padding-right:8pt;box-sizing:border-box;font-weight:700">Notices, rules and race series<div style="font-weight:400;color:#5b616e;font-size:7.2pt;line-height:9pt;margin-top:1pt">Copy longer than the page</div></div>
+<div style="flex:1;padding-right:8pt;box-sizing:border-box;text-wrap:pretty">The supplied copy measures deeper than the page holds &mdash; 954pt against 712pt &mdash; so the section takes a second page and everything after it moves down. Nothing is clipped.</div>
+<div style="width:150pt;flex:0 0 150pt;text-wrap:pretty">Accept the extra page, or trim the copy if the edition extent matters. These stay as warnings because a page-count change is worth seeing before export.</div>
+</div>
+
+<div style="margin-top:16pt;font-size:8pt;line-height:11pt;max-width:430pt;text-wrap:pretty">Anything not on this list, or anything that looks like the build has misread a file rather than found a gap in it, is worth raising rather than working around.</div>
+
+</div>
+</doc-page>
+</x-dc>
+</body>
+</html>

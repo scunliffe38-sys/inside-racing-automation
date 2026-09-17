@@ -135,8 +135,17 @@ async function readChartBlob(blob, label) {
       const cells = letters.map(k => r[k] || []);
       const meeting = flat(cells[0]);
       if (!meeting.trim()) warnings.push('Row ' + (i + 2) + ' has races but no meeting details.');
-      else if (!(cells[0] || []).some(run => run.c)) {
-        warnings.push('No venue colour on "' + meeting.split('\n')[1] + '" (row ' + (i + 2) + ') — metropolitan and country will look the same.');
+      else {
+        // The venue's colour is what marks metropolitan against country, so a
+        // row with no colour at all prints flat — and so does one coloured in
+        // a shade the chart does not know, which is the harder fault to spot.
+        const coloured = (cells[0] || []).filter(run => run.c);
+        if (!coloured.length) {
+          warnings.push('No venue colour on "' + meeting.split('\n')[1] + '" (row ' + (i + 2) + ') — metropolitan and country will look the same.');
+        } else if (!coloured.some(run => run.c === '#FF0040' || run.c === '#00B0F0')) {
+          warnings.push('Venue colour on "' + meeting.split('\n')[1] + '" (row ' + (i + 2) + ') is '
+            + coloured.map(run => run.c).join(', ') + ', not the chart\u2019s red #FF0040 or blue #00B0F0 \u2014 it will print flat.');
+        }
       }
       if (cells.slice(1).every(c => !flat(c).trim())) {
         warnings.push('No races listed for "' + meeting.split('\n')[0] + '" (row ' + (i + 2) + ').');

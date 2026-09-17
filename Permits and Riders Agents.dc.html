@@ -78,14 +78,14 @@ a:hover{color:#1b7fb4}
 <sc-for list="{{ trialCols }}" as="c" hint-placeholder-count="5">
 <div style="position:absolute;left:{{ c.left }};top:762.3pt;width:100pt;font-size:6pt;line-height:8.8pt">
 <sc-for list="{{ c.top }}" as="t" hint-placeholder-count="1">
-<div>{{ t.name }}</div>
+<div style="font-weight:700">{{ t.name }}</div>
 <div>{{ t.phone }}</div>
 <div>{{ t.cat }}</div>
 </sc-for>
 </div>
 <div style="position:absolute;left:{{ c.left }};top:796.9pt;width:100pt;font-size:6pt;line-height:8.8pt">
 <sc-for list="{{ c.bottom }}" as="t" hint-placeholder-count="1">
-<div>{{ t.name }}</div>
+<div style="font-weight:700">{{ t.name }}</div>
 <div>{{ t.phone }}</div>
 <div>{{ t.cat }}</div>
 </sc-for>
@@ -118,7 +118,7 @@ a:hover{color:#1b7fb4}
 </sc-for>
 </div>
 
-<div style="position:absolute;left:22.7pt;top:796.2pt;width:549.9pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1;letter-spacing:.041em">{{ agentsFootnote }}</div>
+<div style="position:absolute;left:22.7pt;top:806pt;width:549.9pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1;letter-spacing:.041em">{{ agentsFootnote }}</div>
 
 <div style="position:absolute;left:12.2pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1;letter-spacing:-.013em">{{ footer }}</div>
 <div style="position:absolute;right:12.3pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1">{{ pageAgents }}</div>
