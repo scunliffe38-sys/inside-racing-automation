@@ -664,10 +664,12 @@ class Component extends DCLogic {
         : 'This browser has no folder picker \u2014 use \u201cchoose the folder\u2019s files\u201d instead.',
       sourceNoteColour: st.srcError ? FAIL : '#5b616e',
       sourceModeLabel: st.build ? src.mode + '  \u00b7  build ' + st.build : src.mode,
-      connectedPath: src.mode === 'bundled' ? '' : (src.label || ''),
+      connectedPath: src.mode === 'bundled' ? ''
+        : src.mode === 'upload' ? (src.label || '')
+        : '\u2026\\' + String(src.label || '').split('/').join('\\'),
       connectedNote: src.mode === 'upload'
         ? 'A one-off copy of those files, held in the browser for this visit only.'
-        : 'Browsers expose the folder name only, never the full drive path. Reads go to this folder\u2019s current contents.',
+        : 'Shown the way an address reads. The browser withholds everything before the folder itself, so the drive and user part cannot be displayed.',
       folderLine: src.ready ? src.label + '  \u00b7  ' + st.count + ' files' : 'No folder chosen yet',
       hasChoices: (st.choices || []).length > 1,
       choices: (st.choices || []).map(c => {
