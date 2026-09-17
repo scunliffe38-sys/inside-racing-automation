@@ -1,83 +1,73 @@
-INSIDE RACING — complete file set, 18 September 2026
-====================================================
+INSIDE RACING — files changed since the last push
+Rebuilt 18 September 2026, after the cover framing fix
+======================================================
 
-This is the whole repository as it should stand. Replace the lot.
+GitHub Desktop says "No local changes" because these edits are not in the
+folder on your machine yet. Copy them in and Desktop will list them.
 
 WHAT TO DO
 ----------
 1. Unzip this folder somewhere outside your clone.
 2. Open your clone in Explorer (GitHub Desktop: Ctrl+Shift+F).
-3. Delete everything in the clone EXCEPT the hidden ".git" folder.
-   Do not delete ".git" — that is the repository itself.
-
-   Let Explorer protect you: leave hidden files HIDDEN for this step.
-   ".git" is then invisible, so Ctrl+A cannot select it and cannot delete
-   it. Everything you can see is safe to remove.
-
-4. Copy everything from this unzipped folder into the clone.
-
-   For this step turn hidden files ON, in the unzipped folder, so that
-   Ctrl+A picks up ".nojekyll" and ".gitignore" as well. Explorer:
-   View > Show > Hidden items. Turn it back off afterwards.
-
-   Miss those two and GitHub Pages goes back to ignoring any folder whose
-   name starts with an underscore, and the working detritus starts getting
-   committed again.
-5. Rename "_CLAUDE.md" to "CLAUDE.md". It could not be named that in the
-   zip. Delete "READ ME FIRST.txt" — it is not part of the repository.
-6. GitHub Desktop will now list the changes, including deletions.
-7. Summary: "Full file set — console conditional rows, cover framing,
+3. Copy everything EXCEPT "READ ME FIRST.txt" and "_CLAUDE.md" into the
+   clone, keeping the folder structure. Overwrite when asked.
+     - the .dc.html files go in the clone's top level
+     - parsers/cover-frame.js and parsers/notices.js go in parsers/
+     - data/edition.json goes in a "data" folder; create it if missing
+4. Rename "_CLAUDE.md" to "CLAUDE.md" and put it in the clone's top level.
+   It could not be named that inside the zip.
+5. Back in GitHub Desktop the Changes tab will list 15 files.
+6. Summary: "Cover framing for deep portraits, console conditional rows,
    layout fixes, baked edition"
-8. Commit to main, then Push origin.
+7. Commit to main, then Push origin.
 
-CHECKING ".git" SURVIVED
-------------------------
-Turn hidden items on in the clone: a ".git" folder should sit alongside the
-files. GitHub Desktop is the other tell — with ".git" gone it reports that
-the repository cannot be found, rather than listing changes.
+THE 15 FILES
+------------
+Cover.dc.html                        cover framing
+Inside Racing Edition.dc.html        cover framing, series and stewards depth,
+Inside Racing Edition-print.dc.html  trials and Division of Races fitting
+Inside Racing Part 1.dc.html
+Inside Racing Part 2.dc.html
+Inside Racing Part 3.dc.html
+Producer Console.dc.html             the red-row fix
+Programs Summary Chart.dc.html       venue colour read by colour, not point size
+Jump Outs and Flat Trials.dc.html    trials title measured from the real depth
+Race Series.dc.html                  row depth by character count
+Notices.dc.html                      stewards' room spacing
+parsers/cover-frame.js               the framing itself
+parsers/notices.js                   headings set bold by hand
+data/edition.json                    the bake
+CLAUDE.md  +  PROJECT-NOTES.md       project notes (same file, two names)
+github.md                            sync record
 
-If it has gone, nothing is lost: the work is all on GitHub. Clone the
-repository again into a new folder and copy this file set into that.
+THE COVER FIX
+-------------
+A photograph proportionally deeper than an A4 page has its crop driven by the
+height, so the whole image height is already on the page and there is no
+vertical overflow left to slide. The horse printed where the camera put it,
+head into the masthead, and no framing figure could move it.
 
-WHAT THIS CLEANS UP
--------------------
-The current repository has three things in it that should not be:
+Such a photograph now prints slightly under full size, sat on the page foot.
+The subject drops clear of the masthead and the strip left at the head is
+painted in a colour sampled from the picture's own top edge, so the sky reads
+as continuous behind the wordmark. The width pays for it — the crop was
+discarding about 13% of it anyway, which caps the reduction at that much.
+Landscape covers keep the existing modest enlargement.
 
-  repo/          a second, older copy of the whole site nested inside itself
-  cover-frame.js and source.js sitting loose at the top level, duplicates
-                 of the real ones in parsers/
-  scraps/, uploads/, screenshots/   working detritus, committed before
-                 .gitignore was added
+August's cover is unchanged: its subject sits at 48-77% of the height,
+already well clear of the masthead.
 
-Replacing the whole lot removes all of it. ".gitignore" keeps the detritus
-out from here on.
+THE RED ROWS
+------------
+The pushed Producer Console tested the printed section titles — "Industry
+Notice", "From the Stewards' Room", "Rules and Notices" — but the catalogue
+rows carry the catalogue names from parsers/source.js: "Industry notice",
+"Stewards' room", "Rules extracts". Nothing matched, so a row never went
+quiet when its toggle was set to No.
 
-WHAT IS FIXED SINCE THE LAST PUSH
----------------------------------
-Producer Console.dc.html        the Industry Notice and Rules Extracts rows
-                                no longer print red when their toggle is No.
-                                The pushed version tested the printed section
-                                titles; the rows carry the catalogue names
-                                from parsers/source.js, so nothing matched.
-Inside Racing Edition, -print   cover auto-framing, race series and stewards
-and Parts 1-3                   depth, trials and Division of Races fitting
-Programs Summary Chart          venue colour read by colour, not point size
-Jump Outs and Flat Trials       trials title measured from the real depth
-Race Series                     row depth by character count, catching wraps
-Notices                         stewards' room spacing, one page not two
-parsers/notices.js              reads a heading set bold by hand, not only
-                                one styled Heading 1
-data/edition.json               the bake. Never committed before, so the
-                                published site had no edition to show until
-                                someone ran the console themselves.
-
-WHAT IS IN HERE
----------------
-  21 pages at the top level, index.html the front door
-  docs/        six reference documents
-  parsers/     seventeen input readers
-  data/        the baked edition the pages render from
-  assets/      artwork, house advertising, the cover derivative
-  fonts/       Gotham Narrow and XNarrow
-  inputs/      the September input set, as supplied
-  support.js, doc-page.js, image-slot.js   the runtime
+NOTE ON data/edition.json
+-------------------------
+It has never been committed, so the published site has no edition to show
+until someone runs the console. This copy is September's bake. If October's
+matters for the commit, run the console against your October folder first and
+tell me, and I will rebuild this folder.

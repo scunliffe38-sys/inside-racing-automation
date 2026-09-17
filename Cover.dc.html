@@ -71,6 +71,9 @@ class Component extends DCLogic {
     this._img.style.left = b.left;
     this._img.style.top = b.top;
     this._img.style.objectPosition = f.objectPosition;
+    // A reduced portrait leaves a strip at the head of the page; painting the
+    // page in the picture's own top-edge colour carries the sky through it.
+    if (f.fill && this._img.parentNode) this._img.parentNode.style.background = f.fill;
   }
 
   componentDidUpdate() { this.applyFrame(); }

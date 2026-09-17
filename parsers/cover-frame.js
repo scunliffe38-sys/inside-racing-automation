@@ -16,6 +16,8 @@
 const SAMPLE = 180;     // long edge of the analysis bitmap
 const SHARE = 0.68;     // fraction of total energy the interest band must hold
 const KEEP = 0.93;      // wider band the crop tries not to cut into
+const MIN_FIT = 0.84;   // smallest a photo may print before it looks inset
+const EDGE = 0.03;      // share of the height averaged for the fill colour
 
 /** Luminance + saturation-weighted edge energy, summed by row and by column. */
 function energy(data, w, h) {
@@ -42,6 +44,21 @@ function energy(data, w, h) {
     }
   }
   return { rows, cols };
+}
+
+/** Mean colour of the top or bottom edge rows, for the strip beside the photo. */
+function edgeColour(data, w, h, atTop) {
+  const band = Math.max(1, Math.round(h * EDGE));
+  const y0 = atTop ? 0 : h - band;
+  let r = 0, g = 0, b = 0, n = 0;
+  for (let y = y0; y < y0 + band; y++) {
+    for (let x = 0; x < w; x++) {
+      const p = (y * w + x) * 4;
+      r += data[p]; g += data[p + 1]; b += data[p + 2]; n++;
+    }
+  }
+  if (!n) return null;
+  return 'rgb(' + Math.round(r / n) + ',' + Math.round(g / n) + ',' + Math.round(b / n) + ')';
 }
 
 /** Smallest contiguous run of `arr` holding `share` of its total. */
@@ -91,6 +108,7 @@ export async function frameCover(url, box, safe, zoom) {
     objectPosition: '50% ' + Math.round(((top + bottom) / 2) * 100) + '%',
     scale: 1,
     box: { width: '100%', height: '100%', left: '0%', top: '0%' },
+    fill: null,
     note: 'centred — the picture could not be measured'
   };
 
@@ -103,7 +121,7 @@ export async function frameCover(url, box, safe, zoom) {
   if (!img || !img.naturalWidth) return fallback;
 
   const iw = img.naturalWidth, ih = img.naturalHeight;
-  let rows, cols, keepRows, keepCols;
+  let rows, cols, keepRows, keepCols, skyFill;
   try {
     const s = SAMPLE / Math.max(iw, ih);
     const w = Math.max(8, Math.round(iw * s)), h = Math.max(8, Math.round(ih * s));
@@ -122,16 +140,37 @@ export async function frameCover(url, box, safe, zoom) {
     // side-on — pulls the crop across its hindquarters.
     keepRows = band(e.rows, KEEP);
     keepCols = band(e.cols, KEEP);
+    skyFill = edgeColour(px, w, h, true);
   } catch (err) {
     return Object.assign({}, fallback, { note: 'centred — the picture could not be read (' + (err.message || err) + ')' });
   }
 
-  // `cover` scale, then any zoom that helps fill the clear band with subject.
-  const base = Math.max(box.w / iw, box.h / ih);
+  // `cover` scale, then a correction — which way it goes depends on the shape
+  // of the picture, because the two shapes fail differently.
+  const byW = box.w / iw, byH = box.h / ih;
+  const base = Math.max(byW, byH);
   const clear = Math.max(0.2, bottom - top);
-  let scale = base;
-  if (maxZoom > 1 && rows.extent > 0) {
-    // Aim the subject band at ~80% of the clear band's depth.
+  let scale = base, deep = false;
+
+  if (byH >= byW) {
+    // Portrait, deeper than the page in proportion. `cover` is driven by the
+    // height, so the whole height is already on the page: there is no vertical
+    // overflow left to slide, and the subject prints wherever the camera put
+    // it — in October's frame, the horse's head behind the masthead. Enlarging
+    // only makes the collision worse.
+    //
+    // So print it a little smaller and sit it on the page foot. The subject
+    // drops clear of the masthead, the photograph's own sky runs up behind the
+    // wordmark, and the grass still reaches the teaser strip. The width pays
+    // for it: `cover` crops that much off the sides, so the picture can lose
+    // the same amount before a gap opens beside it.
+    const zMin = Math.max(MIN_FIT, byW / base);
+    const want = rows.lo < 1 ? (1 - top) / (1 - rows.lo) : 1;
+    scale = base * Math.max(zMin, Math.min(1, want));
+    deep = true;
+  } else if (maxZoom > 1 && rows.extent > 0) {
+    // Landscape, shallower than the page: the height is the scarce axis, so a
+    // modest enlargement is what fills the clear band with subject.
     const want = (0.8 * clear * box.h) / (rows.extent * ih * base);
     // ...but never zoom so far that the wider keep-band no longer fits across.
     const fitsAcross = keepCols.extent > 0 ? box.w / (keepCols.extent * iw * base) : maxZoom;
@@ -139,13 +178,22 @@ export async function frameCover(url, box, safe, zoom) {
   }
 
   const z = scale / base;
-  // Zoom grows the element past the page and centres the overflow rather than
-  // using a transform: `cover` then scales to base x z on its own, and the
-  // object-position below is solved against that same geometry.
-  const bw = box.w * z, bh = box.h * z;
-  const offX = -(bw - box.w) / 2, offY = -(bh - box.h) / 2;
-  const sw = iw * scale, sh = ih * scale;
-  const overX = sw - bw, overY = sh - bh;
+  // The element takes the scaled size rather than a transform, so `cover`
+  // resolves to base x z on its own and the object-position below is solved
+  // against the same geometry. An enlargement centres its overflow; a reduced
+  // portrait keeps its full width — that is the whole point, it is the width
+  // that was paying for the reduction — and loses the depth off the top, which
+  // is what lowers the subject.
+  const shrunk = deep && z < 0.999;
+  const bw = shrunk ? box.w : box.w * z, bh = box.h * z;
+  const offX = shrunk ? 0 : -(bw - box.w) / 2;
+  const offY = shrunk ? box.h - bh : -(bh - box.h) / 2;
+  // A reduced portrait is scaled to the box by `cover` on its own terms, so
+  // its own geometry — not the nominal one — decides what is left to crop.
+  // Reduced, it fits the box exactly: nothing is cropped and both axes centre.
+  const fit = shrunk ? Math.max(bw / iw, bh / ih) : scale;
+  const fw = iw * fit, fh = ih * fit;
+  const overX = fw - bw, overY = fh - bh;
   const place = (centre, keep, scaled, over, target, offset, size) => {
     if (over <= 0.5) return 50;                       // no crop on this axis
     let p = ((centre * scaled) - (target * size - offset)) / over * 100;
@@ -156,19 +204,23 @@ export async function frameCover(url, box, safe, zoom) {
     if (pMin <= pMax) p = Math.max(pMin, Math.min(pMax, p));
     return Math.max(0, Math.min(100, p));
   };
-  const px = place(cols.centre, keepCols, sw, overX, 0.5, offX, box.w);
-  const py = place(rows.centre, keepRows, sh, overY, (top + bottom) / 2, offY, box.h);
+  const px = place(cols.centre, keepCols, fw, overX, 0.5, offX, box.w);
+  const py = place(rows.centre, keepRows, fh, overY, (top + bottom) / 2, offY, box.h);
 
   return {
     objectPosition: Math.round(px) + '% ' + Math.round(py) + '%',
     scale: z,
     box: {
-      width: (z * 100).toFixed(3) + '%',
-      height: (z * 100).toFixed(3) + '%',
-      left: (-(z - 1) * 50).toFixed(3) + '%',
-      top: (-(z - 1) * 50).toFixed(3) + '%'
+      width: (bw / box.w * 100).toFixed(3) + '%',
+      height: (bh / box.h * 100).toFixed(3) + '%',
+      left: (offX / box.w * 100).toFixed(3) + '%',
+      top: (offY / box.h * 100).toFixed(3) + '%'
     },
+    // Painted behind the photograph, so the strip a reduced portrait leaves at
+    // the head of the page carries on from the picture's own sky.
+    fill: skyFill || null,
     note: 'subject measured across ' + Math.round(rows.lo * 100) + '\u2013' + Math.round(rows.hi * 100)
       + '% of the height, centred at ' + Math.round(cols.centre * 100) + '% across'
+      + (z < 0.999 ? '; printed at ' + Math.round(z * 100) + '% and sat on the page foot to clear the masthead' : '')
   };
 }

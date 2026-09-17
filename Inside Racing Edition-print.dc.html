@@ -85,6 +85,7 @@ a:hover{color:#1b7fb4}
 <section class="page" data-screen-label="01 Cover" style="position:relative;font-family:'Gotham Narrow',sans-serif;color:#2c2e35;background:#fff;overflow:hidden">
 <sc-for list="{{ coverPhoto }}" as="c" hint-placeholder-count="0">
 <sc-if value="{{ c.hasArt }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;left:0;top:0;width:100%;height:100%;background:{{ c.fill }}"></div>
 <img src="{{ c.art }}" alt="" style="position:absolute;left:{{ c.left }};top:{{ c.top }};width:{{ c.w }};height:{{ c.h }};object-fit:cover;object-position:{{ c.pos }};display:block" />
 </sc-if>
 </sc-for>
@@ -2649,7 +2650,10 @@ class Component extends DCLogic {
     const cf = this.state.coverFrame;
     const cb = (cf && cf.box) || { width: '100%', height: '100%', left: '0%', top: '0%' };
     const coverBox = { w: cb.width, h: cb.height, left: cb.left, top: cb.top,
-      pos: (cf && cf.objectPosition) || '50% 50%' };
+      pos: (cf && cf.objectPosition) || '50% 50%',
+      // A portrait cover prints a little under full size and sits on the page
+      // foot, so the strip it leaves at the head carries the picture's own sky.
+      fill: (cf && cf.fill) || 'transparent' };
 
     return {
       frontPages: sc.front ? [{}] : [],
