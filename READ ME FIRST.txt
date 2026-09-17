@@ -1,0 +1,83 @@
+INSIDE RACING — complete file set, 18 September 2026
+====================================================
+
+This is the whole repository as it should stand. Replace the lot.
+
+WHAT TO DO
+----------
+1. Unzip this folder somewhere outside your clone.
+2. Open your clone in Explorer (GitHub Desktop: Ctrl+Shift+F).
+3. Delete everything in the clone EXCEPT the hidden ".git" folder.
+   Do not delete ".git" — that is the repository itself.
+
+   Let Explorer protect you: leave hidden files HIDDEN for this step.
+   ".git" is then invisible, so Ctrl+A cannot select it and cannot delete
+   it. Everything you can see is safe to remove.
+
+4. Copy everything from this unzipped folder into the clone.
+
+   For this step turn hidden files ON, in the unzipped folder, so that
+   Ctrl+A picks up ".nojekyll" and ".gitignore" as well. Explorer:
+   View > Show > Hidden items. Turn it back off afterwards.
+
+   Miss those two and GitHub Pages goes back to ignoring any folder whose
+   name starts with an underscore, and the working detritus starts getting
+   committed again.
+5. Rename "_CLAUDE.md" to "CLAUDE.md". It could not be named that in the
+   zip. Delete "READ ME FIRST.txt" — it is not part of the repository.
+6. GitHub Desktop will now list the changes, including deletions.
+7. Summary: "Full file set — console conditional rows, cover framing,
+   layout fixes, baked edition"
+8. Commit to main, then Push origin.
+
+CHECKING ".git" SURVIVED
+------------------------
+Turn hidden items on in the clone: a ".git" folder should sit alongside the
+files. GitHub Desktop is the other tell — with ".git" gone it reports that
+the repository cannot be found, rather than listing changes.
+
+If it has gone, nothing is lost: the work is all on GitHub. Clone the
+repository again into a new folder and copy this file set into that.
+
+WHAT THIS CLEANS UP
+-------------------
+The current repository has three things in it that should not be:
+
+  repo/          a second, older copy of the whole site nested inside itself
+  cover-frame.js and source.js sitting loose at the top level, duplicates
+                 of the real ones in parsers/
+  scraps/, uploads/, screenshots/   working detritus, committed before
+                 .gitignore was added
+
+Replacing the whole lot removes all of it. ".gitignore" keeps the detritus
+out from here on.
+
+WHAT IS FIXED SINCE THE LAST PUSH
+---------------------------------
+Producer Console.dc.html        the Industry Notice and Rules Extracts rows
+                                no longer print red when their toggle is No.
+                                The pushed version tested the printed section
+                                titles; the rows carry the catalogue names
+                                from parsers/source.js, so nothing matched.
+Inside Racing Edition, -print   cover auto-framing, race series and stewards
+and Parts 1-3                   depth, trials and Division of Races fitting
+Programs Summary Chart          venue colour read by colour, not point size
+Jump Outs and Flat Trials       trials title measured from the real depth
+Race Series                     row depth by character count, catching wraps
+Notices                         stewards' room spacing, one page not two
+parsers/notices.js              reads a heading set bold by hand, not only
+                                one styled Heading 1
+data/edition.json               the bake. Never committed before, so the
+                                published site had no edition to show until
+                                someone ran the console themselves.
+
+WHAT IS IN HERE
+---------------
+  21 pages at the top level, index.html the front door
+  docs/        six reference documents
+  parsers/     seventeen input readers
+  data/        the baked edition the pages render from
+  assets/      artwork, house advertising, the cover derivative
+  fonts/       Gotham Narrow and XNarrow
+  inputs/      the September input set, as supplied
+  support.js, doc-page.js, image-slot.js   the runtime

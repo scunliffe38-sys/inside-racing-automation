@@ -177,8 +177,29 @@ class Component extends DCLogic {
       n + Math.max(1, Math.ceil(String(b.t || '').length / 118)) * 9.6, 0);
   }
 
+  /**
+   * Where the flat trials start on the first page. The jump-out schedule above
+   * them is only as deep as the month with the most jump-outs, and the printed
+   * 311.85pt assumed a full one — a short month left a band of white between
+   * the two sections. Measured off the schedule's own depth instead, which also
+   * hands the spare depth to the trials and to the policy beneath them. Capped
+   * at the printed figure so a heavy month never pushes further down.
+   */
+  trialsTop() {
+    const rows = (this.state.blocks || []).slice(0, 2)
+      .reduce((n, b) => Math.max(n, (b.left || []).length, (b.right || []).length), 0);
+    if (!rows) return 311.85;
+    // 11.45pt per entry, measured off the rendered page — 8pt of line on 2pt of
+    // padding comes to 10pt on paper but the flex row sets a taller line box,
+    // and the 1.45pt difference over thirteen entries put the trials title
+    // through the bottom of the schedule.
+    const bottom = 115.65 + rows * 11.45;
+    return Math.min(311.85, Math.max(150, bottom + 16 + 30.85));
+  }
+
   pack() {
-    const BOTTOM = 811.89, TOP_FIRST = 311.85, TOP_CONT = 94.4, GAP = 9, COLS = 4, STUB = 150;
+    const BOTTOM = 811.89, TOP_CONT = 94.4, GAP = 9, COLS = 4, STUB = 150;
+    const TOP_FIRST = this.trialsTop();
     const atoms = Component.trialAtoms(this.state.meetings);
     const policy = this.policyDepth();
     // trials run continuously to the foot of every page; the policy follows them
@@ -266,7 +287,14 @@ class Component extends DCLogic {
     if (policy) {
       const last = pages[pages.length - 1];
       if (last.height + 22 + policy <= last.limit) last.policyOn = true;
-      else pages.push({ first: false, cols: [[], [], [], []], height: 0, policyOn: true, policyOnly: true, limit: limitOf(false) });
+      else {
+        // Say why, so a page of its own does not look like a fault. It is the
+        // month's trial volume that decides this, not the layout.
+        console.info('Division of Races Policy \u2014 needs ' + Math.round(policy)
+          + 'pt and the trials leave ' + Math.round(last.limit - last.height - 22)
+          + 'pt under them, so it runs on a page of its own.');
+        pages.push({ first: false, cols: [[], [], [], []], height: 0, policyOn: true, policyOnly: true, limit: limitOf(false) });
+      }
     }
     return pages;
   }
@@ -297,7 +325,7 @@ class Component extends DCLogic {
     }));
     const from = this.state.from || 0;
     const pages = this.pack().map((p, i) => {
-      const top = p.first ? 311.85 : 94.4;
+      const top = p.first ? this.trialsTop() : 94.4;
       const filled = p.cols.filter(c => c.length).length;
       const policyTop = p.policyOnly ? 94.4 : top + p.height + 22;
       return {
@@ -307,7 +335,7 @@ class Component extends DCLogic {
         // one hairline in each gutter between adjacent columns that carry trials
         dividers: Array.from({ length: Math.max(0, filled - 1) }, (u, j) => ({ left: (C(j) + 126.5 + 6.6) + 'pt' })),
         trialsTitle: p.policyOnly ? '' : (p.first ? 'Official Flat Trials' : 'Official Flat Trials continued'),
-        trialsTitleTop: (p.first ? 281 : 59.3) + 'pt',
+        trialsTitleTop: (p.first ? this.trialsTop() - 30.85 : 59.3) + 'pt',
         trialsTop: top + 'pt',
         rulesTop: (top + 3.15) + 'pt',
         rulesHeight: Math.max(0, p.height - 3.15) + 'pt',

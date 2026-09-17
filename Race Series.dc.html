@@ -41,13 +41,13 @@ a:hover{color:#1b7fb4}
 </sc-for>
 <div style="display:flex;font-size:8pt;font-weight:700;line-height:8pt;letter-spacing:.02em">
 <sc-for list="{{ b.head }}" as="c" hint-placeholder-count="4">
-<div style="width:{{ c.w }};flex:0 0 {{ c.w }};padding:4.6pt 0 2.1pt {{ c.pad }};box-sizing:border-box;box-shadow:inset 0 -0.25pt 0 #2c2e35">{{ c.t }}</div>
+<div style="width:{{ c.w }};flex:0 0 {{ c.w }};padding:4pt 0 1.9pt {{ c.pad }};box-sizing:border-box;box-shadow:inset 0 -0.25pt 0 #2c2e35">{{ c.t }}</div>
 </sc-for>
 </div>
 <sc-for list="{{ b.rows }}" as="r" hint-placeholder-count="9">
 <div style="display:flex;line-height:8pt">
 <sc-for list="{{ r.cells }}" as="c" hint-placeholder-count="4">
-<div style="width:{{ c.w }};flex:0 0 {{ c.w }};padding:4.15pt 0 2.05pt {{ c.pad }};box-sizing:border-box;box-shadow:inset 0 -0.25pt 0 #2c2e35;font-size:{{ c.size }}">{{ c.t }}</div>
+<div style="width:{{ c.w }};flex:0 0 {{ c.w }};padding:3.4pt 0 1.8pt {{ c.pad }};box-sizing:border-box;box-shadow:inset 0 -0.25pt 0 #2c2e35;font-size:{{ c.size }}">{{ c.t }}</div>
 </sc-for>
 </div>
 </sc-for>
@@ -147,8 +147,19 @@ class Component extends DCLogic {
    * heat. No measuring needed, so the pages can be worked out before layout.
    */
   static depth(b) {
+    const grid = b.columns.length === 3 ? Component.THREE : Component.FOUR;
     const note = b.note ? 6.7 + Math.max(1, Math.ceil(String(b.note).length / 62)) * 9.05 + 6.2 : 0;
-    return 14.2 + note + 14.7 + (b.rows || []).length * 14.2;
+      // A row is one line unless a cell wraps, and the race-name column is
+      // where that happens. Counting the wrap is what stops a block of long
+      // names running past the foot of the page.
+    const cpl = i => Math.max(4, Math.floor((grid[i].w - grid[i].pad)
+      / (grid === Component.FOUR && i === 1 ? 2.73 : 2.94)));
+    const rows = (b.rows || []).reduce((n, r) => {
+      const lines = grid.reduce((m, g, i) =>
+        Math.max(m, Math.ceil(String(r[i] || '').length / cpl(i)) || 1), 1);
+      return n + 13.2 + (lines - 1) * 8;
+    }, 0);
+    return 14.2 + note + 13.9 + rows;
   }
 
   /**

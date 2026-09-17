@@ -85,7 +85,7 @@ a:hover{color:#1b7fb4}
 <section class="page" data-screen-label="01 Cover" style="position:relative;font-family:'Gotham Narrow',sans-serif;color:#2c2e35;background:#fff;overflow:hidden">
 <sc-for list="{{ coverPhoto }}" as="c" hint-placeholder-count="0">
 <sc-if value="{{ c.hasArt }}" hint-placeholder-val="{{ false }}">
-<img src="{{ c.art }}" alt="" style="position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;object-position:50% 50%;display:block" />
+<img src="{{ c.art }}" alt="" style="position:absolute;left:{{ c.left }};top:{{ c.top }};width:{{ c.w }};height:{{ c.h }};object-fit:cover;object-position:{{ c.pos }};display:block" />
 </sc-if>
 </sc-for>
 <sc-if value="{{ coverMissing }}" hint-placeholder-val="{{ false }}">
@@ -213,7 +213,7 @@ DETAILS</div>
 <div style="position:absolute;top:0;bottom:0;left:530.8pt;width:38.6pt;background:#edf6fb"></div>
 <sc-for list="{{ pg.rows }}" as="row" hint-placeholder-count="6">
 <div data-row="1" lang="en" style="display:flex;position:relative;border-left:0.25pt solid #2c2e35">
-<div style="position:relative;width:67.6pt;flex:0 0 67.6pt;box-sizing:border-box;padding:3.5pt 2pt;border-right:0.25pt solid #2c2e35;border-bottom:0.25pt solid #2c2e35;font-size:6.5pt;line-height:6.3pt;color:#2c2e35;white-space:pre-wrap;hyphens:manual;overflow-wrap:break-word">
+<div style="position:relative;width:67.6pt;flex:0 0 67.6pt;box-sizing:border-box;padding:3.5pt 1.5pt;border-right:0.25pt solid #2c2e35;border-bottom:0.25pt solid #2c2e35;font-size:6.5pt;line-height:6.3pt;color:#2c2e35;white-space:pre-wrap;hyphens:manual;overflow-wrap:break-word">
 <sc-for list="{{ row.a }}" as="r" hint-placeholder-count="4">
 <sc-for list="{{ r.dt }}" as="v" hint-placeholder-count="0"><span style="font-size:8pt;font-weight:700;line-height:9pt;letter-spacing:-.03em">{{ v.t }}</span></sc-for>
 <sc-for list="{{ r.vm }}" as="v" hint-placeholder-count="0"><span style="font-size:8pt;font-weight:700;line-height:9pt;letter-spacing:-.03em;color:#ff0040">{{ v.t }}</span></sc-for>
@@ -223,18 +223,22 @@ DETAILS</div>
 <sc-for list="{{ r.rd }}" as="v" hint-placeholder-count="0"><span style="font-weight:700;color:#ff0040">{{ v.t }}</span></sc-for>
 <sc-for list="{{ r.mn }}" as="v" hint-placeholder-count="0"><span style="white-space:nowrap">{{ v.t }}</span></sc-for>
 <sc-for list="{{ r.mb }}" as="v" hint-placeholder-count="0"><span style="font-weight:700;white-space:nowrap">{{ v.t }}</span></sc-for>
+<sc-for list="{{ r.sm }}" as="v" hint-placeholder-count="0"><span style="font-size:{{ v.s }};white-space:nowrap">{{ v.t }}</span></sc-for>
+<sc-for list="{{ r.smb }}" as="v" hint-placeholder-count="0"><span style="font-size:{{ v.s }};font-weight:700;white-space:nowrap">{{ v.t }}</span></sc-for>
 <sc-for list="{{ r.vo }}" as="v" hint-placeholder-count="0"><span style="display:block;line-height:6.3pt">{{ v.t }}</span></sc-for>
 <sc-for list="{{ r.sep }}" as="v" hint-placeholder-count="0"><span style="display:inline-block;max-width:100%;overflow:hidden;white-space:pre;vertical-align:top;line-height:6.3pt">{{ v.t }}</span></sc-for>
 </sc-for>
 </div>
 <sc-for list="{{ row.rest }}" as="c" hint-placeholder-count="13">
-<div style="position:relative;width:38.6pt;flex:0 0 38.6pt;box-sizing:border-box;padding:3.5pt 2pt;border-right:0.25pt solid #2c2e35;border-bottom:0.25pt solid #2c2e35;font-size:6.5pt;line-height:6.3pt;color:#2c2e35;white-space:pre-wrap;hyphens:manual;overflow-wrap:break-word">
+<div style="position:relative;width:38.6pt;flex:0 0 38.6pt;box-sizing:border-box;padding:3.5pt 1.5pt;border-right:0.25pt solid #2c2e35;border-bottom:0.25pt solid #2c2e35;font-size:6.5pt;line-height:6.3pt;color:#2c2e35;white-space:pre-wrap;hyphens:manual;overflow-wrap:break-word">
 <sc-for list="{{ c.runs }}" as="r" hint-placeholder-count="3">
 <sc-for list="{{ r.n }}" as="v" hint-placeholder-count="1"><span>{{ v.t }}</span></sc-for>
 <sc-for list="{{ r.b }}" as="v" hint-placeholder-count="0"><span style="font-weight:700">{{ v.t }}</span></sc-for>
 <sc-for list="{{ r.rd }}" as="v" hint-placeholder-count="0"><span style="font-weight:700;color:#ff0040">{{ v.t }}</span></sc-for>
 <sc-for list="{{ r.mn }}" as="v" hint-placeholder-count="0"><span style="white-space:nowrap">{{ v.t }}</span></sc-for>
 <sc-for list="{{ r.mb }}" as="v" hint-placeholder-count="0"><span style="font-weight:700;white-space:nowrap">{{ v.t }}</span></sc-for>
+<sc-for list="{{ r.sm }}" as="v" hint-placeholder-count="0"><span style="font-size:{{ v.s }};white-space:nowrap">{{ v.t }}</span></sc-for>
+<sc-for list="{{ r.smb }}" as="v" hint-placeholder-count="0"><span style="font-size:{{ v.s }};font-weight:700;white-space:nowrap">{{ v.t }}</span></sc-for>
 <sc-for list="{{ r.vo }}" as="v" hint-placeholder-count="0"><span style="display:block;line-height:6.3pt">{{ v.t }}</span></sc-for>
 <sc-for list="{{ r.sep }}" as="v" hint-placeholder-count="0"><span style="display:inline-block;max-width:100%;overflow:hidden;white-space:pre;vertical-align:top;line-height:6.3pt">{{ v.t }}</span></sc-for>
 </sc-for>
@@ -680,13 +684,13 @@ DETAILS</div>
 </sc-for>
 <div style="display:flex;font-size:8pt;font-weight:700;line-height:8pt;letter-spacing:.02em">
 <sc-for list="{{ b.head }}" as="c" hint-placeholder-count="4">
-<div style="width:{{ c.w }};flex:0 0 {{ c.w }};padding:4.6pt 0 2.1pt {{ c.pad }};box-sizing:border-box;border-bottom:0.25pt solid #2c2e35">{{ c.t }}</div>
+<div style="width:{{ c.w }};flex:0 0 {{ c.w }};padding:4pt 0 1.9pt {{ c.pad }};box-sizing:border-box;border-bottom:0.25pt solid #2c2e35">{{ c.t }}</div>
 </sc-for>
 </div>
 <sc-for list="{{ b.rows }}" as="r" hint-placeholder-count="9">
 <div style="display:flex;line-height:8pt">
 <sc-for list="{{ r.cells }}" as="c" hint-placeholder-count="4">
-<div style="width:{{ c.w }};flex:0 0 {{ c.w }};padding:4.15pt 0 2.05pt {{ c.pad }};box-sizing:border-box;border-bottom:0.25pt solid #2c2e35;font-size:{{ c.size }}">{{ c.t }}</div>
+<div style="width:{{ c.w }};flex:0 0 {{ c.w }};padding:3.4pt 0 1.8pt {{ c.pad }};box-sizing:border-box;border-bottom:0.25pt solid #2c2e35;font-size:{{ c.size }}">{{ c.t }}</div>
 </sc-for>
 </div>
 </sc-for>
@@ -859,13 +863,13 @@ DETAILS</div>
 <div style="position:absolute;left:22.7pt;top:{{ tp.top }};width:549.9pt">
 <sc-for list="{{ tp.blocks }}" as="b" hint-placeholder-count="8">
 <sc-if value="{{ b.isHeading }}" hint-placeholder-val="{{ true }}">
-<div style="margin-top:13pt;font-size:15pt;font-weight:700;line-height:17pt;letter-spacing:-.006em;text-wrap:pretty">{{ b.text }}</div>
+<div style="margin-top:9pt;font-size:15pt;font-weight:700;line-height:17pt;letter-spacing:-.006em;text-wrap:pretty">{{ b.text }}</div>
 </sc-if>
 <sc-if value="{{ b.isSubhead }}" hint-placeholder-val="{{ true }}">
 <div style="margin-top:9pt;font-size:9pt;font-weight:700;line-height:11pt;text-wrap:pretty">{{ b.text }}</div>
 </sc-if>
 <sc-if value="{{ b.isPara }}" hint-placeholder-val="{{ true }}">
-<div style="margin-top:6pt;font-size:8pt;font-weight:400;line-height:10.4pt;text-wrap:pretty">{{ b.text }}</div>
+<div style="margin-top:5pt;font-size:8pt;font-weight:400;line-height:10.4pt;text-wrap:pretty">{{ b.text }}</div>
 </sc-if>
 <sc-if value="{{ b.isClause }}" hint-placeholder-val="{{ true }}">
 <div style="margin-top:4pt;padding-left:13pt;font-size:8pt;line-height:10.4pt;text-wrap:pretty">{{ b.text }}</div>
@@ -924,9 +928,9 @@ DETAILS</div>
 
 <sc-for list="{{ adPages }}" as="ad" hint-placeholder-count="0">
 <section class="page" data-screen-label="Full-page advertising" style="position:relative;font-family:'Gotham Narrow',sans-serif;color:#fff;background:#1668dc;overflow:hidden">
-<sc-if value="{{ ad.art }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ ad.hasArt }}" hint-placeholder-val="{{ false }}">
+<sc-if value="{{ ad.hasArt }}" hint-placeholder-val="{{ false }}">
 <img src="{{ ad.art }}" alt="" style="position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover" />
-</sc-if></sc-if>
+</sc-if>
 <sc-if value="{{ ad.live }}" hint-placeholder-val="{{ true }}">
 <div style="position:absolute;left:48pt;top:120pt;width:400pt;font-family:'Gotham XNarrow',sans-serif;font-size:38pt;font-weight:700;line-height:1.04;letter-spacing:-.015em;text-wrap:pretty">{{ ad.headline }}</div>
 <div style="position:absolute;left:48pt;top:330pt;width:330pt;font-size:11pt;line-height:16pt;text-wrap:pretty">{{ ad.body }}</div>
@@ -993,6 +997,41 @@ const FIRST_FOLIO_OVERRIDE = null;
 const JO_COL = i => 22.7 + i * 141.2;
 // measured from the printed edition: four-column series tables and the
 // three-column highweight schedule, as widths inside a 268.4pt column
+// A race name wider than a 38.6pt chart column used to break mid-word —
+// "Wycheproo" over "f". Rather than break it, the word is set a half point
+// smaller, and a half point again when one is not enough: Manangatang,
+// Scarborough and Maribyrnong clear at 6pt, Thoroughbred needs 5.5pt. Widths
+// are measured once per word and cached, so 2,000 cells cost a few dozen
+// measures. A word that still will not fit is left to wrap as before.
+const CH_FIT = { cache: {}, ctx: null, waiting: false };
+function chFitSize(word, inner) {
+  if (!word || word.length < 5) return 0;
+  // Measured before the face has loaded, the canvas reports the fallback's
+  // widths, which are narrower — that is how "Thoroughbred" was handed a 6pt
+  // that still overhung its column. Until Gotham Narrow is ready the word is
+  // left alone and the answer is NOT cached, so a later render measures it
+  // properly; the cache is emptied once the fonts settle.
+  if (!document.fonts || !document.fonts.check('400 6.5pt "Gotham Narrow"')) {
+    if (document.fonts && !CH_FIT.waiting) {
+      CH_FIT.waiting = true;
+      document.fonts.ready.then(() => { CH_FIT.cache = {}; });
+    }
+    return 0;
+  }
+  const key = word + '|' + inner;
+  if (key in CH_FIT.cache) return CH_FIT.cache[key];
+  if (!CH_FIT.ctx) CH_FIT.ctx = document.createElement('canvas').getContext('2d');
+  // a third of a point of slack, so rounding never defeats the fit
+  const room = inner - 0.35;
+  let out = 5.5;
+  for (const size of [6.5, 6, 5.5]) {
+    CH_FIT.ctx.font = '400 ' + size + 'pt "Gotham Narrow"';
+    if (CH_FIT.ctx.measureText(word).width * 72 / 96 <= room) { out = size === 6.5 ? 0 : size; break; }
+  }
+  CH_FIT.cache[key] = out;
+  return out;
+}
+
 const RS_FOUR = [{ w: 27, pad: 3 }, { w: 50.9, pad: 4 }, { w: 48.1, pad: 4 }, { w: 142.4, pad: 3.9 }];
 const RS_THREE = [{ w: 85, pad: 3 }, { w: 75, pad: 3 }, { w: 108.4, pad: 3 }];
 
@@ -1025,6 +1064,7 @@ class Component extends DCLogic {
   state = {
     edition: '', days: null, dlPages: [], chart: null, chPages: null, meetings: null, rpPages: null,
     permits: [], trials: [], agents: [], joBlocks: [], joMeetings: [], policy: [], policyHeading: '',
+    coverFrame: null,
     seriesBlocks: [], notice: [], stewards: [], rules: [], tailLoaded: false, settings: {}
   };
 
@@ -1485,8 +1525,35 @@ class Component extends DCLogic {
     this.setState(patch, () => requestAnimationFrame(() => this.reportExtent()));
   }
 
+  /**
+   * The cover photograph arrives framed for a camera, not for an A4 page with
+   * a masthead across the head and a teaser strip across the foot. October's
+   * was landscape: centred at 50% 50% it lost half its width to the crop.
+   * parsers/cover-frame.js measures where the picture's interest actually sits
+   * and aims that at the band nothing else covers — the same framing the
+   * standalone Cover page has used since August.
+   *
+   * Runs once, as soon as the cover is in state. Until it lands the page shows
+   * the plain centred crop, so nothing waits on it.
+   */
+  frameCoverPhoto() {
+    if (this._coverFramed || !this.state.cover) return;
+    this._coverFramed = true;
+    import('./parsers/cover-frame.js')
+      .then(m => m.frameCover(this.state.cover,
+        { w: 595.3, h: 841.9 }, { top: 0.172, bottom: 0.895 }, 1.2))
+      .then(f => {
+        console.info('Cover \u2014 framing: ' + f.objectPosition
+          + (f.scale > 1.001 ? ', zoomed ' + Math.round((f.scale - 1) * 100) + '%' : '')
+          + ' \u2014 ' + f.note);
+        this.setState({ coverFrame: f });
+      })
+      .catch(e => console.warn('Cover \u2014 could not frame the photograph: ' + (e.message || e)));
+  }
+
   componentDidUpdate() {
     const sc = this.scope();
+    if (sc.front) this.frameCoverPhoto();
     // Pass 2: the sections measure and pack in this one update and commit
     // together — see the note on componentDidMount. A section that commits on
     // its own puts another three-second pass on the clock and brings the
@@ -1724,7 +1791,9 @@ class Component extends DCLogic {
   }
 
   chClassify(runs, isMeeting) {
-    const empty = () => ({ n: [], b: [], rd: [], dt: [], vm: [], vc: [], mn: [], mb: [], vo: [], sep: [] });
+    const empty = () => ({ n: [], b: [], rd: [], dt: [], vm: [], vc: [], mn: [], mb: [], vo: [], sm: [], smb: [], sep: [] });
+    // the measure a word has to fit: the cell less its padding and rule
+    const inner = isMeeting ? 64.35 : 35.34;
     const bucket = (r, i) => {
       if (isMeeting && i === 0) return 'dt';
       // The venue is identified by its colour alone. The calendar export sets
@@ -1769,8 +1838,28 @@ class Component extends DCLogic {
           chunk.split(/(\$\d[\d,]*)/).forEach(bit => {
             if (!bit) return;
             const o = empty();
-            if (/^\$\d/.test(bit) && (key === 'n' || key === 'b')) o[key === 'b' ? 'mb' : 'mn'].push({ t: bit });
-            else o[key].push({ t: this.chAtomic(bit) });
+            if (/^\$\d/.test(bit) && (key === 'n' || key === 'b')) {
+              // prizemoney is already unbreakable; a figure wider than the
+              // column is set smaller rather than allowed to overhang
+              const ms = chFitSize(bit, inner);
+              if (ms) o[key === 'b' ? 'smb' : 'sm'].push({ t: bit, s: ms + 'pt' });
+              else o[key === 'b' ? 'mb' : 'mn'].push({ t: bit });
+              out.push(o);
+              return;
+            }
+            if (key === 'n' || key === 'b') {
+              // split on spaces so only the offending word is set smaller
+              String(bit).split(/(\s+)/).forEach(word => {
+                if (!word) return;
+                const size = chFitSize(word.replace(/[\u2060\u00a0]/g, ' ').trim(), inner);
+                const a = empty();
+                if (size) a[key === 'b' ? 'smb' : 'sm'].push({ t: this.chAtomic(word), s: size + 'pt' });
+                else a[key].push({ t: this.chAtomic(word) });
+                out.push(a);
+              });
+              return;
+            }
+            o[key].push({ t: this.chAtomic(bit) });
             out.push(o);
           });
         });
@@ -1945,8 +2034,29 @@ class Component extends DCLogic {
    * follows the last trial — under it when the page has the depth, otherwise
    * whole on a page of its own.
    */
+  /**
+   * Where the flat trials start on the first page. The jump-out schedule above
+   * them is only as deep as the month with the most jump-outs, and the printed
+   * 311.85pt assumed a full one — a short month left a band of white between
+   * the two sections. Measured off the schedule's own depth instead, which also
+   * hands the spare depth to the trials and to the policy beneath them. Capped
+   * at the printed figure so a heavy month never pushes further down.
+   */
+  joTrialsTop() {
+    const rows = (this.state.joBlocks || []).slice(0, 2)
+      .reduce((n, b) => Math.max(n, (b.left || []).length, (b.right || []).length), 0);
+    if (!rows) return 311.85;
+    // 11.45pt per entry, measured off the rendered page — 8pt of line on 2pt of
+    // padding comes to 10pt on paper but the flex row sets a taller line box,
+    // and the 1.45pt difference over thirteen entries put the trials title
+    // through the bottom of the schedule.
+    const bottom = 115.65 + rows * 11.45;
+    return Math.min(311.85, Math.max(150, bottom + 16 + 30.85));
+  }
+
   joPack() {
-    const BOTTOM = 811.89, TOP_FIRST = 311.85, TOP_CONT = 94.4, GAP = 9, COLS = 4, STUB = 150;
+    const BOTTOM = 811.89, TOP_CONT = 94.4, GAP = 9, COLS = 4, STUB = 150;
+    const TOP_FIRST = this.joTrialsTop();
     const HEAD = 28.35, RACE = 14.25, LINE = 8.1, CPL = 34;
     const atoms = [];
     (this.state.joMeetings || []).forEach(m => {
@@ -2043,7 +2153,14 @@ class Component extends DCLogic {
     if (policy) {
       const last = pages[pages.length - 1];
       if (last.height + 22 + policy <= last.limit) last.policyOn = true;
-      else pages.push({ first: false, cols: [[], [], [], []], height: 0, policyOn: true, policyOnly: true, limit: limitOf(false) });
+      else {
+        // Say why, so a page of its own does not look like a fault. It is the
+        // month's trial volume that decides this, not the layout.
+        console.info('Division of Races Policy \u2014 needs ' + Math.round(policy)
+          + 'pt and the trials leave ' + Math.round(last.limit - last.height - 22)
+          + 'pt under them, so it runs on a page of its own.');
+        pages.push({ first: false, cols: [[], [], [], []], height: 0, policyOn: true, policyOnly: true, limit: limitOf(false) });
+      }
     }
     return pages;
   }
@@ -2055,8 +2172,19 @@ class Component extends DCLogic {
   rsPack() {
     const PAGE = 841.89, BOTTOM = 30, TOP_FIRST = 93.8, TOP_CONT = 57.9, GAP = 20;
     const depth = b => {
+      const grid = b.columns.length === 3 ? RS_THREE : RS_FOUR;
       const note = b.note ? 6.7 + Math.max(1, Math.ceil(String(b.note).length / 62)) * 9.05 + 6.2 : 0;
-      return 14.2 + note + 14.7 + (b.rows || []).length * 14.2;
+      // A row is one line unless a cell wraps, and the race-name column is
+      // where that happens. Counting the wrap is what stops a block of long
+      // names running past the foot of the page.
+      const cpl = i => Math.max(4, Math.floor((grid[i].w - grid[i].pad)
+        / (grid === RS_FOUR && i === 1 ? 2.73 : 2.94)));
+      const rows = (b.rows || []).reduce((n, r) => {
+        const lines = grid.reduce((m, g, i) =>
+          Math.max(m, Math.ceil(String(r[i] || '').length / cpl(i)) || 1), 1);
+        return n + 13.2 + (lines - 1) * 8;
+      }, 0);
+      return 14.2 + note + 13.9 + rows;
     };
     const blocks = this.state.seriesBlocks || [];
     const order = blocks.filter(b => !b.tail).concat(blocks.filter(b => b.tail));
@@ -2091,10 +2219,10 @@ class Component extends DCLogic {
    * heading never sits alone at the foot of a page.
    */
   ntPack(which) {
-    const PAGE = 841.89, BOTTOM = 30, TOP_FIRST = 100, TOP_CONT = 50;
+    const PAGE = 841.89, BOTTOM = 30, TOP_FIRST = 92, TOP_CONT = 50;
     const M = which === 'notice'
       ? { isSubject: [10, 17, 70], isSubhead: [11, 11, 120], isPara: [7, 10.4, 158], isStep: [5, 10.4, 150], isClause: [4, 10.4, 152], isBullet: [4, 10.4, 150] }
-      : { isHeading: [13, 17, 70], isSubhead: [9, 11, 120], isPara: [6, 10.4, 158], isClause: [4, 10.4, 152], isBullet: [4, 10.4, 150] };
+      : { isHeading: [9, 17, 70], isSubhead: [9, 11, 120], isPara: [5, 10.4, 158], isClause: [4, 10.4, 152], isBullet: [4, 10.4, 150] };
     const HEADS = which === 'notice' ? ['isSubject', 'isSubhead'] : ['isHeading', 'isSubhead'];
     const items = (this.state[which] || []).map(b => {
       const kind = Object.keys(M).find(k => b[k]) || 'isPara';
@@ -2394,7 +2522,7 @@ class Component extends DCLogic {
       right1: b.right
     }));
     const joPages = joPacked.map((p, i) => {
-      const top = p.first ? 311.85 : 94.4;
+      const top = p.first ? this.joTrialsTop() : 94.4;
       const filled = p.cols.filter(c => c.length).length;
       const policyTop = p.policyOnly ? 94.4 : top + p.height + 22;
       return {
@@ -2403,7 +2531,7 @@ class Component extends DCLogic {
         columns: p.cols.map((atoms, j) => ({ left: JO_COL(j) + 'pt', atoms })),
         dividers: Array.from({ length: Math.max(0, filled - 1) }, (u, j) => ({ left: (JO_COL(j) + 126.5 + 6.6) + 'pt' })),
         trialsTitle: p.policyOnly ? '' : (p.first ? 'Official Flat Trials' : 'Official Flat Trials continued'),
-        trialsTitleTop: (p.first ? 281 : 59.3) + 'pt',
+        trialsTitleTop: (p.first ? this.joTrialsTop() - 30.85 : 59.3) + 'pt',
         trialsTop: top + 'pt',
         rulesTop: (top + 3.15) + 'pt',
         rulesHeight: Math.max(0, p.height - 3.15) + 'pt',
@@ -2438,7 +2566,7 @@ class Component extends DCLogic {
       no: rsFolios[i] || ''
     }));
     const ntPaged = (packed, folios, blank) => packed.map((p, i) => ({
-      top: (p.first ? 100 : 50) + 'pt',
+      top: (p.first ? 92 : 50) + 'pt',
       titleRow: p.first ? [{}] : [],
       blocks: p.blocks,
       empty: p.first && blank,
@@ -2517,6 +2645,12 @@ class Component extends DCLogic {
       no: pcFolios[i] || ''
     }));
 
+    // Measured framing for the cover, or the plain centred crop until it lands.
+    const cf = this.state.coverFrame;
+    const cb = (cf && cf.box) || { width: '100%', height: '100%', left: '0%', top: '0%' };
+    const coverBox = { w: cb.width, h: cb.height, left: cb.left, top: cb.top,
+      pos: (cf && cf.objectPosition) || '50% 50%' };
+
     return {
       frontPages: sc.front ? [{}] : [],
       rpKeyPages: sc.programs ? [{}] : [],
@@ -2569,7 +2703,7 @@ class Component extends DCLogic {
       // the run makes a 1800px derivative from the producer's Cover.jpg; with
       // no cover supplied the page prints an awaiting-artwork panel rather
       // than last month's photograph
-      coverPhoto: this.state.cover ? [{ art: this.state.cover, hasArt: true }] : [],
+      coverPhoto: this.state.cover ? [Object.assign({ art: this.state.cover, hasArt: true }, coverBox)] : [],
       coverMissing: !this.state.cover,
       coverDate: e.toUpperCase(),
       footer: 'INSIDE RACING I ' + (this.state.edition || ''),

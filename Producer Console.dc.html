@@ -700,11 +700,14 @@ class Component extends DCLogic {
     const checking = (this.S ? this.S.EXPECTED : []).map(r => ({
       file: r.file, extra: '', section: r.section, size: '', status: 'checking\u2026', colour: MUTED
     }));
-    // the two conditional sections: a missing file only matters when they run
+    // The conditional sections: a missing file only matters when they run.
+    // These keys must match the `section` values in EXPECTED (parsers/source.js)
+    // — the catalogue's own names, not the printed section titles. Get one
+    // wrong and the row stays red with the toggle off.
     const conditional = { 'Jumps program': !!(st.edit && st.edit.jumps), 'Picnic racing': !!(st.edit && st.edit.picnics),
-      'Industry Notice': !st.edit || st.edit.notice !== false,
-      'From the Stewards’ Room': !st.edit || st.edit.stewards !== false,
-      'Rules and Notices': !st.edit || st.edit.rules !== false };
+      'Industry notice': !st.edit || st.edit.notice !== false,
+      'Stewards’ room': !st.edit || st.edit.stewards !== false,
+      'Rules extracts': !st.edit || st.edit.rules !== false };
     const catalogue = (st.scanned ? st.rows : checking).map(r => {
       if (r.found || !(r.section in conditional)) return r;
       const on = conditional[r.section];

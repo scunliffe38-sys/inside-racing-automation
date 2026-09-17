@@ -66,7 +66,7 @@ const looksLikeHeading = b => b.bold && b.text.length <= HEADINGISH && !/[.:;,]$
 // style: the gap above it, its line height, and how many characters fit on a
 // line at that size. Close enough to page on, and it needs no layout pass — the
 // section pages use the same model to break their copy across pages.
-const PAGE_DEPTH = 712;      // A4 less the title block and the folio zone
+const PAGE_DEPTH = 720;      // A4 less the title block and the folio zone
 
 // Characters to the line measured off the printed page: a full-measure line
 // at 8pt holds about 158, not the 118 a narrower column would.
@@ -75,9 +75,12 @@ const NOTICE_METRICS = {
   isStep: [5, 10.4, 150], isClause: [4, 10.4, 152], isBullet: [4, 10.4, 150], isPara: [7, 10.4, 158]
 };
 
+// Tightened from the October review: 13pt above every topic and 6pt between
+// paragraphs ran the section past one page. The pages set 9pt and 5pt, and
+// these figures have to stay the same or the overrun warning misleads.
 const STEWARDS_METRICS = {
-  isHeading: [13, 17, 70], isSubhead: [9, 11, 120],
-  isClause: [4, 10.4, 152], isBullet: [4, 10.4, 150], isPara: [6, 10.4, 158]
+  isHeading: [9, 17, 70], isSubhead: [9, 11, 120],
+  isClause: [4, 10.4, 152], isBullet: [4, 10.4, 150], isPara: [5, 10.4, 158]
 };
 
 function estimate(blocks, metrics) {

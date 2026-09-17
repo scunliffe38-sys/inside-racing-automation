@@ -87,8 +87,68 @@ worked out before layout. Any `page_*`
 row left in the workbook is flagged as stale and overwritten.
 
 ## Conditional sections
-`jumps_included` and `picnics_included` in Edition Settings are Yes/No. When a
-flag is No the section takes no pages and everything after it moves up.
+Five sections are conditional, all Yes/No in Edition Settings and all set from
+the producer console. When a flag is No the section takes no pages, the contents
+page drops its row, and everything after it moves up.
+
+`jumps_included` and `picnics_included` default **out** — they run in their
+seasons, and the console proposes Yes for the months that usually carry them.
+
+`notice_included`, `stewards_included` and `rules_included` default **in**: the
+Industry Notice, From the Stewards' Room and Rules and Notices run in most
+months, so a blank or missing setting reads as Yes. Never let a blank drop these
+— an edition built before the toggles existed has no value for them. Switching
+one off also stops the run looking for its .docx, so no awaiting-copy warning
+is raised for a section that was deliberately left out.
+
+## Word documents arrive bold, not styled
+`parsers/notices.js` reads block type from the paragraph style — Heading 1 for a
+topic, Heading 2 for a sub-heading, Normal for body copy. In practice Integrity
+Services and the Stewards set their headings **bold by hand**, which leaves the
+whole document Normal and every heading invisible to a style test. So a
+paragraph that is bold end to end, 90 characters or fewer, and not punctuated
+as a sentence is read as a heading as well, and the run warns that styling it
+Heading 1 would make it certain. An explicit Heading 1 always wins. This applies
+to all four documents: the Industry Notice, Stewards Room, Rules Extracts and
+the Division of Races Policy. **Never tighten this back to a style-only test** —
+an October edition arrived with 26 unstyled paragraphs and printed as an
+awaiting-copy panel because of it.
+
+## Typography rules the markup asks for
+These were set from the October review and are not preferences to re-litigate:
+
+- **Class labels never break.** `0-56`, `BM 62`, `F&M`, `0-70+` hold together
+  across a line break. A word joiner (`\u2060`, zero-width, no glyph) removes
+  the break opportunity and a non-breaking space replaces a space inside a
+  label, so nothing printed changes. `chAtomic()` in the edition files and
+  `atomic()` on the chart page.
+- **VOBIS labels start their own line**, set as a block out of whatever run
+  carried them.
+- **A venue qualifier is capitalised** — CRANBOURNE (NIGHT), not (Night).
+- **`OPEN 1701 AND OVER` prints as 1701M.** The workbook is left alone; the
+  chart header normalises any bare distance before `AND OVER`.
+- **No mid-word breaks in chart cells** — `hyphens:manual`, never `auto`.
+- **Leading inside a chart cell is uniform.** The calendar export carries stray
+  double newlines; any run of newlines collapses to one.
+- **The chart grid stops clear of the footer.** `FOOTER_RESERVE = 40`.
+- **No single line of a race carries into a new column.** When a column
+  boundary would leave exactly one atom of a race on its own, one more atom is
+  handed forward — unless that would empty the column.
+- **A wrapped prizemoney breakdown puts its weight condition on its own line.**
+  The column holds about 44 characters; past that, "Set Weights." is its own
+  atom.
+- **The trials spread across all four columns on the last page**, filled to the
+  shallowest common depth that takes every remaining race, which also frees the
+  depth the Division of Races Policy needs beneath them.
+- Race series blocks sit 20pt apart, not 34pt. The packer constant and the
+  rendered gap must stay the same figure.
+
+## The summary chart's colour comes from the workbook
+The venue name's colour marks metropolitan against country, and the meeting
+block mixes 6pt and 9pt type. Both are read out of the workbook's own rich-text
+runs, not applied by the template, so a month whose rows arrive unformatted
+prints flat and `parsers/chart.js` warns "No venue colour on …". When a whole
+month loses its styling, the workbook is the place to look, not the page.
 
 ## Advertising
 `parsers/ads.js` holds the house-ad library, the bookable slots, the slot rules
