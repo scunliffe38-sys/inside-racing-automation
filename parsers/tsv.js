@@ -24,10 +24,25 @@ function delimiter(line) {
   return String(line || '').indexOf('\t') >= 0 ? '\t' : ',';
 }
 
+/**
+ * A cell the export wrapped in double quotes. The tab-separated files do not
+ * need quoting and mostly do not use it, but one October export arrived with
+ * every cell quoted, which printed the deadlines section's day headings as
+ * “"THURSDAY, 1 OCTOBER"” and left the month in its eyebrow as OCTOBER". A
+ * cell that is quoted end to end is unwrapped; a stray quote inside one is
+ * left alone, since a race name may legitimately carry an inch mark.
+ */
+function unquote(s) {
+  const v = String(s == null ? '' : s).trim();
+  if (v.length < 2 || v.charAt(0) !== '"' || v.charAt(v.length - 1) !== '"') return s;
+  return v.slice(1, -1).replace(/""/g, '"');
+}
+
 /** Split one line, honouring "quoted, cells" when the file uses commas. */
 function cells(line, d) {
   const s = String(line || '');
-  if (d === '\t' || s.indexOf('"') < 0) return s.split(d);
+  if (d === '\t') return s.split(d).map(unquote);
+  if (s.indexOf('"') < 0) return s.split(d);
   const out = [];
   let cur = '';
   let quoted = false;

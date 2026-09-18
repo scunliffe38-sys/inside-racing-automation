@@ -38,7 +38,7 @@ a:hover{color:#1b7fb4}
 <div style="width:67.6pt;flex:0 0 67.6pt;box-sizing:border-box;padding:3.5pt 2pt;border-right:0.25pt solid #2c2e35;border-bottom:0.25pt solid #2c2e35;font-size:7pt;font-weight:700;line-height:8.4pt;letter-spacing:.01em;color:#2c2e35;white-space:pre-line">MEETING
 DETAILS</div>
 <sc-for list="{{ headerRest }}" as="h" hint-placeholder-count="13">
-<div style="width:38.6pt;flex:0 0 38.6pt;box-sizing:border-box;padding:3.5pt 2pt;border-right:0.25pt solid #2c2e35;border-bottom:0.25pt solid #2c2e35;font-size:7pt;font-weight:700;line-height:8.4pt;letter-spacing:.01em;color:#2c2e35;white-space:pre-line">{{ h.text }}</div>
+<div style="width:38.6pt;flex:0 0 38.6pt;box-sizing:border-box;padding:3.5pt 2pt;border-right:0.25pt solid #2c2e35;border-bottom:0.25pt solid #2c2e35;font-size:7pt;font-weight:700;line-height:8.4pt;letter-spacing:.01em;color:#2c2e35;white-space:pre-line"><sc-for list="{{ h.plain }}" as="v" hint-placeholder-count="1">{{ v.t }}</sc-for><sc-for list="{{ h.fit }}" as="v" hint-placeholder-count="0"><span style="font-size:{{ v.s }}">{{ v.t }}</span></sc-for></div>
 </sc-for>
 </div>
 <div style="position:relative">
@@ -96,6 +96,26 @@ DETAILS</div>
 // are measured once per word and cached, so 2,000 cells cost a few dozen
 // measures. A word that still will not fit is left to wrap as before.
 const CH_FIT = { cache: {}, ctx: null, waiting: false };
+// The column heads are held together with word joiners, so a label wider than
+// the 38.6pt column cannot break and overhangs its box — "0-62/BM62," ran a
+// few points past the rule. The head is set a half point smaller instead, and
+// the whole cell moves together: a head of two or three lines at mixed sizes
+// reads as uneven leading even when the leading is identical.
+function chHeadSize(text, inner) {
+  if (!document.fonts || !document.fonts.check('700 7pt "Gotham Narrow"')) return 0;
+  if (!CH_FIT.ctx) CH_FIT.ctx = document.createElement('canvas').getContext('2d');
+  // split on newlines and ordinary spaces only — the non-breaking spaces
+  // inside a label are what hold it together, so they are not split on
+  const atoms = String(text).split(/[\n ]+/).filter(Boolean);
+  if (!atoms.length) return 0;
+  const room = inner - 0.35;
+  for (const size of [7, 6.5, 6, 5.5]) {
+    CH_FIT.ctx.font = '700 ' + size + 'pt "Gotham Narrow"';
+    if (atoms.every(a => CH_FIT.ctx.measureText(a).width * 72 / 96 <= room)) return size === 7 ? 0 : size;
+  }
+  return 5.5;
+}
+
 function chFitSize(word, inner, weight) {
   // Gotham Narrow Bold is a wider face than Book, so a bold word has to be
   // measured bold — measured at 400 it reads as fitting and then overhangs.
@@ -271,7 +291,17 @@ class Component extends DCLogic {
         });
       });
     });
-    return out;
+    // A whitespace-only atom sitting after a VOBIS block prints as an empty
+    // line. The suppression above only reaches the pieces of one run, and the
+    // workbook also leaves the newline as a run of its own — which arrives
+    // here as an atom in its own right, and is what kept a blank line between
+    // VOBIS Silver and VOBIS Gold.
+    const KEYS = ['n','b','rd','dt','vm','vc','vo','sm','smb'];
+    const isBlank = a => !a.sep.length
+      && KEYS.some(k => a[k].length)
+      && KEYS.every(k => a[k].every(x => !String(x.t).trim()));
+    const isVoBlock = a => !!(a && a.vo && a.vo.length);
+    return out.filter((a, i) => !(isBlank(a) && isVoBlock(out[i - 1])));
   }
 
   title() {
@@ -340,7 +370,11 @@ class Component extends DCLogic {
     // head. The workbook is left alone; this is a printing standard.
     const headText = t => this.atomic(String(t).toUpperCase()
       .replace(/(\d{3,4})(\s+AND OVER)/g, '$1M$2'));
-    const headerRest = d ? d.header.slice(1).map(t => ({ text: headText(t) })) : [];
+    const headerRest = d ? d.header.slice(1).map(t => {
+      const text = headText(t);
+      const s = chHeadSize(text, 34.35);
+      return { plain: s ? [] : [{ t: text }], fit: s ? [{ t: text, s: s + 'pt' }] : [] };
+    }) : [];
     const pages = this.state.pages
       ? this.state.pages
       : (d ? [{ rows: this.buildRows(), titleRow: [{ text: this.title() }], no: this.state.from || 0 }] : []);

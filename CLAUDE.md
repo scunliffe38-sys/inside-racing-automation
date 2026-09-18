@@ -202,6 +202,23 @@ These were set from the October review and are not preferences to re-litigate:
 - **A run of spaces collapses to one.** Some cells are typed `1200m  G2` where
   the column two over reads `1100m G2`; the spacing of a class after a distance
   is the same everywhere.
+- **A cell the export wrapped in quotes is unwrapped.** The tab-separated files
+  do not need quoting and mostly do not use it, but one October export quoted
+  every cell, which printed the deadlines day headings as `"THURSDAY, 1
+  OCTOBER"` and left the eyebrow reading `OCTOBER" - NOVEMBER" 2026`. The
+  unwrapping is in `parsers/tsv.js`, so every tab-separated input gets it; a
+  stray quote *inside* a cell is left alone, since a race name may carry an
+  inch mark.
+- **The chart's column heads are fitted to their boxes.** A label is held
+  together with word joiners, so one wider than the column cannot break and
+  overhangs the rule — `0-62/BM62,` did. `chHeadSize()` sets the head a half
+  point smaller instead, and **the whole cell moves together**: a head of two
+  or three lines at mixed sizes reads as uneven leading even when the leading
+  is identical.
+- **A whitespace-only run beside a VOBIS block is dropped.** Pulling the label
+  out of its run only reaches the pieces of that one run; the workbook also
+  leaves the newline as a run of its own, which arrives as an atom in its own
+  right and printed as a blank line between VOBIS Silver and VOBIS Gold.
 - **VOBIS labels start their own line, set bold**, as a block out of whatever
   run carried them — and **no blank line between one VOBIS type and the next**.
   The workbook leaves a newline beside the label; beside a block it would print

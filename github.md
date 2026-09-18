@@ -3,7 +3,15 @@ branch: main
 
 ## Last sync
 
-date: 2026-09-19T02:05:00+10:00
+date: 2026-09-19T03:10:00+10:00
+
+### Updated in this project
+- A cell the export wrapped in quotes is unwrapped in parsers/tsv.js, so the deadlines day headings no longer print as "THURSDAY, 1 OCTOBER" and the eyebrow no longer reads OCTOBER" - NOVEMBER" 2026.
+- The chart's column heads are fitted to their boxes: a label wider than the column sets a half point smaller, the whole cell moving together.
+- A whitespace-only run beside a VOBIS block is dropped, closing the blank line between VOBIS Silver and VOBIS Gold.
+- The cover framing rebuilt around the hero, and October's photograph in.
+
+### Earlier the same day
 
 ### Updated in this project
 - The cover's framing rebuilt: the hero is measured from its leading edge, sized to fill the clear depth and enlarged further where the teaser strip demands it, centred down the page in the clear space, and placed across the page from column energy read over its own rows.

@@ -1,5 +1,5 @@
 INSIDE RACING — the complete repository contents
-Rebuilt 19 September 2026, with the cover framing rebuilt
+Rebuilt 19 September 2026, with the v5 review comments actioned
 ================================================
 
 This is everything the repository holds, not just the changed files: every
@@ -57,13 +57,16 @@ inputs/Meeting Corrections - Entry Deadlines.xlsx      feature schedule and
     venue name or a time on the ordinary lines.
 parsers/deadlines.js                 the adjustment step
 parsers/source.js                    the two inputs in the catalogue
+parsers/tsv.js                       a quoted cell is unwrapped
 parsers/cover-frame.js               the cover framing — the photograph starts
   └ below the masthead and fills the page from there; the hero is measured
     from its leading edge, sized to fill the clear depth (and further where
     the teaser strip demands it), centred in the clear space down the page,
     and placed across the page from column energy read over its own rows.
 parsers/ads.js                       HR Assist benched; full pages bookable
-Programs Summary Chart.dc.html       chart typography and colour
+Programs Summary Chart.dc.html       chart typography and colour; the column
+  └ heads are fitted to their boxes, and a whitespace-only run beside a VOBIS
+    block is dropped so VOBIS Silver and VOBIS Gold sit on consecutive lines.
 Entry Deadlines.dc.html              the ENTRIES / ACCEPTANCES / RIDERS labels
 Permits and Riders Agents.dc.html    the trials riders' names
 Race Series.dc.html                  packing, 15pt gap, highweight last
