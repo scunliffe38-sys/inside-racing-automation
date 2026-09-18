@@ -10,6 +10,7 @@
 <helmet>
 <style>
 @font-face{font-family:'Gotham Narrow';src:url('fonts/GothamNarrow-Book.otf') format('opentype');font-weight:400;font-style:normal;font-display:block}
+@font-face{font-family:'Gotham Narrow';src:url('fonts/GothamNarrow-Bold.otf') format('opentype');font-weight:700;font-style:normal;font-display:block}
 @font-face{font-family:'Gotham XNarrow';src:url('fonts/GothamXNarrow-Book.ttf') format('truetype');font-weight:400;font-style:normal;font-display:block}
 @font-face{font-family:'Gotham XNarrow';src:url('fonts/GothamXNarrow-Bold.ttf') format('truetype');font-weight:700;font-style:normal;font-display:block}
 doc-page:not(:defined){visibility:hidden}
@@ -25,7 +26,7 @@ a:hover{color:#1b7fb4}
 <div style="position:absolute;right:13pt;top:16pt;display:flex;align-items:center;gap:6pt;font-size:9pt;font-weight:700;color:#2c2e35">
 <span>KEY</span>
 <span style="display:flex;align-items:center;gap:3pt"><span style="width:7pt;height:7pt;background:#ff0040;display:inline-block"></span>Metropolitan</span>
-<span style="display:flex;align-items:center;gap:3pt"><span style="width:7pt;height:7pt;background:#00b0f0;display:inline-block"></span>Country</span>
+<span style="display:flex;align-items:center;gap:3pt"><span style="width:7pt;height:7pt;background:#007ba8;display:inline-block"></span>Country</span>
 </div>
 <div style="position:absolute;left:13pt;right:13pt;top:37pt;height:2.25pt;background:#9ecff0"></div>
 <sc-for list="{{ pg.titleRow }}" as="t" hint-placeholder-count="1">
@@ -34,33 +35,33 @@ a:hover{color:#1b7fb4}
 <div style="position:absolute;left:13pt;top:57.9pt;width:569.4pt">
 <sc-for list="{{ pg.titleRow }}" as="t" hint-placeholder-count="1"><div style="height:31.2pt"></div></sc-for>
 <div style="display:flex;border-top:0.25pt solid #2c2e35;border-left:0.25pt solid #2c2e35;background:#f7f7f8">
-<div style="width:67.6pt;flex:0 0 67.6pt;box-sizing:border-box;padding:3.5pt 2pt;border-right:0.25pt solid #2c2e35;border-bottom:0.25pt solid #2c2e35;font-size:7pt;font-weight:700;line-height:7pt;letter-spacing:.01em;color:#2c2e35;white-space:pre-line">MEETING
+<div style="width:67.6pt;flex:0 0 67.6pt;box-sizing:border-box;padding:3.5pt 2pt;border-right:0.25pt solid #2c2e35;border-bottom:0.25pt solid #2c2e35;font-size:7pt;font-weight:700;line-height:8.4pt;letter-spacing:.01em;color:#2c2e35;white-space:pre-line">MEETING
 DETAILS</div>
 <sc-for list="{{ headerRest }}" as="h" hint-placeholder-count="13">
-<div style="width:38.6pt;flex:0 0 38.6pt;box-sizing:border-box;padding:3.5pt 2pt;border-right:0.25pt solid #2c2e35;border-bottom:0.25pt solid #2c2e35;font-size:7pt;font-weight:700;line-height:7pt;letter-spacing:.01em;color:#2c2e35;white-space:pre-line">{{ h.text }}</div>
+<div style="width:38.6pt;flex:0 0 38.6pt;box-sizing:border-box;padding:3.5pt 2pt;border-right:0.25pt solid #2c2e35;border-bottom:0.25pt solid #2c2e35;font-size:7pt;font-weight:700;line-height:8.4pt;letter-spacing:.01em;color:#2c2e35;white-space:pre-line">{{ h.text }}</div>
 </sc-for>
 </div>
 <div style="position:relative">
-<div style="position:absolute;top:0;bottom:0;left:67.6pt;width:38.6pt;background:#edf6fb"></div>
-<div style="position:absolute;top:0;bottom:0;left:144.8pt;width:38.6pt;background:#edf6fb"></div>
-<div style="position:absolute;top:0;bottom:0;left:222pt;width:38.6pt;background:#edf6fb"></div>
-<div style="position:absolute;top:0;bottom:0;left:299.2pt;width:38.6pt;background:#edf6fb"></div>
-<div style="position:absolute;top:0;bottom:0;left:376.4pt;width:38.6pt;background:#edf6fb"></div>
-<div style="position:absolute;top:0;bottom:0;left:453.6pt;width:38.6pt;background:#edf6fb"></div>
-<div style="position:absolute;top:0;bottom:0;left:530.8pt;width:38.6pt;background:#edf6fb"></div>
+<div style="position:absolute;top:0;bottom:0;left:67.6pt;width:38.6pt;background:#f4fafd"></div>
+<div style="position:absolute;top:0;bottom:0;left:144.8pt;width:38.6pt;background:#f4fafd"></div>
+<div style="position:absolute;top:0;bottom:0;left:222pt;width:38.6pt;background:#f4fafd"></div>
+<div style="position:absolute;top:0;bottom:0;left:299.2pt;width:38.6pt;background:#f4fafd"></div>
+<div style="position:absolute;top:0;bottom:0;left:376.4pt;width:38.6pt;background:#f4fafd"></div>
+<div style="position:absolute;top:0;bottom:0;left:453.6pt;width:38.6pt;background:#f4fafd"></div>
+<div style="position:absolute;top:0;bottom:0;left:530.8pt;width:38.6pt;background:#f4fafd"></div>
 <sc-for list="{{ pg.rows }}" as="row" hint-placeholder-count="8">
 <div data-row="1" lang="en" style="display:flex;position:relative;border-left:0.25pt solid #2c2e35">
 <div style="position:relative;width:67.6pt;flex:0 0 67.6pt;box-sizing:border-box;padding:3.5pt 1.5pt;border-right:0.25pt solid #2c2e35;border-bottom:0.25pt solid #2c2e35;font-size:6.5pt;line-height:6.3pt;color:#2c2e35;white-space:pre-wrap;hyphens:manual;overflow-wrap:break-word">
 <sc-for list="{{ row.a }}" as="r" hint-placeholder-count="4">
 <sc-for list="{{ r.dt }}" as="v" hint-placeholder-count="0"><span style="font-size:8pt;font-weight:700;line-height:9pt;letter-spacing:-.03em">{{ v.t }}</span></sc-for>
 <sc-for list="{{ r.vm }}" as="v" hint-placeholder-count="0"><span style="font-size:8pt;font-weight:700;line-height:9pt;letter-spacing:-.03em;color:#ff0040">{{ v.t }}</span></sc-for>
-<sc-for list="{{ r.vc }}" as="v" hint-placeholder-count="0"><span style="font-size:8pt;font-weight:700;line-height:9pt;letter-spacing:-.03em;color:#00b0f0">{{ v.t }}</span></sc-for>
+<sc-for list="{{ r.vc }}" as="v" hint-placeholder-count="0"><span style="font-size:8pt;font-weight:700;line-height:9pt;letter-spacing:-.03em;color:#007ba8">{{ v.t }}</span></sc-for>
 <sc-for list="{{ r.n }}" as="v" hint-placeholder-count="0"><span>{{ v.t }}</span></sc-for>
 <sc-for list="{{ r.b }}" as="v" hint-placeholder-count="0"><span style="font-weight:700">{{ v.t }}</span></sc-for>
 <sc-for list="{{ r.rd }}" as="v" hint-placeholder-count="0"><span style="font-weight:700;color:#ff0040">{{ v.t }}</span></sc-for>
 <sc-for list="{{ r.sm }}" as="v" hint-placeholder-count="0"><span style="font-size:{{ v.s }};white-space:nowrap">{{ v.t }}</span></sc-for>
 <sc-for list="{{ r.smb }}" as="v" hint-placeholder-count="0"><span style="font-size:{{ v.s }};font-weight:700;white-space:nowrap">{{ v.t }}</span></sc-for>
-<sc-for list="{{ r.vo }}" as="v" hint-placeholder-count="0"><span style="display:block;line-height:6.3pt">{{ v.t }}</span></sc-for>
+<sc-for list="{{ r.vo }}" as="v" hint-placeholder-count="0"><span style="display:block;font-weight:700;line-height:6.3pt">{{ v.t }}</span></sc-for>
 <sc-for list="{{ r.sep }}" as="v" hint-placeholder-count="0"><span style="display:inline-block;max-width:100%;overflow:hidden;white-space:pre;vertical-align:top;line-height:6.3pt">{{ v.t }}</span></sc-for>
 </sc-for>
 </div>
@@ -72,7 +73,7 @@ DETAILS</div>
 <sc-for list="{{ r.rd }}" as="v" hint-placeholder-count="0"><span style="font-weight:700;color:#ff0040">{{ v.t }}</span></sc-for>
 <sc-for list="{{ r.sm }}" as="v" hint-placeholder-count="0"><span style="font-size:{{ v.s }};white-space:nowrap">{{ v.t }}</span></sc-for>
 <sc-for list="{{ r.smb }}" as="v" hint-placeholder-count="0"><span style="font-size:{{ v.s }};font-weight:700;white-space:nowrap">{{ v.t }}</span></sc-for>
-<sc-for list="{{ r.vo }}" as="v" hint-placeholder-count="0"><span style="display:block;line-height:6.3pt">{{ v.t }}</span></sc-for>
+<sc-for list="{{ r.vo }}" as="v" hint-placeholder-count="0"><span style="display:block;font-weight:700;line-height:6.3pt">{{ v.t }}</span></sc-for>
 <sc-for list="{{ r.sep }}" as="v" hint-placeholder-count="0"><span style="display:inline-block;max-width:100%;overflow:hidden;white-space:pre;vertical-align:top;line-height:6.3pt">{{ v.t }}</span></sc-for>
 </sc-for>
 </div>
@@ -95,28 +96,32 @@ DETAILS</div>
 // are measured once per word and cached, so 2,000 cells cost a few dozen
 // measures. A word that still will not fit is left to wrap as before.
 const CH_FIT = { cache: {}, ctx: null, waiting: false };
-function chFitSize(word, inner) {
+function chFitSize(word, inner, weight) {
+  // Gotham Narrow Bold is a wider face than Book, so a bold word has to be
+  // measured bold — measured at 400 it reads as fitting and then overhangs.
+  const wt = weight || 400;
   if (!word || word.length < 5) return 0;
   // Measured before the face has loaded, the canvas reports the fallback's
   // widths, which are narrower — that is how "Thoroughbred" was handed a 6pt
   // that still overhung its column. Until Gotham Narrow is ready the word is
   // left alone and the answer is NOT cached, so a later render measures it
   // properly; the cache is emptied once the fonts settle.
-  if (!document.fonts || !document.fonts.check('400 6.5pt "Gotham Narrow"')) {
+  if (!document.fonts || !document.fonts.check('400 6.5pt "Gotham Narrow"')
+      || !document.fonts.check('700 6.5pt "Gotham Narrow"')) {
     if (document.fonts && !CH_FIT.waiting) {
       CH_FIT.waiting = true;
       document.fonts.ready.then(() => { CH_FIT.cache = {}; });
     }
     return 0;
   }
-  const key = word + '|' + inner;
+  const key = word + '|' + inner + '|' + wt;
   if (key in CH_FIT.cache) return CH_FIT.cache[key];
   if (!CH_FIT.ctx) CH_FIT.ctx = document.createElement('canvas').getContext('2d');
   // a third of a point of slack, so rounding never defeats the fit
   const room = inner - 0.35;
   let out = 5.5;
   for (const size of [6.5, 6, 5.5]) {
-    CH_FIT.ctx.font = '400 ' + size + 'pt "Gotham Narrow"';
+    CH_FIT.ctx.font = wt + ' ' + size + 'pt "Gotham Narrow"';
     if (CH_FIT.ctx.measureText(word).width * 72 / 96 <= room) { out = size === 6.5 ? 0 : size; break; }
   }
   CH_FIT.cache[key] = out;
@@ -175,6 +180,9 @@ class Component extends DCLogic {
     const WJ = '\u2060';
     return String(t)
       .replace(/[ \t]*(\r?\n)[ \t\r\n]*/g, '\n')
+      // Some cells are typed with a double space between distance and class —
+      // "1200m  G2" where the column two over reads "1100m G2". One space.
+      .replace(/[ \t]{2,}/g, ' ')
       .replace(/(\d)(\s*)-(\s*)(\d)/g, (m, a, s1, s2, b) =>
         a + (s1 ? '\u00a0' : '') + '-' + WJ + (s2 ? '\u00a0' : '') + b)
       .replace(/\b(BM|CL|Cl)(\s+)(\d)/g, (m, k, sp, d) => k + '\u00a0' + d)
@@ -232,19 +240,27 @@ class Component extends DCLogic {
         // VOBIS labels only break out of ordinary runs — a coloured venue run
         // or the date run is left as it is.
         const pieces = (key === 'n' || key === 'b') ? part.split(VOBIS) : [part];
-        pieces.forEach(piece => {
+        const isVo = s => VOBIS.test(s) && String(s).trim().toUpperCase().startsWith('VOBIS');
+        pieces.forEach((piece, pi) => {
           if (!piece) return;
+          // A VOBIS label sets as a block of its own, so the newline the
+          // workbook leaves beside it would print as an empty line between
+          // one VOBIS type and the next.
+          if (!piece.trim() && (isVo(pieces[pi - 1] || '') || isVo(pieces[pi + 1] || ''))) return;
           const o = empty();
-          if (VOBIS.test(piece) && piece.trim().toUpperCase().startsWith('VOBIS')) {
+          if (isVo(piece)) {
             o.vo.push({ t: this.atomic(piece.trim()) });
           } else if (key === 'n' || key === 'b') {
-            // split on spaces so only the offending word is set smaller
-            String(piece).split(/(\s+)/).forEach(word => {
+            // Made atomic first, then split on ordinary spaces only. Split
+            // first and "0 - 56" reaches the rule as three separate words, so
+            // nothing holds the label together and the column prints "0 -"
+            // over "56"; the non-breaking spaces it leaves are not split on.
+            this.atomic(piece).split(/([^\S\u00a0]+)/).forEach(word => {
               if (!word) return;
-              const size = chFitSize(word.replace(/[\u2060\u00a0]/g, ' ').trim(), inner);
+              const size = chFitSize(word.replace(/[\u2060\u00a0]/g, ' ').trim(), inner, key === 'b' ? 700 : 400);
               const a = empty();
-              if (size) a[key === 'b' ? 'smb' : 'sm'].push({ t: this.atomic(word), s: size + 'pt' });
-              else a[key].push({ t: this.atomic(word) });
+              if (size) a[key === 'b' ? 'smb' : 'sm'].push({ t: word, s: size + 'pt' });
+              else a[key].push({ t: word });
               out.push(a);
             });
             return;

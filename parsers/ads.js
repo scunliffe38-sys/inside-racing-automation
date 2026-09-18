@@ -52,7 +52,7 @@ export const SLOTS = [
   },
   {
     id: 'fullpage-1', kind: 'full', where: 'Whole page, immediately before the back cover',
-    widthMm: 210, heightMm: 297, widthPx: 2480, heightPx: 3508, house: 'hrassist'
+    widthMm: 210, heightMm: 297, widthPx: 2480, heightPx: 3508, house: null
   }
 ];
 
@@ -105,7 +105,9 @@ export const LIBRARY = [
     hours: 'HR Assist available weekdays (Mon to Fri) 9am-5pm',
     contact: '1300 884 687   rvhra@ihraustralia.com',
     slots: ['prebackcover', 'auto'],
-    enabled: true
+    // Benched from the October 2026 edition: the whole-page slot prints as a
+    // bookable blank until inputs/Ad Placements.csv fills it.
+    enabled: false
   }
 ];
 

@@ -3,15 +3,29 @@ branch: main
 
 ## Last sync
 
-date: 2026-09-18
+date: 2026-09-18T23:40:00+10:00
 
 ### Updated in this project
-- Cover framing handles a photograph deeper than the page: it prints a little under full size, sits on the page foot, and the strip left at the head takes a colour sampled from the picture's own top edge.
-- Subject clearance measured by scanning for the frame's leading edge rather than from the interest band, which on October's cover read 20% down while the horse's head sat at 10%.
-- Producer console conditional rows keyed on the catalogue names, so the Industry Notice and Rules Extracts rows go quiet when their toggle is No.
-- Race series, stewards' room, flat trials and the Division of Races Policy all fit their pages; four wide race names set without wrapping.
+- Gotham Narrow Bold added to fonts/ and declared on every page, so the chart heads, the ENTRIES / ACCEPTANCES / RIDERS labels, the trials riders' names and the VOBIS marks print in the real face; the hairline stroke that stood in for it is gone.
+- The chart's fit measure reads a word at the weight it will print, since Bold is wider than Book.
+- October's cover photograph in as the edition's cover, framed below the masthead with the whole horse in frame.
+
+### Earlier the same day
+
+### Updated in this project
+- The cover photograph starts at the foot of the masthead and runs to the page foot, so nothing in the frame can cross the header whatever it holds; the strip above carries a colour sampled from the picture's own top edge.
+- October review round two: class labels made atomic before the fit measure, runs of spaces collapsed, VOBIS marks bold with no blank line between types, chart heads bold on one leading, lighter column shading and a 30% darker country blue.
+- Race series packs by depth in any order with the highweight schedule always last; block gap 15pt.
+- Division of Races Policy set to fit under the trials; HR Assist benched so whole pages print as bookable blanks; contents rule and accuracy note as published.
 
 ## Sync history
+
+date: 2026-09-18
+
+### Updated in that sync
+- Cover framing handles a photograph deeper than the page: it prints a little under full size, sits on the page foot, and the strip left at the head takes a colour sampled from the picture's own top edge.
+- Producer console conditional rows keyed on the catalogue names, so the Industry Notice and Rules Extracts rows go quiet when their toggle is No.
+- Race series, stewards' room, flat trials and the Division of Races Policy all fit their pages; four wide race names set without wrapping.
 
 date: 2026-09-17
 

@@ -16,9 +16,11 @@
 const SAMPLE = 180;     // long edge of the analysis bitmap
 const SHARE = 0.68;     // fraction of total energy the interest band must hold
 const KEEP = 0.93;      // wider band the crop tries not to cut into
-const MIN_FIT = 0.84;   // smallest a photo may print before it looks inset
 const EDGE = 0.03;      // share of the height averaged for the fill colour
 const ONSET = 0.5;      // share of mean row energy that counts as subject
+const OUT = 0.875;      // printed depth as a share of the clear space: the
+                        // photograph sits a touch under full size so more of
+                        // the subject is in frame, as far as the width allows
 
 /** Luminance + saturation-weighted edge energy, summed by row and by column. */
 function energy(data, w, h) {
@@ -131,12 +133,18 @@ export async function frameCover(url, box, safe, zoom) {
   const maxZoom = Math.max(1, zoom == null ? 1.2 : zoom);
   const top = (safe && safe.top) || 0;
   const bottom = (safe && safe.bottom) != null ? safe.bottom : 1;
+  // Unmeasurable or not, the photograph still starts below the masthead.
   const fallback = {
-    objectPosition: '50% ' + Math.round(((top + bottom) / 2) * 100) + '%',
+    objectPosition: '50% 50%',
     scale: 1,
-    box: { width: '100%', height: '100%', left: '0%', top: '0%' },
+    box: {
+      width: '100%',
+      height: ((1 - top) * 100).toFixed(3) + '%',
+      left: '0%',
+      top: (top * 100).toFixed(3) + '%'
+    },
     fill: null,
-    note: 'centred — the picture could not be measured'
+    note: 'centred below the masthead — the picture could not be measured'
   };
 
   const img = await new Promise((res, rej) => {
@@ -173,91 +181,80 @@ export async function frameCover(url, box, safe, zoom) {
     return Object.assign({}, fallback, { note: 'centred — the picture could not be read (' + (err.message || err) + ')' });
   }
 
-  // `cover` scale, then a correction — which way it goes depends on the shape
-  // of the picture, because the two shapes fail differently.
-  const byW = box.w / iw, byH = box.h / ih;
-  const base = Math.max(byW, byH);
+  // The photograph starts at the foot of the masthead, not at the head of the
+  // page, and runs to the page foot.
+  //
+  // Framing it across the whole page and trusting a measurement to keep the
+  // subject out of the header does not hold. Where the crop is driven by the
+  // height there is no vertical overflow left to slide at all, and where there
+  // is overflow the amount to slide has to be solved from a reading of where
+  // the subject's leading edge sits — a reading two editions got wrong, both
+  // times printing the horse's head under the wordmark.
+  //
+  // Inset, the question cannot arise: whatever the picture holds and however
+  // it is measured, none of it reaches the header. The strip above is painted
+  // in a colour sampled from the picture's own top edge, so the sky reads as
+  // continuous behind the wordmark, and the measurement is left to do the
+  // thing it is good at — placing the subject inside the space that is free.
   const clear = Math.max(0.2, bottom - top);
-  let scale = base, deep = false, short = false;
-
-  if (byH >= byW) {
-    // Portrait, deeper than the page in proportion. `cover` is driven by the
-    // height, so the whole height is already on the page: there is no vertical
-    // overflow left to slide, and the subject prints wherever the camera put
-    // it — in October's frame, the horse's head behind the masthead. Enlarging
-    // only makes the collision worse.
-    //
-    // So print it a little smaller and sit it on the page foot. The subject
-    // drops clear of the masthead, the photograph's own sky runs up behind the
-    // wordmark, and the grass still reaches the teaser strip. The width pays
-    // for it: `cover` crops that much off the sides, so the picture can lose
-    // the same amount before a gap opens beside it.
-    //
-    // The reduction is solved, not chosen: sat on the foot at z, the subject's
-    // leading edge lands at (1 - z) + subjectTop * z, and clearing the
-    // masthead means putting that at `top`.
-    const zMin = Math.max(MIN_FIT, byW / base);
-    const want = subjectTop < 1 ? (1 - top) / (1 - subjectTop) : 1;
-    scale = base * Math.max(zMin, Math.min(1, want));
-    deep = true;
-    short = want < zMin - 0.001;   // the width could not pay for all of it
-  } else if (maxZoom > 1 && rows.extent > 0) {
-    // Landscape, shallower than the page: the height is the scarce axis, so a
-    // modest enlargement is what fills the clear band with subject.
+  const baseW = box.w, baseH = box.h - top * box.h;
+  const base = Math.max(baseW / iw, baseH / ih);
+  let z = 1;
+  if (maxZoom > 1 && rows.extent > 0 && rows.extent < 0.55) {
+    // A subject occupying only a shallow band of the frame is enlarged to fill
+    // the clear depth, so long as the wider keep-band still fits across.
     const want = (0.8 * clear * box.h) / (rows.extent * ih * base);
-    // ...but never zoom so far that the wider keep-band no longer fits across.
-    const fitsAcross = keepCols.extent > 0 ? box.w / (keepCols.extent * iw * base) : maxZoom;
-    scale = base * Math.min(maxZoom, Math.max(1, Math.min(want, fitsAcross)));
+    const fitsAcross = keepCols.extent > 0 ? baseW / (keepCols.extent * iw * base) : maxZoom;
+    z = Math.min(maxZoom, Math.max(1, Math.min(want, fitsAcross)));
   }
-
-  const z = scale / base;
-  // The element takes the scaled size rather than a transform, so `cover`
-  // resolves to base x z on its own and the object-position below is solved
-  // against the same geometry. An enlargement centres its overflow; a reduced
-  // portrait keeps its full width — that is the whole point, it is the width
-  // that was paying for the reduction — and loses the depth off the top, which
-  // is what lowers the subject.
-  const shrunk = deep && z < 0.999;
-  const bw = shrunk ? box.w : box.w * z, bh = box.h * z;
-  const offX = shrunk ? 0 : -(bw - box.w) / 2;
-  const offY = shrunk ? box.h - bh : -(bh - box.h) / 2;
-  // A reduced portrait is scaled to the box by `cover` on its own terms, so
-  // its own geometry — not the nominal one — decides what is left to crop.
-  // Reduced, it fits the box exactly: nothing is cropped and both axes centre.
-  const fit = shrunk ? Math.max(bw / iw, bh / ih) : scale;
+  // A subject filling the frame is printed a little under the clear depth
+  // instead, so more of it is in frame — a horse whose legs the crop was
+  // taking. The width sets how far that can go: the picture still has to reach
+  // both edges of the page, so a frame barely wider than the page pays for
+  // little of the reduction and a wide one pays for all of it.
+  const fit = z > 1.001 ? base * z : Math.max(baseW / iw, (baseH / ih) * OUT);
   const fw = iw * fit, fh = ih * fit;
+  // The box IS the photograph's own size, sat on the page foot. Nothing is
+  // cropped by `cover` inside it; the page's own overflow takes whatever runs
+  // past the sides, and the strip left at the head carries the sampled sky.
+  const bw = Math.min(baseW, fw), bh = Math.min(baseH, fh);
+  const offY = top * box.h + Math.max(0, baseH - fh);
+  const offX = fw > baseW ? 0 : (baseW - fw) / 2;
+  const safeLo = 0, safeHi = Math.min(bh, bottom * box.h - offY);
   const overX = fw - bw, overY = fh - bh;
-  const place = (centre, keep, scaled, over, target, offset, size, lo, hi) => {
+  // Positions are in box coordinates: `target`, `lo` and `hi` are lengths down
+  // from the box's own top edge, not the page's.
+  const place = (centre, keep, scaled, over, target, lo, hi) => {
     if (over <= 0.5) return 50;                       // no crop on this axis
-    let p = ((centre * scaled) - (target * size - offset)) / over * 100;
-    // Hold the keep-band inside the clear part of the window if it will fit:
-    // its low edge must not fall behind the masthead, nor its high edge under
-    // the teaser strip.
-    const pMax = ((keep.lo * scaled) + offset - lo) / over * 100;
-    const pMin = ((keep.hi * scaled) + offset - hi) / over * 100;
+    let p = ((centre * scaled) - target) / over * 100;
+    // Hold the keep-band inside the clear part of the box if it will fit: its
+    // low edge clear of the head, its high edge above the teaser strip.
+    const pMax = ((keep.lo * scaled) - lo) / over * 100;
+    const pMin = ((keep.hi * scaled) - hi) / over * 100;
     if (pMin <= pMax) p = Math.max(pMin, Math.min(pMax, p));
     return Math.max(0, Math.min(100, p));
   };
-  const px = place(cols.centre, keepCols, fw, overX, 0.5, offX, box.w, 0, box.w);
-  const py = place(rows.centre, keepRows, fh, overY, (top + bottom) / 2, offY, box.h,
-    top * box.h, bottom * box.h);
+  const px = place(cols.centre, keepCols, fw, overX, bw / 2, 0, bw);
+  const py = place(rows.centre, keepRows, fh, overY, (safeLo + safeHi) / 2, safeLo, safeHi);
+  const printed = fh / baseH;
 
   return {
     objectPosition: Math.round(px) + '% ' + Math.round(py) + '%',
     scale: z,
     box: {
-      width: (bw / box.w * 100).toFixed(3) + '%',
+      width: (Math.max(bw, Math.min(fw, box.w)) / box.w * 100).toFixed(3) + '%',
       height: (bh / box.h * 100).toFixed(3) + '%',
       left: (offX / box.w * 100).toFixed(3) + '%',
       top: (offY / box.h * 100).toFixed(3) + '%'
     },
-    // Painted behind the photograph, so the strip a reduced portrait leaves at
-    // the head of the page carries on from the picture's own sky.
+    // Painted behind the photograph, so the strip it leaves at the head of the
+    // page carries on from the picture's own sky.
     fill: skyFill || null,
     note: 'subject from ' + Math.round(subjectTop * 100) + '% down, interest band '
       + Math.round(rows.lo * 100) + '\u2013' + Math.round(rows.hi * 100)
-      + '%, centred at ' + Math.round(cols.centre * 100) + '% across'
-      + (z < 0.999 ? '; printed at ' + Math.round(z * 100) + '% and sat on the page foot to clear the masthead' : '')
-      + (short ? '. The width would not pay for the whole reduction — the subject still runs behind the masthead. Crop some depth off the top of the photograph.' : '')
+      + '%, centred at ' + Math.round(cols.centre * 100) + '% across; set below the masthead at '
+      + Math.round(printed * 100) + '% of the clear depth'
+      + (z > 1.001 ? ', enlarged ' + Math.round((z - 1) * 100) + '% to fill it' : '')
+      + (printed > 0.995 && z <= 1.001 ? ' \u2014 the width would not pay for a reduction, so the frame is full depth' : '')
   };
 }

@@ -10,6 +10,7 @@
 <helmet>
 <style>
 @font-face{font-family:'Gotham Narrow';src:url('fonts/GothamNarrow-Book.otf') format('opentype');font-weight:400;font-style:normal;font-display:block}
+@font-face{font-family:'Gotham Narrow';src:url('fonts/GothamNarrow-Bold.otf') format('opentype');font-weight:700;font-style:normal;font-display:block}
 @font-face{font-family:'Gotham XNarrow';src:url('fonts/GothamXNarrow-Book.ttf') format('truetype');font-weight:400;font-style:normal;font-display:block}
 @font-face{font-family:'Gotham XNarrow';src:url('fonts/GothamXNarrow-Bold.ttf') format('truetype');font-weight:700;font-style:normal;font-display:block}
 doc-page:not(:defined){visibility:hidden}
@@ -81,6 +82,7 @@ a:hover{color:#1b7fb4}
 <div style="position:absolute;left:22.7pt;width:549.9pt;top:39pt;height:3pt;background:#9ecff0"></div>
 <img src="assets/contents-header.svg" alt="Contents" style="position:absolute;left:22.7pt;top:60.4pt;width:503.7pt;height:95.3pt" />
 
+<div style="position:absolute;left:22.7pt;width:549.9pt;top:193.2pt;height:1.5pt;background:#2c2e35"></div>
 <div style="position:absolute;left:22.7pt;width:549.9pt;top:198.4pt">
 <sc-for list="{{ contentsRows }}" as="r" hint-placeholder-count="11">
 <div style="position:relative;height:{{ contentsRowH }}">
@@ -93,7 +95,7 @@ a:hover{color:#1b7fb4}
 </sc-for>
 </div>
 
-<div style="position:absolute;left:23.7pt;right:22.7pt;top:527.5pt;font-size:6pt;line-height:8pt">{{ contentsNote }}</div>
+<div style="position:absolute;left:23.7pt;right:22.7pt;top:{{ contentsNoteTop }};font-size:7.8pt;line-height:10pt">{{ contentsNote }}</div>
 
 <div style="position:absolute;left:22.7pt;top:568.6pt;width:549.9pt;height:245.2pt;background:#151f45;overflow:hidden">
 <sc-if value="{{ adPanelHouse }}" hint-placeholder-val="{{ true }}"><img src="assets/ads/stableline.png" alt="Stableline — free confidential counselling, 1300 520 122" style="position:absolute;left:0;top:0;width:549.9pt;height:auto;display:block" /></sc-if>
@@ -158,7 +160,7 @@ a:hover{color:#1b7fb4}
 <div style="position:absolute;right:13pt;top:16pt;display:flex;align-items:center;gap:6pt;font-size:9pt;font-weight:700;color:#2c2e35">
 <span>KEY</span>
 <span style="display:flex;align-items:center;gap:3pt"><span style="width:7pt;height:7pt;background:#ff0040;display:inline-block"></span>Metropolitan</span>
-<span style="display:flex;align-items:center;gap:3pt"><span style="width:7pt;height:7pt;background:#00b0f0;display:inline-block"></span>Country</span>
+<span style="display:flex;align-items:center;gap:3pt"><span style="width:7pt;height:7pt;background:#007ba8;display:inline-block"></span>Country</span>
 </div>
 <div style="position:absolute;left:13pt;right:13pt;top:37pt;height:2.25pt;background:#9ecff0"></div>
 <sc-for list="{{ pg.titleRow }}" as="t" hint-placeholder-count="0">
@@ -167,27 +169,27 @@ a:hover{color:#1b7fb4}
 <div style="position:absolute;left:13pt;top:57.9pt;width:569.4pt">
 <sc-for list="{{ pg.titleRow }}" as="t" hint-placeholder-count="0"><div style="height:31.2pt"></div></sc-for>
 <div style="display:flex;border-top:0.25pt solid #2c2e35;border-left:0.25pt solid #2c2e35;background:#f7f7f8">
-<div style="width:67.6pt;flex:0 0 67.6pt;box-sizing:border-box;padding:3.5pt 2pt;border-right:0.25pt solid #2c2e35;border-bottom:0.25pt solid #2c2e35;font-size:7pt;font-weight:700;line-height:7pt;letter-spacing:.01em;color:#2c2e35;white-space:pre-line">MEETING
+<div style="width:67.6pt;flex:0 0 67.6pt;box-sizing:border-box;padding:3.5pt 2pt;border-right:0.25pt solid #2c2e35;border-bottom:0.25pt solid #2c2e35;font-size:7pt;font-weight:700;line-height:8.4pt;letter-spacing:.01em;color:#2c2e35;white-space:pre-line">MEETING
 DETAILS</div>
 <sc-for list="{{ chHeaderRest }}" as="h" hint-placeholder-count="13">
-<div style="width:38.6pt;flex:0 0 38.6pt;box-sizing:border-box;padding:3.5pt 2pt;border-right:0.25pt solid #2c2e35;border-bottom:0.25pt solid #2c2e35;font-size:7pt;font-weight:700;line-height:7pt;letter-spacing:.01em;color:#2c2e35;white-space:pre-line">{{ h.text }}</div>
+<div style="width:38.6pt;flex:0 0 38.6pt;box-sizing:border-box;padding:3.5pt 2pt;border-right:0.25pt solid #2c2e35;border-bottom:0.25pt solid #2c2e35;font-size:7pt;font-weight:700;line-height:8.4pt;letter-spacing:.01em;color:#2c2e35;white-space:pre-line">{{ h.text }}</div>
 </sc-for>
 </div>
 <div style="position:relative">
-<div style="position:absolute;top:0;bottom:0;left:67.6pt;width:38.6pt;background:#edf6fb"></div>
-<div style="position:absolute;top:0;bottom:0;left:144.8pt;width:38.6pt;background:#edf6fb"></div>
-<div style="position:absolute;top:0;bottom:0;left:222pt;width:38.6pt;background:#edf6fb"></div>
-<div style="position:absolute;top:0;bottom:0;left:299.2pt;width:38.6pt;background:#edf6fb"></div>
-<div style="position:absolute;top:0;bottom:0;left:376.4pt;width:38.6pt;background:#edf6fb"></div>
-<div style="position:absolute;top:0;bottom:0;left:453.6pt;width:38.6pt;background:#edf6fb"></div>
-<div style="position:absolute;top:0;bottom:0;left:530.8pt;width:38.6pt;background:#edf6fb"></div>
+<div style="position:absolute;top:0;bottom:0;left:67.6pt;width:38.6pt;background:#f4fafd"></div>
+<div style="position:absolute;top:0;bottom:0;left:144.8pt;width:38.6pt;background:#f4fafd"></div>
+<div style="position:absolute;top:0;bottom:0;left:222pt;width:38.6pt;background:#f4fafd"></div>
+<div style="position:absolute;top:0;bottom:0;left:299.2pt;width:38.6pt;background:#f4fafd"></div>
+<div style="position:absolute;top:0;bottom:0;left:376.4pt;width:38.6pt;background:#f4fafd"></div>
+<div style="position:absolute;top:0;bottom:0;left:453.6pt;width:38.6pt;background:#f4fafd"></div>
+<div style="position:absolute;top:0;bottom:0;left:530.8pt;width:38.6pt;background:#f4fafd"></div>
 <sc-for list="{{ pg.rows }}" as="row" hint-placeholder-count="6">
 <div data-row="1" lang="en" style="display:flex;position:relative;border-left:0.25pt solid #2c2e35">
 <div style="position:relative;width:67.6pt;flex:0 0 67.6pt;box-sizing:border-box;padding:3.5pt 1.5pt;border-right:0.25pt solid #2c2e35;border-bottom:0.25pt solid #2c2e35;font-size:6.5pt;line-height:6.3pt;color:#2c2e35;white-space:pre-wrap;hyphens:manual;overflow-wrap:break-word">
 <sc-for list="{{ row.a }}" as="r" hint-placeholder-count="4">
 <sc-for list="{{ r.dt }}" as="v" hint-placeholder-count="0"><span style="font-size:8pt;font-weight:700;line-height:9pt;letter-spacing:-.03em">{{ v.t }}</span></sc-for>
 <sc-for list="{{ r.vm }}" as="v" hint-placeholder-count="0"><span style="font-size:8pt;font-weight:700;line-height:9pt;letter-spacing:-.03em;color:#ff0040">{{ v.t }}</span></sc-for>
-<sc-for list="{{ r.vc }}" as="v" hint-placeholder-count="0"><span style="font-size:8pt;font-weight:700;line-height:9pt;letter-spacing:-.03em;color:#00b0f0">{{ v.t }}</span></sc-for>
+<sc-for list="{{ r.vc }}" as="v" hint-placeholder-count="0"><span style="font-size:8pt;font-weight:700;line-height:9pt;letter-spacing:-.03em;color:#007ba8">{{ v.t }}</span></sc-for>
 <sc-for list="{{ r.n }}" as="v" hint-placeholder-count="0"><span>{{ v.t }}</span></sc-for>
 <sc-for list="{{ r.b }}" as="v" hint-placeholder-count="0"><span style="font-weight:700">{{ v.t }}</span></sc-for>
 <sc-for list="{{ r.rd }}" as="v" hint-placeholder-count="0"><span style="font-weight:700;color:#ff0040">{{ v.t }}</span></sc-for>
@@ -195,7 +197,7 @@ DETAILS</div>
 <sc-for list="{{ r.mb }}" as="v" hint-placeholder-count="0"><span style="font-weight:700;white-space:nowrap">{{ v.t }}</span></sc-for>
 <sc-for list="{{ r.sm }}" as="v" hint-placeholder-count="0"><span style="font-size:{{ v.s }};white-space:nowrap">{{ v.t }}</span></sc-for>
 <sc-for list="{{ r.smb }}" as="v" hint-placeholder-count="0"><span style="font-size:{{ v.s }};font-weight:700;white-space:nowrap">{{ v.t }}</span></sc-for>
-<sc-for list="{{ r.vo }}" as="v" hint-placeholder-count="0"><span style="display:block;line-height:6.3pt">{{ v.t }}</span></sc-for>
+<sc-for list="{{ r.vo }}" as="v" hint-placeholder-count="0"><span style="display:block;font-weight:700;line-height:6.3pt">{{ v.t }}</span></sc-for>
 <sc-for list="{{ r.sep }}" as="v" hint-placeholder-count="0"><span style="display:inline-block;max-width:100%;overflow:hidden;white-space:pre;vertical-align:top;line-height:6.3pt">{{ v.t }}</span></sc-for>
 </sc-for>
 </div>
@@ -209,7 +211,7 @@ DETAILS</div>
 <sc-for list="{{ r.mb }}" as="v" hint-placeholder-count="0"><span style="font-weight:700;white-space:nowrap">{{ v.t }}</span></sc-for>
 <sc-for list="{{ r.sm }}" as="v" hint-placeholder-count="0"><span style="font-size:{{ v.s }};white-space:nowrap">{{ v.t }}</span></sc-for>
 <sc-for list="{{ r.smb }}" as="v" hint-placeholder-count="0"><span style="font-size:{{ v.s }};font-weight:700;white-space:nowrap">{{ v.t }}</span></sc-for>
-<sc-for list="{{ r.vo }}" as="v" hint-placeholder-count="0"><span style="display:block;line-height:6.3pt">{{ v.t }}</span></sc-for>
+<sc-for list="{{ r.vo }}" as="v" hint-placeholder-count="0"><span style="display:block;font-weight:700;line-height:6.3pt">{{ v.t }}</span></sc-for>
 <sc-for list="{{ r.sep }}" as="v" hint-placeholder-count="0"><span style="display:inline-block;max-width:100%;overflow:hidden;white-space:pre;vertical-align:top;line-height:6.3pt">{{ v.t }}</span></sc-for>
 </sc-for>
 </div>
@@ -620,9 +622,9 @@ DETAILS</div>
 </sc-for>
 
 <sc-for list="{{ tp.policyRow }}" as="f" hint-placeholder-count="1">
-<div style="position:absolute;left:20.7pt;top:{{ tp.policyTop }};font-size:20pt;font-weight:700;line-height:1;letter-spacing:-.01em">{{ joPolicyHeading }}</div>
+<div style="position:absolute;left:20.7pt;top:{{ tp.policyTop }};font-size:17pt;font-weight:700;line-height:1;letter-spacing:-.01em">{{ joPolicyHeading }}</div>
 <div style="position:absolute;left:22.7pt;top:{{ tp.policyRuleTop }};width:549.9pt;height:3pt;background:#2c2e35"></div>
-<div style="position:absolute;left:22.7pt;top:{{ tp.policyTextTop }};width:545.3pt;font-size:8pt;line-height:9.6pt">
+<div style="position:absolute;left:22.7pt;top:{{ tp.policyTextTop }};width:545.3pt;font-size:7.5pt;line-height:8.6pt">
 <sc-for list="{{ joPolicy }}" as="q" hint-placeholder-count="8">
 <div style="display:flex"><span style="width:8.5pt;flex:0 0 8.5pt">&bull;</span><span style="flex:1">{{ q.t }}</span></div>
 </sc-for>
@@ -974,28 +976,32 @@ const JO_COL = i => 22.7 + i * 141.2;
 // are measured once per word and cached, so 2,000 cells cost a few dozen
 // measures. A word that still will not fit is left to wrap as before.
 const CH_FIT = { cache: {}, ctx: null, waiting: false };
-function chFitSize(word, inner) {
+function chFitSize(word, inner, weight) {
+  // Gotham Narrow Bold is a wider face than Book, so a bold word has to be
+  // measured bold — measured at 400 it reads as fitting and then overhangs.
+  const wt = weight || 400;
   if (!word || word.length < 5) return 0;
   // Measured before the face has loaded, the canvas reports the fallback's
   // widths, which are narrower — that is how "Thoroughbred" was handed a 6pt
   // that still overhung its column. Until Gotham Narrow is ready the word is
   // left alone and the answer is NOT cached, so a later render measures it
   // properly; the cache is emptied once the fonts settle.
-  if (!document.fonts || !document.fonts.check('400 6.5pt "Gotham Narrow"')) {
+  if (!document.fonts || !document.fonts.check('400 6.5pt "Gotham Narrow"')
+      || !document.fonts.check('700 6.5pt "Gotham Narrow"')) {
     if (document.fonts && !CH_FIT.waiting) {
       CH_FIT.waiting = true;
       document.fonts.ready.then(() => { CH_FIT.cache = {}; });
     }
     return 0;
   }
-  const key = word + '|' + inner;
+  const key = word + '|' + inner + '|' + wt;
   if (key in CH_FIT.cache) return CH_FIT.cache[key];
   if (!CH_FIT.ctx) CH_FIT.ctx = document.createElement('canvas').getContext('2d');
   // a third of a point of slack, so rounding never defeats the fit
   const room = inner - 0.35;
   let out = 5.5;
   for (const size of [6.5, 6, 5.5]) {
-    CH_FIT.ctx.font = '400 ' + size + 'pt "Gotham Narrow"';
+    CH_FIT.ctx.font = wt + ' ' + size + 'pt "Gotham Narrow"';
     if (CH_FIT.ctx.measureText(word).width * 72 / 96 <= room) { out = size === 6.5 ? 0 : size; break; }
   }
   CH_FIT.cache[key] = out;
@@ -1180,6 +1186,7 @@ class Component extends DCLogic {
     const faces = document.fonts
       ? Promise.all([
           document.fonts.load('400 7pt "Gotham Narrow"'),
+          document.fonts.load('700 6.5pt "Gotham Narrow"'),
           document.fonts.load('700 7pt "Gotham Narrow"'),
           document.fonts.load('700 8.5pt "Gotham Narrow"'),
           document.fonts.load('400 8pt "Gotham Narrow"'),
@@ -1723,6 +1730,9 @@ class Component extends DCLogic {
     const WJ = '\u2060';
     return String(t)
       .replace(/[ \t]*(\r?\n)[ \t\r\n]*/g, '\n')
+      // Some cells are typed with a double space between distance and class —
+      // "1200m  G2" where the column two over reads "1100m G2". One space.
+      .replace(/[ \t]{2,}/g, ' ')
       .replace(/(\d)(\s*)-(\s*)(\d)/g, (m, a, s1, s2, b) =>
         a + (s1 ? '\u00a0' : '') + '-' + WJ + (s2 ? '\u00a0' : '') + b)
       .replace(/\b(BM|CL|Cl)(\s+)(\d)/g, (m, k, sp, d) => k + '\u00a0' + d)
@@ -1770,9 +1780,14 @@ class Component extends DCLogic {
           return;
         }
         const chunks = (key === 'n' || key === 'b') ? part.split(VOBIS) : [part];
-        chunks.forEach(chunk => {
+        const isVo = s => VOBIS.test(s) && String(s).trim().toUpperCase().startsWith('VOBIS');
+        chunks.forEach((chunk, ci) => {
           if (!chunk) return;
-          if (VOBIS.test(chunk) && chunk.trim().toUpperCase().startsWith('VOBIS')) {
+          // A VOBIS label sets as a block of its own, so the newline the
+          // workbook leaves beside it would print as an empty line between
+          // one VOBIS type and the next.
+          if (!chunk.trim() && (isVo(chunks[ci - 1] || '') || isVo(chunks[ci + 1] || ''))) return;
+          if (isVo(chunk)) {
             const o = empty();
             o.vo.push({ t: this.chAtomic(chunk.trim()) });
             out.push(o);
@@ -1787,20 +1802,24 @@ class Component extends DCLogic {
             if (/^\$\d/.test(bit) && (key === 'n' || key === 'b')) {
               // prizemoney is already unbreakable; a figure wider than the
               // column is set smaller rather than allowed to overhang
-              const ms = chFitSize(bit, inner);
+              const ms = chFitSize(bit, inner, key === 'b' ? 700 : 400);
               if (ms) o[key === 'b' ? 'smb' : 'sm'].push({ t: bit, s: ms + 'pt' });
               else o[key === 'b' ? 'mb' : 'mn'].push({ t: bit });
               out.push(o);
               return;
             }
             if (key === 'n' || key === 'b') {
-              // split on spaces so only the offending word is set smaller
-              String(bit).split(/(\s+)/).forEach(word => {
+              // Made atomic first, then split on ordinary spaces only. Split
+              // first and "0 - 56" reaches the rule as three separate words,
+              // so nothing holds the label together and the column prints
+              // "0 -" over "56"; the non-breaking spaces the rule leaves
+              // behind are not split on.
+              this.chAtomic(bit).split(/([^\S\u00a0]+)/).forEach(word => {
                 if (!word) return;
-                const size = chFitSize(word.replace(/[\u2060\u00a0]/g, ' ').trim(), inner);
+                const size = chFitSize(word.replace(/[\u2060\u00a0]/g, ' ').trim(), inner, key === 'b' ? 700 : 400);
                 const a = empty();
-                if (size) a[key === 'b' ? 'smb' : 'sm'].push({ t: this.chAtomic(word), s: size + 'pt' });
-                else a[key].push({ t: this.chAtomic(word) });
+                if (size) a[key === 'b' ? 'smb' : 'sm'].push({ t: word, s: size + 'pt' });
+                else a[key].push({ t: word });
                 out.push(a);
               });
               return;
@@ -2014,7 +2033,7 @@ class Component extends DCLogic {
     });
     const bullets = this.state.policy || [];
     const policy = bullets.length
-      ? 20 + 3.6 + 11 + bullets.reduce((n, b) => n + Math.max(1, Math.ceil(String(b.t || '').length / 118)) * 9.6, 0)
+      ? 17 + 3 + 11 + bullets.reduce((n, b) => n + Math.max(1, Math.ceil(String(b.t || '').length / 126)) * 8.6, 0)
       : 0;
     // trials run continuously to the foot of every page; the policy follows them
     const limitOf = first => (first ? BOTTOM - TOP_FIRST : BOTTOM - TOP_CONT);
@@ -2116,7 +2135,7 @@ class Component extends DCLogic {
    * both are full. Depth comes from the block's own parts, so no measuring.
    */
   rsPack() {
-    const PAGE = 841.89, BOTTOM = 30, TOP_FIRST = 93.8, TOP_CONT = 57.9, GAP = 20;
+    const PAGE = 841.89, BOTTOM = 30, TOP_FIRST = 93.8, TOP_CONT = 57.9, GAP = 15;
     const depth = b => {
       const grid = b.columns.length === 3 ? RS_THREE : RS_FOUR;
       const note = b.note ? 6.7 + Math.max(1, Math.ceil(String(b.note).length / 62)) * 9.05 + 6.2 : 0;
@@ -2133,28 +2152,56 @@ class Component extends DCLogic {
       return 14.2 + note + 13.9 + rows;
     };
     const blocks = this.state.seriesBlocks || [];
-    const order = blocks.filter(b => !b.tail).concat(blocks.filter(b => b.tail));
+    // The order of the series does not matter, so the packer is free to use
+    // the depth: the shallower column takes the deepest block still to place
+    // that will fit it, which is what closes the white space a fixed order
+    // leaves at the foot of a column. The highweight schedule is the one
+    // exception — it always prints last, under the final series in the
+    // right-hand column.
+    const queue = blocks.filter(b => !b.tail);
+    const tail = blocks.filter(b => b.tail);
     const limitOf = first => PAGE - (first ? TOP_FIRST : TOP_CONT) - BOTTOM;
+    const put = (col, b, d) => {
+      col.used += (col.blocks.length ? GAP : 0) + d;
+      col.blocks.push(b);
+    };
     const pages = [];
-    let i = 0;
-    while (i < order.length) {
+    while (queue.length) {
       const first = pages.length === 0;
       const limit = limitOf(first);
       const cols = [{ used: 0, blocks: [] }, { used: 0, blocks: [] }];
-      let placed = false;
-      while (i < order.length) {
-        const d = depth(order[i]);
+      for (;;) {
+        if (!queue.length) break;
         const sides = cols[0].used <= cols[1].used ? [0, 1] : [1, 0];
-        const side = sides.find(x => cols[x].used + (cols[x].blocks.length ? GAP : 0) + d <= limit);
-        if (side === undefined) break;
-        cols[side].used += (cols[side].blocks.length ? GAP : 0) + d;
-        cols[side].blocks.push(order[i]);
-        placed = true;
-        i++;
+        let took = false;
+        for (const x of sides) {
+          const room = limit - cols[x].used - (cols[x].blocks.length ? GAP : 0);
+          let pick = -1, best = -1;
+          queue.forEach((b, k) => {
+            const d = depth(b);
+            if (d <= room && d > best) { best = d; pick = k; }
+          });
+          if (pick >= 0) { put(cols[x], queue[pick], best); queue.splice(pick, 1); took = true; break; }
+        }
+        if (!took) break;
       }
-      if (!placed) { cols[0].blocks.push(order[i]); i++; }
+      // a block taller than the page has to start one anyway
+      if (!cols[0].blocks.length && !cols[1].blocks.length) put(cols[0], queue.shift(), limit);
       pages.push({ first, cols });
     }
+    tail.forEach(b => {
+      const d = depth(b);
+      if (!pages.length) pages.push({ first: true, cols: [{ used: 0, blocks: [] }, { used: 0, blocks: [] }] });
+      const last = pages[pages.length - 1];
+      const limit = limitOf(last.first);
+      const room = limit - last.cols[1].used - (last.cols[1].blocks.length ? GAP : 0);
+      if (d <= room) put(last.cols[1], b, d);
+      else {
+        const cols = [{ used: 0, blocks: [] }, { used: 0, blocks: [] }];
+        put(cols[0], b, d);
+        pages.push({ first: false, cols });
+      }
+    });
     if (!pages.length) pages.push({ first: true, cols: [{ blocks: [] }, { blocks: [] }] });
     return pages;
   }
@@ -2372,7 +2419,11 @@ class Component extends DCLogic {
     const edMonth = (edWords[0] || '').replace(/^(\w)(\w*)$/, (m0, a0, b0) => a0 + b0.toLowerCase());
     const edYear = edWords[edWords.length - 1] || '';
     const contentsHeader = 'INSIDE RACING | ' + String(this.state.edition || '');
-    const contentsRowH = Math.min(30, 322 / Math.max((contentsRows || []).length, 1)).toFixed(2) + 'pt';
+    const contentsRowN = Math.min(30, 322 / Math.max((contentsRows || []).length, 1));
+    const contentsRowH = contentsRowN.toFixed(2) + 'pt';
+    // The note sits under the last row's rule rather than adrift below the
+    // list, so it reads as the foot of the contents and not as stray copy.
+    const contentsNoteTop = (198.4 + Math.max(0, (contentsRows || []).length - 1) * contentsRowN + 20.8).toFixed(2) + 'pt';
     const contentsNote = edMonth
       ? 'Data within Inside Racing is accurate as of 1 ' + edMonth + ' ' + edYear + ' and subject to change.'
       : '';
@@ -2483,8 +2534,8 @@ class Component extends DCLogic {
         rulesHeight: Math.max(0, p.height - 3.15) + 'pt',
         policyRow: p.policyOn ? [{}] : [],
         policyTop: policyTop + 'pt',
-        policyRuleTop: (policyTop + 23.6) + 'pt',
-        policyTextTop: (policyTop + 38.6) + 'pt',
+        policyRuleTop: (policyTop + 20) + 'pt',
+        policyTextTop: (policyTop + 31) + 'pt',
         no: joFolios[i] || ''
       };
     });
@@ -2507,7 +2558,7 @@ class Component extends DCLogic {
       titleRow: p.first ? [{}] : [],
       columns: [21.7, 305].map((left, side) => ({
         left: left + 'pt',
-        blocks: (p.cols[side] ? p.cols[side].blocks : []).map((b, j) => ({ ...rsShape(b), gap: j === 0 ? '0pt' : '20pt' }))
+        blocks: (p.cols[side] ? p.cols[side].blocks : []).map((b, j) => ({ ...rsShape(b), gap: j === 0 ? '0pt' : '15pt' }))
       })),
       no: rsFolios[i] || ''
     }));
@@ -2612,6 +2663,7 @@ class Component extends DCLogic {
       contentsRows,
       contentsRowH,
       contentsNote,
+      contentsNoteTop,
       contentsHeader,
       backPages: sc.tail ? [{}] : [],
       rpKeyNo,

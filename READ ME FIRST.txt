@@ -1,5 +1,5 @@
 INSIDE RACING — the complete repository contents
-Rebuilt 18 September 2026
+Rebuilt 18 September 2026, with Gotham Narrow Bold
 ================================================
 
 This is everything the repository holds, not just the changed files: every
@@ -29,7 +29,8 @@ Top level          the section pages and the assembled edition, the producer
 parsers/           the seventeen input parsers, pagination, advertising and
                    cover framing
 assets/            masthead and heading artwork, house advertising, photos
-fonts/             Gotham Narrow and Gotham Extra Narrow
+fonts/             Gotham Narrow Book and Bold, Gotham Extra Narrow Book and
+                   Bold
 inputs/            a full set of sample inputs, September and October
 data/edition.json  the baked edition the assembled pages read
 docs/              architecture, run sheet, checks guide, blueprint,
@@ -41,24 +42,34 @@ README.md          the repository front page
 
 CHANGED SINCE THE LAST PUSH
 ---------------------------
-Fifteen files, all included here:
+Every page, plus the font, the parsers and October's cover:
 
-Cover.dc.html                        cover framing
-Inside Racing Edition.dc.html        cover framing, series and stewards depth,
-Inside Racing Edition-print.dc.html  trials and Division of Races fitting
-Inside Racing Part 1.dc.html
-Inside Racing Part 2.dc.html
-Inside Racing Part 3.dc.html
+fonts/GothamNarrow-Bold.otf          NEW — the real bold face
+  └ declared at weight 700 on all twenty pages, which is why every .dc.html
+    and index.html appears in the changed list. The hairline stroke that
+    stood in for bold is gone, and the chart's fit measure now reads a word
+    at the weight it will print.
+parsers/cover-frame.js               the photograph starts below the masthead
+parsers/ads.js                       HR Assist benched; full pages bookable
+Programs Summary Chart.dc.html       chart typography and colour
+Entry Deadlines.dc.html              the ENTRIES / ACCEPTANCES / RIDERS labels
+Permits and Riders Agents.dc.html    the trials riders' names
+Race Series.dc.html                  packing, 15pt gap, highweight last
+Inside Racing Edition.dc.html        all of the above, plus the contents page
+Inside Racing Edition-print.dc.html  and the Division of Races Policy
+Inside Racing Part 1-3.dc.html
 Producer Console.dc.html             the red-row fix
-Programs Summary Chart.dc.html       venue colour read by colour, not point size
 Jump Outs and Flat Trials.dc.html    trials title measured from the real depth
-Race Series.dc.html                  row depth by character count
 Notices.dc.html                      stewards' room spacing
-parsers/cover-frame.js               the framing itself
-parsers/notices.js                   headings set bold by hand
-data/edition.json                    September's bake
+assets/photos/cover.jpg              October's photograph
+inputs/Cover.jpg                     the same at camera resolution
 CLAUDE.md / PROJECT-NOTES.md         project notes
 github.md                            sync record
+data/edition.json                    September's bake
+
+Suggested commit summary:
+  "Gotham Narrow Bold, October review round two: cover below the masthead,
+   chart typography, series packing, policy fit, bookable full pages"
 
 Suggested commit summary:
   "Cover framing for deep portraits, console conditional rows, layout fixes,

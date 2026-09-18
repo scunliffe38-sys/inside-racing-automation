@@ -30,24 +30,27 @@ heavy to composite on every page relayout, so the pages load a derivative:
 derivative whenever `inputs/Cover.jpg` changes** — the pages never reference the
 original.
 
-`parsers/cover-frame.js` frames it. A photograph proportionally deeper than the
-page has its `cover` crop driven by the height, so the whole height is already
-on the page and there is no vertical overflow left to slide: the subject prints
-where the camera put it. October's arrived with the horse's head behind the
-masthead and no object-position could move it. Such a frame is therefore printed
-a little under full size and sat on the page foot, and the strip left at the head
-is painted in a colour sampled from the picture's own top edge so the sky reads
-as continuous. The width pays for it — the crop was discarding that much anyway —
-which caps the reduction at the width slack, or 84%, whichever is larger.
+`parsers/cover-frame.js` frames it. **The photograph starts at the foot of the
+masthead, not at the head of the page**, and runs to the page foot; the strip
+left above it is painted in a colour sampled from the picture's own top edge, so
+the sky reads as continuous behind the wordmark. Nothing in the picture can
+therefore cross the header, whatever it holds and however it measures.
 
-The reduction is solved, not chosen, from where the subject starts. **Measure
-that by scanning for the first row whose energy reaches half the frame's mean,
-never from the interest band** — on a frame filled with one large subject the
-band starts well down the picture even though the subject's leading edge is near
-the top, which is exactly how October's cover passed a clearance test while the
-horse sat under the wordmark. When the width cannot pay for the whole reduction
-the run says so and asks for depth to be cropped off the top of the photograph. The cover page fills its window with it, cropped from the top, since
-these are tall portrait frames with sky above the subject.
+That is deliberately structural, not measured. Two editions ran with the horse's
+head under the wordmark while the framing was solved from a reading of where the
+subject's leading edge sat: a frame whose crop is driven by its height has no
+vertical overflow left to slide at all, and where there is overflow the amount
+to slide depends on getting that edge right — which an energy scan does not do
+reliably on a frame filled with one large subject. **Never restore a framing that
+puts the photograph behind the masthead and relies on a measurement to keep the
+subject clear.**
+
+The measurement still does the job it is good at: placing the subject inside the
+space that is free. Edge energy by row and column gives an interest band and a
+wider keep-band; the crop aims the band between the masthead foot and the teaser
+strip and holds the keep-band inside them. A subject filling only a shallow band
+is enlarged to fill the clear depth, and an enlargement grows sideways and
+downwards only — the top edge never moves.
 
 ### Jumps arrives as three files on three rhythms
 `inputs/Jumps Racing Program.xlsx` is the whole season, one row per jumps
@@ -135,13 +138,29 @@ awaiting-copy panel because of it.
 ## Typography rules the markup asks for
 These were set from the October review and are not preferences to re-litigate:
 
-- **Class labels never break.** `0-56`, `BM 62`, `F&M`, `0-70+` hold together
-  across a line break. A word joiner (`\u2060`, zero-width, no glyph) removes
-  the break opportunity and a non-breaking space replaces a space inside a
-  label, so nothing printed changes. `chAtomic()` in the edition files and
-  `atomic()` on the chart page.
-- **VOBIS labels start their own line**, set as a block out of whatever run
-  carried them.
+- **Class labels never break.** `0-56`, `0 - 56`, `BM 62`, `F&M`, `0-70+` hold
+  together across a line break. A word joiner (`\u2060`, zero-width, no glyph)
+  removes the break opportunity and a non-breaking space replaces a space
+  inside a label, so nothing printed changes. `chAtomic()` in the edition files
+  and `atomic()` on the chart page. **Make the text atomic before splitting it
+  into words for the fit measure, never after** — split first and `0 - 56`
+  reaches the rule as three separate words, nothing holds it together, and the
+  column prints "0 -" over "56", which is how October's Murtoa cell went out.
+- **A run of spaces collapses to one.** Some cells are typed `1200m  G2` where
+  the column two over reads `1100m G2`; the spacing of a class after a distance
+  is the same everywhere.
+- **VOBIS labels start their own line, set bold**, as a block out of whatever
+  run carried them — and **no blank line between one VOBIS type and the next**.
+  The workbook leaves a newline beside the label; beside a block it would print
+  as an empty line.
+- **The chart's column heads are bold, on one leading** (8.4pt) whatever the
+  number of lines in the cell.
+- **Gotham Narrow Bold is a real face now** — `fonts/GothamNarrow-Bold.otf`,
+  H&FJ 2.200 Pro, declared at weight 700 on every page. The hairline
+  `-webkit-text-stroke` that stood in for it is gone; **never bring it back**.
+  Bold is wider than Book, so `chFitSize()` measures at the weight the word
+  will actually print — measured at 400 a bold race name reads as fitting and
+  then overhangs its column.
 - **A venue qualifier is capitalised** — CRANBOURNE (NIGHT), not (Night).
 - **`OPEN 1701 AND OVER` prints as 1701M.** The workbook is left alone; the
   chart header normalises any bare distance before `AND OVER`.
@@ -158,8 +177,25 @@ These were set from the October review and are not preferences to re-litigate:
 - **The trials spread across all four columns on the last page**, filled to the
   shallowest common depth that takes every remaining race, which also frees the
   depth the Division of Races Policy needs beneath them.
-- Race series blocks sit 20pt apart, not 34pt. The packer constant and the
-  rendered gap must stay the same figure.
+- Race series blocks sit 15pt apart, not 20pt and not 34pt. The packer
+  constant and the rendered gap must stay the same figure.
+- **The order of the race series does not matter; the space does.** Each
+  column takes the deepest block still to place that will fit it, which closes
+  the white space a fixed order leaves at a column foot. **The highweight
+  schedule always prints last**, under the final series in the right-hand
+  column.
+- **The chart's country blue is `#007ba8`** — the workbook's `#00B0F0` read 30%
+  darker for print — and the key swatch matches it. Column shading is
+  `#f4fafd`.
+- **The contents page carries a rule above the first row**, as the published
+  edition does, and the accuracy note sets at 7.8pt directly under the last
+  row's rule rather than adrift above the panel.
+- **The Division of Races Policy is set to fit under the trials**: 17pt
+  heading, 7.5pt body on 8.6pt. Its depth estimate and its printed styles are
+  the same figures and must move together.
+- **A whole-page ad is a bookable blank by default.** HR Assist is benched in
+  the library (`enabled: false`), so every full page prints its slot id and
+  size until `inputs/Ad Placements.csv` books it.
 
 ## The summary chart's colour comes from the workbook
 The venue name's colour marks metropolitan against country, and the meeting

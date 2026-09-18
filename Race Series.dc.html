@@ -10,6 +10,7 @@
 <helmet>
 <style>
 @font-face{font-family:'Gotham Narrow';src:url('fonts/GothamNarrow-Book.otf') format('opentype');font-weight:400;font-style:normal;font-display:block}
+@font-face{font-family:'Gotham Narrow';src:url('fonts/GothamNarrow-Bold.otf') format('opentype');font-weight:700;font-style:normal;font-display:block}
 @font-face{font-family:'Gotham XNarrow';src:url('fonts/GothamXNarrow-Book.ttf') format('truetype');font-weight:400;font-style:normal;font-display:block}
 @font-face{font-family:'Gotham XNarrow';src:url('fonts/GothamXNarrow-Bold.ttf') format('truetype');font-weight:700;font-style:normal;font-display:block}
 doc-page:not(:defined){visibility:hidden}
@@ -168,33 +169,55 @@ class Component extends DCLogic {
    * schedule is printed last wherever that falls.
    */
   pack() {
-    const PAGE = 841.89, BOTTOM = 30, TOP_FIRST = 93.8, TOP_CONT = 57.9, GAP = 20;
-    const order = this.state.blocks.filter(b => !b.tail).concat(this.state.blocks.filter(b => b.tail));
+    const PAGE = 841.89, BOTTOM = 30, TOP_FIRST = 93.8, TOP_CONT = 57.9, GAP = 15;
+    // The order of the series does not matter, so the packer is free to use
+    // the depth: the shallower column takes the deepest block still to place
+    // that will fit it. The highweight schedule always prints last, under the
+    // final series in the right-hand column.
+    const queue = this.state.blocks.filter(b => !b.tail);
+    const tail = this.state.blocks.filter(b => b.tail);
     const limitOf = first => PAGE - (first ? TOP_FIRST : TOP_CONT) - BOTTOM;
-
+    const put = (col, b, d) => {
+      col.used += (col.blocks.length ? GAP : 0) + d;
+      col.blocks.push(b);
+    };
     const pages = [];
-    let i = 0;
-    while (i < order.length) {
+    while (queue.length) {
       const first = pages.length === 0;
       const limit = limitOf(first);
       const cols = [{ used: 0, blocks: [] }, { used: 0, blocks: [] }];
-      let placed = false;
-      while (i < order.length) {
-        const b = order[i];
-        const d = Component.depth(b);
-        // the shallower column takes the next block, which keeps the
-        // alternation of the printed page while respecting the fit
+      for (;;) {
+        if (!queue.length) break;
         const sides = cols[0].used <= cols[1].used ? [0, 1] : [1, 0];
-        const side = sides.find(x => cols[x].used + (cols[x].blocks.length ? GAP : 0) + d <= limit);
-        if (side === undefined) break;
-        cols[side].used += (cols[side].blocks.length ? GAP : 0) + d;
-        cols[side].blocks.push(b);
-        placed = true;
-        i++;
+        let took = false;
+        for (const x of sides) {
+          const room = limit - cols[x].used - (cols[x].blocks.length ? GAP : 0);
+          let pick = -1, best = -1;
+          queue.forEach((b, k) => {
+            const d = Component.depth(b);
+            if (d <= room && d > best) { best = d; pick = k; }
+          });
+          if (pick >= 0) { put(cols[x], queue[pick], best); queue.splice(pick, 1); took = true; break; }
+        }
+        if (!took) break;
       }
-      if (!placed) { cols[0].blocks.push(order[i]); i++; }   // a block taller than the page
+      if (!cols[0].blocks.length && !cols[1].blocks.length) put(cols[0], queue.shift(), limit);   // a block taller than the page
       pages.push({ first, cols, height: Math.max(cols[0].used, cols[1].used) });
     }
+    tail.forEach(b => {
+      const d = Component.depth(b);
+      if (!pages.length) pages.push({ first: true, cols: [{ used: 0, blocks: [] }, { used: 0, blocks: [] }], height: 0 });
+      const last = pages[pages.length - 1];
+      const room = limitOf(last.first) - last.cols[1].used - (last.cols[1].blocks.length ? GAP : 0);
+      if (d <= room) put(last.cols[1], b, d);
+      else {
+        const cols = [{ used: 0, blocks: [] }, { used: 0, blocks: [] }];
+        put(cols[0], b, d);
+        pages.push({ first: false, cols, height: d });
+      }
+      const p = pages[pages.length - 1];
+      p.height = Math.max(p.cols[0].used, p.cols[1].used);
+    });
     if (!pages.length) pages.push({ first: true, cols: [{ blocks: [] }, { blocks: [] }] });
     return pages;
   }
@@ -224,7 +247,7 @@ class Component extends DCLogic {
       titleRow: p.first ? [{}] : [],
       columns: [21.7, 305].map((left, side) => ({
         left: left + 'pt',
-        blocks: (p.cols[side] ? p.cols[side].blocks : []).map((b, j) => ({ ...shape(b), gap: j === 0 ? '0pt' : '20pt' }))
+        blocks: (p.cols[side] ? p.cols[side].blocks : []).map((b, j) => ({ ...shape(b), gap: j === 0 ? '0pt' : '15pt' }))
       })),
       no: from ? String(from + i) : ''
     }));
