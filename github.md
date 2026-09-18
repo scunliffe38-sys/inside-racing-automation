@@ -3,15 +3,23 @@ branch: main
 
 ## Last sync
 
-date: 2026-09-17
+date: 2026-09-18
 
 ### Updated in this project
+- Cover framing handles a photograph deeper than the page: it prints a little under full size, sits on the page foot, and the strip left at the head takes a colour sampled from the picture's own top edge.
+- Subject clearance measured by scanning for the frame's leading edge rather than from the interest band, which on October's cover read 20% down while the horse's head sat at 10%.
+- Producer console conditional rows keyed on the catalogue names, so the Industry Notice and Rules Extracts rows go quiet when their toggle is No.
+- Race series, stewards' room, flat trials and the Division of Races Policy all fit their pages; four wide race names set without wrapping.
+
+## Sync history
+
+date: 2026-09-17
+
+### Updated in that sync
 - October review actioned: nineteen of the twenty-two marked-up comments are in the templates.
 - Three new Yes/No toggles — Industry Notice, From the Stewards' Room, Rules and Notices — on the console and in pagination, all defaulting in.
 - Notices parser reads a heading set bold by hand, not only one styled Heading 1, which is how all four Word documents actually arrive.
 - Summary chart identifies a venue by its colour rather than an exact point size, so a month exported at 8pt keeps its metro/country colour and scale.
-
-## Sync history
 
 date: 2026-09-10
 

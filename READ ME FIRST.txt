@@ -1,28 +1,48 @@
-INSIDE RACING — files changed since the last push
-Rebuilt 18 September 2026, after the cover framing fix
-======================================================
+INSIDE RACING — the complete repository contents
+Rebuilt 18 September 2026
+================================================
 
-GitHub Desktop says "No local changes" because these edits are not in the
-folder on your machine yet. Copy them in and Desktop will list them.
+This is everything the repository holds, not just the changed files: every
+page, every parser, the fonts, the artwork, the sample inputs, the bake and
+the notes. Use it when you want the clone brought wholly into line rather
+than patched.
 
 WHAT TO DO
 ----------
 1. Unzip this folder somewhere outside your clone.
 2. Open your clone in Explorer (GitHub Desktop: Ctrl+Shift+F).
-3. Copy everything EXCEPT "READ ME FIRST.txt" and "_CLAUDE.md" into the
-   clone, keeping the folder structure. Overwrite when asked.
-     - the .dc.html files go in the clone's top level
-     - parsers/cover-frame.js and parsers/notices.js go in parsers/
-     - data/edition.json goes in a "data" folder; create it if missing
-4. Rename "_CLAUDE.md" to "CLAUDE.md" and put it in the clone's top level.
-   It could not be named that inside the zip.
-5. Back in GitHub Desktop the Changes tab will list 15 files.
-6. Summary: "Cover framing for deep portraits, console conditional rows,
-   layout fixes, baked edition"
-7. Commit to main, then Push origin.
+3. Copy everything EXCEPT "READ ME FIRST.txt" into the clone, keeping the
+   folder structure. Overwrite when asked.
+4. GitHub Desktop's Changes tab will list only the files that actually
+   differ — most of these are already identical to what is pushed.
+5. Commit to main, then Push origin.
 
-THE 15 FILES
-------------
+Nothing is deleted by copying, so a file that exists in the clone but not
+here stays put. If you would rather start clean, delete the clone's contents
+first (leaving the hidden .git folder alone) and then copy this in.
+
+WHAT IS IN IT
+-------------
+Top level          the section pages and the assembled edition, the producer
+                   console, the input checklist, index.html, support.js,
+                   doc-page.js, image-slot.js
+parsers/           the seventeen input parsers, pagination, advertising and
+                   cover framing
+assets/            masthead and heading artwork, house advertising, photos
+fonts/             Gotham Narrow and Gotham Extra Narrow
+inputs/            a full set of sample inputs, September and October
+data/edition.json  the baked edition the assembled pages read
+docs/              architecture, run sheet, checks guide, blueprint,
+                   testing and GitHub plan, input sources worksheet
+CLAUDE.md          project notes, also as PROJECT-NOTES.md
+github.md          the sync record
+README.md          the repository front page
+.nojekyll          keeps GitHub Pages from rewriting the folder names
+
+CHANGED SINCE THE LAST PUSH
+---------------------------
+Fifteen files, all included here:
+
 Cover.dc.html                        cover framing
 Inside Racing Edition.dc.html        cover framing, series and stewards depth,
 Inside Racing Edition-print.dc.html  trials and Division of Races fitting
@@ -36,38 +56,15 @@ Race Series.dc.html                  row depth by character count
 Notices.dc.html                      stewards' room spacing
 parsers/cover-frame.js               the framing itself
 parsers/notices.js                   headings set bold by hand
-data/edition.json                    the bake
-CLAUDE.md  +  PROJECT-NOTES.md       project notes (same file, two names)
+data/edition.json                    September's bake
+CLAUDE.md / PROJECT-NOTES.md         project notes
 github.md                            sync record
 
-THE COVER FIX
--------------
-A photograph proportionally deeper than an A4 page has its crop driven by the
-height, so the whole image height is already on the page and there is no
-vertical overflow left to slide. The horse printed where the camera put it,
-head into the masthead, and no framing figure could move it.
-
-Such a photograph now prints slightly under full size, sat on the page foot.
-The subject drops clear of the masthead and the strip left at the head is
-painted in a colour sampled from the picture's own top edge, so the sky reads
-as continuous behind the wordmark. The width pays for it — the crop was
-discarding about 13% of it anyway, which caps the reduction at that much.
-Landscape covers keep the existing modest enlargement.
-
-August's cover is unchanged: its subject sits at 48-77% of the height,
-already well clear of the masthead.
-
-THE RED ROWS
-------------
-The pushed Producer Console tested the printed section titles — "Industry
-Notice", "From the Stewards' Room", "Rules and Notices" — but the catalogue
-rows carry the catalogue names from parsers/source.js: "Industry notice",
-"Stewards' room", "Rules extracts". Nothing matched, so a row never went
-quiet when its toggle was set to No.
+Suggested commit summary:
+  "Cover framing for deep portraits, console conditional rows, layout fixes,
+   baked edition"
 
 NOTE ON data/edition.json
 -------------------------
-It has never been committed, so the published site has no edition to show
-until someone runs the console. This copy is September's bake. If October's
-matters for the commit, run the console against your October folder first and
-tell me, and I will rebuild this folder.
+This copy is September's bake. Run the console against your October folder
+and re-bake if October is what should be published.

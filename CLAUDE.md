@@ -28,7 +28,25 @@ These arrive at full camera resolution (7797×9605 in August), which is far too
 heavy to composite on every page relayout, so the pages load a derivative:
 `assets/photos/cover.jpg` at 1800px on the long edge. **Regenerate the
 derivative whenever `inputs/Cover.jpg` changes** — the pages never reference the
-original. The cover page fills its window with it, cropped from the top, since
+original.
+
+`parsers/cover-frame.js` frames it. A photograph proportionally deeper than the
+page has its `cover` crop driven by the height, so the whole height is already
+on the page and there is no vertical overflow left to slide: the subject prints
+where the camera put it. October's arrived with the horse's head behind the
+masthead and no object-position could move it. Such a frame is therefore printed
+a little under full size and sat on the page foot, and the strip left at the head
+is painted in a colour sampled from the picture's own top edge so the sky reads
+as continuous. The width pays for it — the crop was discarding that much anyway —
+which caps the reduction at the width slack, or 84%, whichever is larger.
+
+The reduction is solved, not chosen, from where the subject starts. **Measure
+that by scanning for the first row whose energy reaches half the frame's mean,
+never from the interest band** — on a frame filled with one large subject the
+band starts well down the picture even though the subject's leading edge is near
+the top, which is exactly how October's cover passed a clearance test while the
+horse sat under the wordmark. When the width cannot pay for the whole reduction
+the run says so and asks for depth to be cropped off the top of the photograph. The cover page fills its window with it, cropped from the top, since
 these are tall portrait frames with sky above the subject.
 
 ### Jumps arrives as three files on three rhythms
