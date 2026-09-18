@@ -456,7 +456,12 @@ class Component extends DCLogic {
         const m = await P('./parsers/deadlines.js');
         const r = await m.loadDeadlines('inputs/Entry Deadlines.csv');
         ctx.days = r.days;
-        return { warnings: r.warnings, summary: r.count + ' race days' };
+        const a = r.adjusted || {};
+        const extra = [
+          a.featureLines ? a.featureLines + ' feature race lines from the schedule sheet' : '',
+          a.corrections ? a.corrections + ' meeting corrections' : ''
+        ].filter(Boolean);
+        return { warnings: r.warnings, summary: r.count + ' race days' + (extra.length ? ' \u00b7 ' + extra.join(', ') : '') };
       } },
       { name: 'Programs summary chart', fn: async ctx => {
         const m = await P('./parsers/chart.js');

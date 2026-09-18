@@ -3,12 +3,20 @@ branch: main
 
 ## Last sync
 
-date: 2026-09-18T23:40:00+10:00
+date: 2026-09-19T02:05:00+10:00
 
 ### Updated in this project
-- Gotham Narrow Bold added to fonts/ and declared on every page, so the chart heads, the ENTRIES / ACCEPTANCES / RIDERS labels, the trials riders' names and the VOBIS marks print in the real face; the hairline stroke that stood in for it is gone.
-- The chart's fit measure reads a word at the weight it will print, since Bold is wider than Book.
-- October's cover photograph in as the edition's cover, framed below the masthead with the whole horse in frame.
+- The cover's framing rebuilt: the hero is measured from its leading edge, sized to fill the clear depth and enlarged further where the teaser strip demands it, centred down the page in the clear space, and placed across the page from column energy read over its own rows.
+- The enlargement is expressed as the element's own size with the page cropping it; written as object-position inside a window-sized box it was silently discarded and the picture printed at plain cover scale.
+- October's cover photograph in, with the derivative raised to 2600px so an enlarged frame still has pixels to print.
+
+### Earlier the same day
+
+### Updated in this project
+- Entry deadlines take two hand-kept workbooks over the export: Feature Race Deadlines carries the real staged feature schedule and replaces every feature line the export calculates, and Meeting Corrections fixes a venue name or a time on the ordinary lines.
+- Both are optional, both are in the console's file catalogue, and the run reports how many lines each supplied; a sheet left over from another month says so once.
+- Gotham Narrow Bold added to fonts/ and declared on every page, so the chart heads, the deadlines labels, the trials riders' names and the VOBIS marks print in the real face; the hairline stroke that stood in for it is gone, and the chart's fit measure reads a word at the weight it will print.
+- October's cover photograph in as the edition's cover, framed below the masthead with the whole horse in frame; the contents rule set to the published edition's weight and position.
 
 ### Earlier the same day
 

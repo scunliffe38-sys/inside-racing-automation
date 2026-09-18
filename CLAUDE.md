@@ -24,11 +24,13 @@ suffix format, chronological sort, gap warning.
 
 ### The cover photograph is an input
 `inputs/Cover.jpg` is the month's cover photograph, overwritten each edition.
-These arrive at full camera resolution (7797×9605 in August), which is far too
+These arrive at full camera resolution (6516×7385 in October), which is far too
 heavy to composite on every page relayout, so the pages load a derivative:
-`assets/photos/cover.jpg` at 1800px on the long edge. **Regenerate the
+`assets/photos/cover.jpg` at 2600px on the long edge. **Regenerate the
 derivative whenever `inputs/Cover.jpg` changes** — the pages never reference the
-original.
+original. It was 1800px until the framing began enlarging the hero; the visible
+slice of an enlarged frame is little more than half the file's width, so the
+derivative needs the headroom.
 
 `parsers/cover-frame.js` frames it. **The photograph starts at the foot of the
 masthead, not at the head of the page**, and runs to the page foot; the strip
@@ -45,12 +47,38 @@ reliably on a frame filled with one large subject. **Never restore a framing tha
 puts the photograph behind the masthead and relies on a measurement to keep the
 subject clear.**
 
-The measurement still does the job it is good at: placing the subject inside the
-space that is free. Edge energy by row and column gives an interest band and a
-wider keep-band; the crop aims the band between the masthead foot and the teaser
-strip and holds the keep-band inside them. A subject filling only a shallow band
-is enlarged to fill the clear depth, and an enlargement grows sideways and
-downwards only — the top edge never moves.
+The photograph always **fills** that window, edge to edge and masthead foot to
+page foot. Printing it under size instead only opens a band of flat sampled
+colour under the wordmark, which reads as a mistake however well the colour is
+matched.
+
+The measurement does the job it is good at: sizing the subject and placing it in
+the space that is free.
+
+- The **hero** runs from the subject's leading edge (the first row carrying
+  detail) to the foot of the interest band. Sizing off the interest band alone
+  measures a horse from the shoulder down, and a frame given deliberate
+  headroom then prints as mostly sky.
+- The hero is enlarged to fill about 82% of the clear depth, and **further if
+  the teaser strip demands it**: with the picture's foot on the page foot, only
+  what lies below the hero in the frame separates the hooves from the strip, and
+  only a larger picture opens that gap. Where the width cap and the teaser
+  disagree, **the teaser wins** — an inch lost off the sides is ordinary for a
+  cover, a horse standing on the teaser strip is not.
+- Down the page the hero is **centred in the clear space**, not aimed by its
+  energy centroid, with 18pt held at each end. The centroid sits wherever detail
+  is heaviest — the crowd, the grandstand glass — and the keep-band then drags
+  the crop to one limit.
+- Across the page, column energy is measured **over the hero's own rows and at a
+  tighter share**, and that band is centred. Whole-frame column energy cannot
+  find the subject sideways: a grandstand runs the full depth and carries more
+  detail than a horse, so its band starts hard at the left edge and the crop
+  took the horse's hindquarters off the page.
+
+An enlargement is expressed as the element's own size with the page cropping it,
+never as `object-position` inside a window-sized box — `cover` recomputes its
+own fit inside whatever box it is handed, so an enlargement written that way is
+silently discarded and the picture prints at plain cover scale.
 
 ### Jumps arrives as three files on three rhythms
 `inputs/Jumps Racing Program.xlsx` is the whole season, one row per jumps
@@ -121,6 +149,31 @@ months, so a blank or missing setting reads as Yes. Never let a blank drop these
 — an edition built before the toggles existed has no value for them. Switching
 one off also stops the run looking for its .docx, so no awaiting-copy warning
 is raised for a section that was deliberately left out.
+
+## The entry deadlines export is mechanical; the printed section is not
+`inputs/Entry Deadlines.csv` is a six-days-out calculation. Two workbooks the
+team keeps by hand sit over it, both read by `parsers/deadlines.js` in the same
+call as the export, both optional:
+
+- `inputs/Feature Race Deadlines - Entry Deadlines.xlsx` — Date, Race, Stage,
+  Time, Meeting date. The real feature schedule, which runs through late
+  entries and staged acceptances the program file cannot know. **Where the
+  sheet has rows they replace every feature race line the export produced** —
+  otherwise a race prints twice, once on its real date and once six days out.
+  A date the export never listed becomes a day of its own, which is how the
+  Melbourne Cup's final acceptance reaches 31 October. Stages print
+  latest-first, as the published edition sets them.
+- `inputs/Meeting Corrections - Entry Deadlines.xlsx` — Date, Heading, Meeting
+  as supplied, Print as, Time. For the ordinary lines: a trials meeting prints
+  without its sponsor, or a time the export has wrong.
+
+**The export's `date_order` column is month-first** (`8/3/2026` is 3 August),
+so the date is read off the printed heading — "Monday, 3 August" — with the
+year taken from the numeric column. One October export arrived day-first, so
+both are accepted; never trust the numeric column's order alone.
+
+A sheet left over from another month reads as every date missing, and the run
+says so once rather than eleven times.
 
 ## Word documents arrive bold, not styled
 `parsers/notices.js` reads block type from the paragraph style — Heading 1 for a

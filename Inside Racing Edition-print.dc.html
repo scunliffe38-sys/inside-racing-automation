@@ -113,7 +113,7 @@ a:hover{color:#1b7fb4}
 <div style="position:absolute;left:22.7pt;width:549.9pt;top:39pt;height:3pt;background:#9ecff0"></div>
 <img src="assets/contents-header.svg" alt="Contents" style="position:absolute;left:22.7pt;top:60.4pt;width:503.7pt;height:95.3pt" />
 
-<div style="position:absolute;left:22.7pt;width:549.9pt;top:193.2pt;height:1.5pt;background:#2c2e35"></div>
+<div style="position:absolute;left:22.7pt;width:549.9pt;top:180pt;height:2pt;background:#2c2e35"></div>
 <div style="position:absolute;left:22.7pt;width:549.9pt;top:198.4pt">
 <sc-for list="{{ contentsRows }}" as="r" hint-placeholder-count="11">
 <div style="position:relative;height:{{ contentsRowH }}">
@@ -1549,7 +1549,7 @@ class Component extends DCLogic {
     this._coverFramed = true;
     import('./parsers/cover-frame.js')
       .then(m => m.frameCover(this.state.cover,
-        { w: 595.3, h: 841.9 }, { top: 0.172, bottom: 0.895 }, 1.2))
+        { w: 595.3, h: 841.9 }, { top: 0.172, bottom: 0.895 }, 1.9))
       .then(f => {
         console.info('Cover \u2014 framing: ' + f.objectPosition
           + (f.scale > 1.001 ? ', zoomed ' + Math.round((f.scale - 1) * 100) + '%' : '')
@@ -2702,8 +2702,8 @@ class Component extends DCLogic {
     const cb = (cf && cf.box) || { width: '100%', height: '100%', left: '0%', top: '0%' };
     const coverBox = { w: cb.width, h: cb.height, left: cb.left, top: cb.top,
       pos: (cf && cf.objectPosition) || '50% 50%',
-      // A portrait cover prints a little under full size and sits on the page
-      // foot, so the strip it leaves at the head carries the picture's own sky.
+      // Only used where a picture cannot reach both edges of the page: the
+      // strip left over carries the colour of the picture's own top edge.
       fill: (cf && cf.fill) || 'transparent' };
 
     return {

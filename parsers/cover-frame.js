@@ -18,9 +18,35 @@ const SHARE = 0.68;     // fraction of total energy the interest band must hold
 const KEEP = 0.93;      // wider band the crop tries not to cut into
 const EDGE = 0.03;      // share of the height averaged for the fill colour
 const ONSET = 0.5;      // share of mean row energy that counts as subject
-const OUT = 0.875;      // printed depth as a share of the clear space: the
-                        // photograph sits a touch under full size so more of
-                        // the subject is in frame, as far as the width allows
+const FILL = 0.82;      // share of the clear depth the hero is sized to fill
+const ACROSS = 0.88;    // share of the page width the hero may take
+const AIR = 18;         // points of clear space held above and below the hero
+const HERO = 0.5;       // energy share of the across-band measured on the hero
+
+/**
+ * Edge energy by column, counted only over a band of rows. Whole-frame column
+ * energy cannot find the subject across the page: a grandstand runs the full
+ * depth of the frame and carries more detail than a horse, so the band it
+ * produces starts hard at the left edge. Counted over the rows the subject
+ * actually occupies, and at a tighter share, the same measure lands on the
+ * subject itself.
+ */
+function colsIn(data, w, h, y0, y1) {
+  const out = new Float32Array(w);
+  const a = Math.max(1, Math.min(h - 2, y0)), b = Math.max(a + 1, Math.min(h - 1, y1));
+  for (let y = a; y < b; y++) {
+    for (let x = 1; x < w - 1; x++) {
+      const i = y * w + x, p = i * 4;
+      const l = (q) => 0.2126 * data[q] + 0.7152 * data[q + 1] + 0.0722 * data[q + 2];
+      const dx = Math.abs(l(p + 4) - l(p - 4));
+      const dy = Math.abs(l(p + w * 4) - l(p - w * 4));
+      const mx = Math.max(data[p], data[p + 1], data[p + 2]);
+      const mn = Math.min(data[p], data[p + 1], data[p + 2]);
+      out[x] += (dx + dy) * (0.6 + 0.8 * (mx === 0 ? 0 : (mx - mn) / mx));
+    }
+  }
+  return out;
+}
 
 /** Luminance + saturation-weighted edge energy, summed by row and by column. */
 function energy(data, w, h) {
@@ -156,7 +182,7 @@ export async function frameCover(url, box, safe, zoom) {
   if (!img || !img.naturalWidth) return fallback;
 
   const iw = img.naturalWidth, ih = img.naturalHeight;
-  let rows, cols, keepRows, keepCols, skyFill, subjectTop;
+  let rows, cols, keepRows, keepCols, heroCols, skyFill, subjectTop;
   try {
     const s = SAMPLE / Math.max(iw, ih);
     const w = Math.max(8, Math.round(iw * s)), h = Math.max(8, Math.round(ih * s));
@@ -176,6 +202,10 @@ export async function frameCover(url, box, safe, zoom) {
     keepRows = band(e.rows, KEEP);
     keepCols = band(e.cols, KEEP);
     subjectTop = onset(e.rows);
+    // Across the page, measured on the subject's own rows rather than the
+    // whole frame — see colsIn above.
+    const hLo = Math.min(subjectTop == null ? rows.lo : subjectTop, rows.lo);
+    heroCols = band(colsIn(px, w, h, Math.round(hLo * h), Math.round(rows.hi * h)), HERO);
     skyFill = edgeColour(px, w, h, true);
   } catch (err) {
     return Object.assign({}, fallback, { note: 'centred — the picture could not be read (' + (err.message || err) + ')' });
@@ -198,32 +228,53 @@ export async function frameCover(url, box, safe, zoom) {
   // thing it is good at — placing the subject inside the space that is free.
   const clear = Math.max(0.2, bottom - top);
   const baseW = box.w, baseH = box.h - top * box.h;
+  // What the furniture leaves: masthead foot down to the head of the teaser.
+  const clearDepth = Math.min(baseH, (bottom - top) * box.h);
   const base = Math.max(baseW / iw, baseH / ih);
+  // The hero runs from the subject's leading edge — the jockey's cap, the
+  // first row carrying detail — to the foot of the interest band. Sizing off
+  // the interest band alone measures the horse from the shoulder down, and a
+  // frame given deliberate headroom then prints as mostly sky.
+  const heroLo = Math.min(subjectTop == null ? rows.lo : subjectTop, rows.lo);
+  const heroDepth = Math.max(0, rows.hi - heroLo);
   let z = 1;
-  if (maxZoom > 1 && rows.extent > 0 && rows.extent < 0.55) {
-    // A subject occupying only a shallow band of the frame is enlarged to fill
-    // the clear depth, so long as the wider keep-band still fits across.
-    const want = (0.8 * clear * box.h) / (rows.extent * ih * base);
-    const fitsAcross = keepCols.extent > 0 ? baseW / (keepCols.extent * iw * base) : maxZoom;
+  if (maxZoom > 1 && heroDepth > 0.02 && heroDepth < 0.92) {
+    // Fill most of the clear depth with the hero, leaving a little air under
+    // the masthead and above the teaser strip.
+    const want = (FILL * clear * box.h) / (heroDepth * ih * base);
+    // What the width will pay for. The measure is the hero's own span across
+    // the frame, not the wider keep-band — that band takes in the grandstand
+    // and the trailing field, which the crop is allowed to lose, and reading
+    // the limit off it holds the enlargement to a few per cent.
+    const across = heroCols && heroCols.extent > 0 ? heroCols.extent
+      : (cols.extent > 0 ? cols.extent : keepCols.extent);
+    const fitsAcross = across > 0 ? (ACROSS * baseW) / (across * iw * base) : maxZoom;
     z = Math.min(maxZoom, Math.max(1, Math.min(want, fitsAcross)));
+    // The hero's foot still has to clear the teaser strip, and with the
+    // picture's foot on the page foot only a larger picture opens that gap:
+    // what lies below the hero in the frame is all that separates the hooves
+    // from the strip, and enlarging scales it. Where the width cap and the
+    // teaser disagree the teaser wins — an inch lost off the sides is
+    // ordinary for a cover, a horse standing on the teaser strip is not.
+    const below = Math.max(0.01, 1 - rows.hi);
+    const zClear = (baseH - clearDepth + AIR) / (below * ih * base);
+    if (zClear > z) z = Math.min(maxZoom, zClear);
   }
-  // A subject filling the frame is printed a little under the clear depth
-  // instead, so more of it is in frame — a horse whose legs the crop was
-  // taking. The width sets how far that can go: the picture still has to reach
-  // both edges of the page, so a frame barely wider than the page pays for
-  // little of the reduction and a wide one pays for all of it.
-  const fit = z > 1.001 ? base * z : Math.max(baseW / iw, (baseH / ih) * OUT);
+  // The photograph fills the window it is given — masthead foot to page foot,
+  // edge to edge. Printing it under size instead only opens a band of flat
+  // sampled colour under the wordmark, which reads as a mistake however
+  // faithfully the colour is matched.
+  const fit = base * z;
   const fw = iw * fit, fh = ih * fit;
-  // The box IS the photograph's own size, sat on the page foot. Nothing is
-  // cropped by `cover` inside it; the page's own overflow takes whatever runs
-  // past the sides, and the strip left at the head carries the sampled sky.
-  const bw = Math.min(baseW, fw), bh = Math.min(baseH, fh);
-  const offY = top * box.h + Math.max(0, baseH - fh);
-  const offX = fw > baseW ? 0 : (baseW - fw) / 2;
-  const safeLo = 0, safeHi = Math.min(bh, bottom * box.h - offY);
-  const overX = fw - bw, overY = fh - bh;
-  // Positions are in box coordinates: `target`, `lo` and `hi` are lengths down
-  // from the box's own top edge, not the page's.
+  // The element is given the photograph's own printed size, which is at least
+  // as large as the window on both axes, and slid under it; the page's own
+  // overflow does the cropping. Sizing the element to the window instead and
+  // leaning on object-position cannot work: `cover` recomputes its own fit
+  // inside whatever box it is handed, so an enlargement expressed that way is
+  // silently discarded and the picture prints at plain cover scale.
+  const overX = Math.max(0, fw - baseW), overY = Math.max(0, fh - baseH);
+  // The clear depth, in coordinates down from the window's own top edge.
+  const safeLo = 0, safeHi = clearDepth;
   const place = (centre, keep, scaled, over, target, lo, hi) => {
     if (over <= 0.5) return 50;                       // no crop on this axis
     let p = ((centre * scaled) - target) / over * 100;
@@ -234,27 +285,51 @@ export async function frameCover(url, box, safe, zoom) {
     if (pMin <= pMax) p = Math.max(pMin, Math.min(pMax, p));
     return Math.max(0, Math.min(100, p));
   };
-  const px = place(cols.centre, keepCols, fw, overX, bw / 2, 0, bw);
-  const py = place(rows.centre, keepRows, fh, overY, (safeLo + safeHi) / 2, safeLo, safeHi);
-  const printed = fh / baseH;
+  // Across the page the hero band is centred, then held inside the window if
+  // it will fit. Aiming the whole frame's centroid instead put the horse's
+  // hindquarters over the page edge, because the grandstand it takes in pulls
+  // the centroid left.
+  const hx = heroCols && heroCols.extent > 0 ? heroCols : cols;
+  let slidX = Math.max(0, Math.min(overX, hx.centre * fw - baseW / 2));
+  const xLo = hx.lo * fw, xHi = hx.hi * fw;
+  if (xHi - xLo <= baseW) slidX = Math.max(xHi - baseW, Math.min(xLo, slidX));
+  slidX = Math.max(0, Math.min(overX, slidX));
+  const px = overX > 0.5 ? (slidX / overX) * 100 : 50;
+  // Down the page the hero is centred in the clear space rather than aimed by
+  // its energy centroid. The centroid sits wherever the detail happens to be
+  // heaviest — the crowd, the grandstand glass — and the wider keep-band then
+  // drags the crop to one limit or the other, which is how the hero came to
+  // print two points off the teaser strip with a third of the page in sky.
+  // Sliding is measured in points of the picture, upwards: a larger slide
+  // lifts the hero towards the masthead.
+  const heroMid = ((heroLo + rows.hi) / 2) * fh;
+  let slid = Math.max(0, Math.min(overY, heroMid - (safeLo + safeHi) / 2));
+  // Then hold a little air at both ends, as far as the overflow allows.
+  const upTo = Math.min(overY, heroLo * fh - AIR);
+  const from = Math.max(0, rows.hi * fh - (safeHi - AIR));
+  if (from <= upTo) slid = Math.max(from, Math.min(upTo, slid));
+  const py = overY > 0.5 ? (slid / overY) * 100 : 50;
+  const heroTop = heroLo * fh - slid, heroFoot = rows.hi * fh - slid;
+
 
   return {
-    objectPosition: Math.round(px) + '% ' + Math.round(py) + '%',
+    objectPosition: '50% 50%',
     scale: z,
     box: {
-      width: (Math.max(bw, Math.min(fw, box.w)) / box.w * 100).toFixed(3) + '%',
-      height: (bh / box.h * 100).toFixed(3) + '%',
-      left: (offX / box.w * 100).toFixed(3) + '%',
-      top: (offY / box.h * 100).toFixed(3) + '%'
+      width: (fw / box.w * 100).toFixed(3) + '%',
+      height: (fh / box.h * 100).toFixed(3) + '%',
+      left: (-(px / 100) * overX / box.w * 100).toFixed(3) + '%',
+      top: ((top * box.h - slid) / box.h * 100).toFixed(3) + '%'
     },
     // Painted behind the photograph, so the strip it leaves at the head of the
     // page carries on from the picture's own sky.
     fill: skyFill || null,
     note: 'subject from ' + Math.round(subjectTop * 100) + '% down, interest band '
       + Math.round(rows.lo * 100) + '\u2013' + Math.round(rows.hi * 100)
-      + '%, centred at ' + Math.round(cols.centre * 100) + '% across; set below the masthead at '
-      + Math.round(printed * 100) + '% of the clear depth'
-      + (z > 1.001 ? ', enlarged ' + Math.round((z - 1) * 100) + '% to fill it' : '')
-      + (printed > 0.995 && z <= 1.001 ? ' \u2014 the width would not pay for a reduction, so the frame is full depth' : '')
+      + '%, centred at ' + Math.round(cols.centre * 100) + '% across; filling the page from the masthead foot down'
+      + (z > 1.001 ? ', the hero enlarged ' + Math.round((z - 1) * 100) + '%' : '')
+      + '. Hero set ' + Math.round(heroTop) + 'pt below the masthead, '
+      + Math.round(safeHi - heroFoot) + 'pt clear of the teaser strip'
+      + (heroFoot > safeHi + 2 ? ' — it runs under the teaser strip; the picture needs depth cropped off its foot.' : '')
   };
 }

@@ -36,6 +36,8 @@ let origFetch = null;
 /** The files an edition is built from, in the order the console lists them. */
 export const EXPECTED = [
   { file: 'Entry Deadlines.csv', section: 'Entry deadlines', cadence: 'monthly', required: true },
+  { file: 'Feature Race Deadlines - Entry Deadlines.xlsx', section: 'Entry deadlines', cadence: 'monthly', required: false },
+  { file: 'Meeting Corrections - Entry Deadlines.xlsx', section: 'Entry deadlines', cadence: 'monthly', required: false },
   { file: 'Vic Calendar - <Mon YY>.xlsx', section: 'Programs summary chart', cadence: 'monthly', required: true, pattern: /^vic calendar( - [a-z]{3} \d{2})?\.xlsx$/ },
   { file: 'Race Programs.csv', section: 'Race programs', cadence: 'monthly', required: true },
   { file: 'Race Series.docx', section: 'Race series', cadence: 'monthly', required: true },

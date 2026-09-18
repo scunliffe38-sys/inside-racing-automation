@@ -40,7 +40,7 @@ a:hover{color:#1b7fb4}
 </section>
 </doc-page>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;coverAutoFrame&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Cover photograph&quot;},&quot;coverZoom&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:1.2,&quot;min&quot;:1,&quot;max&quot;:1.6,&quot;step&quot;:0.05,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Cover photograph&quot;}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;coverAutoFrame&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Cover photograph&quot;},&quot;coverZoom&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:1.9,&quot;min&quot;:1,&quot;max&quot;:2.4,&quot;step&quot;:0.05,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Cover photograph&quot;}}">
 // Cover (page 1).
 //
 // The photograph is supplied as artwork, so the page carries a slot for it and
@@ -80,7 +80,7 @@ class Component extends DCLogic {
   componentDidUpdate() { this.applyFrame(); }
 
   frameCoverPhoto() {
-    const zoom = this.props.coverZoom == null ? 1.2 : this.props.coverZoom;
+    const zoom = this.props.coverZoom == null ? 1.9 : this.props.coverZoom;
     if (this.props.coverAutoFrame === false) return;
     import('./parsers/cover-frame.js')
       .then(m => m.frameCover('assets/photos/cover.jpg', this.PAGE, this.SAFE, zoom))
