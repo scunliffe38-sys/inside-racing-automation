@@ -9,8 +9,8 @@
 <x-dc>
 <helmet>
 <style>
-@font-face{font-family:'Gotham Narrow';src:url('fonts/GothamNarrow-Book.otf') format('opentype');font-weight:400;font-style:normal;font-display:block}
-@font-face{font-family:'Gotham Narrow';src:url('fonts/GothamNarrow-Bold.otf') format('opentype');font-weight:700;font-style:normal;font-display:block}
+@font-face{font-family:'Gotham Narrow';src:url('fonts/GothamNarrow-Book.ttf') format('truetype');font-weight:400;font-style:normal;font-display:block}
+@font-face{font-family:'Gotham Narrow';src:url('fonts/GothamNarrow-Bold.ttf') format('truetype');font-weight:700;font-style:normal;font-display:block}
 @font-face{font-family:'Gotham XNarrow';src:url('fonts/GothamXNarrow-Book.ttf') format('truetype');font-weight:400;font-style:normal;font-display:block}
 @font-face{font-family:'Gotham XNarrow';src:url('fonts/GothamXNarrow-Bold.ttf') format('truetype');font-weight:700;font-style:normal;font-display:block}
 doc-page:not(:defined){visibility:hidden}
@@ -28,7 +28,7 @@ a:hover{color:#1b7fb4}
 <div style="position:absolute;left:22.7pt;top:47.6pt;font-family:'Gotham Narrow',sans-serif;font-size:15pt;font-weight:700;line-height:1;letter-spacing:-.005em">Permits to ride in races</div>
 
 <div style="position:absolute;left:24pt;top:68.1pt;width:547.3pt;font-size:5.4pt;line-height:6.5pt">
-<div style="display:flex;border-top:3pt solid #2c2e35;text-align:center">
+<div style="display:flex;border-top:3pt solid #2c2e35;text-align:center;font-weight:700">
 <div style="width:65.4pt;flex:0 0 65.4pt;padding:2.4pt 0 2.1pt 4pt;box-sizing:border-box;box-shadow:inset 0 -0.25pt 0 #2c2e35;text-align:left">Apprentice</div>
 <div style="width:28.5pt;flex:0 0 28.5pt;padding:2.4pt 0 2.1pt 4pt;box-sizing:border-box;box-shadow:inset 0 -0.25pt 0 #2c2e35;text-align:left">Wgt</div>
 <div style="width:21.2pt;flex:0 0 21.2pt;padding:2.4pt 0 2.1pt 4pt;box-sizing:border-box;box-shadow:inset 0 -0.25pt 0 #2c2e35;text-align:left">Cat</div>
@@ -38,7 +38,7 @@ a:hover{color:#1b7fb4}
 <div style="width:73.9pt;flex:0 0 73.9pt;padding:2.4pt 0 2.1pt;box-sizing:border-box;box-shadow:inset 0 -0.25pt 0 #2c2e35">Allowance kgs</div>
 <div style="width:98.7pt;flex:0 0 98.7pt;padding:2.4pt 0 2.1pt;box-sizing:border-box;box-shadow:inset 0 -0.25pt 0 #2c2e35">WINS (As at {{ winsAsAt }})</div>
 </div>
-<div style="display:flex">
+<div style="display:flex;font-weight:700">
 <div style="width:169.5pt;flex:0 0 169.5pt"></div>
 <div style="width:58.7pt;flex:0 0 58.7pt;padding:3.7pt 0 2.1pt 4pt;box-sizing:border-box;box-shadow:inset 0.25pt 0 0 #2c2e35, inset 0 -0.25pt 0 #2c2e35">Apprentice</div>
 <div style="width:56.5pt;flex:0 0 56.5pt;padding:3.7pt 0 2.1pt 4pt;box-sizing:border-box;box-shadow:inset 0.25pt 0 0 #2c2e35, inset 0 -0.25pt 0 #2c2e35">Employee</div>
@@ -110,10 +110,10 @@ a:hover{color:#1b7fb4}
 </div>
 <sc-for list="{{ agents }}" as="a" hint-placeholder-count="35">
 <div style="display:flex;gap:0.1pt;line-height:7.8pt">
-<div style="width:105.6pt;flex:0 0 105.6pt;background:{{ a.bg }};padding:3.55pt 0 3.55pt 4pt;box-sizing:border-box">{{ a.agent }}</div>
-<div style="width:122.2pt;flex:0 0 122.2pt;background:{{ a.bg }};padding:3.55pt 0 3.55pt 4pt;box-sizing:border-box;white-space:pre-line">{{ a.c1 }}</div>
-<div style="width:122.2pt;flex:0 0 122.2pt;background:{{ a.bg }};padding:3.55pt 0 3.55pt 4pt;box-sizing:border-box;white-space:pre-line">{{ a.c2 }}</div>
-<div style="width:122.2pt;flex:0 0 122.2pt;background:{{ a.bg }};padding:3.55pt 0 3.55pt 4pt;box-sizing:border-box;white-space:pre-line">{{ a.c3 }}</div>
+<div style="width:105.6pt;flex:0 0 105.6pt;background:{{ a.bg }};padding:3.55pt 0 3.55pt 4pt;box-sizing:border-box;font-weight:700">{{ a.agent }}</div>
+<div style="width:122.2pt;flex:0 0 122.2pt;background:{{ a.bg }};padding:3.55pt 0 3.55pt 4pt;box-sizing:border-box;white-space:pre-line;font-weight:700">{{ a.c1 }}</div>
+<div style="width:122.2pt;flex:0 0 122.2pt;background:{{ a.bg }};padding:3.55pt 0 3.55pt 4pt;box-sizing:border-box;white-space:pre-line;font-weight:700">{{ a.c2 }}</div>
+<div style="width:122.2pt;flex:0 0 122.2pt;background:{{ a.bg }};padding:3.55pt 0 3.55pt 4pt;box-sizing:border-box;white-space:pre-line;font-weight:700">{{ a.c3 }}</div>
 <div style="width:73.4pt;flex:0 0 73.4pt;background:{{ a.bg }};padding:3.55pt 0 3.55pt 4pt;box-sizing:border-box;white-space:pre-line">{{ a.contact }}</div>
 </div>
 </sc-for>

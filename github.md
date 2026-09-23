@@ -3,6 +3,18 @@ branch: main
 
 ## Last sync
 
+date: 2026-09-23T23:50:27+10:00
+
+### Updated in this project
+- Gotham Narrow Book and Bold now load as TrueType (fonts/*.ttf, H&FJ 2.200 Pro, identical widths), so exported PDFs embed them properly instead of as Type 3.
+- Cover centred across on the horse, from a hand-set centre point in assets/photos/cover.json; cover derivative rebaked at 5000px.
+- VOBIS inside a race name prints plain, a split "V" rejoins its label, and race program prose left in heading slots or notes prints regular.
+- Minimum ratings note reads "at any other metropolitan meeting"; Riders Agents headers, names and riders set bold.
+
+## Sync history
+
+### Previous
+
 date: 2026-09-19T03:10:00+10:00
 
 ### Updated in this project
@@ -34,7 +46,6 @@ date: 2026-09-19T03:10:00+10:00
 - Race series packs by depth in any order with the highweight schedule always last; block gap 15pt.
 - Division of Races Policy set to fit under the trials; HR Assist benched so whole pages print as bookable blanks; contents rule and accuracy note as published.
 
-## Sync history
 
 date: 2026-09-18
 

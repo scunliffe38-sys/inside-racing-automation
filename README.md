@@ -20,7 +20,7 @@ themselves out, and the edition exports as a print-ready PDF.
 ## Producing an edition
 
 1. Drop the month's files into `inputs/` under their existing names.
-2. Regenerate `assets/photos/cover.jpg` from `inputs/Cover.jpg` at 1800px on
+2. Regenerate `assets/photos/cover.jpg` from `inputs/Cover.jpg` at 5000px on
    the long edge.
 3. Open each section page to check the parse before baking.
 4. Re-bake `data/edition.json`.

@@ -9,8 +9,8 @@
 <x-dc>
 <helmet>
 <style>
-@font-face{font-family:'Gotham Narrow';src:url('fonts/GothamNarrow-Book.otf') format('opentype');font-weight:400;font-style:normal;font-display:swap}
-@font-face{font-family:'Gotham Narrow';src:url('fonts/GothamNarrow-Bold.otf') format('opentype');font-weight:700;font-style:normal;font-display:swap}
+@font-face{font-family:'Gotham Narrow';src:url('fonts/GothamNarrow-Book.ttf') format('truetype');font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'Gotham Narrow';src:url('fonts/GothamNarrow-Bold.ttf') format('truetype');font-weight:700;font-style:normal;font-display:swap}
 @font-face{font-family:'Gotham XNarrow';src:url('fonts/GothamXNarrow-Book.ttf') format('truetype');font-weight:400;font-style:normal;font-display:swap}
 @font-face{font-family:'Gotham XNarrow';src:url('fonts/GothamXNarrow-Bold.ttf') format('truetype');font-weight:700;font-style:normal;font-display:swap}
 body{margin:0;background:#f4f6f8}
@@ -550,23 +550,35 @@ class Component extends DCLogic {
       { name: 'Cover photograph', fn: async ctx => {
         // The cover arrives at full camera resolution, far too heavy to
         // composite on every relayout, so the run makes the derivative the
-        // pages actually load: 1800px on the long edge.
+        // pages actually load: 5000px on the long edge. The framing enlarges
+        // the hero (1.72x in October), so the derivative must carry ~300ppi at
+        // that scale; 1800px printed at 108ppi and read as grain.
         const res = await fetch('inputs/Cover.jpg');
         if (!res.ok) return { warnings: ['No Cover.jpg in the input folder — the edition keeps the cover it was published with.'], summary: 'not supplied' };
         const blob = await res.blob();
         const bmp = await createImageBitmap(blob);
         const from = bmp.width + '\u00d7' + bmp.height;
-        const scale = Math.min(1, 1800 / Math.max(bmp.width, bmp.height));
+        const scale = Math.min(1, 5000 / Math.max(bmp.width, bmp.height));
         const w = Math.round(bmp.width * scale), h = Math.round(bmp.height * scale);
         const canvas = document.createElement('canvas');
         canvas.width = w; canvas.height = h;
         canvas.getContext('2d').drawImage(bmp, 0, 0, w, h);
-        ctx.cover = canvas.toDataURL('image/jpeg', 0.86);
+        ctx.cover = canvas.toDataURL('image/jpeg', 0.92);
         bmp.close();
+        // Printed resolution at the framing's actual enlargement.
+        const warnings = [];
+        try {
+          const fm = await P('./parsers/cover-frame.js');
+          const f = await fm.frameCover(ctx.cover, { w: 595.3, h: 841.9 }, { top: 0.172, bottom: 0.895 }, 1.9);
+          const ppi = Math.round(h / (parseFloat(f.box.height) / 100 * 841.9 / 72));
+          if (ppi < 250) warnings.push('Cover prints at ' + ppi + 'ppi at the framing\u2019s ' + Math.round((f.scale - 1) * 100) + '% enlargement \u2014 under 250ppi it will look grainy. Supply a larger original.');
+          ctx.coverPpi = ppi;
+        } catch (e) { warnings.push('Cover \u2014 could not check printed resolution: ' + (e.message || e)); }
         return {
-          warnings: [],
+          warnings,
           summary: from + ' reduced to ' + w + '\u00d7' + h
-            + ' (' + Math.round(ctx.cover.length / 1365) + ' kB)'
+            + ' (' + Math.round(ctx.cover.length / 1365) + ' kB'
+            + (ctx.coverPpi ? ', ' + ctx.coverPpi + 'ppi printed' : '') + ')'
         };
       } },
       { name: 'Pagination and advertising', fn: async ctx => {

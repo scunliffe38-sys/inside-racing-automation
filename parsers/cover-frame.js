@@ -182,6 +182,24 @@ export async function frameCover(url, box, safe, zoom) {
   if (!img || !img.naturalWidth) return fallback;
 
   const iw = img.naturalWidth, ih = img.naturalHeight;
+  // The subject's centre across the photograph, when the producer has set it.
+  // The energy measure cannot find a horse sideways against a grandstand and a
+  // crowd — both carry more detail than the horse does — so the point is set by
+  // eye in assets/photos/cover.json, baked with the derivative. It records the
+  // derivative's size, so a new photograph with a stale file is not misaimed.
+  let centreX = null, centreNote = '';
+  try {
+    const r = await fetch('assets/photos/cover.json', { cache: 'no-store' });
+    if (r.ok) {
+      const j = await r.json();
+      const cx = Number(j.centreX);
+      if (!(cx > 0 && cx < 1)) centreNote = '';
+      else if (j.width && j.height && (j.width !== iw || j.height !== ih)) {
+        centreNote = ' cover.json is for a ' + j.width + '\u00d7' + j.height + ' picture, not this ' + iw + '\u00d7' + ih + ' one \u2014 its centre was ignored; set it again for the new cover.';
+        console.warn('Cover \u2014' + centreNote);
+      } else centreX = cx;
+    }
+  } catch (e) { /* no file: measured framing */ }
   let rows, cols, keepRows, keepCols, heroCols, skyFill, subjectTop;
   try {
     const s = SAMPLE / Math.max(iw, ih);
@@ -293,6 +311,7 @@ export async function frameCover(url, box, safe, zoom) {
   let slidX = Math.max(0, Math.min(overX, hx.centre * fw - baseW / 2));
   const xLo = hx.lo * fw, xHi = hx.hi * fw;
   if (xHi - xLo <= baseW) slidX = Math.max(xHi - baseW, Math.min(xLo, slidX));
+  if (centreX != null) slidX = centreX * fw - baseW / 2;
   slidX = Math.max(0, Math.min(overX, slidX));
   const px = overX > 0.5 ? (slidX / overX) * 100 : 50;
   // Down the page the hero is centred in the clear space rather than aimed by
@@ -330,6 +349,7 @@ export async function frameCover(url, box, safe, zoom) {
       + (z > 1.001 ? ', the hero enlarged ' + Math.round((z - 1) * 100) + '%' : '')
       + '. Hero set ' + Math.round(heroTop) + 'pt below the masthead, '
       + Math.round(safeHi - heroFoot) + 'pt clear of the teaser strip'
+      + (centreX != null ? '. Centred across on the subject at ' + Math.round(centreX * 100) + '% of the photograph (cover.json)' : '') + centreNote
       + (heroFoot > safeHi + 2 ? ' — it runs under the teaser strip; the picture needs depth cropped off its foot.' : '')
   };
 }

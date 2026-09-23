@@ -26,11 +26,13 @@ suffix format, chronological sort, gap warning.
 `inputs/Cover.jpg` is the month's cover photograph, overwritten each edition.
 These arrive at full camera resolution (6516×7385 in October), which is far too
 heavy to composite on every page relayout, so the pages load a derivative:
-`assets/photos/cover.jpg` at 2600px on the long edge. **Regenerate the
+`assets/photos/cover.jpg` at 5000px on the long edge. **Regenerate the
 derivative whenever `inputs/Cover.jpg` changes** — the pages never reference the
-original. It was 1800px until the framing began enlarging the hero; the visible
-slice of an enlarged frame is little more than half the file's width, so the
-derivative needs the headroom.
+original. The framing enlarges the hero (1.72× in October), so the derivative
+must carry about 300ppi at that scale: at 1800px October printed at 108ppi and
+went out grainy, and 2600px would only have reached 156ppi. The bake is 5000px
+at JPEG quality 0.92, and the console warns when the printed figure falls below
+250ppi.
 
 `parsers/cover-frame.js` frames it. **The photograph starts at the foot of the
 masthead, not at the head of the page**, and runs to the page foot; the strip

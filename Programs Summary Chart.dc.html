@@ -9,8 +9,8 @@
 <x-dc>
 <helmet>
 <style>
-@font-face{font-family:'Gotham Narrow';src:url('fonts/GothamNarrow-Book.otf') format('opentype');font-weight:400;font-style:normal;font-display:block}
-@font-face{font-family:'Gotham Narrow';src:url('fonts/GothamNarrow-Bold.otf') format('opentype');font-weight:700;font-style:normal;font-display:block}
+@font-face{font-family:'Gotham Narrow';src:url('fonts/GothamNarrow-Book.ttf') format('truetype');font-weight:400;font-style:normal;font-display:block}
+@font-face{font-family:'Gotham Narrow';src:url('fonts/GothamNarrow-Bold.ttf') format('truetype');font-weight:700;font-style:normal;font-display:block}
 @font-face{font-family:'Gotham XNarrow';src:url('fonts/GothamXNarrow-Book.ttf') format('truetype');font-weight:400;font-style:normal;font-display:block}
 @font-face{font-family:'Gotham XNarrow';src:url('fonts/GothamXNarrow-Bold.ttf') format('truetype');font-weight:700;font-style:normal;font-display:block}
 doc-page:not(:defined){visibility:hidden}
@@ -245,6 +245,44 @@ class Component extends DCLogic {
     // whatever run carried it and set as a block.
     const VOBIS = /(VOBIS\s+(?:Silver|Gold|Platinum)(?:\s*&\s*(?:VOBIS\s+)?(?:Silver|Gold|Platinum))*)/i;
     const out = [];
+    const isVoT = s => VOBIS.test(s) && String(s).trim().toUpperCase().startsWith('VOBIS');
+    // A run can end partway into a label ("BM 62\nV", then "OBIS Gold"), which
+    // printed the V apart and unbolded. The fragment moves forward to its label.
+    runs = (runs || []).map(r => ({ ...r }));
+    for (let k = 0; k + 1 < runs.length; k++) {
+      const a = runs[k], b = runs[k + 1];
+      const m = String(a.t || '').match(/\bV(?:O(?:B(?:I)?)?)?$/);
+      if (m && new RegExp('^' + 'VOBIS'.slice(m[0].length) + '\\s+(?:Silver|Gold|Platinum)', 'i').test(String(b.t || ''))) {
+        a.t = String(a.t).slice(0, -m[0].length);
+        b.t = m[0] + b.t;
+      }
+    }
+    // VOBIS inside a race name (VOBIS Gold Star, VOBIS Gold Carat) is plain
+    // text. A reference is a name when a later VOBIS mark follows it in the same
+    // entry with words in between; only the marks at the end set as a block.
+    const voName = [];
+    {
+      const toks = [];
+      runs.forEach((r, i) => {
+        const key = bucket(r, i);
+        String(r.t).split(/([-\u2013\u2014]{3,})/).forEach(part => {
+          if (!part) return;
+          if (/^[-\u2013\u2014]{3,}$/.test(part)) { toks.push({ sep: 1 }); return; }
+          ((key === 'n' || key === 'b') ? part.split(VOBIS) : [part])
+            .forEach(c => { if (c) toks.push({ vo: isVoT(c), t: c }); });
+        });
+      });
+      toks.forEach((tk, j) => {
+        if (!tk.vo) return;
+        let words = false, name = false;
+        for (let q = j + 1; q < toks.length && !toks[q].sep; q++) {
+          if (toks[q].vo) { name = words; break; }
+          if (/[A-Za-z]/.test(toks[q].t.replace(/\(\s*[NQ]\s*\/?\s*C\s*\)/gi, ''))) words = true;
+        }
+        voName.push(name);
+      });
+    }
+    let voSeen = 0;
     runs.forEach((r, i) => {
       const key = bucket(r, i);
       let text = key === 'dt' ? String(r.t).toUpperCase() : String(r.t);
@@ -268,7 +306,7 @@ class Component extends DCLogic {
           // one VOBIS type and the next.
           if (!piece.trim() && (isVo(pieces[pi - 1] || '') || isVo(pieces[pi + 1] || ''))) return;
           const o = empty();
-          if (isVo(piece)) {
+          if (isVo(piece) && !voName[voSeen++]) {
             o.vo.push({ t: this.atomic(piece.trim()) });
           } else if (key === 'n' || key === 'b') {
             // Made atomic first, then split on ordinary spaces only. Split
