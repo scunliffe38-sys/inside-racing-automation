@@ -3,6 +3,18 @@ branch: main
 
 ## Last sync
 
+date: 2026-09-24T15:10:00+10:00
+
+### Updated in this project
+- Race programs take four optional team sheets: Add Twilight in Race Program, Race Program - Race Name Updates, Country run as Metro and The Valley Transfer meetings, each matched on date and venue.
+- A blank conditions cell prints "Open" in the grey bar.
+- The four sheets are listed in the producer console as optional, and the race programs step reports what each one changed.
+- October's four sheets filled from the V1 review comments.
+
+## Sync history
+
+### 2026-09-23
+
 date: 2026-09-23T23:50:27+10:00
 
 ### Updated in this project
@@ -10,8 +22,6 @@ date: 2026-09-23T23:50:27+10:00
 - Cover centred across on the horse, from a hand-set centre point in assets/photos/cover.json; cover derivative rebaked at 5000px.
 - VOBIS inside a race name prints plain, a split "V" rejoins its label, and race program prose left in heading slots or notes prints regular.
 - Minimum ratings note reads "at any other metropolitan meeting"; Riders Agents headers, names and riders set bold.
-
-## Sync history
 
 ### Previous
 

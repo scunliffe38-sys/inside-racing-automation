@@ -113,6 +113,23 @@ and belongs to the meeting above. The printed cell divides equally between them.
 The eligibility notes at the foot of the sheet ride under the table, on the last
 page when it has room and on a page of their own when it has not.
 
+### Race programs take four optional team sheets
+`parsers/programs.js` puts these over the export, each matched on date and
+venue (sponsor optional; dates day-first). All optional; a header-only sheet
+or a missing file changes nothing. Unmatched rows inside the edition window
+warn; rows for later months are noted and left.
+
+- `inputs/Add Twilight in Race Program.xlsx` — Date, Venue. Prints (TWILIGHT)
+  where (NIGHT) sits.
+- `inputs/Race Program - Race Name Updates.xlsx` — Date, Venue, Race No, Race
+  Name. Replaces the export's name (a bare HANDICAP).
+- `inputs/Country run as Metro.xlsx` — Date, Venue. Heading prints red (metro).
+- `inputs/The Valley Transfer meetings.xlsx` — Date, Venue. Prints "THE VALLEY
+  AT" before the venue.
+
+**A blank conditions cell prints "Open" in the grey bar** — permanent rule, set
+in the parser and again at render so an older bake gets it too.
+
 ## The assembled edition renders from a bake, not the inputs
 `Inside Racing Edition.dc.html` and its part files read `data/edition.json`,
 which holds the parsed result of every input. Reading seventeen inputs live

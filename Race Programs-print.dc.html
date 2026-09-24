@@ -207,7 +207,7 @@ class Component extends DCLogic {
         out.push({
           ...blank,
           race: rid,
-          bar: [{ cond: r.cond || '', dist: (r.dist || '').replace(/\s+/g, '') }],
+          bar: [{ cond: String(r.cond || '').trim() || 'Open', dist: (r.dist || '').replace(/\s+/g, '') }],
           title: one(join(r.no + '.', r.name).toUpperCase()),
           claim: one(join(r.claim, r.group)),
           bonus: one(join(r.bonus, noteSplit(r.notation)[0])),

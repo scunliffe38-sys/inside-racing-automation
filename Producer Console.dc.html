@@ -473,7 +473,14 @@ class Component extends DCLogic {
         const m = await P('./parsers/programs.js');
         const r = await m.loadPrograms('inputs/Race Programs.csv', ctx.edition);
         ctx.meetings = r.meetings;
-        return { warnings: r.warnings, notes: r.notes, summary: r.count + ' meetings, ' + r.races + ' races' };
+        const a = r.adjusted || {};
+        const extra = [
+          a.twilight ? a.twilight + ' twilight' : '',
+          a.metro ? a.metro + ' country run as metro' : '',
+          a.valley ? a.valley + ' Valley transfer' : '',
+          a.names ? a.names + ' race name updates' : ''
+        ].filter(Boolean);
+        return { warnings: r.warnings, notes: r.notes, summary: r.count + ' meetings, ' + r.races + ' races' + (extra.length ? ' \u00b7 ' + extra.join(', ') : '') };
       } },
       { name: 'Race series', fn: async ctx => {
         const m = await P('./parsers/series.js');
