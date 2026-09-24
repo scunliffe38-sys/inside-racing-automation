@@ -127,8 +127,11 @@ warn; rows for later months are noted and left.
 - `inputs/The Valley Transfer meetings.xlsx` — Date, Venue. Prints "THE VALLEY
   AT" before the venue.
 
-**A blank conditions cell prints "Open" in the grey bar** — permanent rule, set
-in the parser and again at render so an older bake gets it too.
+**A grey bar with no class prints "Open"** — permanent rule. The export's
+`race_conditions` carries age and class together ("3YO & Up BM66"), so a cell
+that is blank prints "Open", and one holding only an age and sex ("3YO & Up",
+"3 & 4YO", "3YO & Up F&M") has " Open" appended. Applied at render so an older
+bake gets it too.
 
 ## The assembled edition renders from a bake, not the inputs
 `Inside Racing Edition.dc.html` and its part files read `data/edition.json`,

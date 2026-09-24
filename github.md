@@ -3,9 +3,10 @@ branch: main
 
 ## Last sync
 
-date: 2026-09-24T15:10:00+10:00
+date: 2026-09-24T17:20:00+10:00
 
 ### Updated in this project
+- Grey bars holding only an age ("3YO & Up") now print "Open" after it; checked V8 against the JG V1 comments.
 - Race programs take four optional team sheets: Add Twilight in Race Program, Race Program - Race Name Updates, Country run as Metro and The Valley Transfer meetings, each matched on date and venue.
 - A blank conditions cell prints "Open" in the grey bar.
 - The four sheets are listed in the producer console as optional, and the race programs step reports what each one changed.

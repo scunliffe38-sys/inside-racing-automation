@@ -204,7 +204,7 @@ class Component extends DCLogic {
         out.push({
           ...blank,
           race: rid,
-          bar: [{ cond: String(r.cond || '').trim() || 'Open', dist: (r.dist || '').replace(/\s+/g, '') }],
+          bar: [{ cond: (c => { c = String(c || '').replace(/\s+/g, ' ').trim(); const rest = c.replace(/\b\d(?:\s*,\s*\d)*(?:\s*,?\s*&\s*\d)?\s*YO\b(?:\s*&\s*UP\b)?/gi, '').replace(/\b(F&M|C,\s*G\s*&\s*E|C&G|E&G|F|M|C|G)\b/gi, '').replace(/[\s,&]+/g, ''); return !c ? 'Open' : rest ? c : c + ' Open'; })(r.cond), dist: (r.dist || '').replace(/\s+/g, '') }],
           title: one(join(r.no + '.', r.name).toUpperCase()),
           claim: one(join(r.claim, r.group)),
           bonus: one(join(r.bonus, noteSplit(r.notation)[0])),
