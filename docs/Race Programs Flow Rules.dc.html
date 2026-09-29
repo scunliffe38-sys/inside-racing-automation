@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+@font-face{font-family:'Gotham Narrow';src:url('../fonts/GothamNarrow-Book.ttf') format('truetype');font-weight:400}
+@font-face{font-family:'Gotham Narrow';src:url('../fonts/GothamNarrow-Bold.ttf') format('truetype');font-weight:700}
+body{margin:0}
+a{color:#2c2e35}
+a:hover{color:#ff2f1a}
+doc-page:not(:defined){visibility:hidden}
+</style>
+<script src="./doc-page.js"></script>
+</helmet>
+<template id="__bundler_thumbnail" data-bg-color="#2c2e35"><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect x="30" y="24" width="40" height="52" fill="#fff"></rect><rect x="36" y="32" width="28" height="4" fill="#ff2f1a"></rect><rect x="36" y="42" width="28" height="2" fill="#2c2e35"></rect><rect x="36" y="48" width="22" height="2" fill="#2c2e35"></rect></svg></template>
+<doc-page size="a4" margin="16mm">
+<div style="font-family:'Gotham Narrow',sans-serif;color:#2c2e35;font-size:10pt;line-height:14pt">
+<div style="display:flex;justify-content:space-between;align-items:baseline;gap:12pt;border-bottom:2pt solid #2c2e35;padding-bottom:6pt;margin-bottom:4pt">
+<div style="font-size:8pt;font-weight:700;letter-spacing:0.08em;text-transform:uppercase">Inside Racing · October 2026 Edition</div>
+<div style="font-size:8pt">Race Programs · 29 September 2026</div>
+</div>
+<h1 style="font-size:22pt;line-height:26pt;font-weight:700;margin:14pt 0 4pt">Race Programs: column and page flow</h1>
+<p style="margin:0 0 14pt;max-width:160mm">The rules the layout uses now, with the producer's instructions set against each one.</p>
+
+<h2 style="font-size:13pt;line-height:16pt;font-weight:700;margin:0 0 4pt">How a race is broken up</h2>
+<p style="margin:0 0 6pt;max-width:160mm">The layout fills columns with blocks (atoms). An atom never splits: it prints whole in one column. Each race is made of these atoms, in order:</p>
+<ol style="margin:0 0 16pt;padding-left:16pt;display:grid;gap:2pt;font-size:9.5pt;line-height:13pt">
+<li><span style="font-weight:700">Meeting heading</span>: venue and date (once per meeting, before its first race)</li>
+<li><span style="font-weight:700">Race head</span>: grey bar, race number and name, claiming/group line, bonus and short notes, long notes. One atom, often 40–120pt deep</li>
+<li><span style="font-weight:700">Prizemoney</span>: one atom, or two when a long breakdown puts "Set Weights." on its own line</li>
+<li><span style="font-weight:700">Fees</span>: nomination, acceptance, declarations</li>
+<li><span style="font-weight:700">Race details</span>: not one atom but a group. Each item below is its own atom, and a column can break between them:
+<ul style="margin:2pt 0 0;padding-left:14pt;display:grid;gap:1pt">
+<li>Penalties: the heading and its first paragraph</li>
+<li>Balloting Conditions: the heading and its first paragraph</li>
+<li>Other conditions</li>
+<li>Entries: the heading and its line</li>
+<li>Acceptances: the heading and its line</li>
+</ul>
+<div style="margin-top:2pt">Any further paragraph under a heading is an atom of its own.</div></li>
+</ol>
+
+<h2 style="font-size:13pt;line-height:16pt;font-weight:700;margin:0 0 6pt">Rules and the producer's instructions</h2>
+<table style="width:100%;border-collapse:collapse;font-size:9pt;line-height:12pt">
+<thead><tr style="text-align:left;border-bottom:1pt solid #2c2e35">
+<th style="padding:4pt 8pt 4pt 0;width:37%">Our rule now</th><th style="padding:4pt 8pt;width:28%">Producer's instruction</th><th style="padding:4pt 0 4pt 8pt">Assessment</th>
+</tr></thead>
+<tbody>
+<tr style="border-bottom:0.5pt solid #c9cacc;vertical-align:top"><td style="padding:6pt 8pt 6pt 0"><span style="font-weight:700">1. Measure.</span> Before placing text, the layout checks how tall each atom is. It now checks only after the text is set in Gotham, the font that prints, so it works from the real sizes.</td><td style="padding:6pt 8pt;color:#6b6e75">None</td><td style="padding:6pt 0 6pt 8pt">Fixed 28 Sept. In V9 the check ran while the text was still in a wider stand-in font, so every atom looked taller than it prints and columns broke 70–100pt early.</td></tr>
+<tr style="border-bottom:0.5pt solid #c9cacc;vertical-align:top"><td style="padding:6pt 8pt 6pt 0"><span style="font-weight:700">2. Fill down.</span> Atoms go into a column in order until the next one won't fit in 756.8pt; then the column breaks. An atom never splits.</td><td style="padding:6pt 8pt">Race details run from column to column.</td><td style="padding:6pt 0 6pt 8pt"><span style="font-weight:700">Partly.</span> Races already break between atoms. But a long paragraph or race head can't break inside, so it moves whole and leaves a gap. <span style="font-weight:700">Change:</span> let paragraphs and the race head break between lines.</td></tr>
+<tr style="border-bottom:0.5pt solid #c9cacc;vertical-align:top"><td style="padding:6pt 8pt 6pt 0"><span style="font-weight:700">3. Meeting spacing.</span> When a new meeting starts partway down a column, a 13pt gap (about one and a half lines) sits above its heading to separate it from the meeting before. A meeting at the top of a column gets no gap, so it lines up with the other columns. The gap counts towards what fits.</td><td style="padding:6pt 8pt;color:#6b6e75">None</td><td style="padding:6pt 0 6pt 8pt">No conflict.</td></tr>
+<tr style="border-bottom:0.5pt solid #c9cacc;vertical-align:top"><td style="padding:6pt 8pt 6pt 0"><span style="font-weight:700">4. No stranded meeting heading.</span> A column can't end on a meeting heading; it moves to the next column.</td><td style="padding:6pt 8pt;color:#6b6e75">None</td><td style="padding:6pt 0 6pt 8pt">No conflict.</td></tr>
+<tr style="border-bottom:0.5pt solid #c9cacc;vertical-align:top"><td style="padding:6pt 8pt 6pt 0"><span style="font-weight:700">5. Heading with its detail.</span> A detail heading (PENALTIES, BALLOTING CONDITIONS) is in the same atom as its first paragraph.</td><td style="padding:6pt 8pt">PENALTIES must not sit at a column foot with its detail carried over.</td><td style="padding:6pt 0 6pt 8pt"><span style="font-weight:700">Complies.</span> Must stay true once paragraphs can break (heading plus at least two lines together).</td></tr>
+<tr style="border-bottom:0.5pt solid #c9cacc;vertical-align:top"><td style="padding:6pt 8pt 6pt 0"><span style="font-weight:700">6. No lone carry-over.</span> If only one atom of a race would go to the next column, the atom before it goes too, except when that atom is the only thing in the column.<div style="margin-top:3pt;font-size:8.5pt;line-height:11pt;color:#4a4d54">Example: column 2 holds just one huge race head. The race's last atom doesn't fit and goes to column 3. The race head stays in column 2, or the column would be empty.</div></td><td style="padding:6pt 8pt">Don't carry one line to another column; keep it together if only one line is left or carried.</td><td style="padding:6pt 0 6pt 8pt"><span style="font-weight:700">Partly.</span> The rule counts atoms, not lines, and only checks the carried side. It can move ten lines to protect one atom, and a single line can still be left at a column foot. <span style="font-weight:700">Change:</span> at least two lines of a race on each side of a column break.</td></tr>
+<tr style="border-bottom:0.5pt solid #c9cacc;vertical-align:top"><td style="padding:6pt 8pt 6pt 0"><span style="font-weight:700">7. Pages.</span> Every four columns make a page. There is no difference between a column break and a new page: column 4 to the next page follows exactly the same rules as column 1 to column 2, so a race can start at the foot of column 4 and finish on the next page.</td><td style="padding:6pt 8pt">The last race on a page does not flow onto the next page.</td><td style="padding:6pt 0 6pt 8pt"><span style="font-weight:700;color:#ff2f1a">Does not comply.</span> A race can split across a page turn. <span style="font-weight:700">Change:</span> a page turn gets its own rule. If the last race in column 4 won't fit whole, it starts the next page. Column breaks within a page still let a race split.</td></tr>
+</tbody>
+</table>
+</div>
+</doc-page>
+</x-dc>
+</body>
+</html>

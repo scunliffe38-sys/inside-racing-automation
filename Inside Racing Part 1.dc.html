@@ -1458,8 +1458,29 @@ class Component extends DCLogic {
     return out;
   }
 
+  /** Every packer measures the DOM, so the Gotham faces must be in before it
+   * reads a height. Until they load the browser lays text out in its fallback
+   * face, which is wider and wraps more, so every block measures taller than it
+   * prints and every column breaks early — the V9 race programs ran 70-100pt
+   * short at each column foot because the bake path packed before the fonts
+   * arrived. Returns true when all four faces are loaded; otherwise starts the
+   * loads, calls wake() once they land, and returns false. */
+  _facesReady(key, wake) {
+    const faces = ['400 7pt "Gotham Narrow"', '700 7pt "Gotham Narrow"', '400 6.5pt "Gotham XNarrow"', '700 6.5pt "Gotham XNarrow"'];
+    if (!document.fonts || faces.every(f => document.fonts.check(f))) return true;
+    this._faceWake = this._faceWake || {};
+    if (!this._faceWake[key]) {
+      this._faceWake[key] = true;
+      Promise.all(faces.map(f => document.fonts.load(f).catch(() => null)))
+        .then(() => document.fonts.ready)
+        .then(() => requestAnimationFrame(() => requestAnimationFrame(() => { wake(); this._flush(); })));
+    }
+    return false;
+  }
+
   packPrograms() {
     if (!this.state.meetings || this.state.rpPages || this._rpPacked) return;
+    if (!this._facesReady('rp', () => this.packPrograms())) return;
     const els = Array.from(document.querySelectorAll('[data-atom]'));
     const all = this.rpAtoms();
     // The measuring render has to be in the DOM before it can be read. Wait
@@ -1615,6 +1636,7 @@ class Component extends DCLogic {
   packDeadlines() {
     const host = this.dlMeasureEl;
     if (!host || !this.state.days || this._dlPacked) return;
+    if (!this._facesReady('dl', () => this.packDeadlines())) return;
     const rows = this.dlRows();
     const measured = { day: [], head: [], item: [] };
     ['day', 'head', 'item'].forEach(k => {
@@ -1949,6 +1971,7 @@ class Component extends DCLogic {
 
   packChart() {
     if (!this.state.chart || this.state.chPages || this._chPacked) return;
+    if (!this._facesReady('ch', () => this.packChart())) return;
     const els = Array.from(document.querySelectorAll('[data-row]'));
     if (els.length !== this.state.chart.rows.length) return;
     this._chPacked = true;
