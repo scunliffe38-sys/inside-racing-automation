@@ -286,8 +286,9 @@ These were set from the October review and are not preferences to re-litigate:
 - **The Division of Races Policy is set to fit under the trials**: 17pt
   heading, 7.5pt body on 8.6pt. Its depth estimate and its printed styles are
   the same figures and must move together.
-- **HR Assist runs on the page directly before the back cover**, from
-  `inputs/HR Assist.JPG` (whole-page artwork, exactly that filename — the
+- **HR Assist runs on the page directly before the back cover**, baked by the
+  console from `inputs/HR Assist.JPG` (reduced to 3508px, like the cover) —
+  the page cannot load the input folder by path (whole-page artwork, exactly that filename — the
   site is case-sensitive). Booking `fullpage-1` in Ad Placements replaces it.
 
 - **"Heat 1" never breaks, and an ampersand never ends a line.** `chAtomic()`
@@ -313,8 +314,8 @@ These were set from the October review and are not preferences to re-litigate:
 - **The series or bonus note under a VOBIS line starts a line of its own.**
 - **Penalties, Balloting Conditions and Other Conditions may split across a
   column** so long as each column carries at least three lines of that text.
-  No race splits in column 4: a race that starts there and will not fit whole
-  moves to the next page. The meeting-heading check runs last, after every rule
+  **A page turn follows exactly the same rules as a column break**: a race
+  may carry from column 4 onto the next page. The meeting-heading check runs last, after every rule
   that hands atoms forward.
 - **The Entry Deadlines packer checks its own pages.** Once laid out, any
   column foot past the 30pt clearance re-cuts the section with the clearance
@@ -337,8 +338,11 @@ These were set from the October review and are not preferences to re-litigate:
 - **Notices carry the document's own formatting**: bold runs print bold,
   hyperlinks (and typed web or email addresses) print as links, and Word line
   breaks start a new line. `runsOf()` in `parsers/notices.js`.
+- **The Industry Notice takes one contents row**, named after its first
+  heading; the headings below it are sections of the same notice.
 - **Filler ad panels are drawn again at print time**, so a late re-layout
-  cannot send a page out without its bookable panel.
+  cannot send a page out without its bookable panel. The print hook is set
+  when the page mounts, not when the settle timer first fires.
 
 ## The summary chart's colour comes from the workbook
 The venue name's colour marks metropolitan against country, and the meeting

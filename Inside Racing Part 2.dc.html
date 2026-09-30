@@ -1122,7 +1122,14 @@ class Component extends DCLogic {
    * Re-bake whenever the inputs change — see the run sheet. */
   componentDidMount() {
     // the advertising rules, for the bookable panel on a page that came out short
-    import('./parsers/ads.js').then(A => { this.ads = A; this.markFillers(); }).catch(() => {});
+    import('./parsers/ads.js').then(A => {
+      this.ads = A;
+      // Printing never waits on the settle timer. v14 went out with no panel on
+      // pages 5 and 56: the timer kept being reset by late relayouts, and the
+      // print hook was only registered once the timer had fired.
+      window.addEventListener('beforeprint', () => { clearTimeout(this._fillerTimer); this.applyFillers(); });
+      this.markFillers();
+    }).catch(() => {});
     // The producer's own input folder first, if this browser has been pointed
     // at one: the console bakes edition.json into it after every run, so the
     // edition shows the month just run rather than whatever was published with
@@ -1147,6 +1154,10 @@ class Component extends DCLogic {
   applyBaked(b) {
     const t0 = performance.now();
     if (b.cover) this.state.cover = b.cover;
+    // HR Assist artwork is baked by the console from inputs/HR Assist.JPG: the
+    // producer's input folder is not on the web server, so the page cannot
+    // load it by path (v14 printed the page blank).
+    if (b.hrAssist) this.state.hrAssist = b.hrAssist;
     const say = (label, list) => {
       if (list && list.length) console.warn('Inside Racing — ' + label + ', ' + list.length + ' to check:\n' + list.join('\n'));
     };
@@ -1562,14 +1573,14 @@ class Component extends DCLogic {
     while (i < all.length) {
       let used = 0;
       const atoms = [];
-      // Column 4 is a page foot: nothing splits there and the race in progress
-      // does not carry onto the next page.
-      const pageFoot = cols.length % 4 === 3;
+      // A page turn follows the same rules as a column break (producer, after
+      // v14): a race may carry from column 4 onto the next page, and the text
+      // splits, the two-line minimum and Entries with Acceptances all hold.
       while (i < all.length) {
         const cost = (all[i].head && atoms.length ? GAP : 0) + h[i];
         if (used + cost > LIMIT && atoms.length) {
           const sp = split[i];
-          if (sp && !pageFoot) {
+          if (sp) {
             const n = sp.starts.length;
             const tail = h[i] - n * sp.lh;
             const fit = Math.min(n - LINES_MIN, Math.floor((LIMIT - used - tail) / sp.lh + 0.01));
@@ -1585,15 +1596,6 @@ class Component extends DCLogic {
           break;
         }
         used += cost; atoms.push(all[i]); i++;
-      }
-      // Page turn: if the last race in column 4 began in this column and will
-      // not fit whole, it starts the next page. A race already running in from
-      // column 3 cannot move whole, so it is left to carry.
-      if (pageFoot && i < all.length && all[i].race && atoms.length) {
-        const r = all[i].race;
-        let k = atoms.length;
-        while (k > 0 && atoms[k - 1].race === r) k--;
-        if (k > 0) { i -= atoms.length - k; atoms.length = k; }
       }
       // At least two lines of a race on each side of a column break. If what
       // carries over is under two lines deep, the atom before it goes too,
@@ -2631,7 +2633,10 @@ class Component extends DCLogic {
     const cRules = ruOn ? span(1) : '';
     // a month can carry two notices; each is listed
     const noticeSubjects = (this.state.notice || []).filter(b => b.isSubject).map(b => b.text);
-    const noticeRows = (noticeSubjects.length ? noticeSubjects : ['']).map(s => ({
+    // The Industry Notice is one section with one contents row, named after its
+    // first heading. The headings further down are the notice's own sections,
+    // not further notices (v14 printed three rows for one notice).
+    const noticeRows = [noticeSubjects[0] || ''].map(s => ({
       label: 'Industry Notice' + (s ? ' - ' + s : ''), pages: cNotice
     }));
     const contentsRows = [
@@ -2687,7 +2692,7 @@ class Component extends DCLogic {
     // which is what parsers/ads.js fullPages() computes for the folios.
     const AD_STOCK = [{
       id: 'hrassist', name: 'RACING VICTORIA HR ASSIST',
-      art: 'inputs/HR Assist.JPG',
+      art: this.state.hrAssist || 'inputs/HR Assist.JPG',
       headline: 'Award wages are increasing from the first full pay period on or after 1 July 2026.',
       body: 'For free and confidential guidance, contact HR Assist via the channels below and state that you require advice under the Racing Victoria HR Assist support service.',
       hours: 'HR Assist available weekdays (Mon to Fri) 9am-5pm',

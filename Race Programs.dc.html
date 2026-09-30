@@ -299,14 +299,14 @@ class Component extends DCLogic {
     while (i < all.length) {
       let used = 0;
       const atoms = [];
-      // Column 4 is a page foot: nothing splits there and the race in progress
-      // does not carry onto the next page.
-      const pageFoot = cols.length % 4 === 3;
+      // A page turn follows the same rules as a column break (producer, after
+      // v14): a race may carry from column 4 onto the next page, and the text
+      // splits, the two-line minimum and Entries with Acceptances all hold.
       while (i < all.length) {
         const cost = (all[i].head && atoms.length ? GAP : 0) + h[i];
         if (used + cost > LIMIT && atoms.length) {
           const sp = split[i];
-          if (sp && !pageFoot) {
+          if (sp) {
             const n = sp.starts.length;
             const tail = h[i] - n * sp.lh;
             const fit = Math.min(n - LINES_MIN, Math.floor((LIMIT - used - tail) / sp.lh + 0.01));
@@ -322,15 +322,6 @@ class Component extends DCLogic {
           break;
         }
         used += cost; atoms.push(all[i]); i++;
-      }
-      // Page turn: if the last race in column 4 began in this column and will
-      // not fit whole, it starts the next page. A race already running in from
-      // column 3 cannot move whole, so it is left to carry.
-      if (pageFoot && i < all.length && all[i].race && atoms.length) {
-        const r = all[i].race;
-        let k = atoms.length;
-        while (k > 0 && atoms[k - 1].race === r) k--;
-        if (k > 0) { i -= atoms.length - k; atoms.length = k; }
       }
       // At least two lines of a race on each side of a column break. If what
       // carries over is under two lines deep, the atom before it goes too,

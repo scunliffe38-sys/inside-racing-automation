@@ -588,6 +588,25 @@ class Component extends DCLogic {
             + (ctx.coverPpi ? ', ' + ctx.coverPpi + 'ppi printed' : '') + ')'
         };
       } },
+      { name: 'HR Assist artwork', fn: async ctx => {
+        // Whole-page artwork for the page before the back cover. Baked into the
+        // run like the cover: the edition cannot load the input folder by path.
+        const res = await fetch('inputs/HR Assist.JPG');
+        if (!res.ok) return { warnings: ['No HR Assist.JPG in the input folder — the page before the back cover prints without artwork.'], summary: 'not supplied' };
+        const bmp = await createImageBitmap(await res.blob());
+        const from = bmp.width + '\u00d7' + bmp.height;
+        // A4 at 300dpi is 2480 × 3508; nothing larger adds anything in print.
+        const scale = Math.min(1, 3508 / Math.max(bmp.width, bmp.height));
+        const w = Math.round(bmp.width * scale), h = Math.round(bmp.height * scale);
+        const canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(bmp, 0, 0, w, h);
+        ctx.hrAssist = canvas.toDataURL('image/jpeg', 0.9);
+        bmp.close();
+        const warnings = [];
+        if (Math.max(w, h) < 3000) warnings.push('HR Assist artwork is ' + from + ' — under about 3000px on the long edge it prints below 250ppi.');
+        return { warnings, summary: from + (scale < 1 ? ' reduced to ' + w + '\u00d7' + h : '') + ' (' + Math.round(ctx.hrAssist.length / 1365) + ' kB)' };
+      } },
       { name: 'Pagination and advertising', fn: async ctx => {
         const m = await P('./parsers/ads.js');
         const r = await m.loadPlacements('inputs/Ad Placements.csv');
@@ -655,7 +674,7 @@ class Component extends DCLogic {
     });
     const payload = {
       bakedAt: new Date().toISOString(), warnings, notes,
-      settings: c.settings || {}, edition: c.edition || '', cover: c.cover || '',
+      settings: c.settings || {}, edition: c.edition || '', cover: c.cover || '', hrAssist: c.hrAssist || '',
       days: c.days || [], chart: c.chart || { header: [], rows: [] }, chartMonths: c.chartMonths || [],
       meetings: c.meetings || [], permits: c.permits || [], trialsText: c.trialsText || '', agents: c.agents || [],
       joBlocks: c.joBlocks || [], joMeetings: c.joMeetings || [],
