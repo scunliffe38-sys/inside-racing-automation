@@ -145,9 +145,8 @@ class Component extends DCLogic {
     const extent = plan ? plan.total + 'pp' : '';
     const extentNote = !plan ? ''
       : plan.padding
-        ? 'This edition runs ' + plan.total + ' pages against ' + plan.signatures + ' four-page signatures, so '
-          + plan.padding + ' page' + (plan.padding > 1 ? 's' : '') + ' of advertising or filler is needed to reach ' + plan.padded + '.'
-        : 'This edition runs ' + plan.total + ' pages, a clean ' + plan.signatures + ' signatures.';
+        ? 'This edition runs ' + plan.total + ' pages, so one page of advertising is needed to finish on an even page (' + plan.padded + ').'
+        : 'This edition runs ' + plan.total + ' pages and finishes on an even page.';
     const outstanding = [
       { colour: '#2c2e35', head: 'The chart now matches the published pagination.', body: 'The dash rules that divide two entries in one cell were breaking over four lines in a 34pt column — 460 of them, most sitting inside a larger run rather than being a run of their own. Each is now set on one line and clipped. With the rows their true height, cell leading of 6.3pt against the 6.8pt in use sets the chart in 21 pages and breaks at the same meetings the published edition does on pages 1, 2, 16, 20 and 21.' },
       { colour: '#ff2f1a', head: 'Regular-width Gotham Bold is missing.', body: 'The page titles on 47, 48 and 51 are measured at 1.15× Gotham Narrow Book, which is regular-width Gotham. Neither supplied narrow cut fits, so those titles render as synthesised bold about 14–18% too narrow.' },

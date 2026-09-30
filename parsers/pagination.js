@@ -72,7 +72,7 @@ export function report(id, count) {
 
 /**
  * Works out the running order for this edition.
- * Returns { start, count, sections, total, signatures, warnings }.
+ * Returns { start, count, sections, total, padding, warnings }.
  *   start[id]  first folio of that section (0 if it is not in this edition)
  *   count[id]  its extent in pages
  */
@@ -163,7 +163,7 @@ export function plan(settings, placements) {
     }
   });
 
-  return { start, count, sections, total, signatures, padded: signatures * 4, padding, ads, warnings };
+  return { start, count, sections, total, padded: total + padding, padding, ads, warnings };
 }
 
 /** Convenience: the first folio of a section, as a string for the page furniture. */
