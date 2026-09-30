@@ -615,7 +615,7 @@ DETAILS</div>
 <div style="margin-top:3.8pt;font-size:8pt;font-weight:400;line-height:1;letter-spacing:.01em;color:#00843d">{{ a.date }}</div>
 </sc-if>
 <sc-if value="{{ a.isRace }}" hint-placeholder-val="{{ false }}">
-<div style="margin-top:3.5pt;display:flex;justify-content:space-between;gap:5pt;background:#d8d9da;height:9pt;box-sizing:border-box;padding:1.6pt 3pt 0;font-size:6.3pt;line-height:6.8pt"><span>{{ a.cond }}</span><span style="text-align:right">{{ a.dist }}</span></div>
+<div style="margin-top:3.5pt;display:flex;justify-content:space-between;align-items:center;gap:5pt;background:#d8d9da;height:9pt;box-sizing:border-box;padding:0 3pt;font-size:6.3pt;line-height:1"><span style="display:block;line-height:1">{{ a.cond }}</span><span style="display:block;line-height:1;text-align:right">{{ a.dist }}</span></div>
 <div style="margin-top:1.75pt;font-size:6.8pt;line-height:8.1pt">{{ a.title }}</div>
 </sc-if>
 </sc-for>
@@ -793,21 +793,21 @@ DETAILS</div>
 <div style="margin-top:11pt;font-size:9pt;font-weight:700;line-height:11pt;letter-spacing:.02em">{{ b.text }}</div>
 </sc-if>
 <sc-if value="{{ b.isPara }}" hint-placeholder-val="{{ true }}">
-<div style="margin-top:7pt;font-size:8pt;font-weight:400;line-height:10.4pt;text-wrap:pretty">{{ b.text }}</div>
+<div style="margin-top:7pt;font-size:8pt;font-weight:400;line-height:10.4pt;text-wrap:pretty"><sc-for list="{{ b.runs }}" as="r" hint-placeholder-count="0"><sc-for list="{{ r.plain }}" as="x" hint-placeholder-count="0"><span>{{ x.t }}</span></sc-for><sc-for list="{{ r.bold }}" as="x" hint-placeholder-count="0"><span style="font-weight:700">{{ x.t }}</span></sc-for><sc-for list="{{ r.link }}" as="x" hint-placeholder-count="0"><a href="{{ x.href }}" style="color:#2c9cd7;text-decoration:underline">{{ x.t }}</a></sc-for><sc-for list="{{ r.linkBold }}" as="x" hint-placeholder-count="0"><a href="{{ x.href }}" style="color:#2c9cd7;text-decoration:underline;font-weight:700">{{ x.t }}</a></sc-for><sc-for list="{{ r.br }}" as="x" hint-placeholder-count="0"><br></sc-for></sc-for></div>
 </sc-if>
 <sc-if value="{{ b.isStep }}" hint-placeholder-val="{{ true }}">
 <div style="margin-top:5pt;display:flex;gap:6pt;font-size:8pt;line-height:10.4pt">
 <div style="flex:0 0 13pt;font-weight:700">{{ b.no }}</div>
-<div style="flex:1;text-wrap:pretty">{{ b.text }}</div>
+<div style="flex:1;text-wrap:pretty"><sc-for list="{{ b.runs }}" as="r" hint-placeholder-count="0"><sc-for list="{{ r.plain }}" as="x" hint-placeholder-count="0"><span>{{ x.t }}</span></sc-for><sc-for list="{{ r.bold }}" as="x" hint-placeholder-count="0"><span style="font-weight:700">{{ x.t }}</span></sc-for><sc-for list="{{ r.link }}" as="x" hint-placeholder-count="0"><a href="{{ x.href }}" style="color:#2c9cd7;text-decoration:underline">{{ x.t }}</a></sc-for><sc-for list="{{ r.linkBold }}" as="x" hint-placeholder-count="0"><a href="{{ x.href }}" style="color:#2c9cd7;text-decoration:underline;font-weight:700">{{ x.t }}</a></sc-for><sc-for list="{{ r.br }}" as="x" hint-placeholder-count="0"><br></sc-for></sc-for></div>
 </div>
 </sc-if>
 <sc-if value="{{ b.isClause }}" hint-placeholder-val="{{ true }}">
-<div style="margin-top:4pt;padding-left:13pt;font-size:8pt;line-height:10.4pt;text-wrap:pretty">{{ b.text }}</div>
+<div style="margin-top:4pt;padding-left:13pt;font-size:8pt;line-height:10.4pt;text-wrap:pretty"><sc-for list="{{ b.runs }}" as="r" hint-placeholder-count="0"><sc-for list="{{ r.plain }}" as="x" hint-placeholder-count="0"><span>{{ x.t }}</span></sc-for><sc-for list="{{ r.bold }}" as="x" hint-placeholder-count="0"><span style="font-weight:700">{{ x.t }}</span></sc-for><sc-for list="{{ r.link }}" as="x" hint-placeholder-count="0"><a href="{{ x.href }}" style="color:#2c9cd7;text-decoration:underline">{{ x.t }}</a></sc-for><sc-for list="{{ r.linkBold }}" as="x" hint-placeholder-count="0"><a href="{{ x.href }}" style="color:#2c9cd7;text-decoration:underline;font-weight:700">{{ x.t }}</a></sc-for><sc-for list="{{ r.br }}" as="x" hint-placeholder-count="0"><br></sc-for></sc-for></div>
 </sc-if>
 <sc-if value="{{ b.isBullet }}" hint-placeholder-val="{{ true }}">
 <div style="margin-top:4pt;display:flex;gap:5pt;font-size:8pt;line-height:10.4pt">
 <div style="flex:0 0 7pt">&bull;</div>
-<div style="flex:1;text-wrap:pretty">{{ b.text }}</div>
+<div style="flex:1;text-wrap:pretty"><sc-for list="{{ b.runs }}" as="r" hint-placeholder-count="0"><sc-for list="{{ r.plain }}" as="x" hint-placeholder-count="0"><span>{{ x.t }}</span></sc-for><sc-for list="{{ r.bold }}" as="x" hint-placeholder-count="0"><span style="font-weight:700">{{ x.t }}</span></sc-for><sc-for list="{{ r.link }}" as="x" hint-placeholder-count="0"><a href="{{ x.href }}" style="color:#2c9cd7;text-decoration:underline">{{ x.t }}</a></sc-for><sc-for list="{{ r.linkBold }}" as="x" hint-placeholder-count="0"><a href="{{ x.href }}" style="color:#2c9cd7;text-decoration:underline;font-weight:700">{{ x.t }}</a></sc-for><sc-for list="{{ r.br }}" as="x" hint-placeholder-count="0"><br></sc-for></sc-for></div>
 </div>
 </sc-if>
 </sc-for>
@@ -842,15 +842,15 @@ DETAILS</div>
 <div style="margin-top:9pt;font-size:9pt;font-weight:700;line-height:11pt;text-wrap:pretty">{{ b.text }}</div>
 </sc-if>
 <sc-if value="{{ b.isPara }}" hint-placeholder-val="{{ true }}">
-<div style="margin-top:5pt;font-size:8pt;font-weight:400;line-height:10.4pt;text-wrap:pretty">{{ b.text }}</div>
+<div style="margin-top:5pt;font-size:8pt;font-weight:400;line-height:10.4pt;text-wrap:pretty"><sc-for list="{{ b.runs }}" as="r" hint-placeholder-count="0"><sc-for list="{{ r.plain }}" as="x" hint-placeholder-count="0"><span>{{ x.t }}</span></sc-for><sc-for list="{{ r.bold }}" as="x" hint-placeholder-count="0"><span style="font-weight:700">{{ x.t }}</span></sc-for><sc-for list="{{ r.link }}" as="x" hint-placeholder-count="0"><a href="{{ x.href }}" style="color:#2c9cd7;text-decoration:underline">{{ x.t }}</a></sc-for><sc-for list="{{ r.linkBold }}" as="x" hint-placeholder-count="0"><a href="{{ x.href }}" style="color:#2c9cd7;text-decoration:underline;font-weight:700">{{ x.t }}</a></sc-for><sc-for list="{{ r.br }}" as="x" hint-placeholder-count="0"><br></sc-for></sc-for></div>
 </sc-if>
 <sc-if value="{{ b.isClause }}" hint-placeholder-val="{{ true }}">
-<div style="margin-top:4pt;padding-left:13pt;font-size:8pt;line-height:10.4pt;text-wrap:pretty">{{ b.text }}</div>
+<div style="margin-top:4pt;padding-left:13pt;font-size:8pt;line-height:10.4pt;text-wrap:pretty"><sc-for list="{{ b.runs }}" as="r" hint-placeholder-count="0"><sc-for list="{{ r.plain }}" as="x" hint-placeholder-count="0"><span>{{ x.t }}</span></sc-for><sc-for list="{{ r.bold }}" as="x" hint-placeholder-count="0"><span style="font-weight:700">{{ x.t }}</span></sc-for><sc-for list="{{ r.link }}" as="x" hint-placeholder-count="0"><a href="{{ x.href }}" style="color:#2c9cd7;text-decoration:underline">{{ x.t }}</a></sc-for><sc-for list="{{ r.linkBold }}" as="x" hint-placeholder-count="0"><a href="{{ x.href }}" style="color:#2c9cd7;text-decoration:underline;font-weight:700">{{ x.t }}</a></sc-for><sc-for list="{{ r.br }}" as="x" hint-placeholder-count="0"><br></sc-for></sc-for></div>
 </sc-if>
 <sc-if value="{{ b.isBullet }}" hint-placeholder-val="{{ true }}">
 <div style="margin-top:4pt;display:flex;gap:5pt;font-size:8pt;line-height:10.4pt">
 <div style="flex:0 0 7pt">&bull;</div>
-<div style="flex:1;text-wrap:pretty">{{ b.text }}</div>
+<div style="flex:1;text-wrap:pretty"><sc-for list="{{ b.runs }}" as="r" hint-placeholder-count="0"><sc-for list="{{ r.plain }}" as="x" hint-placeholder-count="0"><span>{{ x.t }}</span></sc-for><sc-for list="{{ r.bold }}" as="x" hint-placeholder-count="0"><span style="font-weight:700">{{ x.t }}</span></sc-for><sc-for list="{{ r.link }}" as="x" hint-placeholder-count="0"><a href="{{ x.href }}" style="color:#2c9cd7;text-decoration:underline">{{ x.t }}</a></sc-for><sc-for list="{{ r.linkBold }}" as="x" hint-placeholder-count="0"><a href="{{ x.href }}" style="color:#2c9cd7;text-decoration:underline;font-weight:700">{{ x.t }}</a></sc-for><sc-for list="{{ r.br }}" as="x" hint-placeholder-count="0"><br></sc-for></sc-for></div>
 </div>
 </sc-if>
 </sc-for>
@@ -878,10 +878,10 @@ DETAILS</div>
 <div style="font-size:9pt;font-weight:700;line-height:11pt;letter-spacing:.01em;text-wrap:pretty">{{ g.heading }}</div>
 <sc-for list="{{ g.blocks }}" as="b" hint-placeholder-count="3">
 <sc-if value="{{ b.isPara }}" hint-placeholder-val="{{ true }}">
-<div style="margin-top:4pt;font-size:7.5pt;font-weight:400;line-height:9.4pt;text-wrap:pretty">{{ b.text }}</div>
+<div style="margin-top:4pt;font-size:7.5pt;font-weight:400;line-height:9.4pt;text-wrap:pretty"><sc-for list="{{ b.runs }}" as="r" hint-placeholder-count="0"><sc-for list="{{ r.plain }}" as="x" hint-placeholder-count="0"><span>{{ x.t }}</span></sc-for><sc-for list="{{ r.bold }}" as="x" hint-placeholder-count="0"><span style="font-weight:700">{{ x.t }}</span></sc-for><sc-for list="{{ r.link }}" as="x" hint-placeholder-count="0"><a href="{{ x.href }}" style="color:#2c9cd7;text-decoration:underline">{{ x.t }}</a></sc-for><sc-for list="{{ r.linkBold }}" as="x" hint-placeholder-count="0"><a href="{{ x.href }}" style="color:#2c9cd7;text-decoration:underline;font-weight:700">{{ x.t }}</a></sc-for><sc-for list="{{ r.br }}" as="x" hint-placeholder-count="0"><br></sc-for></sc-for></div>
 </sc-if>
 <sc-if value="{{ b.isClause }}" hint-placeholder-val="{{ true }}">
-<div style="margin-top:4pt;font-size:7.5pt;font-weight:400;line-height:9.4pt;text-wrap:pretty">{{ b.text }}</div>
+<div style="margin-top:4pt;font-size:7.5pt;font-weight:400;line-height:9.4pt;text-wrap:pretty"><sc-for list="{{ b.runs }}" as="r" hint-placeholder-count="0"><sc-for list="{{ r.plain }}" as="x" hint-placeholder-count="0"><span>{{ x.t }}</span></sc-for><sc-for list="{{ r.bold }}" as="x" hint-placeholder-count="0"><span style="font-weight:700">{{ x.t }}</span></sc-for><sc-for list="{{ r.link }}" as="x" hint-placeholder-count="0"><a href="{{ x.href }}" style="color:#2c9cd7;text-decoration:underline">{{ x.t }}</a></sc-for><sc-for list="{{ r.linkBold }}" as="x" hint-placeholder-count="0"><a href="{{ x.href }}" style="color:#2c9cd7;text-decoration:underline;font-weight:700">{{ x.t }}</a></sc-for><sc-for list="{{ r.br }}" as="x" hint-placeholder-count="0"><br></sc-for></sc-for></div>
 </sc-if>
 </sc-for>
 </div>
@@ -1411,7 +1411,8 @@ class Component extends DCLogic {
     // MAIDEN)" over "VOBIS Silver: $20,000 Inglis Xtra Bonus Maiden".
     const REPEATS = [
       [/\s*\(\s*MCC\s+SERIES\s+HEATS?(?:\s+\d+)?\s*\)/i, /\bMCCS?\s+Series\b/i],
-      [/\s*\bINGLIS\s*\(\s*XTRA\s+BONUS\s+MAIDEN\s*\)/i, /\bInglis\s+Xtra\s+Bonus\b/i]
+      // both "INGLIS (XTRA BONUS MAIDEN)" and "(INGLIS XTRA BONUS MAIDEN)" (v11 p35)
+      [/\s*(?:\(\s*INGLIS\s+XTRA\s+BONUS\s+MAIDEN\s*\)|\bINGLIS\s*\(\s*XTRA\s+BONUS\s+MAIDEN\s*\))/i, /\bInglis\s+Xtra\s+Bonus\b/i]
     ];
     const rpTrimName = (name, after) => REPEATS.reduce((n, [inName, inAfter]) =>
       inName.test(n) && inAfter.test(after || '') ? n.replace(inName, '').trim() : n, String(name || ''));
@@ -1438,7 +1439,7 @@ class Component extends DCLogic {
           ...blank,
           race: rid,
           bar: [{ cond: (c => { c = String(c || '').replace(/\s+/g, ' ').trim(); const rest = c.replace(/\b\d(?:\s*,\s*\d)*(?:\s*,?\s*&\s*\d)?\s*YO\b(?:\s*&\s*UP\b)?/gi, '').replace(/\b(F&M|C,\s*G\s*&\s*E|C&G|E&G|F|M|C|G)\b/gi, '').replace(/[\s,&]+/g, ''); return !c ? 'Open' : rest ? c : c + ' Open'; })(r.cond), dist: (r.dist || '').replace(/\s+/g, '') }],
-          title: one(join(r.no + '.', rpTrimName(r.name, join(r.bonus, r.notation))).toUpperCase()),
+          title: one(join(r.no + '.', rpTrimName(r.name, [r.bonus, r.notation, r.prize, r.weight, r.nomFee, r.accFee, r.decl, r.penH, r.pen, r.balH, r.bal, r.other].join(' '))).toUpperCase()),
           claim: one(join(r.claim, r.group)),
           // The VOBIS line and the series or bonus note after it are two
           // things: the note starts a line of its own (v10 pp29, 31).
@@ -1458,7 +1459,7 @@ class Component extends DCLogic {
           push({ prize: one(join(r.prize, r.weight)) });
         }
         push({ fees: one(join(r.nomFee, r.accFee, r.decl)) });
-        [['penH', 'pen'], ['balH', 'bal'], [null, 'other'], ['nomH', 'nom'], ['accH', 'acc']].forEach(([hk, bk]) => {
+        [['penH', 'pen'], ['balH', 'bal'], [null, 'other']].forEach(([hk, bk]) => {
           const lab = hk && isLabel(r[hk]);
           const body = (hk && !lab ? paras(r[hk]) : []).concat(paras(r[bk]));
           const head = lab ? one(r[hk]) : [];
@@ -1466,6 +1467,17 @@ class Component extends DCLogic {
           if (!body.length) return;
           body.forEach((p, k) => push(k === 0 && head.length ? { [hk]: head, [bk]: p } : { [bk]: p }));
         });
+        // Entries and Acceptances print together as one atom: a column break
+        // never falls between them (producer rule, after the v10 review).
+        const ea = {};
+        [['nomH', 'nom'], ['accH', 'acc']].forEach(([hk, bk]) => {
+          const lab = isLabel(r[hk]);
+          const body = (!lab ? paras(r[hk]) : []).concat(paras(r[bk]));
+          if (!body.length) return;
+          if (lab) ea[hk] = one(r[hk]);
+          ea[bk] = body.map(p => p[0]);
+        });
+        push(ea);
       });
     });
     return out;
@@ -1858,6 +1870,8 @@ class Component extends DCLogic {
       .replace(/[ \t]{2,}/g, ' ')
       // "Heat 1" holds together, and an ampersand never ends a line on its
       // own: it binds to the word after it (v10 review).
+      // a line that would start with "&" hands it back to the line before
+      .replace(/[ \t]*\n[ \t]*&[ \t]*/g, '\u00a0&\n')
       .replace(/\b(Heat)[ \t]+(\d+)/gi, (m, h, n) => h + '\u00a0' + n)
       .replace(/[ \t]+&[ \t]+(?=\S)/g, ' &\u00a0')
       .replace(/(\d)(\s*)-(\s*)(\d)/g, (m, a, s1, s2, b) =>
@@ -2014,7 +2028,34 @@ class Component extends DCLogic {
       && KEYS.some(k => a[k].length)
       && KEYS.every(k => a[k].every(x => !String(x.t).trim()));
     const isVoBlock = a => !!(a && a.vo && a.vo.length);
-    return out.filter((a, i) => !(isBlank(a) && isVoBlock(out[i - 1])));
+    const kept = out.filter((a, i) => !(isBlank(a) && isVoBlock(out[i - 1])));
+    // An ampersand never sits on a line of its own. The workbook often gives
+    // the "&" between two VOBIS labels a run of its own, unbolded, so it
+    // arrived as an atom by itself and printed alone and regular (v11 p22).
+    // It joins the end of whatever precedes it, taking that atom's weight:
+    // "VOBIS Silver &" over "VOBIS Gold & VOBIS Platinum".
+    const AMP = /^[\s\u00a0\u2060]*&[\s\u00a0\u2060]*$/;
+    const ampOnly = a => !a.sep.length && !a.vo.length
+      && KEYS.some(k => a[k].some(x => AMP.test(String(x.t))))
+      && KEYS.every(k => a[k].every(x => AMP.test(String(x.t)) || !String(x.t).trim()));
+    const done = [];
+    kept.forEach(a => {
+      if (ampOnly(a)) {
+        let j = done.length - 1;
+        while (j >= 0 && isBlank(done[j])) j--;
+        const p = done[j];
+        const k = p && (p.vo.length ? 'vo' : KEYS.find(key => p[key].length));
+        if (k) {
+          const L = p[k][p[k].length - 1];
+          p[k][p[k].length - 1] = { ...L, t: String(L.t).replace(/[\s\u00a0]+$/, '') + '\u00a0&' };
+          done.length = j + 1;
+          return;
+        }
+      }
+      done.push(a);
+    });
+    // the space that followed the "&" now sits beside a VOBIS block
+    return done.filter((a, i) => !(isBlank(a) && isVoBlock(done[i - 1])));
   }
 
   /** "Programs Summary Chart August - October", from the months it covers. */
@@ -2402,7 +2443,9 @@ class Component extends DCLogic {
       ? { isSubject: [10, 17, 70], isSubhead: [11, 11, 120], isPara: [7, 10.4, 158], isStep: [5, 10.4, 150], isClause: [4, 10.4, 152], isBullet: [4, 10.4, 150] }
       : { isHeading: [9, 17, 70], isSubhead: [9, 11, 120], isPara: [5, 10.4, 158], isClause: [4, 10.4, 152], isBullet: [4, 10.4, 150] };
     const HEADS = which === 'notice' ? ['isSubject', 'isSubhead'] : ['isHeading', 'isSubhead'];
-    const items = (this.state[which] || []).map(b => {
+    // a bake from before the notices carried runs prints its plain text
+    const withRuns = b => (b.runs && b.runs.length ? b : { ...b, runs: [{ plain: [{ t: b.text }], bold: [], link: [], linkBold: [], br: [] }] });
+    const items = (this.state[which] || []).map(withRuns).map(b => {
       const kind = Object.keys(M).find(k => b[k]) || 'isPara';
       const [gap, lh, cpl] = M[kind];
       const lines = Math.max(1, Math.ceil(String(b.text || '').length / cpl));
@@ -2429,7 +2472,7 @@ class Component extends DCLogic {
   }
 
   /**
-   * A page that leaves more than 40% of its live depth empty is worth selling.
+   * A page that leaves more than 30% of its live depth empty is worth selling.
    * Rather than each section working out its own leftovers, this runs once the
    * edition has laid out and measures what actually reached the page: the slot
    * is named after the folio it sits on — page-26 — which is the id the
@@ -2445,6 +2488,12 @@ class Component extends DCLogic {
 
   applyFillers() {
     if (!this.ads) return;
+    // Printing never waits on the settle timer: a re-cut late in the build
+    // pushed it past the export in v11 and page 5 went out without its panel.
+    if (!this._fillerPrintHook) {
+      this._fillerPrintHook = true;
+      window.addEventListener('beforeprint', () => { clearTimeout(this._fillerTimer); this.applyFillers(); });
+    }
     const pages = [...document.querySelectorAll('doc-page > .page')];
     if (!pages.length) return;
     const placements = (this.state.settings || {}).$placements;
@@ -2638,14 +2687,22 @@ class Component extends DCLogic {
     // which is what parsers/ads.js fullPages() computes for the folios.
     const AD_STOCK = [{
       id: 'hrassist', name: 'RACING VICTORIA HR ASSIST',
-      art: 'assets/ads/hr-assist-full-page.png',
+      art: 'inputs/HR Assist.JPG',
       headline: 'Award wages are increasing from the first full pay period on or after 1 July 2026.',
       body: 'For free and confidential guidance, contact HR Assist via the channels below and state that you require advice under the Racing Victoria HR Assist support service.',
       hours: 'HR Assist available weekdays (Mon to Fri) 9am-5pm',
-      contact: '1300 884 687   rvhra@ihraustralia.com'
+      contact: '1300 884 687   rvhra@ihraustralia.com',
+      enabled: true
     }];
-    const adProvisional = (Number(ntPageNotices) || 0) + 2; // this page and the back cover
-    const adShort = adProvisional % 4 ? 4 - (adProvisional % 4) : 0;
+    // The edition is published as a PDF, not saddle-stitched, so it only has
+    // to finish on an even page with the back cover last. One advertising page
+    // runs before the back cover when the count would otherwise be odd, and
+    // none when it is already even.
+    // HR Assist always runs on the page directly before the back cover, from
+    // the producer's inputs/HR Assist.JPG. If the count is then odd, one
+    // bookable page (fullpage-2) runs in front of it.
+    const adProvisional = (Number(ntPageNotices) || 0) + 2; // HR Assist and the back cover
+    const adPad = adProvisional % 2;
     // Bookings from inputs/Ad Placements.csv, read by parsers/ads.js at parse
     // time and carried in settings.$placements. A booked page runs as supplied
     // artwork with no live type; an unbooked one keeps the house ad.
@@ -2654,12 +2711,15 @@ class Component extends DCLogic {
     // advertising, and those are bookable rather than the same ad again — each
     // prints the slot id to put in inputs/Ad Placements.csv.
     const adPages = sc.tail
-      ? Array.from({ length: 1 + adShort }, (unused, i) => {
+      ? Array.from({ length: 1 + adPad }, (unused, k) => {
+          const i = adPad - k;      // padding page first, HR Assist (fullpage-1) last
           const slot = 'fullpage-' + (i + 1);
           const b = adBooked[slot];
           if (b && !b.enabled) return { id: slot, name: '', art: null, hasArt: false, live: false, open: false };
           if (b && b.artwork) return { id: slot, name: b.caption || '', art: b.artwork, hasArt: true, live: false, open: false };
-          if (i === 0) return Object.assign({ live: true, open: false, hasArt: !!AD_STOCK[0].art }, AD_STOCK[0]);
+          // HR Assist is benched (parsers/ads.js, enabled: false), so the page
+          // before the back cover is a bookable blank like the padding pages.
+          if (i === 0 && AD_STOCK[0].enabled) return { id: slot, name: '', art: AD_STOCK[0].art, hasArt: true, live: false, open: false };
           return { id: slot, name: '', art: null, hasArt: false, live: false, open: true, slotName: slot, size: '210 \u00d7 297 mm  \u00b7  2480 \u00d7 3508 px at 300dpi' };
         })
       : [];
@@ -2881,7 +2941,7 @@ class Component extends DCLogic {
       ntNoticePages: sc.tail ? ntNoticePages : [],
       ntStewardsPages: sc.tail ? ntStewardsPages : [],
       ntRulesPages: sc.tail && ruOn ? [{}] : [],
-      ntRules: this.state.rules,
+      ntRules: (this.state.rules || []).map(g => ({ ...g, blocks: (g.blocks || []).map(b => (b.runs && b.runs.length ? b : { ...b, runs: [{ plain: [{ t: b.text }], bold: [], link: [], linkBold: [], br: [] }] })) })),
       ntNoticeEmpty: this.state.tailLoaded && !this.state.notice.length,
       ntStewardsEmpty: this.state.tailLoaded && !this.state.stewards.length,
       ntRulesEmpty: this.state.tailLoaded && !this.state.rules.length,

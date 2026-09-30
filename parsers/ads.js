@@ -23,13 +23,12 @@
 //   automatic fill any page leaving more than BLANK_THRESHOLD of its depth
 //                  empty gets offered a filler, largest gap first
 //
-// Full-page count is not fixed. Saddle-stitch needs a multiple of four, so
-// fullPageCount() returns however many whole-page ads bring the edition up to
-// the next signature — one at minimum, since the page before the back cover
-// always carries one.
+// Full-page count is not fixed. HR Assist always runs directly before the
+// back cover; the edition is a PDF and only has to finish on an even page, so
+// one further bookable page runs in front of HR Assist when the count is odd.
 
 /** A page is a filler candidate when this much of its depth is unused. */
-export const BLANK_THRESHOLD = 0.40;
+export const BLANK_THRESHOLD = 0.30;
 
 /** Trim box of an A4 page in points, less the standing 24pt margins. */
 const LIVE_DEPTH = 842 - 48;
@@ -94,7 +93,7 @@ export const LIBRARY = [
     id: 'hrassist',
     name: 'HR Assist',
     kind: 'full',             // whole page of supplied artwork
-    artwork: 'assets/ads/hr-assist-full-page.png',
+    artwork: 'inputs/HR Assist.JPG',   // supplied whole-page artwork, an input
     overlay: 'assets/ads/hr-assist-secondary.png',
     width: 1187,
     height: 837,
@@ -105,9 +104,8 @@ export const LIBRARY = [
     hours: 'HR Assist available weekdays (Mon to Fri) 9am-5pm',
     contact: '1300 884 687   rvhra@ihraustralia.com',
     slots: ['prebackcover', 'auto'],
-    // Benched from the October 2026 edition: the whole-page slot prints as a
-    // bookable blank until inputs/Ad Placements.csv fills it.
-    enabled: false
+    // Always runs on the page directly before the back cover (fullpage-1).
+    enabled: true
   }
 ];
 
@@ -199,7 +197,8 @@ export async function loadPlacements(url) {
 export function slotReport(total, placements) {
   const booked = (placements && placements.bySlot) || {};
   const extra = Math.max(0, fullPages(total).length - 1);
-  const all = SLOTS.concat(Array.from({ length: extra }, (_, i) => fullPageSlot(i + 2)));
+  const base = fullPages(total).length ? SLOTS : SLOTS.filter(s => s.kind !== 'full');
+  const all = base.concat(Array.from({ length: extra }, (_, i) => fullPageSlot(i + 2)));
   return all.map(s => {
     const b = booked[s.id];
     const house = s.house ? byId(s.house) : null;
@@ -255,8 +254,10 @@ export function forSlot(slot, placements) {
  */
 export function fullPages(total, placements) {
   const n = Number(total) || 0;
-  const short = n % 4 ? 4 - (n % 4) : 0;
-  const wanted = 1 + short;
+  // Published as a PDF, not saddle-stitched: the edition only has to finish
+  // on an even page with the back cover last. `total` counts the standing
+  // HR Assist page; one more bookable page runs if that leaves it odd.
+  const wanted = 1 + (n % 2);
   const stock = live().filter(a => a.kind === 'full' && a.artwork);
   const out = [];
   for (let i = 0; i < wanted; i++) {

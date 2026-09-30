@@ -186,7 +186,8 @@ class Component extends DCLogic {
     // lines under the name repeat it.
     const REPEATS = [
       [/\s*\(\s*MCC\s+SERIES\s+HEATS?(?:\s+\d+)?\s*\)/i, /\bMCCS?\s+Series\b/i],
-      [/\s*\bINGLIS\s*\(\s*XTRA\s+BONUS\s+MAIDEN\s*\)/i, /\bInglis\s+Xtra\s+Bonus\b/i]
+      // both "INGLIS (XTRA BONUS MAIDEN)" and "(INGLIS XTRA BONUS MAIDEN)" (v11 p35)
+      [/\s*(?:\(\s*INGLIS\s+XTRA\s+BONUS\s+MAIDEN\s*\)|\bINGLIS\s*\(\s*XTRA\s+BONUS\s+MAIDEN\s*\))/i, /\bInglis\s+Xtra\s+Bonus\b/i]
     ];
     const rpTrimName = (name, after) => REPEATS.reduce((n, [inName, inAfter]) =>
       inName.test(n) && inAfter.test(after || '') ? n.replace(inName, '').trim() : n, String(name || ''));
@@ -213,7 +214,7 @@ class Component extends DCLogic {
           ...blank,
           race: rid,
           bar: [{ cond: (c => { c = String(c || '').replace(/\s+/g, ' ').trim(); const rest = c.replace(/\b\d(?:\s*,\s*\d)*(?:\s*,?\s*&\s*\d)?\s*YO\b(?:\s*&\s*UP\b)?/gi, '').replace(/\b(F&M|C,\s*G\s*&\s*E|C&G|E&G|F|M|C|G)\b/gi, '').replace(/[\s,&]+/g, ''); return !c ? 'Open' : rest ? c : c + ' Open'; })(r.cond), dist: (r.dist || '').replace(/\s+/g, '') }],
-          title: one(join(r.no + '.', rpTrimName(r.name, join(r.bonus, r.notation))).toUpperCase()),
+          title: one(join(r.no + '.', rpTrimName(r.name, [r.bonus, r.notation, r.prize, r.weight, r.nomFee, r.accFee, r.decl, r.penH, r.pen, r.balH, r.bal, r.other].join(' '))).toUpperCase()),
           claim: one(join(r.claim, r.group)),
           // The VOBIS line and the series or bonus note after it are two
           // things: the note starts a line of its own (v10 pp29, 31).
@@ -236,7 +237,7 @@ class Component extends DCLogic {
           push({ prize: one(join(r.prize, r.weight)) });
         }
         push({ fees: one(join(r.nomFee, r.accFee, r.decl)) });
-        [['penH', 'pen'], ['balH', 'bal'], [null, 'other'], ['nomH', 'nom'], ['accH', 'acc']].forEach(([hk, bk]) => {
+        [['penH', 'pen'], ['balH', 'bal'], [null, 'other']].forEach(([hk, bk]) => {
           const lab = hk && isLabel(r[hk]);
           const body = (hk && !lab ? paras(r[hk]) : []).concat(paras(r[bk]));
           const head = lab ? one(r[hk]) : [];
@@ -244,6 +245,17 @@ class Component extends DCLogic {
           if (!body.length) return;
           body.forEach((p, k) => push(k === 0 && head.length ? { [hk]: head, [bk]: p } : { [bk]: p }));
         });
+        // Entries and Acceptances print together as one atom: a column break
+        // never falls between them (producer rule, after the v10 review).
+        const ea = {};
+        [['nomH', 'nom'], ['accH', 'acc']].forEach(([hk, bk]) => {
+          const lab = isLabel(r[hk]);
+          const body = (!lab ? paras(r[hk]) : []).concat(paras(r[bk]));
+          if (!body.length) return;
+          if (lab) ea[hk] = one(r[hk]);
+          ea[bk] = body.map(p => p[0]);
+        });
+        push(ea);
       });
     });
     return out;

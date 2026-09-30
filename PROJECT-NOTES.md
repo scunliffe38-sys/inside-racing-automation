@@ -264,9 +264,9 @@ These were set from the October review and are not preferences to re-litigate:
 - **The Division of Races Policy is set to fit under the trials**: 17pt
   heading, 7.5pt body on 8.6pt. Its depth estimate and its printed styles are
   the same figures and must move together.
-- **A whole-page ad is a bookable blank by default.** HR Assist is benched in
-  the library (`enabled: false`), so every full page prints its slot id and
-  size until `inputs/Ad Placements.csv` books it.
+- **HR Assist runs on the page directly before the back cover**, from
+  `inputs/HR Assist.JPG` (whole-page artwork, exactly that filename — the
+  site is case-sensitive). Booking `fullpage-1` in Ad Placements replaces it.
 
 - **"Heat 1" never breaks, and an ampersand never ends a line.** `chAtomic()`
   holds Heat and its number with a non-breaking space and binds `&` to the word
@@ -282,6 +282,8 @@ These were set from the October review and are not preferences to re-litigate:
   the Acceptances, printed stray quotation marks and put PENALTIES and
   BALLOTING CONDITIONS in body slots, unbolded.
 - **A race detail heading with no text under it is not printed.**
+- **Entries and Acceptances are one atom.** A column break never falls between
+  them; the pair moves together.
 - **A bracketed series on a race name is dropped when the lines under it repeat
   it**: (MCC SERIES HEAT n) under an MCCS Series note, INGLIS (XTRA BONUS
   MAIDEN) under an Inglis Xtra Bonus note. `REPEATS` in `rpAtoms()` holds
@@ -301,6 +303,20 @@ These were set from the October review and are not preferences to re-litigate:
 - **Picnic table rules are all 1pt**, one colour (v10 review; they were
   0.75pt, which PDF viewers drew unevenly on screen). The cell dividers inside
   a meeting row use the same `RULE` in `pcPack()`.
+
+- **An ampersand never starts or sits alone on a line in the chart.** It joins
+  the end of what precedes it, at that text's weight: "VOBIS Silver &" over
+  "VOBIS Gold & VOBIS Platinum". The workbook often gives the "&" a run of its
+  own, unbolded, which printed it alone and regular in v11.
+- **Both INGLIS (XTRA BONUS MAIDEN) and (INGLIS XTRA BONUS MAIDEN)** drop from
+  a race name when the lines under it repeat Inglis Xtra Bonus.
+- **Trial grey bars centre their text vertically**, conditions left and
+  distance right, horizontal positions unchanged.
+- **Notices carry the document's own formatting**: bold runs print bold,
+  hyperlinks (and typed web or email addresses) print as links, and Word line
+  breaks start a new line. `runsOf()` in `parsers/notices.js`.
+- **Filler ad panels are drawn again at print time**, so a late re-layout
+  cannot send a page out without its bookable panel.
 
 ## The summary chart's colour comes from the workbook
 The venue name's colour marks metropolitan against country, and the meeting
@@ -334,14 +350,16 @@ Three placements, as the printed edition does it:
 
 - **panel** — Stableline, in space the contents page does not use
 - **filler** — Off The Track photo under a short section page (Jumps Program)
-- **full page** — HR Assist, the page before the back cover
+- **full page** — HR Assist, the page before the back cover, plus one bookable page in front of it when the count is odd
 
-Full-page count is not fixed. One always runs; the saddle-stitch shortfall runs
-as further ad pages rather than blank paper, so `plan()` returns `ads` and
-grows `count.fullpage`, moving the back cover down. **Never pad an edition with
-a blank page — pad it with advertising.**
+Full-page count is not fixed. The edition is published as a PDF, not
+saddle-stitched, so it only has to **finish on an even page with the back
+cover last**. HR Assist always sits directly before the back cover; when
+content, HR Assist and back cover come to an odd count, one bookable page
+(`fullpage-2`) runs in front of HR Assist. **Never pad an edition with a blank page — pad it with
+advertising**, and never pad past the next even page.
 
-Automatic fill: a page leaving more than 40% of its live depth empty is a filler
+Automatic fill: a page leaving more than 30% of its live depth empty is a filler
 candidate (`hasBlankSpace`, `fillers()`), deepest gap first. The assembled
 edition measures every page once it has laid out and draws a bookable panel in
 what is left over, named after the folio it sits on — `page-26`. That name is

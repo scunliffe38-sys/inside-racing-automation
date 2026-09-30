@@ -3,6 +3,17 @@ branch: main
 
 ## Last sync
 
+date: 2026-09-30T16:00:00+10:00
+
+### Updated in this project
+- v11 review: chart "&" joins the line before it; (INGLIS XTRA BONUS MAIDEN) dropped when repeated anywhere under the race; trial grey bars centred; notices carry bold, hyperlinks and line breaks from the .docx.
+- Entries and Acceptances print as one atom.
+- Advertising: edition finishes on an even page (not multiples of four); HR Assist from inputs/HR Assist.JPG before the back cover, one bookable page in front when odd; white-space panels at 30%; panels redrawn at print time.
+- Print copies rebuilt; picnic rules 1pt.
+
+## Sync history
+
+### 2026-09-30 (earlier)
 date: 2026-09-30T12:00:00+10:00
 
 ### Updated in this project
@@ -10,8 +21,6 @@ date: 2026-09-30T12:00:00+10:00
 - Race programs columns: Penalties/Balloting/Other Conditions split with three lines each side, no lone lines, no race split over a page turn.
 - Chart: country blue #2c9cd7, Heat n and & held together, bold only on VOBIS, #FF0000 read as red. Deadlines self-check against the footer. Flat trials 2YO/3YO without dashes. Picnic rules 1pt.
 - Print copies rebuilt from the current edition and Race Programs pages.
-
-## Sync history
 
 ### 2026-09-24
 date: 2026-09-24T17:20:00+10:00
