@@ -38,11 +38,35 @@ function unquote(s) {
   return v.slice(1, -1).replace(/""/g, '"');
 }
 
-/** Split one line, honouring "quoted, cells" when the file uses commas. */
+/**
+ * Split one line, honouring quoted cells. The tab-separated exports quote a
+ * cell that carries a tab of its own — "2026 Country Mile Series Heat 6<tab>(QC)"
+ * — and splitting on every tab shifted each later column one place right: in
+ * v10 the penalties and ballot headings arrived in body slots and printed
+ * regular, the acceptances fell off the end of the row, and the closing quote
+ * printed. A quote opens a cell only as its first character, so an inch mark
+ * inside a race name is still read as text; a tab inside a quoted cell reads
+ * as a space.
+ */
 function cells(line, d) {
   const s = String(line || '');
-  if (d === '\t') return s.split(d).map(unquote);
   if (s.indexOf('"') < 0) return s.split(d);
+  if (d === '\t') {
+    const out = [];
+    let cur = '', quoted = false, start = true;
+    for (let i = 0; i < s.length; i++) {
+      const c = s[i];
+      if (quoted) {
+        if (c === '"' && s[i + 1] === '"') { cur += '"'; i++; }
+        else if (c === '"' && (i + 1 === s.length || s[i + 1] === d || /^\s*(\t|$)/.test(s.slice(i + 1, i + 3)))) quoted = false;
+        else cur += c === d ? ' ' : c;
+      } else if (c === '"' && start) { quoted = true; start = false; }
+      else if (c === d) { out.push(cur); cur = ''; start = true; }
+      else { cur += c; if (!/\s/.test(c)) start = false; }
+    }
+    out.push(cur);
+    return out.map(unquote);
+  }
   const out = [];
   let cur = '';
   let quoted = false;

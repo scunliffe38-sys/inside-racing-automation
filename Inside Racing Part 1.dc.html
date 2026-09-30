@@ -44,7 +44,7 @@ a:hover{color:#1b7fb4}
 </div>
 </sc-for>
 <sc-for list="{{ dlHeadRows }}" as="r" hint-placeholder-count="0">
-<div data-r="head" style="font-size:7pt;font-weight:700;line-height:8pt;margin-top:2pt;color:#2c2e35">{{ r.text }}</div>
+<div data-r="head" style="font-size:7.5pt;font-weight:700;line-height:8.4pt;margin-top:2.5pt;letter-spacing:.04em;color:#2c2e35">{{ r.text }}</div>
 </sc-for>
 <sc-for list="{{ dlItemRows }}" as="r" hint-placeholder-count="0">
 <div data-r="item" style="font-size:7pt;font-weight:400;line-height:8pt;color:#2c2e35">{{ r.text }}</div>
@@ -160,7 +160,7 @@ a:hover{color:#1b7fb4}
 <div style="position:absolute;right:13pt;top:16pt;display:flex;align-items:center;gap:6pt;font-size:9pt;font-weight:700;color:#2c2e35">
 <span>KEY</span>
 <span style="display:flex;align-items:center;gap:3pt"><span style="width:7pt;height:7pt;background:#ff0040;display:inline-block"></span>Metropolitan</span>
-<span style="display:flex;align-items:center;gap:3pt"><span style="width:7pt;height:7pt;background:#007ba8;display:inline-block"></span>Country</span>
+<span style="display:flex;align-items:center;gap:3pt"><span style="width:7pt;height:7pt;background:#2c9cd7;display:inline-block"></span>Country</span>
 </div>
 <div style="position:absolute;left:13pt;right:13pt;top:37pt;height:2.25pt;background:#9ecff0"></div>
 <sc-for list="{{ pg.titleRow }}" as="t" hint-placeholder-count="0">
@@ -189,7 +189,7 @@ DETAILS</div>
 <sc-for list="{{ row.a }}" as="r" hint-placeholder-count="4">
 <sc-for list="{{ r.dt }}" as="v" hint-placeholder-count="0"><span style="font-size:8pt;font-weight:700;line-height:9pt;letter-spacing:-.03em">{{ v.t }}</span></sc-for>
 <sc-for list="{{ r.vm }}" as="v" hint-placeholder-count="0"><span style="font-size:8pt;font-weight:700;line-height:9pt;letter-spacing:-.03em;color:#ff0040">{{ v.t }}</span></sc-for>
-<sc-for list="{{ r.vc }}" as="v" hint-placeholder-count="0"><span style="font-size:8pt;font-weight:700;line-height:9pt;letter-spacing:-.03em;color:#007ba8">{{ v.t }}</span></sc-for>
+<sc-for list="{{ r.vc }}" as="v" hint-placeholder-count="0"><span style="font-size:8pt;font-weight:700;line-height:9pt;letter-spacing:-.03em;color:#2c9cd7">{{ v.t }}</span></sc-for>
 <sc-for list="{{ r.n }}" as="v" hint-placeholder-count="0"><span>{{ v.t }}</span></sc-for>
 <sc-for list="{{ r.b }}" as="v" hint-placeholder-count="0"><span style="font-weight:700">{{ v.t }}</span></sc-for>
 <sc-for list="{{ r.rd }}" as="v" hint-placeholder-count="0"><span style="font-weight:700;color:#ff0040">{{ v.t }}</span></sc-for>
@@ -305,10 +305,10 @@ DETAILS</div>
 <sc-for list="{{ a.prize }}" as="r" hint-placeholder-count="1"><div style="font-size:7pt;font-weight:400;line-height:9pt;white-space:pre-wrap;color:#2c2e35">{{ r.t }}</div></sc-for>
 <sc-for list="{{ a.fees }}" as="r" hint-placeholder-count="0"><div style="font-size:7pt;font-weight:400;line-height:9pt;white-space:pre-wrap;color:#2c2e35">{{ r.t }}</div></sc-for>
 <sc-for list="{{ a.penH }}" as="r" hint-placeholder-count="0"><div style="font-family:'Gotham XNarrow',sans-serif;font-size:6pt;font-weight:700;line-height:8pt;letter-spacing:.01em;color:#2c2e35">{{ r.t }}</div></sc-for>
-<sc-for list="{{ a.pen }}" as="r" hint-placeholder-count="0"><div style="font-family:'Gotham XNarrow',sans-serif;font-size:6.5pt;font-weight:400;line-height:8pt;white-space:pre-wrap;color:#2c2e35">{{ r.t }}</div></sc-for>
+<sc-for list="{{ a.pen }}" as="r" hint-placeholder-count="0"><div data-split="pen" style="font-family:'Gotham XNarrow',sans-serif;font-size:6.5pt;font-weight:400;line-height:8pt;white-space:pre-wrap;color:#2c2e35">{{ r.t }}</div></sc-for>
 <sc-for list="{{ a.balH }}" as="r" hint-placeholder-count="0"><div style="font-family:'Gotham XNarrow',sans-serif;font-size:6pt;font-weight:700;line-height:8pt;letter-spacing:.01em;color:#2c2e35">{{ r.t }}</div></sc-for>
-<sc-for list="{{ a.bal }}" as="r" hint-placeholder-count="0"><div style="font-family:'Gotham XNarrow',sans-serif;font-size:6.5pt;font-weight:400;line-height:8pt;white-space:pre-wrap;color:#2c2e35">{{ r.t }}</div></sc-for>
-<sc-for list="{{ a.other }}" as="r" hint-placeholder-count="0"><div style="font-family:'Gotham XNarrow',sans-serif;font-size:6.5pt;font-weight:400;line-height:8pt;white-space:pre-wrap;color:#2c2e35">{{ r.t }}</div></sc-for>
+<sc-for list="{{ a.bal }}" as="r" hint-placeholder-count="0"><div data-split="bal" style="font-family:'Gotham XNarrow',sans-serif;font-size:6.5pt;font-weight:400;line-height:8pt;white-space:pre-wrap;color:#2c2e35">{{ r.t }}</div></sc-for>
+<sc-for list="{{ a.other }}" as="r" hint-placeholder-count="0"><div data-split="other" style="font-family:'Gotham XNarrow',sans-serif;font-size:6.5pt;font-weight:400;line-height:8pt;white-space:pre-wrap;color:#2c2e35">{{ r.t }}</div></sc-for>
 <sc-for list="{{ a.nomH }}" as="r" hint-placeholder-count="0"><div style="font-family:'Gotham XNarrow',sans-serif;font-size:6.5pt;font-weight:700;line-height:8pt;color:#2c2e35">{{ r.t }}</div></sc-for>
 <sc-for list="{{ a.nom }}" as="r" hint-placeholder-count="0"><div style="font-family:'Gotham XNarrow',sans-serif;font-size:6.5pt;font-weight:400;line-height:8pt;white-space:pre-wrap;color:#2c2e35">{{ r.t }}</div></sc-for>
 <sc-for list="{{ a.accH }}" as="r" hint-placeholder-count="0"><div style="font-family:'Gotham XNarrow',sans-serif;font-size:6.5pt;font-weight:700;line-height:8pt;color:#2c2e35">{{ r.t }}</div></sc-for>
@@ -687,72 +687,72 @@ DETAILS</div>
 </sc-for>
 
 <div style="position:absolute;left:22.7pt;top:{{ p.top }};width:549.9pt">
-<div style="border-top:0.75pt solid #2c2e35;border-left:0.75pt solid #2c2e35">
+<div style="border-top:1pt solid #2c2e35;border-left:1pt solid #2c2e35">
 
 <div style="display:flex;background:#e6e7e9;font-family:'Gotham XNarrow',sans-serif;font-size:6.2pt;font-weight:700;line-height:7pt;letter-spacing:.01em">
-<div style="width:44.8pt;flex:0 0 44.8pt;height:14.1pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35"></div>
-<div style="width:116.8pt;flex:0 0 116.8pt;height:14.1pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;align-items:center;justify-content:center">MAIDEN</div>
-<div style="width:192.4pt;flex:0 0 192.4pt;height:14.1pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;align-items:center;justify-content:center">RESTRICTED TROPHY</div>
-<div style="width:195.9pt;flex:0 0 195.9pt;height:14.1pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;align-items:center;justify-content:center">OPEN</div>
+<div style="width:44.8pt;flex:0 0 44.8pt;height:14.1pt;box-sizing:border-box;border-right:1pt solid #2c2e35;border-bottom:1pt solid #2c2e35"></div>
+<div style="width:116.8pt;flex:0 0 116.8pt;height:14.1pt;box-sizing:border-box;border-right:1pt solid #2c2e35;border-bottom:1pt solid #2c2e35;display:flex;align-items:center;justify-content:center">MAIDEN</div>
+<div style="width:192.4pt;flex:0 0 192.4pt;height:14.1pt;box-sizing:border-box;border-right:1pt solid #2c2e35;border-bottom:1pt solid #2c2e35;display:flex;align-items:center;justify-content:center">RESTRICTED TROPHY</div>
+<div style="width:195.9pt;flex:0 0 195.9pt;height:14.1pt;box-sizing:border-box;border-right:1pt solid #2c2e35;border-bottom:1pt solid #2c2e35;display:flex;align-items:center;justify-content:center">OPEN</div>
 </div>
 
 <div style="display:flex;background:#e6e7e9;font-family:'Gotham XNarrow',sans-serif;font-size:6.2pt;font-weight:700;line-height:7pt;letter-spacing:.01em">
-<div style="width:44.8pt;flex:0 0 44.8pt;height:13pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35"></div>
-<div style="width:60.9pt;flex:0 0 60.9pt;height:13pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35"></div>
-<div style="width:55.9pt;flex:0 0 55.9pt;height:13pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35"></div>
-<div style="width:56.9pt;flex:0 0 56.9pt;height:13pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;align-items:center;justify-content:center">1</div>
-<div style="width:75.1pt;flex:0 0 75.1pt;height:13pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;align-items:center;justify-content:center">2</div>
-<div style="width:60.4pt;flex:0 0 60.4pt;height:13pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;align-items:center;justify-content:center">3</div>
-<div style="width:60.9pt;flex:0 0 60.9pt;height:13pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;align-items:center;justify-content:center">999m - 1499m</div>
-<div style="width:68pt;flex:0 0 68pt;height:13pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;align-items:center;justify-content:center">1500m - 1999m</div>
-<div style="width:67pt;flex:0 0 67pt;height:13pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;align-items:center;justify-content:center">2000m - 3000m</div>
+<div style="width:44.8pt;flex:0 0 44.8pt;height:13pt;box-sizing:border-box;border-right:1pt solid #2c2e35;border-bottom:1pt solid #2c2e35"></div>
+<div style="width:60.9pt;flex:0 0 60.9pt;height:13pt;box-sizing:border-box;border-right:1pt solid #2c2e35;border-bottom:1pt solid #2c2e35"></div>
+<div style="width:55.9pt;flex:0 0 55.9pt;height:13pt;box-sizing:border-box;border-right:1pt solid #2c2e35;border-bottom:1pt solid #2c2e35"></div>
+<div style="width:56.9pt;flex:0 0 56.9pt;height:13pt;box-sizing:border-box;border-right:1pt solid #2c2e35;border-bottom:1pt solid #2c2e35;display:flex;align-items:center;justify-content:center">1</div>
+<div style="width:75.1pt;flex:0 0 75.1pt;height:13pt;box-sizing:border-box;border-right:1pt solid #2c2e35;border-bottom:1pt solid #2c2e35;display:flex;align-items:center;justify-content:center">2</div>
+<div style="width:60.4pt;flex:0 0 60.4pt;height:13pt;box-sizing:border-box;border-right:1pt solid #2c2e35;border-bottom:1pt solid #2c2e35;display:flex;align-items:center;justify-content:center">3</div>
+<div style="width:60.9pt;flex:0 0 60.9pt;height:13pt;box-sizing:border-box;border-right:1pt solid #2c2e35;border-bottom:1pt solid #2c2e35;display:flex;align-items:center;justify-content:center">999m - 1499m</div>
+<div style="width:68pt;flex:0 0 68pt;height:13pt;box-sizing:border-box;border-right:1pt solid #2c2e35;border-bottom:1pt solid #2c2e35;display:flex;align-items:center;justify-content:center">1500m - 1999m</div>
+<div style="width:67pt;flex:0 0 67pt;height:13pt;box-sizing:border-box;border-right:1pt solid #2c2e35;border-bottom:1pt solid #2c2e35;display:flex;align-items:center;justify-content:center">2000m - 3000m</div>
 </div>
 
 <sc-for list="{{ p.rows }}" as="m" hint-placeholder-count="12">
 <div style="display:flex;align-items:stretch;font-size:7pt;line-height:8pt;min-height:{{ m.h }}">
-<div style="width:44.8pt;flex:0 0 44.8pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;padding:0 3pt;display:flex;flex-direction:column;justify-content:center">
+<div style="width:44.8pt;flex:0 0 44.8pt;box-sizing:border-box;border-right:1pt solid #2c2e35;border-bottom:1pt solid #2c2e35;padding:0 3pt;display:flex;flex-direction:column;justify-content:center">
 <div style="font-weight:700;white-space:nowrap">{{ m.dateLabel }}</div>
 <div style="font-size:6.6pt;font-weight:700;color:#2c9cd7">{{ m.venue }}</div>
 </div>
 
-<div style="width:60.9pt;flex:0 0 60.9pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;flex-direction:column">
+<div style="width:60.9pt;flex:0 0 60.9pt;box-sizing:border-box;border-right:1pt solid #2c2e35;border-bottom:1pt solid #2c2e35;display:flex;flex-direction:column">
 <sc-for list="{{ m.m1 }}" as="e" hint-placeholder-count="1">
 <div style="flex:1;display:flex;align-items:center;padding:0 3pt;border-top:{{ e.rule }}">{{ e.t }}</div>
 </sc-for>
 </div>
-<div style="width:55.9pt;flex:0 0 55.9pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;background:#edf6fb;display:flex;flex-direction:column">
+<div style="width:55.9pt;flex:0 0 55.9pt;box-sizing:border-box;border-right:1pt solid #2c2e35;border-bottom:1pt solid #2c2e35;background:#edf6fb;display:flex;flex-direction:column">
 <sc-for list="{{ m.m2 }}" as="e" hint-placeholder-count="1">
 <div style="flex:1;display:flex;align-items:center;padding:0 3pt;border-top:{{ e.rule }}">{{ e.t }}</div>
 </sc-for>
 </div>
 
-<div style="width:56.9pt;flex:0 0 56.9pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;flex-direction:column">
+<div style="width:56.9pt;flex:0 0 56.9pt;box-sizing:border-box;border-right:1pt solid #2c2e35;border-bottom:1pt solid #2c2e35;display:flex;flex-direction:column">
 <sc-for list="{{ m.rt1 }}" as="e" hint-placeholder-count="1">
 <div style="flex:1;display:flex;align-items:center;padding:0 3pt;border-top:{{ e.rule }}">{{ e.t }}</div>
 </sc-for>
 </div>
-<div style="width:75.1pt;flex:0 0 75.1pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;background:#edf6fb;display:flex;flex-direction:column">
+<div style="width:75.1pt;flex:0 0 75.1pt;box-sizing:border-box;border-right:1pt solid #2c2e35;border-bottom:1pt solid #2c2e35;background:#edf6fb;display:flex;flex-direction:column">
 <sc-for list="{{ m.rt2 }}" as="e" hint-placeholder-count="1">
 <div style="flex:1;display:flex;align-items:center;padding:0 3pt;border-top:{{ e.rule }}">{{ e.t }}</div>
 </sc-for>
 </div>
-<div style="width:60.4pt;flex:0 0 60.4pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;flex-direction:column">
+<div style="width:60.4pt;flex:0 0 60.4pt;box-sizing:border-box;border-right:1pt solid #2c2e35;border-bottom:1pt solid #2c2e35;display:flex;flex-direction:column">
 <sc-for list="{{ m.rt3 }}" as="e" hint-placeholder-count="1">
 <div style="flex:1;display:flex;align-items:center;padding:0 3pt;border-top:{{ e.rule }}">{{ e.t }}</div>
 </sc-for>
 </div>
 
-<div style="width:60.9pt;flex:0 0 60.9pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;background:#edf6fb;display:flex;flex-direction:column">
+<div style="width:60.9pt;flex:0 0 60.9pt;box-sizing:border-box;border-right:1pt solid #2c2e35;border-bottom:1pt solid #2c2e35;background:#edf6fb;display:flex;flex-direction:column">
 <sc-for list="{{ m.o1 }}" as="e" hint-placeholder-count="1">
 <div style="flex:1;display:flex;align-items:center;padding:0 3pt;border-top:{{ e.rule }}">{{ e.t }}</div>
 </sc-for>
 </div>
-<div style="width:68pt;flex:0 0 68pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;display:flex;flex-direction:column">
+<div style="width:68pt;flex:0 0 68pt;box-sizing:border-box;border-right:1pt solid #2c2e35;border-bottom:1pt solid #2c2e35;display:flex;flex-direction:column">
 <sc-for list="{{ m.o2 }}" as="e" hint-placeholder-count="1">
 <div style="flex:1;display:flex;align-items:center;padding:0 3pt;border-top:{{ e.rule }}">{{ e.t }}</div>
 </sc-for>
 </div>
-<div style="width:67pt;flex:0 0 67pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;background:#edf6fb;display:flex;flex-direction:column">
+<div style="width:67pt;flex:0 0 67pt;box-sizing:border-box;border-right:1pt solid #2c2e35;border-bottom:1pt solid #2c2e35;background:#edf6fb;display:flex;flex-direction:column">
 <sc-for list="{{ m.o3 }}" as="e" hint-placeholder-count="1">
 <div style="flex:1;display:flex;align-items:center;padding:0 3pt;border-top:{{ e.rule }}">{{ e.t }}</div>
 </sc-for>
@@ -1405,6 +1405,16 @@ class Component extends DCLogic {
       const k = lines.findIndex(l => l.length > 100);
       return k < 0 ? [v, ''] : [lines.slice(0, k).join('\n'), lines.slice(k).join('\n')];
     };
+    // A series or bonus named in brackets on the race name is dropped when the
+    // lines under the name repeat it: "BM66 HANDICAP (MCC SERIES HEAT 1)" over
+    // "…MCCS Series Heat 1 (Q/C)", "3YO MAIDEN PLATE INGLIS (XTRA BONUS
+    // MAIDEN)" over "VOBIS Silver: $20,000 Inglis Xtra Bonus Maiden".
+    const REPEATS = [
+      [/\s*\(\s*MCC\s+SERIES\s+HEATS?(?:\s+\d+)?\s*\)/i, /\bMCCS?\s+Series\b/i],
+      [/\s*\bINGLIS\s*\(\s*XTRA\s+BONUS\s+MAIDEN\s*\)/i, /\bInglis\s+Xtra\s+Bonus\b/i]
+    ];
+    const rpTrimName = (name, after) => REPEATS.reduce((n, [inName, inAfter]) =>
+      inName.test(n) && inAfter.test(after || '') ? n.replace(inName, '').trim() : n, String(name || ''));
     const out = [];
     this.rpPrinted().forEach(m => {
       const head = {
@@ -1428,9 +1438,11 @@ class Component extends DCLogic {
           ...blank,
           race: rid,
           bar: [{ cond: (c => { c = String(c || '').replace(/\s+/g, ' ').trim(); const rest = c.replace(/\b\d(?:\s*,\s*\d)*(?:\s*,?\s*&\s*\d)?\s*YO\b(?:\s*&\s*UP\b)?/gi, '').replace(/\b(F&M|C,\s*G\s*&\s*E|C&G|E&G|F|M|C|G)\b/gi, '').replace(/[\s,&]+/g, ''); return !c ? 'Open' : rest ? c : c + ' Open'; })(r.cond), dist: (r.dist || '').replace(/\s+/g, '') }],
-          title: one(join(r.no + '.', r.name).toUpperCase()),
+          title: one(join(r.no + '.', rpTrimName(r.name, join(r.bonus, r.notation))).toUpperCase()),
           claim: one(join(r.claim, r.group)),
-          bonus: one(join(r.bonus, noteSplit(r.notation)[0])),
+          // The VOBIS line and the series or bonus note after it are two
+          // things: the note starts a line of its own (v10 pp29, 31).
+          bonus: one([nl(r.bonus), noteSplit(r.notation)[0]].filter(Boolean).join('\n')),
           note: one(noteSplit(r.notation)[1])
         });
         const push = part => { if (Object.values(part).some(v => v && v.length)) out.push({ ...blank, race: rid, ...part }); };
@@ -1450,7 +1462,8 @@ class Component extends DCLogic {
           const lab = hk && isLabel(r[hk]);
           const body = (hk && !lab ? paras(r[hk]) : []).concat(paras(r[bk]));
           const head = lab ? one(r[hk]) : [];
-          if (!body.length) { if (head.length) push({ [hk]: head }); return; }
+          // A heading the export left with no text under it is not printed.
+          if (!body.length) return;
           body.forEach((p, k) => push(k === 0 && head.length ? { [hk]: head, [bk]: p } : { [bk]: p }));
         });
       });
@@ -1509,33 +1522,82 @@ class Component extends DCLogic {
     const h = all.map((a, k) => seen[k] || mean);
     const LIMIT = 841.89 - 55.1 - 30;
     const GAP = 13;
+    // Penalties, Balloting Conditions and Other Conditions may split between
+    // lines at a column foot, so long as each column carries at least three
+    // lines of that text. Where each printed line starts is read off the
+    // measuring render, so the cut falls exactly on a line break.
+    const LINES_MIN = 3;
+    const TWO_LINES = 15.5;
+    const split = all.map((a, k) => {
+      const el = els[k] && els[k].querySelector('[data-split]');
+      const tn = el && Array.from(el.childNodes).find(n => n.nodeType === 3);
+      if (!tn) return null;
+      const s = tn.data, rg = document.createRange(), starts = [];
+      let top = -1e9;
+      for (let o = 0; o < s.length; o++) {
+        if (/\s/.test(s[o]) || (o > 0 && !/[\s\-\/]/.test(s[o - 1]))) continue;
+        rg.setStart(tn, o); rg.setEnd(tn, o + 1);
+        const r = rg.getClientRects()[0];
+        if (r && r.top > top + 2) { starts.push(o); top = r.top; }
+      }
+      const bodyH = toPt(el.getBoundingClientRect().height);
+      return starts.length >= LINES_MIN * 2
+        ? { key: el.getAttribute('data-split'), text: s, starts, lh: bodyH / starts.length }
+        : null;
+    });
     const cols = [];
     let i = 0;
     while (i < all.length) {
       let used = 0;
       const atoms = [];
+      // Column 4 is a page foot: nothing splits there and the race in progress
+      // does not carry onto the next page.
+      const pageFoot = cols.length % 4 === 3;
       while (i < all.length) {
         const cost = (all[i].head && atoms.length ? GAP : 0) + h[i];
-        if (used + cost > LIMIT && atoms.length) break;
+        if (used + cost > LIMIT && atoms.length) {
+          const sp = split[i];
+          if (sp && !pageFoot) {
+            const n = sp.starts.length;
+            const tail = h[i] - n * sp.lh;
+            const fit = Math.min(n - LINES_MIN, Math.floor((LIMIT - used - tail) / sp.lh + 0.01));
+            if (fit >= LINES_MIN) {
+              const a = all[i], cut = sp.starts[fit], restH = (n - fit) * sp.lh;
+              const first = { ...a, [sp.key]: [{ t: sp.text.slice(0, cut).trimEnd() }] };
+              const rest = { ...a, penH: [], balH: [], [sp.key]: [{ t: sp.text.slice(cut).trimStart() }] };
+              const firstH = h[i] - restH;
+              all.splice(i, 1, first, rest); h.splice(i, 1, firstH, restH); split.splice(i, 1, null, null);
+              used += firstH; atoms.push(all[i]); i++;
+            }
+          }
+          break;
+        }
         used += cost; atoms.push(all[i]); i++;
       }
-      while (atoms.length > 1 && atoms[atoms.length - 1].head) { atoms.pop(); i--; }
-      // No single line of a race carried over on its own. When the boundary
-      // leaves exactly one atom of a race for the next column, one more atom is
-      // handed forward so the remainder reads as a block rather than a stray
-      // line under the next column's heading. If that would empty the column,
-      // it is left alone — a column has to hold something.
-      if (i < all.length && atoms.length) {
+      // Page turn: if the last race in column 4 began in this column and will
+      // not fit whole, it starts the next page. A race already running in from
+      // column 3 cannot move whole, so it is left to carry.
+      if (pageFoot && i < all.length && all[i].race && atoms.length) {
+        const r = all[i].race;
+        let k = atoms.length;
+        while (k > 0 && atoms[k - 1].race === r) k--;
+        if (k > 0) { i -= atoms.length - k; atoms.length = k; }
+      }
+      // At least two lines of a race on each side of a column break. If what
+      // carries over is under two lines deep, the atom before it goes too,
+      // unless that would empty the column.
+      if (i < all.length && atoms.length > 1) {
         const carried = all[i].race;
-        if (carried) {
-          let ahead = 0;
-          for (let k = i; k < all.length && all[k].race === carried; k++) ahead++;
-          if (ahead === 1 && atoms.length > 1 && atoms[atoms.length - 1].race === carried) {
-            atoms.pop();
-            i--;
-          }
+        if (carried && atoms[atoms.length - 1].race === carried) {
+          let aheadH = 0;
+          for (let k = i; k < all.length && all[k].race === carried; k++) aheadH += h[k];
+          if (aheadH < TWO_LINES) { atoms.pop(); i--; }
         }
       }
+      // Never leave a meeting heading at a column foot. Run last, after every
+      // rule that hands atoms forward, since any of them can leave one behind
+      // (v10 p41, BET365 SWAN HILL).
+      while (atoms.length > 1 && atoms[atoms.length - 1].head) { atoms.pop(); i--; }
       cols.push({ atoms: atoms.map((a, k) => (a.head && k > 0 ? { ...a, gap: [{}] } : { ...a, gap: [] })) });
     }
     const pages = [];
@@ -1635,7 +1697,9 @@ class Component extends DCLogic {
 
   packDeadlines() {
     const host = this.dlMeasureEl;
-    if (!host || !this.state.days || this._dlPacked) return;
+    if (!this.state.days || this._dlPacked) return;
+    if (this._dlCache) return this.cutDeadlines();
+    if (!host) return;
     if (!this._facesReady('dl', () => this.packDeadlines())) return;
     const rows = this.dlRows();
     const measured = { day: [], head: [], item: [] };
@@ -1679,13 +1743,20 @@ class Component extends DCLogic {
       r.h = toPt(el.getBoundingClientRect().height + parseFloat(cs.marginTop || 0) + parseFloat(cs.marginBottom || 0));
     });
 
-    const PAGE_H = 841.89, BOTTOM = 30, FLOOR = 16, GAP = 11, PULLBACK = 150;
     const noteEl = host.querySelector('[data-note]');
     const noteBottom = 93.9 + (noteEl ? toPt(noteEl.getBoundingClientRect().height) : 165) + 12;
     // The spacer that holds column one clear of the Trainers' Note has to be
     // measured, not assumed: a constant here silently disagrees with limits.note
     // the moment the note's copy changes, and the first day heading lands wrong.
     this._dlNoteGap = (noteBottom - 61.4).toFixed(1) + 'pt';
+    this._dlCache = { rows, noteBottom };
+    this.cutDeadlines();
+  }
+
+  cutDeadlines() {
+    const { rows, noteBottom } = this._dlCache;
+    this._dlPacked = true;
+    const PAGE_H = 841.89, BOTTOM = 30 + (this._dlTrim || 0), FLOOR = BOTTOM, GAP = 11, PULLBACK = 150;
 
     // Greedy line-level fill; a day block may continue into the next column.
     // The bottom clearance is a parameter so a short spill can be pulled back
@@ -1718,8 +1789,8 @@ class Component extends DCLogic {
 
     // A stub of a column stranded on a page of its own reads as a mistake.
     // Hand the columns before it as much of the bottom clearance back as
-    // FLOOR allows — the most that can go without the last line reaching the
-    // folio — and keep it only if that pulls the stub up. A spill with content
+    // FLOOR allows — held at BOTTOM, since anything less lands the last line on
+    // the footer line (v10 pp3-4) — and keep it only if that pulls the stub up. A spill with content
     // is left to spill, and the page it lands on sells the space underneath.
     let colRuns = runsFor(BOTTOM, GAP), blockGap = GAP;
     if (colRuns.length > 4 && colRuns.length % 4 === 1
@@ -1773,6 +1844,36 @@ class Component extends DCLogic {
       pages.push({ first, cont: !first, cols, ruleH: ruleH.toFixed(1) + 'pt', blockGap: blockGap + 'pt', no: 0 });
     }
     this._stage({ dlPages: pages });
+    clearTimeout(this._dlCheckTimer);
+    this._dlCheckTimer = setTimeout(() => this.checkDeadlines(), 400);
+  }
+
+  /**
+   * The packer works from measured row heights, but what reaches the page is
+   * what counts: v10 printed columns 10pt into the footer on pages 3 and 4.
+   * Once the pages have laid out, each column foot is read off the page and,
+   * if any passes the bottom clearance, the whole section is re-cut with the
+   * clearance raised by the overrun. Four tries at most.
+   */
+  checkDeadlines() {
+    const pages = [...document.querySelectorAll('.page[data-screen-label="Entry Deadlines"]')];
+    if (!pages.length || !this._dlCache) return;
+    const limit = 841.89 - 30;
+    let over = 0;
+    pages.forEach(p => {
+      const pr = p.getBoundingClientRect();
+      if (!pr.height) return;
+      const s = pr.height / 841.89;
+      p.querySelectorAll(':scope > div[style*="display: flex"] > div').forEach(c => {
+        over = Math.max(over, (c.getBoundingClientRect().bottom - pr.top) / s - limit);
+      });
+    });
+    if (over <= 0.5 || (this._dlTries || 0) >= 4) return;
+    this._dlTries = (this._dlTries || 0) + 1;
+    this._dlTrim = (this._dlTrim || 0) + over + 1;
+    this._dlPacked = false;
+    this.packDeadlines();
+    this._flush();
   }
 
   // ── Programs Summary Chart ────────────────────────────────────────────────
@@ -1798,6 +1899,10 @@ class Component extends DCLogic {
       // Some cells are typed with a double space between distance and class —
       // "1200m  G2" where the column two over reads "1100m G2". One space.
       .replace(/[ \t]{2,}/g, ' ')
+      // "Heat 1" holds together, and an ampersand never ends a line on its
+      // own: it binds to the word after it (v10 review).
+      .replace(/\b(Heat)[ \t]+(\d+)/gi, (m, h, n) => h + '\u00a0' + n)
+      .replace(/[ \t]+&[ \t]+(?=\S)/g, ' &\u00a0')
       .replace(/(\d)(\s*)-(\s*)(\d)/g, (m, a, s1, s2, b) =>
         a + (s1 ? '\u00a0' : '') + '-' + WJ + (s2 ? '\u00a0' : '') + b)
       .replace(/\b(BM|CL|Cl)(\s+)(\d)/g, (m, k, sp, d) => k + '\u00a0' + d)
@@ -1822,9 +1927,12 @@ class Component extends DCLogic {
       // the size dropped a whole month's colour and scale — December 2026 came
       // through at 8pt and printed flat. The printed size is set by the
       // template below, so the workbook's own size is never needed here.
-      if (isMeeting && r.c === '#FF0040') return 'vm';
+      // The workbook's red arrives as #FF0040 in most rows and #FF0000 in
+      // others; both are the chart's red (FILLIES printed black in v10).
+      const red = /^#FF00(40|00)$/i.test(r.c || '');
+      if (isMeeting && red) return 'vm';
       if (isMeeting && r.c === '#00B0F0') return 'vc';
-      if (r.b && r.c === '#FF0040') return 'rd';
+      if (r.b && red) return 'rd';
       if (r.b) return 'b';
       return 'n';
     };
@@ -1884,8 +1992,14 @@ class Component extends DCLogic {
         }
         const chunks = (key === 'n' || key === 'b') ? part.split(VOBIS) : [part];
         const isVo = s => VOBIS.test(s) && String(s).trim().toUpperCase().startsWith('VOBIS');
+        // Bold belongs to the VOBIS label. A bold run that also carries the
+        // race's conditions ("4YO & Up VOBIS Silver", bold end to end in the
+        // December workbook) prints those conditions regular.
+        const runKey = key;
+        const voRun = key === 'b' && chunks.some(c => isVo(c));
         chunks.forEach((chunk, ci) => {
           if (!chunk) return;
+          const key = voRun && !isVo(chunk) ? 'n' : runKey;
           // A VOBIS label sets as a block of its own, so the newline the
           // workbook leaves beside it would print as an empty line between
           // one VOBIS type and the next.
@@ -2014,7 +2128,7 @@ class Component extends DCLogic {
     const TOP_CONT = 57.9;     // under the eyebrow rule
     const PAGE = 841.89;
     const IDS = ['m1', 'm2', 'rt1', 'rt2', 'rt3', 'o1', 'o2', 'o3'];
-    const RULE = '0.75pt solid #2c2e35';
+    const RULE = '1pt solid #2c2e35';
 
     const rows = this.state.pcMeetings.map(m => {
       const out = { dateLabel: m.dateLabel, venue: String(m.venue || '').toUpperCase() };

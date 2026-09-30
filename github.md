@@ -3,6 +3,17 @@ branch: main
 
 ## Last sync
 
+date: 2026-09-30T12:00:00+10:00
+
+### Updated in this project
+- v10 review fixes: race programs file reader handles quoted cells (restores Acceptances, bold headings, no stray quotes); series names dropped when repeated; VOBIS note on its own line; empty detail headings dropped.
+- Race programs columns: Penalties/Balloting/Other Conditions split with three lines each side, no lone lines, no race split over a page turn.
+- Chart: country blue #2c9cd7, Heat n and & held together, bold only on VOBIS, #FF0000 read as red. Deadlines self-check against the footer. Flat trials 2YO/3YO without dashes. Picnic rules 1pt.
+- Print copies rebuilt from the current edition and Race Programs pages.
+
+## Sync history
+
+### 2026-09-24
 date: 2026-09-24T17:20:00+10:00
 
 ### Updated in this project
@@ -11,8 +22,6 @@ date: 2026-09-24T17:20:00+10:00
 - A blank conditions cell prints "Open" in the grey bar.
 - The four sheets are listed in the producer console as optional, and the race programs step reports what each one changed.
 - October's four sheets filled from the V1 review comments.
-
-## Sync history
 
 ### 2026-09-23
 

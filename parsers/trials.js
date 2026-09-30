@@ -20,6 +20,12 @@ const clean = v => String(v || '').replace(/\s+/g, ' ').trim();
 // page rather than being dropped.
 const MAX_COLUMNS = 4;
 
+// 2YO and 3YO are written without dashes throughout the trials: the export
+// types "2-Y-O TRIAL", and sometimes "2-Y-OTRIAL" with the space lost too.
+const ageNoDash = s => String(s || '')
+  .replace(/\b([23])\s*-\s*Y\s*-?\s*O\b|\b([23])\s*-?\s*Y\s*-\s*O/gi, (m, a, b) => (a || b) + 'YO')
+  .replace(/\b([23]YO)(?=[A-Za-z])/g, '$1 ');
+
 export async function loadTrials(url) {
   let rows;
   if (/\.(csv|tsv|txt)$/i.test(url)) {
@@ -63,8 +69,8 @@ export async function loadTrials(url) {
     if (!clean(r.K)) warnings.push('No conditions — ' + line);
     current.races.push({
       no: no,
-      title: no ? no + '. ' + title.toUpperCase() : title.toUpperCase(),
-      cond: clean(r.K),
+      title: ageNoDash(no ? no + '. ' + title.toUpperCase() : title.toUpperCase()),
+      cond: ageNoDash(clean(r.K)),
       dist: clean(r.J)
     });
   });

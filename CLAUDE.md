@@ -276,8 +276,9 @@ These were set from the October review and are not preferences to re-litigate:
   the white space a fixed order leaves at a column foot. **The highweight
   schedule always prints last**, under the final series in the right-hand
   column.
-- **The chart's country blue is `#007ba8`** — the workbook's `#00B0F0` read 30%
-  darker for print — and the key swatch matches it. Column shading is
+- **The chart's country blue is `#2c9cd7`**, the same blue as the Entry
+  Deadlines day headings (set from the v10 review; it replaced `#007ba8`), and
+  the key swatch matches it. Column shading is
   `#f4fafd`.
 - **The contents page carries a rule above the first row**, as the published
   edition does, and the accuracy note sets at 7.8pt directly under the last
@@ -288,6 +289,40 @@ These were set from the October review and are not preferences to re-litigate:
 - **A whole-page ad is a bookable blank by default.** HR Assist is benched in
   the library (`enabled: false`), so every full page prints its slot id and
   size until `inputs/Ad Placements.csv` books it.
+
+- **"Heat 1" never breaks, and an ampersand never ends a line.** `chAtomic()`
+  holds Heat and its number with a non-breaking space and binds `&` to the word
+  after it, so "VOBIS Silver & VOBIS Gold" cannot leave "&" on a line alone.
+- **Bold in a chart cell belongs to the VOBIS label.** A bold run that also
+  carries the race's conditions ("4YO & Up VOBIS Silver", bold end to end in
+  the December workbook) prints the conditions regular.
+- **The workbook's red is #FF0040 or #FF0000**; both read as the chart's red.
+  FILLIES printed black in v10 because only #FF0040 was recognised.
+- **The race programs export quotes a cell that holds a tab.** `parsers/tsv.js`
+  reads quoted cells whole; a quote opens a cell only as its first character.
+  Splitting on every tab shifted each later column right, which in v10 dropped
+  the Acceptances, printed stray quotation marks and put PENALTIES and
+  BALLOTING CONDITIONS in body slots, unbolded.
+- **A race detail heading with no text under it is not printed.**
+- **A bracketed series on a race name is dropped when the lines under it repeat
+  it**: (MCC SERIES HEAT n) under an MCCS Series note, INGLIS (XTRA BONUS
+  MAIDEN) under an Inglis Xtra Bonus note. `REPEATS` in `rpAtoms()` holds
+  the pairs.
+- **The series or bonus note under a VOBIS line starts a line of its own.**
+- **Penalties, Balloting Conditions and Other Conditions may split across a
+  column** so long as each column carries at least three lines of that text.
+  No race splits in column 4: a race that starts there and will not fit whole
+  moves to the next page. The meeting-heading check runs last, after every rule
+  that hands atoms forward.
+- **The Entry Deadlines packer checks its own pages.** Once laid out, any
+  column foot past the 30pt clearance re-cuts the section with the clearance
+  raised by the overrun. The measuring rig's styles must match the printed
+  rows; in v10 the group heading was measured at 7pt and printed at 7.5pt.
+- **Official Flat Trials: 2YO and 3YO carry no dashes**, and "2YOTRIAL" gets
+  its space back (`ageNoDash()` in `parsers/trials.js`).
+- **Picnic table rules are all 1pt**, one colour (v10 review; they were
+  0.75pt, which PDF viewers drew unevenly on screen). The cell dividers inside
+  a meeting row use the same `RULE` in `pcPack()`.
 
 ## The summary chart's colour comes from the workbook
 The venue name's colour marks metropolitan against country, and the meeting
