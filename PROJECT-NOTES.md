@@ -318,6 +318,9 @@ These were set from the October review and are not preferences to re-litigate:
   breaks start a new line. `runsOf()` in `parsers/notices.js`.
 - **The Industry Notice takes one contents row**, named after its first
   heading; the headings below it are sections of the same notice.
+- **Race programs column rules stop at the deepest column** on a short last
+  page, so the space under the copy is measured and offered as an ad panel
+  (v15 p50). A page within 90pt of full keeps full-depth rules.
 - **Filler ad panels are drawn again at print time**, so a late re-layout
   cannot send a page out without its bookable panel. The print hook is set
   when the page mounts, not when the settle timer first fires.

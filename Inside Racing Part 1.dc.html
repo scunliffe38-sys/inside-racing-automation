@@ -272,9 +272,9 @@ DETAILS</div>
 <span style="display:flex;align-items:center;gap:3pt"><span style="width:7pt;height:7pt;background:#2c9cd7;display:inline-block"></span>Country</span>
 </div>
 <div style="position:absolute;left:23pt;right:13pt;top:37pt;height:2.25pt;background:#9ecff0"></div>
-<div style="position:absolute;left:158.5pt;top:55.1pt;height:756.8pt;border-left:0.75pt dotted #9a9c9f"></div>
-<div style="position:absolute;left:299.5pt;top:55.1pt;height:756.8pt;border-left:0.75pt dotted #9a9c9f"></div>
-<div style="position:absolute;left:440.5pt;top:55.1pt;height:756.8pt;border-left:0.75pt dotted #9a9c9f"></div>
+<div style="position:absolute;left:158.5pt;top:55.1pt;height:{{ pg.ruleH }};border-left:0.75pt dotted #9a9c9f"></div>
+<div style="position:absolute;left:299.5pt;top:55.1pt;height:{{ pg.ruleH }};border-left:0.75pt dotted #9a9c9f"></div>
+<div style="position:absolute;left:440.5pt;top:55.1pt;height:{{ pg.ruleH }};border-left:0.75pt dotted #9a9c9f"></div>
 <div style="position:absolute;left:23pt;right:19pt;top:55.1pt;display:flex;gap:11pt;align-items:flex-start">
 <sc-for list="{{ pg.cols }}" as="col" hint-placeholder-count="4">
 <div style="width:130pt;flex:0 0 130pt">
@@ -1573,6 +1573,7 @@ class Component extends DCLogic {
     while (i < all.length) {
       let used = 0;
       const atoms = [];
+      const start = i;
       // A page turn follows the same rules as a column break (producer, after
       // v14): a race may carry from column 4 onto the next page, and the text
       // splits, the two-line minimum and Entries with Acceptances all hold.
@@ -1612,11 +1613,21 @@ class Component extends DCLogic {
       // rule that hands atoms forward, since any of them can leave one behind
       // (v10 p41, BET365 SWAN HILL).
       while (atoms.length > 1 && atoms[atoms.length - 1].head) { atoms.pop(); i--; }
-      cols.push({ atoms: atoms.map((a, k) => (a.head && k > 0 ? { ...a, gap: [{}] } : { ...a, gap: [] })) });
+      let depth = 0;
+      for (let k = start; k < i; k++) depth += h[k] + (all[k].head && k > start ? GAP : 0);
+      cols.push({ depth, atoms: atoms.map((a, k) => (a.head && k > 0 ? { ...a, gap: [{}] } : { ...a, gap: [] })) });
     }
+    // The column rules stop at the deepest column on the page, so a last page
+    // that comes out short reads as short and the space under it can be
+    // measured and sold as a bookable panel (v15 p50). A full page keeps its
+    // full-depth rules.
+    const RULE_FULL = 756.8;
     const pages = [];
     for (let p = 0; p * 4 < cols.length; p++) {
-      pages.push({ cols: [0, 1, 2, 3].map(c => cols[p * 4 + c] || { atoms: [] }) });
+      const pc = [0, 1, 2, 3].map(c => cols[p * 4 + c] || { atoms: [], depth: 0 });
+      const deep = Math.max(...pc.map(c => c.depth || 0));
+      const ruleH = Math.min(RULE_FULL, deep + 6);
+      pages.push({ cols: pc, ruleH: (ruleH >= RULE_FULL - 90 ? RULE_FULL : ruleH).toFixed(1) + 'pt' });
     }
     this._stage({ rpPages: pages });
   }
@@ -2611,7 +2622,7 @@ class Component extends DCLogic {
     const rpKeyNo = sc.programs ? String(n++) : '';
     // the one-page measuring render, only in the part that lays programs out
     const rp = this.state.rpPages
-      || (sc.programs && this.state.meetings ? [{ cols: [{ atoms: this.rpAtoms() }, { atoms: [] }, { atoms: [] }, { atoms: [] }] }] : []);
+      || (sc.programs && this.state.meetings ? [{ ruleH: '756.8pt', cols: [{ atoms: this.rpAtoms() }, { atoms: [] }, { atoms: [] }, { atoms: [] }] }] : []);
     const rpPages = rp.map(p => ({ ...p, no: n++ }));
     const M = ['JANUARY','FEBRUARY','MARCH','APRIL','MAY','JUNE','JULY','AUGUST','SEPTEMBER','OCTOBER','NOVEMBER','DECEMBER'];
     const ms = this.rpPrinted();
