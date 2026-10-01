@@ -379,8 +379,12 @@ export async function loadPrograms(url, edition, opts) {
   }
 
   // after the name updates, so a renamed Highweight is still caught
+  // The export sometimes carries the line already, in the claim or further
+  // down the race (v18 duplicated it), so look through every field first.
+  const saysJumps = r => /licen[cs]ed\s+to\s+ride\s+in\s+jumps?\s+races?/i.test(
+    [r.claim, r.group, r.bonus, r.notation, r.prize, r.weight, r.nomFee, r.accFee, r.decl, r.pen, r.bal, r.other, r.nom, r.acc].join(' '));
   meetings.forEach(m => m.races.forEach(r => {
-    if (!needsJumpsRiders(r.name) || String(r.claim).includes(JUMPS_RIDERS)) return;
+    if (!needsJumpsRiders(r.name) || saysJumps(r)) return;
     r.claim = r.claim ? String(r.claim).replace(/\s+$/, '') + '\n' + JUMPS_RIDERS : JUMPS_RIDERS;
   }));
 

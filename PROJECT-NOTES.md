@@ -328,7 +328,9 @@ These were set from the October review and are not preferences to re-litigate:
 - **Every Highweight race and the Jericho Cup carry "For riders licensed to ride
   in jumps races"** on the line under "No allowances for Apprentices".
   `JUMPS_RIDERS` in `parsers/programs.js`, matched on the race name after the
-  name updates are applied (v16 review).
+  name updates are applied (v16 review). **Never add it twice**: the export
+  sometimes carries it already, so every field of the race is searched for
+  "licensed to ride in jumps races" first (v18).
 - **`inputs/NOM ACCEPT REMOVE.xlsx`** — Date, Venue, Race No, Race Name. Drops
   the "Nomination $… Acceptance $…" line from the races listed; any declaration
   after it (Northern Hemisphere Bred Horses allowed…) still prints. Race Name is
@@ -360,7 +362,8 @@ Yes), plus a "How to fill this in" sheet with sizes. Each row becomes slot
 laid out: a page carrying a standing position (`data-ad-fixed`: the contents
 panel, the Jumps panel, a whole advertising page) takes it there, any other
 page in the space it leaves over. PDF ads are exported to JPG at 300dpi first.
-The producer drops the artwork in
+Booked artwork is never cropped and sits **centred in its space, with even white
+above and below** (v18 p50). The producer drops the artwork in
 `inputs/ads/`. `slot` is an id from `SLOTS` (`contents-panel`, `jumps-filler`,
 `fullpage-1`) or `fullpage-N` for a signature padding page. A bare artwork
 filename is resolved against `inputs/ads/`, then `assets/ads/`, then
