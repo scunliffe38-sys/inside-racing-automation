@@ -122,7 +122,7 @@ export async function loadBake() {
 // every request in that load.
 // Bumped by hand whenever this file changes, so the console can show which copy
 // of it the browser actually loaded. A stale cache shows a stale build.
-export const VERSION = '2026-09-17a';
+export const VERSION = '2026-10-01a';
 
 const BUST = 'ir=' + Date.now();
 
