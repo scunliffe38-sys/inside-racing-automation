@@ -325,6 +325,19 @@ These were set from the October review and are not preferences to re-litigate:
   cannot send a page out without its bookable panel. The print hook is set
   when the page mounts, not when the settle timer first fires.
 
+- **Every Highweight race and the Jericho Cup carry "For riders licensed to ride
+  in jumps races"** on the line under "No allowances for Apprentices".
+  `JUMPS_RIDERS` in `parsers/programs.js`, matched on the race name after the
+  name updates are applied (v16 review).
+- **`inputs/NOM ACCEPT REMOVE.xlsx`** — Date, Venue, Race No, Race Name. Drops
+  the "Nomination $… Acceptance $…" line from the races listed; any declaration
+  after it (Northern Hemisphere Bred Horses allowed…) still prints. Race Name is
+  for the reader; the match is date, venue and race number. October lists the
+  Caulfield Guineas, Thousand Guineas, Caulfield Cup, Cox Plate and Melbourne Cup.
+- **Official Flat Trials: a dash inside brackets has a space either side** —
+  (CL1 - CL2), (CL3 - OPN). A hyphenated word such as BLACK-TYPE is left alone
+  (`bracketDash()` in `parsers/trials.js`).
+
 ## The summary chart's colour comes from the workbook
 The venue name's colour marks metropolitan against country, and the meeting
 block mixes 6pt and 9pt type. Both are read out of the workbook's own rich-text
@@ -339,9 +352,15 @@ and the count. House artwork lives as PNG under `assets/ads/` and
 artwork there and adding a `LIBRARY` entry — `kind` is how it prints, `slots` is
 where it may run, `enabled: false` benches one.
 
-Month-to-month bookings are an input. `inputs/Ad Placements.csv` is
-tab-separated with a header row — `slot`, `artwork`, `caption`, `enabled`,
-`notes` — one row per booked slot, and the producer drops the artwork in
+Month-to-month bookings are an input. `inputs/Ad Placements.xlsx` has three
+columns: **Page number** (the page in the PDF, cover = 1), **Artwork file
+name** (PNG or JPG in `inputs/ads/`) and **Run this ad?** (Yes/No, blank is
+Yes), plus a "How to fill this in" sheet with sizes. Each row becomes slot
+`page-N`. `applyFillers()` in the edition files places it once the edition has
+laid out: a page carrying a standing position (`data-ad-fixed`: the contents
+panel, the Jumps panel, a whole advertising page) takes it there, any other
+page in the space it leaves over. PDF ads are exported to JPG at 300dpi first.
+The producer drops the artwork in
 `inputs/ads/`. `slot` is an id from `SLOTS` (`contents-panel`, `jumps-filler`,
 `fullpage-1`) or `fullpage-N` for a signature padding page. A bare artwork
 filename is resolved against `inputs/ads/`, then `assets/ads/`, then
@@ -370,5 +389,5 @@ Automatic fill: a page leaving more than 30% of its live depth empty is a filler
 candidate (`hasBlankSpace`, `fillers()`), deepest gap first. The assembled
 edition measures every page once it has laid out and draws a bookable panel in
 what is left over, named after the folio it sits on — `page-26`. That name is
-the slot id: put it in `inputs/Ad Placements.csv` with artwork and the panel
+the slot id: put it in `inputs/Ad Placements.xlsx` against that page number with artwork and the panel
 becomes the ad. The panel prints its own size in mm and pixels at 300dpi.

@@ -37,6 +37,12 @@
 //     a country venue running a metropolitan meeting prints red, not blue
 //   inputs/The Valley Transfer meetings.xlsx     Date | Venue
 //     prints "THE VALLEY AT" before the venue
+//   inputs/NOM ACCEPT REMOVE.xlsx                Date | Venue | Race No | Race Name
+//     drops the "Nomination $… Acceptance $…" line from the race (Race Name
+//     is for the reader only; the match is date, venue and race number)
+//
+// Every Highweight race and the Jericho Cup print "For riders licensed to ride
+// in jumps races" under "No allowances for Apprentices" (v16 review).
 //
 // A race whose conditions column is blank prints "Open" in the grey bar.
 
@@ -47,8 +53,12 @@ export const ADJUST_FILES = {
   twilight: 'inputs/Add Twilight in Race Program.xlsx',
   names: 'inputs/Race Program - Race Name Updates.xlsx',
   metro: 'inputs/Country run as Metro.xlsx',
-  valley: 'inputs/The Valley Transfer meetings.xlsx'
+  valley: 'inputs/The Valley Transfer meetings.xlsx',
+  nomAccept: 'inputs/NOM ACCEPT REMOVE.xlsx'
 };
+
+export const JUMPS_RIDERS = 'For riders licensed to ride in jumps races';
+const needsJumpsRiders = name => /\bhigh\s*weights?\b/i.test(name || '') || /\bjericho\s+cup\b/i.test(name || '');
 
 const clean = v => String(v == null ? '' : v).replace(/\s+/g, ' ').trim();
 const venueKey = v => clean(v).toLowerCase().replace(/\([^)]*\)/g, '').replace(/^the valley at\s+/, '').replace(/[^a-z]/g, '');
@@ -116,11 +126,12 @@ async function teamSheet(url, cols, label, warnings) {
 /** Puts the four team sheets over the printed meetings. */
 async function applyTeamSheets(meetings, order, inWindow, warnings, notes, files) {
   const F = Object.assign({}, ADJUST_FILES, files || {});
-  const [tw, nm, mt, va] = await Promise.all([
+  const [tw, nm, mt, va, na] = await Promise.all([
     teamSheet(F.twilight, ['date', 'venue'], 'Add Twilight', warnings),
     teamSheet(F.names, ['date', 'venue', 'no', 'name'], 'Race name updates', warnings),
     teamSheet(F.metro, ['date', 'venue'], 'Country run as Metro', warnings),
-    teamSheet(F.valley, ['date', 'venue'], 'The Valley Transfer', warnings)
+    teamSheet(F.valley, ['date', 'venue'], 'The Valley Transfer', warnings),
+    teamSheet(F.nomAccept, ['date', 'venue', 'no', 'name'], 'NOM ACCEPT REMOVE', warnings)
   ]);
   meetings.forEach(m => { m.day = dkey(dayOf(m.date, m.key.split('|')[0], order)); });
   // exact venue first, so "Southside Pakenham" never lands on Southside Pakenham
@@ -138,7 +149,7 @@ async function applyTeamSheets(meetings, order, inWindow, warnings, notes, files
     const txt = label + ': no ' + r.venue + ' meeting on ' + r.date + ' in the program export — row ' + r.row + '.';
     if (inWindow(r.at)) warnings.push(txt + ' Check the date and spelling.'); else notes.push(label + ': ' + r.venue + ' ' + r.date + ' is outside this edition, left for later.');
   };
-  let n = { tw: 0, nm: 0, mt: 0, va: 0 };
+  let n = { tw: 0, nm: 0, mt: 0, va: 0, na: 0 };
   (tw || []).forEach(r => { const m = find(r); if (!m) return miss('Add Twilight', r); m.night = '(TWILIGHT)'; n.tw++; });
   (mt || []).forEach(r => { const m = find(r); if (!m) return miss('Country run as Metro', r); m.metro = true; n.mt++; });
   (va || []).forEach(r => {
@@ -153,9 +164,16 @@ async function applyTeamSheets(meetings, order, inWindow, warnings, notes, files
     if (!race) { warnings.push('Race name updates: ' + m.venue + ' ' + r.date + ' has no race ' + (r.no || '(blank)') + ' — row ' + r.row + '.'); return; }
     race.name = r.name; n.nm++;
   });
-  const done = [n.tw && n.tw + ' twilight', n.mt && n.mt + ' country-as-metro', n.va && n.va + ' Valley transfer', n.nm && n.nm + ' race name update(s)'].filter(Boolean);
+  (na || []).forEach(r => {
+    const m = find(r); if (!m) return miss('NOM ACCEPT REMOVE', r);
+    const race = m.races.find(x => String(Number(x.no)) === String(Number(r.no)));
+    if (!race) { warnings.push('NOM ACCEPT REMOVE: ' + m.venue + ' ' + r.date + ' has no race ' + (r.no || '(blank)') + ' — row ' + r.row + '.'); return; }
+    if (!race.nomFee && !race.accFee) notes.push('NOM ACCEPT REMOVE: ' + m.venue + ' race ' + race.no + ' already has no nomination or acceptance fee — row ' + r.row + '.');
+    race.nomFee = ''; race.accFee = ''; n.na++;
+  });
+  const done = [n.tw && n.tw + ' twilight', n.mt && n.mt + ' country-as-metro', n.va && n.va + ' Valley transfer', n.nm && n.nm + ' race name update(s)', n.na && n.na + ' nomination/acceptance line(s) removed'].filter(Boolean);
   if (done.length) notes.push('Race program adjustments applied: ' + done.join(', ') + '.');
-  return { twilight: n.tw, names: n.nm, metro: n.mt, valley: n.va };
+  return { twilight: n.tw, names: n.nm, metro: n.mt, valley: n.va, nomAccept: n.na };
 }
 
 const C = {
@@ -350,7 +368,7 @@ export async function loadPrograms(url, edition, opts) {
   }
   meetings = printed;
 
-  let adjusted = { twilight: 0, names: 0, metro: 0, valley: 0 };
+  let adjusted = { twilight: 0, names: 0, metro: 0, valley: 0, nomAccept: 0 };
   if (o.adjust !== false) {
     let inWin = () => true;
     if (edition) {
@@ -359,6 +377,12 @@ export async function loadPrograms(url, edition, opts) {
     }
     adjusted = await applyTeamSheets(meetings, order, inWin, warnings, notes, o.files);
   }
+
+  // after the name updates, so a renamed Highweight is still caught
+  meetings.forEach(m => m.races.forEach(r => {
+    if (!needsJumpsRiders(r.name) || String(r.claim).includes(JUMPS_RIDERS)) return;
+    r.claim = r.claim ? String(r.claim).replace(/\s+$/, '') + '\n' + JUMPS_RIDERS : JUMPS_RIDERS;
+  }));
 
   // per-race checks, only for the meetings this edition prints
   meetings.forEach(m => {

@@ -24,7 +24,7 @@ themselves out, and the edition exports as a print-ready PDF.
    the long edge.
 3. Open each section page to check the parse before baking.
 4. Re-bake `data/edition.json`.
-5. Run the advertising slot report, fill `inputs/Ad Placements.csv`, drop
+5. Run the advertising slot report, fill `inputs/Ad Placements.xlsx`, drop
    artwork in `inputs/ads/`, then re-run so pagination picks up any full pages.
 6. Export `Inside Racing Edition-print.dc.html` to PDF.
 

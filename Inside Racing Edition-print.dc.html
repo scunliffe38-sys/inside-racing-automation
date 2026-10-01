@@ -128,7 +128,7 @@ a:hover{color:#1b7fb4}
 
 <div style="position:absolute;left:23.7pt;right:22.7pt;top:{{ contentsNoteTop }};font-size:7.8pt;line-height:10pt">{{ contentsNote }}</div>
 
-<div style="position:absolute;left:22.7pt;top:568.6pt;width:549.9pt;height:245.2pt;background:#151f45;overflow:hidden">
+<div data-ad-fixed="contents" style="position:absolute;left:22.7pt;top:568.6pt;width:549.9pt;height:245.2pt;background:#151f45;overflow:hidden">
 <sc-if value="{{ adPanelHouse }}" hint-placeholder-val="{{ true }}"><img src="assets/ads/stableline.png" alt="Stableline — free confidential counselling, 1300 520 122" style="position:absolute;left:0;top:0;width:549.9pt;height:auto;display:block" /></sc-if>
 <sc-if value="{{ adPanelBooked }}" hint-placeholder-val="{{ false }}"><img src="{{ adPanelArt }}" alt="" style="position:absolute;left:0;top:0;width:100%;height:100%;object-fit:contain;display:block" /></sc-if>
 </div>
@@ -587,7 +587,7 @@ DETAILS</div>
 </div>
 
 <sc-for list="{{ jpOttPanel }}" as="o" hint-placeholder-count="1">
-<div style="position:relative;margin-top:29pt;height:96pt;background:#edf6fb;box-sizing:border-box;padding:10pt 12pt">
+<div data-ad-fixed="jumps" style="position:relative;margin-top:29pt;height:96pt;background:#edf6fb;box-sizing:border-box;padding:10pt 12pt">
 <div style="font-size:20.6pt;font-weight:700;line-height:1;letter-spacing:-.01em">Transition Pathway Programs</div>
 <div style="margin-top:7pt;font-size:8pt;line-height:10.5pt;width:330pt">There are many and varied options for your horse when it retires from racing. Visit ottcommunity.com.au to access RV&rsquo;s easy-to-follow transition guide.</div>
 <img src="assets/photos/off-the-track-handler.png" alt="" style="position:absolute;right:0;top:0;width:130pt;height:96pt;object-fit:cover" />
@@ -931,7 +931,7 @@ DETAILS</div>
 </sc-for>
 
 <sc-for list="{{ adPages }}" as="ad" hint-placeholder-count="0">
-<section class="page" data-screen-label="Full-page advertising" style="position:relative;font-family:'Gotham Narrow',sans-serif;color:#fff;background:#1668dc;overflow:hidden">
+<section class="page" data-screen-label="Full-page advertising" data-ad-fixed="fullpage" style="position:relative;font-family:'Gotham Narrow',sans-serif;color:#fff;background:#1668dc;overflow:hidden">
 <sc-if value="{{ ad.hasArt }}" hint-placeholder-val="{{ false }}">
 <img src="{{ ad.art }}" alt="" style="position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover" />
 </sc-if>
@@ -945,7 +945,7 @@ DETAILS</div>
 <sc-if value="{{ ad.open }}" hint-placeholder-val="{{ false }}">
 <div style="position:absolute;left:0;top:0;width:100%;height:100%;background:#fff"></div>
 <div style="position:absolute;left:34pt;top:34pt;right:34pt;bottom:34pt;box-sizing:border-box;border:0.75pt dashed #b6bcc3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6pt;color:#9aa1a9">
-<div style="font-family:'Gotham XNarrow',sans-serif;font-size:12pt;font-weight:700;letter-spacing:.09em">ADVERTISING PAGE &mdash; {{ ad.slotName }}</div>
+<div data-ad-label="1" style="font-family:'Gotham XNarrow',sans-serif;font-size:12pt;font-weight:700;letter-spacing:.09em">ADVERTISING PAGE</div>
 <div style="font-size:8pt;letter-spacing:.02em">{{ ad.size }}</div>
 </div>
 </sc-if>
@@ -959,9 +959,7 @@ DETAILS</div>
 <div style="position:absolute;left:0;top:0;width:100%;height:100%;background:linear-gradient(160deg,#0a5f96 0%,#0a6ba4 42%,#0e86c4 78%,#1b93cf 100%)"></div>
 <div style="position:absolute;left:0;right:0;bottom:0;height:9pt;background:linear-gradient(90deg,#0e86c4 0%,#4a86c8 38%,#a45ba0 72%,#e0518e 100%)"></div>
 <div style="position:absolute;left:0;right:0;top:300pt;display:flex;flex-direction:column;align-items:center;gap:13pt">
-<div style="position:relative;width:150pt;height:44pt">
-<div style="position:absolute;left:0;top:0;width:100%;height:100%;box-sizing:border-box;border:0.5pt dashed rgba(255,255,255,.45);display:flex;align-items:center;justify-content:center;font-size:6.5pt;letter-spacing:.08em;color:rgba(255,255,255,.6)">RACING VICTORIA LOGO</div>
-</div>
+<img src="assets/rv-logo-mono-rev.png" alt="Racing Victoria" style="display:block;width:150pt;height:auto"/>
 <div style="text-align:center;line-height:1.5">
 <div style="font-size:10pt;font-weight:700;letter-spacing:.01em">Racing Victoria Limited</div>
 <div style="font-size:8pt;color:rgba(255,255,255,.88)">400 Epsom Road, Flemington, Victoria 3031</div>
@@ -2585,7 +2583,7 @@ class Component extends DCLogic {
    * Rather than each section working out its own leftovers, this runs once the
    * edition has laid out and measures what actually reached the page: the slot
    * is named after the folio it sits on — page-26 — which is the id the
-   * producer books in inputs/Ad Placements.csv, and the panel prints that name
+   * producer books in inputs/Ad Placements.xlsx, and the panel prints that name
    * and its size so there is nothing to look up.
    */
   markFillers() {
@@ -2606,12 +2604,49 @@ class Component extends DCLogic {
     const pages = [...document.querySelectorAll('doc-page > .page')];
     if (!pages.length) return;
     const placements = (this.state.settings || {}).$placements;
+    // Ads are booked by page number alone (Ad Placements.xlsx). A page that
+    // carries a standing ad position — the contents panel, the Jumps panel, a
+    // whole advertising page — takes the booking there; any other page takes it
+    // in the space it leaves over. Page numbers count from the cover, so an
+    // artwork page with no folio still has one: the page it sits on in the PDF.
+    const bySlot = (placements && placements.bySlot) || {};
+    let base = null;
+    pages.forEach((pg, i) => {
+      if (base != null) return;
+      const f = ((pg.lastElementChild && pg.lastElementChild.textContent) || '').trim();
+      if (/^\d+$/.test(f)) base = +f - i;
+    });
+    if (base == null) base = 1;
+    const fixedTaken = new Set();
+    pages.forEach((pg, i) => {
+      const phys = base + i;
+      pg.querySelectorAll('[data-ad-booked]').forEach(e => e.remove());
+      const label = pg.querySelector('[data-ad-label]');
+      if (label) label.textContent = 'ADVERTISING PAGE \u2014 PAGE ' + phys;
+      const fixed = pg.matches('[data-ad-fixed]') ? pg : pg.querySelector('[data-ad-fixed]');
+      if (!fixed) return;
+      fixed.style.visibility = '';
+      const b = bySlot['page-' + phys];
+      if (!b) return;
+      fixedTaken.add(phys);
+      if (!b.enabled) { fixed.style.visibility = 'hidden'; return; }
+      if (!b.artwork) return;
+      const o = document.createElement('div');
+      o.setAttribute('data-ad-booked', 'page-' + phys);
+      o.style.cssText = 'position:absolute;left:0;top:0;width:100%;height:100%;z-index:5;background:#fff';
+      const img = document.createElement('img');
+      img.src = b.artwork; img.alt = '';
+      img.style.cssText = 'width:100%;height:100%;object-fit:' + (fixed === pg ? 'cover' : 'contain') + ';display:block';
+      o.appendChild(img);
+      fixed.appendChild(o);
+    });
     pages.forEach(pg => {
       const had = pg.querySelector('[data-filler]');
       if (had) had.remove();
       const foot = pg.lastElementChild;
       const folio = ((foot && foot.textContent) || '').trim();
       if (!/^\d+$/.test(folio)) return;                 // artwork pages carry no folio
+      if (fixedTaken.has(+folio)) return;               // booked into its standing position
       const pr = pg.getBoundingClientRect();
       if (!pr.height) return;
       const scale = pr.height / 841.89;
@@ -2639,7 +2674,7 @@ class Component extends DCLogic {
         box.style.cssText += ';border:0.75pt dashed #b6bcc3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5pt;color:#9aa1a9';
         const name = document.createElement('div');
         name.style.cssText = "font-family:'Gotham XNarrow',sans-serif;font-size:10pt;font-weight:700;letter-spacing:.09em";
-        name.textContent = 'ADVERTISING SLOT \u2014 ' + slot.id;
+        name.textContent = 'ADVERTISING SPACE \u2014 PAGE ' + folio;
         const size = document.createElement('div');
         size.style.cssText = 'font-size:7.5pt;letter-spacing:.02em';
         size.textContent = slot.size;
@@ -2815,13 +2850,13 @@ class Component extends DCLogic {
     // bookable page (fullpage-2) runs in front of it.
     const adProvisional = (Number(ntPageNotices) || 0) + 2; // HR Assist and the back cover
     const adPad = adProvisional % 2;
-    // Bookings from inputs/Ad Placements.csv, read by parsers/ads.js at parse
+    // Bookings from inputs/Ad Placements.xlsx, read by parsers/ads.js at parse
     // time and carried in settings.$placements. A booked page runs as supplied
     // artwork with no live type; an unbooked one keeps the house ad.
     const adBooked = ((this.state.settings || {}).$placements || {}).bySlot || {};
     // One house page runs; the saddle-stitch shortfall runs as further pages of
     // advertising, and those are bookable rather than the same ad again — each
-    // prints the slot id to put in inputs/Ad Placements.csv.
+    // prints the slot id to put in inputs/Ad Placements.xlsx.
     const adPages = sc.tail
       ? Array.from({ length: 1 + adPad }, (unused, k) => {
           const i = adPad - k;      // padding page first, HR Assist (fullpage-1) last

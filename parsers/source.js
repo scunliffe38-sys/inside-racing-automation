@@ -44,6 +44,7 @@ export const EXPECTED = [
   { file: 'Race Program - Race Name Updates.xlsx', section: 'Race programs', cadence: 'monthly', required: false },
   { file: 'Country run as Metro.xlsx', section: 'Race programs', cadence: 'monthly', required: false },
   { file: 'The Valley Transfer meetings.xlsx', section: 'Race programs', cadence: 'monthly', required: false },
+  { file: 'NOM ACCEPT REMOVE.xlsx', section: 'Race programs', cadence: 'monthly', required: false },
   { file: 'Race Series.docx', section: 'Race series', cadence: 'monthly', required: true },
   { file: 'Highweights.docx', section: 'Race series', cadence: 'monthly', required: false },
   { file: 'Jumps Racing Program.xlsx', section: 'Jumps program', cadence: 'yearly', required: false },
@@ -60,7 +61,7 @@ export const EXPECTED = [
   { file: 'Stewards Room.docx', section: 'Stewards\u2019 room', cadence: 'monthly', required: true },
   { file: 'Rules Extracts.docx', section: 'Rules extracts', cadence: 'monthly', required: true },
   { file: 'Division of Races Policy.docx', section: 'Division of races', cadence: 'rarely', required: false },
-  { file: 'Ad Placements.csv', section: 'Advertising', cadence: 'monthly', required: false },
+  { file: 'Ad Placements.xlsx', section: 'Advertising', cadence: 'monthly', required: false },
   { file: 'Cover.jpg', section: 'Cover', cadence: 'monthly', required: true }
 ];
 
