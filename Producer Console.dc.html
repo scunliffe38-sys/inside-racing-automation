@@ -611,13 +611,38 @@ class Component extends DCLogic {
       { name: 'Pagination and advertising', fn: async ctx => {
         const m = await P('./parsers/ads.js');
         const r = await m.loadPlacements('inputs/Ad Placements.xlsx');
+        // Bake the booked artwork into the run, like the cover and HR Assist:
+        // the edition opens in its own tab and cannot read the input folder, so
+        // an inputs/ads/ path printed an empty space in v17.
+        const artWarn = [];
+        for (const row of r.rows || []) {
+          if (!row.enabled || !row.artwork || /^data:/.test(row.artwork)) continue;
+          try {
+            const res = await fetch(row.artwork);
+            if (!res.ok) throw new Error(String(res.status));
+            const bmp = await createImageBitmap(await res.blob());
+            const scale = Math.min(1, 3508 / Math.max(bmp.width, bmp.height));
+            const w = Math.round(bmp.width * scale), h = Math.round(bmp.height * scale);
+            const canvas = document.createElement('canvas');
+            canvas.width = w; canvas.height = h;
+            const g = canvas.getContext('2d');
+            g.fillStyle = '#fff'; g.fillRect(0, 0, w, h);
+            g.drawImage(bmp, 0, 0, w, h);
+            bmp.close();
+            row.artwork = canvas.toDataURL('image/jpeg', 0.9);
+          } catch (e) {
+            artWarn.push('Artwork "' + row.artworkName + '" for ' + row.slot.replace('page-', 'page ') + ' could not be read (' + ((e && e.message) || e) + ') — the house ad runs.');
+            row.artwork = null;
+          }
+        }
+        if (ctx.settings) ctx.settings.$placements = { rows: r.rows, bySlot: r.bySlot };
         const total = (ctx.pages && ctx.pages.total) || 0;
         const full = m.fullPageCount(total, r);
         ctx.ads = { booked: (r.rows || []).length, full };
         return {
           // the bookings are read twice — once for the page plan, once here
-          warnings: (ctx.setupWarnings || []).concat(r.warnings).filter((w, i, all) => all.indexOf(w) === i),
-          summary: total + ' pages \u00b7 ' + (r.rows || []).length + ' booked slot(s), ' + full + ' full page(s) of advertising'
+          warnings: (ctx.setupWarnings || []).concat(r.warnings, artWarn).filter((w, i, all) => all.indexOf(w) === i),
+          summary: total + ' pages \u00b7 ' + (r.rows || []).length + ' booked ad(s)' + ((r.rows || []).length ? ' on page ' + r.rows.map(x => x.slot.replace(/^page-/, '')).join(', ') : '') + ', ' + full + ' full page(s) of advertising'
         };
       } }
     ];
