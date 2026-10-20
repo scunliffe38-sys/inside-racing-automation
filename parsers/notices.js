@@ -161,14 +161,69 @@ const STEWARDS_METRICS = {
 function estimate(blocks, metrics) {
   const kinds = Object.keys(metrics);
   return blocks.reduce((total, b) => {
+    if (b.isTable) return total + b.depth;
     const kind = kinds.find(k => b[k]) || 'isPara';
     const [gap, lh, cpl] = metrics[kind];
     return total + gap + Math.max(1, Math.ceil(String(b.text || '').length / cpl)) * lh;
   }, 0);
 }
 
-// one flat list of { style, text }, blank paragraphs dropped
-async function paragraphs(url) {
+
+// A Word table, kept as a table. Column widths come from the table grid
+// (scaled down if wider than the measure), cell shading from the cell, and
+// every paragraph in a cell is a line of its own. Depth is estimated the same
+// way as body copy so the packer can page it: 8pt on 10.4pt, 3pt padding.
+const MEASURE = 549.9;
+function tableOf(xml) {
+  const grid = [...xml.matchAll(/<w:gridCol\s+w:w="(\d+)"/g)].map(m => +m[1] / 20);
+  const rowsXml = [...xml.matchAll(/<w:tr\b[\s\S]*?<\/w:tr>/g)].map(m => m[0]);
+  const cellRe = /<w:tc(?:\s[^>]*)?>[\s\S]*?<\/w:tc>/g;
+  const rows = rowsXml.map(r => [...r.matchAll(cellRe)].map((c, ci) => {
+    const span = +((c[0].match(/<w:gridSpan\s+w:val="(\d+)"/) || [])[1] || 1);
+    const fill = (c[0].match(/<w:shd\b[^>]*w:fill="([0-9A-Fa-f]{6})"/) || [])[1];
+    const paras = (c[0].match(/<w:p\b[^>]*>[\s\S]*?<\/w:p>/g) || []).filter(p => textOf(p));
+    return {
+      span,
+      fill: fill && !/^FFFFFF$/i.test(fill) ? '#' + fill.toUpperCase() : 'transparent',
+      // the left-hand column is the row's label and sets bold (Nov review)
+      weight: ci === 0 || (paras.length && paras.every(allBold)) ? 700 : 400,
+      // lines after one ending in a colon are its list (Nov review: the races
+      // under "3 Hours for Group 1 races on:" print as bullets)
+      lines: paras.map(textOf).map((t, i, a) => {
+        const isBullet = a.slice(0, i).some(x => /:\s*$/.test(x));
+        // the line introducing the list holds 3pt under it
+        const isLead = !isBullet && /:\s*$/.test(t) && i < a.length - 1;
+        return { t: isBullet ? t.replace(/^[\u2022\u25cf\u25aa\u00b7\u2013-]\s+/, '') : t, isBullet, isLead, isPlain: !isBullet && !isLead };
+      })
+    };
+  }));
+  const n = grid.length || Math.max(1, ...rows.map(r => r.reduce((s, c) => s + c.span, 0)));
+  let cols = grid.length ? grid : Array(n).fill(MEASURE / n);
+  const total = cols.reduce((a, b) => a + b, 0);
+  if (total > MEASURE) cols = cols.map(w => w * MEASURE / total);
+  let depth = 6 + 1;
+  rows.forEach(r => {
+    let at = 0, deepest = 1;
+    r.forEach(c => {
+      const w = cols.slice(at, at + c.span).reduce((a, b) => a + b, 0) || MEASURE / n;
+      const cpl = Math.max(8, (w - 10.8) / 3.48);
+      deepest = Math.max(deepest, c.lines.reduce((s, l) => s + Math.max(1, Math.ceil(l.t.length / cpl)), 0));
+      at += c.span;
+    });
+    depth += 6 + deepest * 10.4 + 1 + (r.some(c => c.lines.some(l => l.isLead)) ? 3 : 0);
+  });
+  return {
+    isTable: true, style: 'Table', bold: false, text: '',
+    width: cols.reduce((a, b) => a + b, 0).toFixed(1) + 'pt',
+    cols: cols.map(w => w.toFixed(1) + 'pt').join(' '),
+    cells: [].concat(...rows.map(r => r.map(c => ({ fill: c.fill, weight: c.weight, lines: c.lines, gridColumn: 'span ' + c.span })))),
+    rows: rows.length, depth
+  };
+}
+
+// one flat list of { style, text }, blank paragraphs dropped. With tables on,
+// a Word table arrives as one block rather than as its cells' paragraphs.
+async function paragraphs(url, opts = {}) {
   const res = await fetch(url);
   if (!res.ok) throw new Error('cannot read ' + url + ' (' + res.status + ')');
   const files = await unzip(await res.blob());
@@ -181,9 +236,12 @@ async function paragraphs(url) {
     if (id && target && /hyperlink/i.test(m[0])) rels[id] = unescapeXml(target);
   }
   const body = (xml.match(/<w:body>([\s\S]*)<\/w:body>/) || [])[1] || '';
-  return [...body.matchAll(/<w:p\b[^>]*>[\s\S]*?<\/w:p>|<w:p\b[^>]*\/>/g)]
-    .map(m => ({ style: styleOf(m[0]), text: textOf(m[0]), bold: allBold(m[0]), runs: runsOf(m[0], rels) }))
-    .filter(b => b.text);
+  const re = opts.tables
+    ? /<w:tbl>[\s\S]*?<\/w:tbl>|<w:p\b[^>]*>[\s\S]*?<\/w:p>|<w:p\b[^>]*\/>/g
+    : /<w:p\b[^>]*>[\s\S]*?<\/w:p>|<w:p\b[^>]*\/>/g;
+  return [...body.matchAll(re)]
+    .map(m => /^<w:tbl>/.test(m[0]) ? tableOf(m[0]) : ({ style: styleOf(m[0]), text: textOf(m[0]), bold: allBold(m[0]), runs: runsOf(m[0], rels) }))
+    .filter(b => b.text || (b.isTable && b.cells.length));
 }
 
 const isH1 = s => /^Heading1$|^Title$/i.test(s);
@@ -207,7 +265,7 @@ const BULLET_GLYPH = /^[\u2022\u25cf\u25aa\u00b7\u2013-]\s+/;
 const isBulletPara = b => b.style === 'IRBullet' || b.style === 'ListParagraph' || BULLET_GLYPH.test(b.text);
 const debullet = t => String(t).replace(BULLET_GLYPH, '');
 const isH2 = s => /^Heading2$|^Heading3$/i.test(s);
-const KNOWN = ['Heading1', 'Heading2', 'Heading3', 'Title', 'Normal', 'IRStep', 'IRClause', 'IRBullet', 'BodyText', 'ListParagraph'];
+const KNOWN = ['Heading1', 'Heading2', 'Heading3', 'Title', 'Normal', 'IRStep', 'IRClause', 'IRBullet', 'BodyText', 'ListParagraph', 'Table'];
 
 function flagUnknown(blocks, warnings, label) {
   const odd = [...new Set(blocks.map(b => b.style).filter(s => !KNOWN.includes(s)))];
@@ -218,12 +276,13 @@ function flagUnknown(blocks, warnings, label) {
 
 export async function loadNotice(url) {
   const warnings = [];
-  const paras = await paragraphs(url);
+  const paras = await paragraphs(url, { tables: true });
   flagUnknown(paras, warnings, 'Industry Notice');
   noteInferred(paras, warnings, 'Industry Notice');
 
   let step = 0;
   const blocks = paras.map(b => {
+    if (b.isTable) return b;
     if (heads(b) || isH2(b.style)) step = 0;
     if (b.style === 'IRStep') step += 1;
     const head = heads(b) || isH2(b.style);
@@ -261,11 +320,12 @@ export async function loadNotice(url) {
 
 export async function loadStewards(url) {
   const warnings = [];
-  const paras = await paragraphs(url);
+  const paras = await paragraphs(url, { tables: true });
   flagUnknown(paras, warnings, 'Stewards Room');
   noteInferred(paras, warnings, 'Stewards Room');
 
   const blocks = paras.map(b => {
+    if (b.isTable) return b;
     const head = heads(b) || isH2(b.style);
     const bullet = !head && b.style !== 'IRClause' && isBulletPara(b);
     return {

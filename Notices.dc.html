@@ -57,6 +57,28 @@ a:hover{color:#1b7fb4}
 <div style="flex:1;text-wrap:pretty">{{ b.text }}</div>
 </div>
 </sc-if>
+<sc-if value="{{ b.isTable }}" hint-placeholder-val="{{ false }}">
+<div style="margin-top:6pt;display:grid;grid-template-columns:{{ b.cols }};width:{{ b.width }};max-width:100%;box-sizing:border-box;border-top:1pt solid #2c2e35;border-left:1pt solid #2c2e35">
+<sc-for list="{{ b.cells }}" as="c" hint-placeholder-count="4">
+<div style="grid-column:{{ c.gridColumn }};padding:3pt 5.4pt;box-sizing:border-box;border-right:1pt solid #2c2e35;border-bottom:1pt solid #2c2e35;background:{{ c.fill }};font-size:8pt;font-weight:{{ c.weight }};line-height:10.4pt">
+<sc-for list="{{ c.lines }}" as="l" hint-placeholder-count="1">
+<sc-if value="{{ l.isPlain }}" hint-placeholder-val="{{ true }}">
+<div style="text-wrap:pretty">{{ l.t }}</div>
+</sc-if>
+<sc-if value="{{ l.isLead }}" hint-placeholder-val="{{ false }}">
+<div style="margin-bottom:3pt;text-wrap:pretty">{{ l.t }}</div>
+</sc-if>
+<sc-if value="{{ l.isBullet }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;gap:5pt">
+<div style="flex:0 0 7pt">&bull;</div>
+<div style="flex:1;text-wrap:pretty">{{ l.t }}</div>
+</div>
+</sc-if>
+</sc-for>
+</div>
+</sc-for>
+</div>
+</sc-if>
 </sc-for>
 <sc-if value="{{ noticeEmpty }}" hint-placeholder-val="{{ false }}">
 <div style="margin-top:9pt;background:#edf6fb;box-sizing:border-box;padding:12pt 14pt 14pt">
@@ -98,6 +120,28 @@ a:hover{color:#1b7fb4}
 <div style="margin-top:4pt;display:flex;gap:5pt;font-size:8pt;line-height:10.4pt">
 <div style="flex:0 0 7pt">&bull;</div>
 <div style="flex:1;text-wrap:pretty">{{ b.text }}</div>
+</div>
+</sc-if>
+<sc-if value="{{ b.isTable }}" hint-placeholder-val="{{ false }}">
+<div style="margin-top:6pt;display:grid;grid-template-columns:{{ b.cols }};width:{{ b.width }};max-width:100%;box-sizing:border-box;border-top:1pt solid #2c2e35;border-left:1pt solid #2c2e35">
+<sc-for list="{{ b.cells }}" as="c" hint-placeholder-count="4">
+<div style="grid-column:{{ c.gridColumn }};padding:3pt 5.4pt;box-sizing:border-box;border-right:1pt solid #2c2e35;border-bottom:1pt solid #2c2e35;background:{{ c.fill }};font-size:8pt;font-weight:{{ c.weight }};line-height:10.4pt">
+<sc-for list="{{ c.lines }}" as="l" hint-placeholder-count="1">
+<sc-if value="{{ l.isPlain }}" hint-placeholder-val="{{ true }}">
+<div style="text-wrap:pretty">{{ l.t }}</div>
+</sc-if>
+<sc-if value="{{ l.isLead }}" hint-placeholder-val="{{ false }}">
+<div style="margin-bottom:3pt;text-wrap:pretty">{{ l.t }}</div>
+</sc-if>
+<sc-if value="{{ l.isBullet }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;gap:5pt">
+<div style="flex:0 0 7pt">&bull;</div>
+<div style="flex:1;text-wrap:pretty">{{ l.t }}</div>
+</div>
+</sc-if>
+</sc-for>
+</div>
+</sc-for>
 </div>
 </sc-if>
 </sc-for>
@@ -226,6 +270,7 @@ class Component extends DCLogic {
     const HEADS = which === 'notice' ? ['isSubject', 'isSubhead'] : ['isHeading', 'isSubhead'];
 
     const blocks = (this.state[which] || []).map(b => {
+      if (b.isTable) return { block: b, depth: b.depth, head: false };
       const kind = Object.keys(M).find(k => b[k]) || 'isPara';
       const [gap, lh, cpl] = M[kind];
       const lines = Math.max(1, Math.ceil(String(b.text || '').length / cpl));

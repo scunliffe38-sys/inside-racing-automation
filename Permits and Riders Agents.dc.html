@@ -145,7 +145,7 @@ class Component extends DCLogic {
     const get = f => fetch('inputs/' + f).then(r => r.text());
     Promise.all([
       import('./parsers/permits.js').then(m => m.loadPermits('inputs/Permits to Ride.xlsx')),
-      get('Eligible to Ride in Trials.csv'),
+      import('./parsers/eligible.js').then(m => m.loadEligible('inputs/Eligible to Ride in Trials.xlsx')).then(r => r.text).catch(() => ''),
       import('./parsers/settings.js').then(m => m.loadAgents('inputs/Riders Agents.csv')),
       import('./parsers/settings.js').then(m => m.loadSettings('inputs/Edition Settings.xlsx')),
       faces

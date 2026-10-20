@@ -499,7 +499,7 @@ class Component extends DCLogic {
         const r = await m.loadPermits('inputs/Permits to Ride.xlsx');
         ctx.permits = r.permits;
         const t = await P('./parsers/tsv.js');
-        ctx.trialsText = await t.fetchDelimited('inputs/Eligible to Ride in Trials.csv').then(x => x.text).catch(() => '');
+        ctx.trialsText = await import('./parsers/eligible.js').then(m => m.loadEligible('inputs/Eligible to Ride in Trials.xlsx')).then(r => r.text).catch(() => '');
         return { warnings: r.warnings, summary: r.count + ' permits' };
       } },
       { name: 'Riders\u2019 agents', fn: async ctx => {

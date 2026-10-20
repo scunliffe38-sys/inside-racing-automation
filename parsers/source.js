@@ -54,7 +54,7 @@ export const EXPECTED = [
   { file: 'Jump Outs.xlsx', section: 'Jump outs', cadence: 'monthly', required: true },
   { file: 'HR Assist.JPG', section: 'Advertising', cadence: 'as supplied', required: true },
   { file: 'Official Flat Trials.csv', section: 'Flat trials', cadence: 'monthly', required: true },
-  { file: 'Eligible to Ride in Trials.csv', section: 'Flat trials', cadence: 'rarely', required: false },
+  { file: 'Eligible to Ride in Trials.xlsx', section: 'Flat trials', cadence: 'rarely', required: false },
   { file: 'Permits to Ride.xlsx', section: 'Permits to ride', cadence: 'monthly', required: true },
   { file: 'Riders Agents.csv', section: 'Riders\u2019 agents', cadence: 'monthly', required: true },
   { file: 'Industry Notice.docx', section: 'Industry notice', cadence: 'monthly', required: true },
