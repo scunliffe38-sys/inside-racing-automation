@@ -26,11 +26,13 @@ suffix format, chronological sort, gap warning.
 `inputs/Cover.jpg` is the month's cover photograph, overwritten each edition.
 These arrive at full camera resolution (6516×7385 in October), which is far too
 heavy to composite on every page relayout, so the pages load a derivative:
-`assets/photos/cover.jpg` at 2600px on the long edge. **Regenerate the
+`assets/photos/cover.jpg` at 5000px on the long edge. **Regenerate the
 derivative whenever `inputs/Cover.jpg` changes** — the pages never reference the
-original. It was 1800px until the framing began enlarging the hero; the visible
-slice of an enlarged frame is little more than half the file's width, so the
-derivative needs the headroom.
+original. The framing enlarges the hero (1.72× in October), so the derivative
+must carry about 300ppi at that scale: at 1800px October printed at 108ppi and
+went out grainy, and 2600px would only have reached 156ppi. The bake is 5000px
+at JPEG quality 0.92, and the console warns when the printed figure falls below
+250ppi.
 
 `parsers/cover-frame.js` frames it. **The photograph starts at the foot of the
 masthead, not at the head of the page**, and runs to the page foot; the strip
@@ -75,6 +77,16 @@ the space that is free.
   detail than a horse, so its band starts hard at the left edge and the crop
   took the horse's hindquarters off the page.
 
+**Across the page the subject's centre is set by eye, not measured.** Even
+measured over the hero's rows, the October grandstand and crowd outweighed the
+horse and the framing sat it right of centre with its hindquarters near the
+edge. `assets/photos/cover.json` holds `centreX` (the subject's centre as a
+fraction of the photograph's width, nose to hindquarters) plus the derivative's
+width and height; the framing centres that point on the page. **Set it again
+whenever `inputs/Cover.jpg` changes**, alongside the derivative. A file whose
+size does not match the new derivative is ignored with a console warning, and
+with no file the measured band is used as before.
+
 An enlargement is expressed as the element's own size with the page cropping it,
 never as `object-position` inside a window-sized box — `cover` recomputes its
 own fit inside whatever box it is handed, so an enlargement written that way is
@@ -95,6 +107,13 @@ checked against the trials file instead.
 `inputs/Jumps Prizemoney Breakdowns.csv` holds the standing tiers. Both are
 tab-separated with a header row, and both are meant to be edited by hand — the
 breakdowns change rarely but must stay editable.
+
+### Eligible to Ride in Trials is a workbook
+`inputs/Eligible to Ride in Trials.xlsx` — header row then one rider per row:
+Name | Phone | Category. `parsers/eligible.js` finds the columns by header
+(falling back to A/B/C), restores a leading 0 Excel drops off a mobile typed as
+a number, and hands back the same tab-separated `trialsText` the pages and the
+bake already carry.
 
 ### Picnics is one workbook, one sheet per season
 `inputs/Picnic Program.xlsx` keeps a worksheet per season ("2026 - 27", "2025-26",
@@ -223,10 +242,27 @@ These were set from the October review and are not preferences to re-litigate:
   run carried them — and **no blank line between one VOBIS type and the next**.
   The workbook leaves a newline beside the label; beside a block it would print
   as an empty line.
+- **VOBIS inside a race name is plain text.** A VOBIS mark followed later in
+  the same entry by words and then another VOBIS mark is part of the name
+  (VOBIS Gold Star, VOBIS Gold Carat) and prints as ordinary type; only the
+  marks at the end set bold as blocks. A run that ends partway into a label
+  ("BM V" then "OBIS Gold") hands the fragment forward so the V sets bold.
+- **Race program prose is never bold.** A heading slot (penH, balH, nomH,
+  accH) prints bold only when it holds a short all-caps label such as
+  PENALTIES or ENTRIES; a paragraph the export left there prints as body copy.
+  In the notation, a list under a lead like "Weights;", anything from an
+  all-caps label such as "SPECIAL BONUS:" onwards, and any line over 100
+  characters print regular; short race notes stay bold.
+- **The minimum ratings note reads "Group & Listed races at any other
+  metropolitan meeting."**, not "for night meetings".
 - **The chart's column heads are bold, on one leading** (8.4pt) whatever the
   number of lines in the cell.
-- **Gotham Narrow Bold is a real face now** — `fonts/GothamNarrow-Bold.otf`,
-  H&FJ 2.200 Pro, declared at weight 700 on every page. The hairline
+- **Gotham Narrow Book and Bold load as TrueType** — `fonts/GothamNarrow-Book.ttf`
+  and `fonts/GothamNarrow-Bold.ttf`, H&F-J 2.200 Pro, the same release as the
+  `.otf` files with identical widths. Chrome writes `.otf` (CFF) faces into the
+  PDF as Type 3, which Acrobat renders soft on screen and preflight flags;
+  **never point a page back at the `.otf` files**. Bold is declared at weight
+  700 on every page. The hairline
   `-webkit-text-stroke` that stood in for it is gone; **never bring it back**.
   Bold is wider than Book, so `chFitSize()` measures at the weight the word
   will actually print — measured at 400 a bold race name reads as fitting and
@@ -249,14 +285,14 @@ These were set from the October review and are not preferences to re-litigate:
   depth the Division of Races Policy needs beneath them.
 - Race series blocks sit 15pt apart, not 20pt and not 34pt. The packer
   constant and the rendered gap must stay the same figure.
-- **The order of the race series does not matter; the space does.** Each
-  column takes the deepest block still to place that will fit it, which closes
-  the white space a fixed order leaves at a column foot. **The highweight
-  schedule always prints last**, under the final series in the right-hand
-  column.
-- **The chart's country blue is `#2c9cd7`**, the same blue as the Entry
-  Deadlines day headings (set from the v10 review; it replaced `#007ba8`), and
-  the key swatch matches it. Column shading is
+- **The order of the race series does not matter; the space does** (November
+  review). On the last page every split of the blocks between the two columns
+  is tried and the one with the shallowest deeper column prints. **The
+  highweight schedule always prints last in reading order** — at the foot of
+  the right-hand column (its head if nothing else is there), or the foot of the
+  left when the right is empty. Earlier pages fill deepest-first.
+- **The chart's country blue is `#2c9cd7`**, the Entry Deadlines day-heading
+  blue (v10 review), and the key swatch matches it. Column shading is
   `#f4fafd`.
 - **The contents page carries a rule above the first row**, as the published
   edition does, and the accuracy note sets at 7.8pt directly under the last
@@ -325,21 +361,6 @@ These were set from the October review and are not preferences to re-litigate:
   cannot send a page out without its bookable panel. The print hook is set
   when the page mounts, not when the settle timer first fires.
 
-- **Every Highweight race and the Jericho Cup carry "For riders licensed to ride
-  in jumps races"** on the line under "No allowances for Apprentices".
-  `JUMPS_RIDERS` in `parsers/programs.js`, matched on the race name after the
-  name updates are applied (v16 review). **Never add it twice**: the export
-  sometimes carries it already, so every field of the race is searched for
-  "licensed to ride in jumps races" first (v18).
-- **`inputs/NOM ACCEPT REMOVE.xlsx`** — Date, Venue, Race No, Race Name. Drops
-  the "Nomination $… Acceptance $…" line from the races listed; any declaration
-  after it (Northern Hemisphere Bred Horses allowed…) still prints. Race Name is
-  for the reader; the match is date, venue and race number. October lists the
-  Caulfield Guineas, Thousand Guineas, Caulfield Cup, Cox Plate and Melbourne Cup.
-- **Official Flat Trials: a dash inside brackets has a space either side** —
-  (CL1 - CL2), (CL3 - OPN). A hyphenated word such as BLACK-TYPE is left alone
-  (`bracketDash()` in `parsers/trials.js`).
-
 ## The summary chart's colour comes from the workbook
 The venue name's colour marks metropolitan against country, and the meeting
 block mixes 6pt and 9pt type. Both are read out of the workbook's own rich-text
@@ -354,16 +375,9 @@ and the count. House artwork lives as PNG under `assets/ads/` and
 artwork there and adding a `LIBRARY` entry — `kind` is how it prints, `slots` is
 where it may run, `enabled: false` benches one.
 
-Month-to-month bookings are an input. `inputs/Ad Placements.xlsx` has three
-columns: **Page number** (the page in the PDF, cover = 1), **Artwork file
-name** (PNG or JPG in `inputs/ads/`) and **Run this ad?** (Yes/No, blank is
-Yes), plus a "How to fill this in" sheet with sizes. Each row becomes slot
-`page-N`. `applyFillers()` in the edition files places it once the edition has
-laid out: a page carrying a standing position (`data-ad-fixed`: the contents
-panel, the Jumps panel, a whole advertising page) takes it there, any other
-page in the space it leaves over. PDF ads are exported to JPG at 300dpi first.
-Booked artwork is never cropped and sits **centred in its space, with even white
-above and below** (v18 p50). The producer drops the artwork in
+Month-to-month bookings are an input. `inputs/Ad Placements.csv` is
+tab-separated with a header row — `slot`, `artwork`, `caption`, `enabled`,
+`notes` — one row per booked slot, and the producer drops the artwork in
 `inputs/ads/`. `slot` is an id from `SLOTS` (`contents-panel`, `jumps-filler`,
 `fullpage-1`) or `fullpage-N` for a signature padding page. A bare artwork
 filename is resolved against `inputs/ads/`, then `assets/ads/`, then
@@ -392,5 +406,5 @@ Automatic fill: a page leaving more than 30% of its live depth empty is a filler
 candidate (`hasBlankSpace`, `fillers()`), deepest gap first. The assembled
 edition measures every page once it has laid out and draws a bookable panel in
 what is left over, named after the folio it sits on — `page-26`. That name is
-the slot id: put it in `inputs/Ad Placements.xlsx` against that page number with artwork and the panel
+the slot id: put it in `inputs/Ad Placements.csv` with artwork and the panel
 becomes the ad. The panel prints its own size in mm and pixels at 300dpi.

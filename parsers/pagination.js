@@ -72,7 +72,7 @@ export function report(id, count) {
 
 /**
  * Works out the running order for this edition.
- * Returns { start, count, sections, total, padding, warnings }.
+ * Returns { start, count, sections, total, signatures, warnings }.
  *   start[id]  first folio of that section (0 if it is not in this edition)
  *   count[id]  its extent in pages
  */
@@ -122,7 +122,7 @@ export function plan(settings, placements) {
   const provisional = page - 1;
   const ads = fullPages(provisional, placements);
   const extra = ads.length - 1;
-  if (extra !== 0) {
+  if (extra > 0) {
     const at = sections.findIndex(x => x.id === 'fullpage');
     if (at >= 0) {
       sections[at].pages += extra;
@@ -139,8 +139,8 @@ export function plan(settings, placements) {
   }
 
   const total = page - 1;
-  // a PDF edition: an even count, back cover last
-  const padding = total % 2;
+  const signatures = Math.ceil(total / 4);
+  const padding = signatures * 4 - total;
 
   if (missing.length) {
     warnings.push('Pagination: using the standing extent for ' + missing.join(', ')
@@ -149,10 +149,12 @@ export function plan(settings, placements) {
   if (extra > 0) {
     warnings.push('Advertising: the edition carries ' + ads.length + ' whole pages ('
       + ads.map(a => a.name).join(', ') + ') — one standing, '
-      + extra + ' more.');
+      + extra + ' more to bring ' + provisional + ' pages up to a multiple of four.');
   }
   if (padding) {
-    warnings.push('Pagination: the edition runs ' + total + ' pages; it should finish on an even page.');
+    warnings.push('Pagination: the edition runs ' + total + ' pages. Saddle-stitch needs a multiple of four, so '
+      + padding + ' page' + (padding > 1 ? 's' : '') + ' of filler or advertising is needed to reach '
+      + (signatures * 4) + '.');
   }
   SPINE.filter(x => x.flag).forEach(x => {
     const raw = String(s[x.flag] || '').trim();
@@ -163,7 +165,7 @@ export function plan(settings, placements) {
     }
   });
 
-  return { start, count, sections, total, padded: total + padding, padding, ads, warnings };
+  return { start, count, sections, total, signatures, padded: signatures * 4, padding, ads, warnings };
 }
 
 /** Convenience: the first folio of a section, as a string for the page furniture. */

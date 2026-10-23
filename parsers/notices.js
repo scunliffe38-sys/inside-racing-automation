@@ -36,83 +36,8 @@ const unescapeXml = s => String(s)
   .replace(/&amp;/g, '&');
 
 const textOf = xml => unescapeXml(
-  [...String(xml).replace(/<w:(?:br|cr)\b[^>]*\/>/g, '<w:t> </w:t>').matchAll(/<w:t(?:\s[^>]*)?>([\s\S]*?)<\/w:t>/g)].map(m => m[1]).join('')
+  [...String(xml).matchAll(/<w:t(?:\s[^>]*)?>([\s\S]*?)<\/w:t>/g)].map(m => m[1]).join('')
 ).replace(/\s+/g, ' ').trim();
-
-// The paragraph as printed: runs in order, each carrying its own bold and any
-// hyperlink, with Word's line breaks kept (v11 review: the Industry Notice
-// sets its two resource links, the contact lines and the sign-off on lines of
-// their own, links clickable and bold where the document has it). A link is
-// either a <w:hyperlink> resolved through the relationships part or a
-// HYPERLINK field; a web address or email typed as plain text is linked too.
-const EMAIL_OR_URL = /((?:https?:\/\/|www\.)[^\s<>()]+[^\s<>().,;:]|[\w.+-]+@[\w-]+(?:\.[\w-]+)+)/g;
-function runsOf(pxml, rels) {
-  const out = [];
-  const add = (t, b, href) => {
-    if (!t) return;
-    const last = out[out.length - 1];
-    if (last && !last.br && last.b === b && last.href === href) last.t += t;
-    else out.push({ t, b, href });
-  };
-  let fieldHref = null, instr = '', inInstr = false;
-  const doRun = (run, href) => {
-    const bold = runIsBold(run);
-    for (const m of run.matchAll(/<w:fldChar\b[^>]*w:fldCharType="(\w+)"[^>]*\/>|<w:instrText\b[^>]*>([\s\S]*?)<\/w:instrText>|<w:t(?:\s[^>]*)?>([\s\S]*?)<\/w:t>|<w:(br|cr)\b[^>]*\/>|<w:tab\b[^>]*\/>/g)) {
-      if (m[1] === 'begin') { inInstr = true; instr = ''; }
-      else if (m[1] === 'separate') { inInstr = false; const u = instr.match(/HYPERLINK\s+"([^"]+)"/i); fieldHref = u ? u[1] : null; }
-      else if (m[1] === 'end') { inInstr = false; fieldHref = null; }
-      else if (m[2] !== undefined) { if (inInstr) instr += unescapeXml(m[2]); }
-      else if (m[3] !== undefined) { if (!inInstr) add(unescapeXml(m[3]), bold, href || fieldHref); }
-      else if (m[4]) out.push({ br: true });
-      else add(' ', bold, href || fieldHref);
-    }
-  };
-  const re = /<w:hyperlink\b([^>]*)>([\s\S]*?)<\/w:hyperlink>|<w:fldSimple\b([^>]*)>([\s\S]*?)<\/w:fldSimple>|<w:r\b[^>]*>[\s\S]*?<\/w:r>/g;
-  for (const m of String(pxml).matchAll(re)) {
-    if (m[1] !== undefined) {
-      const id = (m[1].match(/r:id="([^"]+)"/) || [])[1];
-      const anchor = (m[1].match(/w:anchor="([^"]+)"/) || [])[1];
-      const href = (id && rels[id]) || (anchor ? '#' + anchor : null);
-      for (const r of m[2].matchAll(/<w:r\b[^>]*>[\s\S]*?<\/w:r>/g)) doRun(r[0], href);
-    } else if (m[3] !== undefined) {
-      const u = unescapeXml(m[3]).match(/HYPERLINK\s+"([^"]+)"/i);
-      for (const r of m[4].matchAll(/<w:r\b[^>]*>[\s\S]*?<\/w:r>/g)) doRun(r[0], u ? u[1] : null);
-    } else doRun(m[0], null);
-  }
-  // collapse spacing, trim the ends, drop breaks at either end
-  out.forEach(p => { if (!p.br) p.t = p.t.replace(/\s+/g, ' '); });
-  while (out.length && out[0].br) out.shift();
-  while (out.length && out[out.length - 1].br) out.pop();
-  if (out.length && !out[0].br) out[0].t = out[0].t.replace(/^\s+/, '');
-  if (out.length && !out[out.length - 1].br) out[out.length - 1].t = out[out.length - 1].t.replace(/\s+$/, '');
-  out.forEach((p, i) => { if (p.br) { const a = out[i - 1], b = out[i + 1]; if (a && !a.br) a.t = a.t.replace(/\s+$/, ''); if (b && !b.br) b.t = b.t.replace(/^\s+/, ''); } });
-  // plain-text addresses become links
-  const linked = [];
-  out.forEach(p => {
-    if (p.br || p.href) { linked.push(p); return; }
-    String(p.t).split(EMAIL_OR_URL).forEach((bit, k) => {
-      if (!bit) return;
-      if (k % 2) linked.push({ t: bit, b: p.b, href: /@/.test(bit) && !/^https?:/i.test(bit) ? 'mailto:' + bit : (/^www\./i.test(bit) ? 'https://' + bit : bit) });
-      else linked.push({ t: bit, b: p.b, href: null });
-    });
-  });
-  return linked.filter(p => p.br || p.t);
-}
-
-/** The runs in the shape the templates print: one list per kind, so each run
- *  is a plain span, a bold span, a link or a line break. */
-export const printRuns = runs => (runs || []).map(p => ({
-  plain: !p.br && !p.href && !p.b ? [{ t: p.t }] : [],
-  bold: !p.br && !p.href && p.b ? [{ t: p.t }] : [],
-  link: !p.br && p.href && !p.b ? [{ t: p.t, href: p.href }] : [],
-  linkBold: !p.br && p.href && p.b ? [{ t: p.t, href: p.href }] : [],
-  br: p.br ? [{}] : []
-}));
-const debulletRuns = runs => {
-  const r = (runs || []).map(p => ({ ...p }));
-  if (r.length && !r[0].br) r[0].t = r[0].t.replace(BULLET_GLYPH, '');
-  return r;
-};
 
 const styleOf = xml => ((String(xml).match(/<w:pStyle\s+w:val="([^"]+)"/) || [])[1] || 'Normal');
 
@@ -191,7 +116,7 @@ function tableOf(xml) {
       // under "3 Hours for Group 1 races on:" print as bullets)
       lines: paras.map(textOf).map((t, i, a) => {
         const isBullet = a.slice(0, i).some(x => /:\s*$/.test(x));
-        // the line introducing the list holds 3pt under it
+        // the line introducing the list holds 7pt under it
         const isLead = !isBullet && /:\s*$/.test(t) && i < a.length - 1;
         return { t: isBullet ? t.replace(/^[\u2022\u25cf\u25aa\u00b7\u2013-]\s+/, '') : t, isBullet, isLead, isPlain: !isBullet && !isLead };
       })
@@ -210,7 +135,7 @@ function tableOf(xml) {
       deepest = Math.max(deepest, c.lines.reduce((s, l) => s + Math.max(1, Math.ceil(l.t.length / cpl)), 0));
       at += c.span;
     });
-    depth += 6 + deepest * 10.4 + 1 + (r.some(c => c.lines.some(l => l.isLead)) ? 3 : 0);
+    depth += 6 + deepest * 10.4 + 1 + (r.some(c => c.lines.some(l => l.isLead)) ? 7 : 0);
   });
   return {
     isTable: true, style: 'Table', bold: false, text: '',
@@ -229,18 +154,12 @@ async function paragraphs(url, opts = {}) {
   const files = await unzip(await res.blob());
   if (!files['word/document.xml']) throw new Error(url + ' is not a Word document');
   const xml = new TextDecoder().decode(files['word/document.xml']);
-  const relXml = files['word/_rels/document.xml.rels'] ? new TextDecoder().decode(files['word/_rels/document.xml.rels']) : '';
-  const rels = {};
-  for (const m of relXml.matchAll(/<Relationship\b[^>]*>/g)) {
-    const id = (m[0].match(/Id="([^"]+)"/) || [])[1], target = (m[0].match(/Target="([^"]+)"/) || [])[1];
-    if (id && target && /hyperlink/i.test(m[0])) rels[id] = unescapeXml(target);
-  }
   const body = (xml.match(/<w:body>([\s\S]*)<\/w:body>/) || [])[1] || '';
   const re = opts.tables
     ? /<w:tbl>[\s\S]*?<\/w:tbl>|<w:p\b[^>]*>[\s\S]*?<\/w:p>|<w:p\b[^>]*\/>/g
     : /<w:p\b[^>]*>[\s\S]*?<\/w:p>|<w:p\b[^>]*\/>/g;
   return [...body.matchAll(re)]
-    .map(m => /^<w:tbl>/.test(m[0]) ? tableOf(m[0]) : ({ style: styleOf(m[0]), text: textOf(m[0]), bold: allBold(m[0]), runs: runsOf(m[0], rels) }))
+    .map(m => /^<w:tbl>/.test(m[0]) ? tableOf(m[0]) : ({ style: styleOf(m[0]), text: textOf(m[0]), bold: allBold(m[0]) }))
     .filter(b => b.text || (b.isTable && b.cells.length));
 }
 
@@ -295,8 +214,7 @@ export async function loadNotice(url) {
       isBullet: bullet,
       isPara: !head && !bullet && b.style !== 'IRStep' && b.style !== 'IRClause',
       no: b.style === 'IRStep' ? step + '.' : '',
-      text: bullet ? debullet(b.text) : b.text,
-      runs: printRuns(bullet ? debulletRuns(b.runs) : b.runs)
+      text: bullet ? debullet(b.text) : b.text
     };
   });
 
@@ -334,8 +252,7 @@ export async function loadStewards(url) {
       isClause: b.style === 'IRClause',
       isBullet: bullet,
       isPara: !head && !bullet && b.style !== 'IRClause',
-      text: bullet ? debullet(b.text) : b.text,
-      runs: printRuns(bullet ? debulletRuns(b.runs) : b.runs)
+      text: bullet ? debullet(b.text) : b.text
     };
   });
 
@@ -375,8 +292,7 @@ export async function loadRules(url) {
     groups[groups.length - 1].blocks.push({
       isClause: b.style === 'IRClause',
       isPara: b.style !== 'IRClause',
-      text: b.text,
-      runs: printRuns(b.runs)
+      text: b.text
     });
   });
 
@@ -416,5 +332,3 @@ export async function loadPolicy(url) {
 
   return { heading, bullets, warnings, empty: !bullets.length, count: bullets.length };
 }
-
-export { runsOf };

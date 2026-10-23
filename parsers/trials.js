@@ -20,18 +20,6 @@ const clean = v => String(v || '').replace(/\s+/g, ' ').trim();
 // page rather than being dropped.
 const MAX_COLUMNS = 4;
 
-// 2YO and 3YO are written without dashes throughout the trials: the export
-// types "2-Y-O TRIAL", and sometimes "2-Y-OTRIAL" with the space lost too.
-const ageNoDash = s => String(s || '')
-  .replace(/\b([23])\s*-\s*Y\s*-?\s*O\b|\b([23])\s*-?\s*Y\s*-\s*O/gi, (m, a, b) => (a || b) + 'YO')
-  .replace(/\b([23]YO)(?=[A-Za-z])/g, '$1 ')
-  // a dash inside brackets has a space either side: (C1 - CL2) (v16 review).
-  // A hyphenated word is not a dash: BLACK-TYPE, with no digit beside the
-  // hyphen and no space either side, stays as it is.
-  .replace(/\(([^()]*)\)/g, (m, inner) => '(' + bracketDash(inner) + ')');
-const bracketDash = s => s.replace(/(\S*?)(\s*)[-\u2013](\s*)(\S*)/g, (m, a, sa, sb, b) =>
-  (!sa && !sb && /^[A-Za-z]+$/.test(a) && /^[A-Za-z]+$/.test(b)) ? m : a + ' - ' + b);
-
 export async function loadTrials(url) {
   let rows;
   if (/\.(csv|tsv|txt)$/i.test(url)) {
@@ -75,8 +63,8 @@ export async function loadTrials(url) {
     if (!clean(r.K)) warnings.push('No conditions — ' + line);
     current.races.push({
       no: no,
-      title: ageNoDash(no ? no + '. ' + title.toUpperCase() : title.toUpperCase()),
-      cond: ageNoDash(clean(r.K)),
+      title: no ? no + '. ' + title.toUpperCase() : title.toUpperCase(),
+      cond: clean(r.K),
       dist: clean(r.J)
     });
   });

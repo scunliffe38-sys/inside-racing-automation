@@ -71,27 +71,23 @@ a:hover{color:#1b7fb4}
 <div style="width:24.8pt;flex:0 0 24.8pt;padding:3.7pt 0 2.1pt 4pt;box-sizing:border-box;box-shadow:inset 0.25pt 0 0 #2c2e35, inset 0 -0.25pt 0 #2c2e35">{{ p.wT }}</div>
 </div>
 </sc-for>
-</div>
-
-<div style="position:absolute;left:22.7pt;top:715.7pt;font-family:'Gotham Narrow',sans-serif;font-size:15pt;font-weight:700;line-height:1;letter-spacing:-.005em">Eligible to ride in trials</div>
-<div style="position:absolute;left:25.3pt;top:738.8pt;width:547pt;height:3pt;background:#2c2e35"></div>
-<div style="position:absolute;left:24.3pt;top:747.2pt;width:540pt;font-size:9pt;line-height:1">{{ trialsIntro }}</div>
+<div style="margin:20pt 0 0 -1.3pt;font-family:'Gotham Narrow',sans-serif;font-size:15pt;font-weight:700;line-height:1;letter-spacing:-.005em">Eligible to ride in trials</div>
+<div style="margin:8.1pt 0 0 1.3pt;width:547pt;height:3pt;background:#2c2e35"></div>
+<div style="margin:5.4pt 0 0 .3pt;width:540pt;font-size:9pt;line-height:1">{{ trialsIntro }}</div>
+<div style="display:flex;margin:6.1pt 0 0 .7pt;font-size:6pt;line-height:8.8pt">
 <sc-for list="{{ trialCols }}" as="c" hint-placeholder-count="5">
-<div style="position:absolute;left:{{ c.left }};top:762.3pt;width:100pt;font-size:6pt;line-height:8.8pt">
-<sc-for list="{{ c.top }}" as="t" hint-placeholder-count="1">
+<div style="width:{{ c.width }};flex:0 0 auto;display:flex;flex-direction:column;gap:8.2pt">
+<sc-for list="{{ c.riders }}" as="t" hint-placeholder-count="2">
+<div>
 <div style="font-weight:700">{{ t.name }}</div>
 <div>{{ t.phone }}</div>
 <div>{{ t.cat }}</div>
-</sc-for>
 </div>
-<div style="position:absolute;left:{{ c.left }};top:796.9pt;width:100pt;font-size:6pt;line-height:8.8pt">
-<sc-for list="{{ c.bottom }}" as="t" hint-placeholder-count="1">
-<div style="font-weight:700">{{ t.name }}</div>
-<div>{{ t.phone }}</div>
-<div>{{ t.cat }}</div>
 </sc-for>
 </div>
 </sc-for>
+</div>
+</div>
 
 <div style="position:absolute;left:12.2pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1;letter-spacing:-.013em">{{ footer }}</div>
 <div style="position:absolute;right:12.3pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1">{{ pagePermits }}</div>
@@ -211,12 +207,13 @@ class Component extends DCLogic {
       };
     });
     // five columns across the foot of page 47, two entries deep, as the print edition sets them
-    const lefts = [24.7, 121, 207.7, 311.8, 398.5];
+    const widths = [96.3, 86.7, 104.1, 86.7, 100];
     const t = this.state.trials.map(x => ({ name: x.Name, phone: x.Phone, cat: x.Category }));
-    const trialCols = lefts.map((l, i) => ({
-      left: l + 'pt',
-      top: t[i * 2] ? [t[i * 2]] : [],
-      bottom: t[i * 2 + 1] ? [t[i * 2 + 1]] : []
+    // every rider prints: five columns, filled down, as many rows as the list needs (two at least)
+    const rows = Math.max(2, Math.ceil(t.length / 5));
+    const trialCols = widths.map((w, i) => ({
+      width: w + 'pt',
+      riders: t.slice(i * rows, (i + 1) * rows)
     }));
     return {
       permits, agents, trialCols,

@@ -1,4 +1,3 @@
-import { readSheet } from './xlsx.js';
 // Advertising — the house library, where ads may sit, and how many run.
 //
 // Read from the August 2026 edition, which places advertising three ways:
@@ -24,12 +23,13 @@ import { readSheet } from './xlsx.js';
 //   automatic fill any page leaving more than BLANK_THRESHOLD of its depth
 //                  empty gets offered a filler, largest gap first
 //
-// Full-page count is not fixed. HR Assist always runs directly before the
-// back cover; the edition is a PDF and only has to finish on an even page, so
-// one further bookable page runs in front of HR Assist when the count is odd.
+// Full-page count is not fixed. Saddle-stitch needs a multiple of four, so
+// fullPageCount() returns however many whole-page ads bring the edition up to
+// the next signature — one at minimum, since the page before the back cover
+// always carries one.
 
 /** A page is a filler candidate when this much of its depth is unused. */
-export const BLANK_THRESHOLD = 0.30;
+export const BLANK_THRESHOLD = 0.40;
 
 /** Trim box of an A4 page in points, less the standing 24pt margins. */
 const LIVE_DEPTH = 842 - 48;
@@ -94,7 +94,7 @@ export const LIBRARY = [
     id: 'hrassist',
     name: 'HR Assist',
     kind: 'full',             // whole page of supplied artwork
-    artwork: 'inputs/HR Assist.JPG',   // supplied whole-page artwork, an input
+    artwork: 'assets/ads/hr-assist-full-page.png',
     overlay: 'assets/ads/hr-assist-secondary.png',
     width: 1187,
     height: 837,
@@ -105,36 +105,25 @@ export const LIBRARY = [
     hours: 'HR Assist available weekdays (Mon to Fri) 9am-5pm',
     contact: '1300 884 687   rvhra@ihraustralia.com',
     slots: ['prebackcover', 'auto'],
-    // Always runs on the page directly before the back cover (fullpage-1).
-    enabled: true
+    // Benched from the October 2026 edition: the whole-page slot prints as a
+    // bookable blank until inputs/Ad Placements.csv fills it.
+    enabled: false
   }
 ];
 
 const byId = id => LIBRARY.find(a => a.id === id) || null;
 
-// ---- inputs/Ad Placements.xlsx -----------------------------------------------
+// ---- inputs/Ad Placements.csv ------------------------------------------------
 //
-// The producer's bookings, one row per ad, three columns (v16 request):
+// Tab-separated, one row per booked slot:
 //
-//   A Page number          the page in the PDF, counting the cover as 1
-//   B Artwork file name    a PNG or JPG dropped in inputs/ads/
-//   C Run this ad?         Yes / No (blank reads as Yes)
+//   slot   artwork   caption   enabled   notes
 //
-// Each booking becomes slot page-N. The edition decides where on that page it
-// goes once it has laid out: a page with a standing ad position (the contents
-// panel, the Jumps panel, a whole advertising page) takes it there, any other
-// page in the space it leaves over. A slot id typed in column A (contents-panel,
-// fullpage-1 …) still works, and the older tab-separated Ad Placements.csv is
-// read when there is no workbook. A page with no row keeps its house ad; "No"
-// runs that position empty.
-
-function slotOf(where) {
-  const w = String(where || '').trim();
-  if (!w) return '';
-  if (slotById(w) || /^(fullpage|page)-\d+$/i.test(w)) return w.toLowerCase();
-  const n = w.match(/^(?:page\s*)?(\d{1,3})(?:\.0+)?$/i);
-  return n ? 'page-' + (+n[1]) : null;
-}
+// `slot` is an id from SLOTS (or fullpage-N). `artwork` is a filename dropped
+// in inputs/ads/ — house artwork already in the project is found by bare name
+// too, so the standing ads need no file supplied. `enabled` no benches a slot
+// for one edition: it runs empty rather than falling back to the house ad.
+// A slot with no row at all keeps its house ad.
 
 const ART_DIRS = ['inputs/ads/', 'assets/ads/', 'assets/photos/'];
 
@@ -153,58 +142,46 @@ async function findArtwork(name) {
 
 const yes = v => !/^(no|n|false|0|off)$/i.test(String(v == null ? '' : v).trim());
 
-async function placementRows(url) {
-  const xlsx = String(url || '').replace(/\.csv$/i, '.xlsx') || 'inputs/Ad Placements.xlsx';
-  try {
-    const res = await fetch(/\.xlsx$/i.test(xlsx) ? xlsx : 'inputs/Ad Placements.xlsx');
-    if (res.ok) {
-      const raw = await readSheet(await res.blob());
-      return { file: 'Ad Placements.xlsx', rows: raw.map((r, i) => ({
-        line: i + 1, where: r.A || '', artwork: r.B || '', enabled: r.C || '', caption: '', notes: ''
-      })).filter(r => !/^page\s*number/i.test(r.where)) };
-    }
-  } catch (e) { /* fall through to the CSV */ }
-  const csv = /\.csv$/i.test(url || '') ? url : 'inputs/Ad Placements.csv';
-  const res = await fetch(csv).catch(() => null);
-  if (!res || !res.ok) return null;
-  const lines = (await res.text()).replace(/^\uFEFF/, '').replace(/\r\n?/g, '\n').split('\n').filter(l => l.trim());
-  const head = (lines.shift() || '').split('\t').map(h => h.trim().toLowerCase());
-  const col = name => head.indexOf(name);
-  return { file: 'Ad Placements.csv', rows: lines.map((line, i) => {
-    const c = line.split('\t').map(v => (v || '').trim());
-    return { line: i + 2, where: c[col('slot')] || '', page: '', artwork: c[col('artwork')] || '', enabled: c[col('enabled')] || '', caption: c[col('caption')] || '', notes: c[col('notes')] || '' };
-  }) };
-}
-
 /**
- * Read the producer's bookings. Returns { rows, bySlot, warnings }.
+ * Read the producer's placement file. Returns { rows, bySlot, warnings }.
  * Missing file is not an error — the edition simply runs its house ads.
  */
 export async function loadPlacements(url) {
   const warnings = [];
-  const src = await placementRows(url);
-  if (!src) return { rows: [], bySlot: {}, warnings: ['No Ad Placements workbook found — running house advertising only.'] };
+  let text;
+  try {
+    const res = await fetch(url || 'inputs/Ad Placements.csv');
+    if (!res.ok) throw new Error(String(res.status));
+    text = await res.text();
+  } catch (e) {
+    return { rows: [], bySlot: {}, warnings: ['No Ad Placements.csv found — running house advertising only.'] };
+  }
+  const lines = text.replace(/^\uFEFF/, '').replace(/\r\n?/g, '\n').split('\n').filter(l => l.trim());
+  const head = (lines.shift() || '').split('\t').map(h => h.trim().toLowerCase());
+  const col = name => head.indexOf(name);
   const rows = [];
   const bySlot = {};
-  for (const r of src.rows) {
-    if (!r.where || r.where.charAt(0) === '#') continue;
-    const at = src.file + ' row ' + r.line;
-    const slot = slotOf(r.where);
-    if (!slot) { warnings.push('"' + r.where + '" is not a page number — ' + at + ' ignored.'); continue; }
-    if (bySlot[slot]) { warnings.push(slot.replace('page-', 'Page ') + ' is booked twice — ' + at + ' ignored.'); continue; }
-    if (!r.artwork && yes(r.enabled)) warnings.push('No artwork file name for ' + slot.replace('page-', 'page ') + ' — ' + at + '; the house ad runs.');
+  for (const line of lines) {
+    const c = line.split('\t').map(v => (v || '').trim());
+    const slot = c[col('slot')] || '';
+    if (!slot || slot.charAt(0) === '#') continue;
+    if (!slotById(slot) && !/^fullpage-\d+$/.test(slot) && !/^page-\d+$/.test(slot)) {
+      warnings.push('Unknown ad slot "' + slot + '" — row ignored. Slots: ' + SLOTS.map(s => s.id).join(', ') + ', fullpage-N, page-N.');
+      continue;
+    }
+    if (bySlot[slot]) { warnings.push('Slot "' + slot + '" booked twice — the later row is ignored.'); continue; }
     const row = {
       slot,
       kind: (slotById(slot) || {}).kind || 'full',
-      artworkName: r.artwork,
-      caption: r.caption,
-      enabled: yes(r.enabled),
-      notes: r.notes,
+      artworkName: c[col('artwork')] || '',
+      caption: c[col('caption')] || '',
+      enabled: yes(c[col('enabled')]),
+      notes: c[col('notes')] || '',
       artwork: null
     };
     if (row.enabled && row.artworkName) {
       row.artwork = await findArtwork(row.artworkName);
-      if (!row.artwork) warnings.push('Artwork "' + row.artworkName + '" for ' + slot + ' not found in inputs/ads/ — check the spelling and extension; the house ad runs.');
+      if (!row.artwork) warnings.push('Artwork "' + row.artworkName + '" for slot "' + slot + '" not found in inputs/ads/ — that slot falls back to its house ad.');
     }
     rows.push(row);
     bySlot[slot] = row;
@@ -222,8 +199,7 @@ export async function loadPlacements(url) {
 export function slotReport(total, placements) {
   const booked = (placements && placements.bySlot) || {};
   const extra = Math.max(0, fullPages(total).length - 1);
-  const base = fullPages(total).length ? SLOTS : SLOTS.filter(s => s.kind !== 'full');
-  const all = base.concat(Array.from({ length: extra }, (_, i) => fullPageSlot(i + 2)));
+  const all = SLOTS.concat(Array.from({ length: extra }, (_, i) => fullPageSlot(i + 2)));
   return all.map(s => {
     const b = booked[s.id];
     const house = s.house ? byId(s.house) : null;
@@ -279,10 +255,8 @@ export function forSlot(slot, placements) {
  */
 export function fullPages(total, placements) {
   const n = Number(total) || 0;
-  // Published as a PDF, not saddle-stitched: the edition only has to finish
-  // on an even page with the back cover last. `total` counts the standing
-  // HR Assist page; one more bookable page runs if that leaves it odd.
-  const wanted = 1 + (n % 2);
+  const short = n % 4 ? 4 - (n % 4) : 0;
+  const wanted = 1 + short;
   const stock = live().filter(a => a.kind === 'full' && a.artwork);
   const out = [];
   for (let i = 0; i < wanted; i++) {
