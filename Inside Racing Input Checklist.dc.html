@@ -166,7 +166,7 @@ class Component extends DCLogic {
       { title: 'D \u00a0 FOR THE FINAL DRAFT \u2014 BOOKED ADVERTISING',
         note: 'Not needed for a draft run: with nothing here every slot runs its house advertisement. A booked full page changes the page count, so the console is run again once these are in.',
         rows: [
-          ['Ad Placements.csv', 'Advertising', 'optional', 'One row per booked slot. A slot with no row keeps its house ad.'],
+          ['Ad Placements.xlsx', 'Advertising', 'optional', 'One row per ad: pick where it goes from the dropdown and type the artwork file name. A position with no row keeps its house ad.'],
           ['ads/ \u2014 the booked artwork', 'Advertising', 'optional', 'A folder beside the inputs holding the artwork named in the placements file.']
         ] }
     ];
@@ -188,7 +188,7 @@ class Component extends DCLogic {
       g.rows.forEach(([file, section, tag, note]) => {
         const off = tag === 'not this edition';
         const done = !!ticks[file] && !off;
-        const isAd = file === 'Ad Placements.csv' || file.indexOf('ads/') === 0;
+        const isAd = file === 'Ad Placements.xlsx' || file.indexOf('ads/') === 0;
         if (isAd) { adTotal++; if (done) adHave++; }
         else if (!off) { need++; if (done) have++; }
         const label = isAd ? 'final step (not first draft)' : '';

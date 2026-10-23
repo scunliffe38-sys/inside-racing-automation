@@ -40,6 +40,11 @@ export const EXPECTED = [
   { file: 'Meeting Corrections - Entry Deadlines.xlsx', section: 'Entry deadlines', cadence: 'monthly', required: false },
   { file: 'Vic Calendar - <Mon YY>.xlsx', section: 'Programs summary chart', cadence: 'monthly', required: true, pattern: /^vic calendar( - [a-z]{3} \d{2})?\.xlsx$/ },
   { file: 'Race Programs.csv', section: 'Race programs', cadence: 'monthly', required: true },
+  { file: 'Add Twilight in Race Program.xlsx', section: 'Race programs', cadence: 'monthly', required: false },
+  { file: 'Race Program - Race Name Updates.xlsx', section: 'Race programs', cadence: 'monthly', required: false },
+  { file: 'Country run as Metro.xlsx', section: 'Race programs', cadence: 'monthly', required: false },
+  { file: 'The Valley Transfer meetings.xlsx', section: 'Race programs', cadence: 'monthly', required: false },
+  { file: 'NOM ACCEPT REMOVE.xlsx', section: 'Race programs', cadence: 'monthly', required: false },
   { file: 'Race Series.docx', section: 'Race series', cadence: 'monthly', required: true },
   { file: 'Highweights.docx', section: 'Race series', cadence: 'monthly', required: false },
   { file: 'Jumps Racing Program.xlsx', section: 'Jumps program', cadence: 'yearly', required: false },
@@ -47,6 +52,7 @@ export const EXPECTED = [
   { file: 'Jumps Prizemoney Breakdowns.csv', section: 'Jumps program', cadence: 'rarely', required: false },
   { file: 'Picnic Program.xlsx', section: 'Picnic racing', cadence: 'yearly', required: false },
   { file: 'Jump Outs.xlsx', section: 'Jump outs', cadence: 'monthly', required: true },
+  { file: 'HR Assist.JPG', section: 'Advertising', cadence: 'as supplied', required: true },
   { file: 'Official Flat Trials.csv', section: 'Flat trials', cadence: 'monthly', required: true },
   { file: 'Eligible to Ride in Trials.xlsx', section: 'Flat trials', cadence: 'rarely', required: false },
   { file: 'Permits to Ride.xlsx', section: 'Permits to ride', cadence: 'monthly', required: true },
@@ -55,7 +61,7 @@ export const EXPECTED = [
   { file: 'Stewards Room.docx', section: 'Stewards\u2019 room', cadence: 'monthly', required: true },
   { file: 'Rules Extracts.docx', section: 'Rules extracts', cadence: 'monthly', required: true },
   { file: 'Division of Races Policy.docx', section: 'Division of races', cadence: 'rarely', required: false },
-  { file: 'Ad Placements.csv', section: 'Advertising', cadence: 'monthly', required: false },
+  { file: 'Ad Placements.xlsx', section: 'Advertising', cadence: 'monthly', required: false },
   { file: 'Cover.jpg', section: 'Cover', cadence: 'monthly', required: true }
 ];
 
@@ -116,7 +122,7 @@ export async function loadBake() {
 // every request in that load.
 // Bumped by hand whenever this file changes, so the console can show which copy
 // of it the browser actually loaded. A stale cache shows a stale build.
-export const VERSION = '2026-09-17a';
+export const VERSION = '2026-10-01a';
 
 const BUST = 'ir=' + Date.now();
 

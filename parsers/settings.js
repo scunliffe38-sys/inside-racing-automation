@@ -108,7 +108,7 @@ export async function loadSettings(url) {
   }
   // Advertising bookings, read before pagination: a booked full page changes
   // the page count, so the running order has to be worked out with them in hand.
-  const placements = await loadPlacements('inputs/Ad Placements.csv');
+  const placements = await loadPlacements('inputs/Ad Placements.xlsx');
   warnings.push(...placements.warnings);
   settings.$placements = { rows: placements.rows, bySlot: placements.bySlot };
   const pages = plan(settings, placements);

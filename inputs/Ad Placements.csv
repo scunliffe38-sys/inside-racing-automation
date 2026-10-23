@@ -1,8 +1,0 @@
-slot	artwork	caption	enabled	notes
-# Booked advertising for this edition. One row per slot. Lines starting with #
-# are ignored, so the three examples below are inactive until you delete the #.
-# A slot with no row runs its house ad. enabled: no runs the slot empty.
-# Slot ids and artwork sizes are in the placement report the run produces.
-#contents-panel	sportsbet-panel.png		yes	Panel on the contents page
-#jumps-filler	tabcorp-filler.jpg	Caption printed under the panel	yes	Foot of the Jumps Program page
-#fullpage-1	acme-fullpage.png		yes	Whole page before the back cover

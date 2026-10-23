@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="omelette-print-source" content="v1787577986495901 Race Programs.dc.html">
+<meta name="omelette-print-source" content="v1790734525794444 Race Programs.dc.html">
 <script src="./support.js"></script>
 </head>
 <body>
@@ -69,9 +69,9 @@ a:hover{color:#1b7fb4}
 <span style="display:flex;align-items:center;gap:3pt"><span style="width:7pt;height:7pt;background:#2c9cd7;display:inline-block"></span>Country</span>
 </div>
 <div style="position:absolute;left:23pt;right:13pt;top:37pt;height:2.25pt;background:#9ecff0"></div>
-<div style="position:absolute;left:158.5pt;top:55.1pt;height:756.8pt;border-left:0.75pt dotted #9a9c9f"></div>
-<div style="position:absolute;left:299.5pt;top:55.1pt;height:756.8pt;border-left:0.75pt dotted #9a9c9f"></div>
-<div style="position:absolute;left:440.5pt;top:55.1pt;height:756.8pt;border-left:0.75pt dotted #9a9c9f"></div>
+<div style="position:absolute;left:158.5pt;top:55.1pt;height:{{ pg.ruleH }};border-left:0.75pt dotted #9a9c9f"></div>
+<div style="position:absolute;left:299.5pt;top:55.1pt;height:{{ pg.ruleH }};border-left:0.75pt dotted #9a9c9f"></div>
+<div style="position:absolute;left:440.5pt;top:55.1pt;height:{{ pg.ruleH }};border-left:0.75pt dotted #9a9c9f"></div>
 <div style="position:absolute;left:23pt;right:19pt;top:55.1pt;display:flex;gap:11pt;align-items:flex-start">
 <sc-for list="{{ pg.cols }}" as="col" hint-placeholder-count="4">
 <div style="width:130pt;flex:0 0 130pt">
@@ -102,10 +102,10 @@ a:hover{color:#1b7fb4}
 <sc-for list="{{ a.prize }}" as="r" hint-placeholder-count="1"><div style="font-size:7pt;font-weight:400;line-height:9pt;white-space:pre-wrap;color:#2c2e35">{{ r.t }}</div></sc-for>
 <sc-for list="{{ a.fees }}" as="r" hint-placeholder-count="0"><div style="font-size:7pt;font-weight:400;line-height:9pt;white-space:pre-wrap;color:#2c2e35">{{ r.t }}</div></sc-for>
 <sc-for list="{{ a.penH }}" as="r" hint-placeholder-count="0"><div style="font-family:'Gotham XNarrow',sans-serif;font-size:6pt;font-weight:700;line-height:8pt;letter-spacing:.01em;color:#2c2e35">{{ r.t }}</div></sc-for>
-<sc-for list="{{ a.pen }}" as="r" hint-placeholder-count="0"><div style="font-family:'Gotham XNarrow',sans-serif;font-size:6.5pt;font-weight:400;line-height:8pt;white-space:pre-wrap;color:#2c2e35">{{ r.t }}</div></sc-for>
+<sc-for list="{{ a.pen }}" as="r" hint-placeholder-count="0"><div data-split="pen" style="font-family:'Gotham XNarrow',sans-serif;font-size:6.5pt;font-weight:400;line-height:8pt;white-space:pre-wrap;color:#2c2e35">{{ r.t }}</div></sc-for>
 <sc-for list="{{ a.balH }}" as="r" hint-placeholder-count="0"><div style="font-family:'Gotham XNarrow',sans-serif;font-size:6pt;font-weight:700;line-height:8pt;letter-spacing:.01em;color:#2c2e35">{{ r.t }}</div></sc-for>
-<sc-for list="{{ a.bal }}" as="r" hint-placeholder-count="0"><div style="font-family:'Gotham XNarrow',sans-serif;font-size:6.5pt;font-weight:400;line-height:8pt;white-space:pre-wrap;color:#2c2e35">{{ r.t }}</div></sc-for>
-<sc-for list="{{ a.other }}" as="r" hint-placeholder-count="0"><div style="font-family:'Gotham XNarrow',sans-serif;font-size:6.5pt;font-weight:400;line-height:8pt;white-space:pre-wrap;color:#2c2e35">{{ r.t }}</div></sc-for>
+<sc-for list="{{ a.bal }}" as="r" hint-placeholder-count="0"><div data-split="bal" style="font-family:'Gotham XNarrow',sans-serif;font-size:6.5pt;font-weight:400;line-height:8pt;white-space:pre-wrap;color:#2c2e35">{{ r.t }}</div></sc-for>
+<sc-for list="{{ a.other }}" as="r" hint-placeholder-count="0"><div data-split="other" style="font-family:'Gotham XNarrow',sans-serif;font-size:6.5pt;font-weight:400;line-height:8pt;white-space:pre-wrap;color:#2c2e35">{{ r.t }}</div></sc-for>
 <sc-for list="{{ a.nomH }}" as="r" hint-placeholder-count="0"><div style="font-family:'Gotham XNarrow',sans-serif;font-size:6.5pt;font-weight:700;line-height:8pt;color:#2c2e35">{{ r.t }}</div></sc-for>
 <sc-for list="{{ a.nom }}" as="r" hint-placeholder-count="0"><div style="font-family:'Gotham XNarrow',sans-serif;font-size:6.5pt;font-weight:400;line-height:8pt;white-space:pre-wrap;color:#2c2e35">{{ r.t }}</div></sc-for>
 <sc-for list="{{ a.accH }}" as="r" hint-placeholder-count="0"><div style="font-family:'Gotham XNarrow',sans-serif;font-size:6.5pt;font-weight:700;line-height:8pt;color:#2c2e35">{{ r.t }}</div></sc-for>
@@ -185,6 +185,15 @@ class Component extends DCLogic {
       const k = lines.findIndex(l => l.length > 100);
       return k < 0 ? [v, ''] : [lines.slice(0, k).join('\n'), lines.slice(k).join('\n')];
     };
+    // A series or bonus named in brackets on the race name is dropped when the
+    // lines under the name repeat it.
+    const REPEATS = [
+      [/\s*\(\s*MCC\s+SERIES\s+HEATS?(?:\s+\d+)?\s*\)/i, /\bMCCS?\s+Series\b/i],
+      // both "INGLIS (XTRA BONUS MAIDEN)" and "(INGLIS XTRA BONUS MAIDEN)" (v11 p35)
+      [/\s*(?:\(\s*INGLIS\s+XTRA\s+BONUS\s+MAIDEN\s*\)|\bINGLIS\s*\(\s*XTRA\s+BONUS\s+MAIDEN\s*\))/i, /\bInglis\s+Xtra\s+Bonus\b/i]
+    ];
+    const rpTrimName = (name, after) => REPEATS.reduce((n, [inName, inAfter]) =>
+      inName.test(n) && inAfter.test(after || '') ? n.replace(inName, '').trim() : n, String(name || ''));
     const out = [];
     (this.state.meetings || []).forEach(m => {
       const head = {
@@ -207,10 +216,12 @@ class Component extends DCLogic {
         out.push({
           ...blank,
           race: rid,
-          bar: [{ cond: r.cond || '', dist: (r.dist || '').replace(/\s+/g, '') }],
-          title: one(join(r.no + '.', r.name).toUpperCase()),
+          bar: [{ cond: (c => { c = String(c || '').replace(/\s+/g, ' ').trim(); const rest = c.replace(/\b\d(?:\s*,\s*\d)*(?:\s*,?\s*&\s*\d)?\s*YO\b(?:\s*&\s*UP\b)?/gi, '').replace(/\b(F&M|C,\s*G\s*&\s*E|C&G|E&G|F|M|C|G)\b/gi, '').replace(/[\s,&]+/g, ''); return !c ? 'Open' : rest ? c : c + ' Open'; })(r.cond), dist: (r.dist || '').replace(/\s+/g, '') }],
+          title: one(join(r.no + '.', rpTrimName(r.name, [r.bonus, r.notation, r.prize, r.weight, r.nomFee, r.accFee, r.decl, r.penH, r.pen, r.balH, r.bal, r.other].join(' '))).toUpperCase()),
           claim: one(join(r.claim, r.group)),
-          bonus: one(join(r.bonus, noteSplit(r.notation)[0])),
+          // The VOBIS line and the series or bonus note after it are two
+          // things: the note starts a line of its own (v10 pp29, 31).
+          bonus: one([nl(r.bonus), noteSplit(r.notation)[0]].filter(Boolean).join('\n')),
           note: one(noteSplit(r.notation)[1])
         });
         // finer granularity: prizemoney, fees and each conditions/declarations block are
@@ -229,13 +240,25 @@ class Component extends DCLogic {
           push({ prize: one(join(r.prize, r.weight)) });
         }
         push({ fees: one(join(r.nomFee, r.accFee, r.decl)) });
-        [['penH', 'pen'], ['balH', 'bal'], [null, 'other'], ['nomH', 'nom'], ['accH', 'acc']].forEach(([hk, bk]) => {
+        [['penH', 'pen'], ['balH', 'bal'], [null, 'other']].forEach(([hk, bk]) => {
           const lab = hk && isLabel(r[hk]);
           const body = (hk && !lab ? paras(r[hk]) : []).concat(paras(r[bk]));
           const head = lab ? one(r[hk]) : [];
-          if (!body.length) { if (head.length) push({ [hk]: head }); return; }
+          // A heading the export left with no text under it is not printed.
+          if (!body.length) return;
           body.forEach((p, k) => push(k === 0 && head.length ? { [hk]: head, [bk]: p } : { [bk]: p }));
         });
+        // Entries and Acceptances print together as one atom: a column break
+        // never falls between them (producer rule, after the v10 review).
+        const ea = {};
+        [['nomH', 'nom'], ['accH', 'acc']].forEach(([hk, bk]) => {
+          const lab = isLabel(r[hk]);
+          const body = (!lab ? paras(r[hk]) : []).concat(paras(r[bk]));
+          if (!body.length) return;
+          if (lab) ea[hk] = one(r[hk]);
+          ea[bk] = body.map(p => p[0]);
+        });
+        push(ea);
       });
     });
     return out;
@@ -251,39 +274,87 @@ class Component extends DCLogic {
     const h = els.map(e => toPt(e.getBoundingClientRect().height));
     const LIMIT = 841.89 - 55.1 - 30;
     const GAP = 13;
+    // Penalties, Balloting Conditions and Other Conditions may split between
+    // lines at a column foot, so long as each column carries at least three
+    // lines of that text. Where each printed line starts is read off the
+    // measuring render, so the cut falls exactly on a line break.
+    const LINES_MIN = 3;
+    const TWO_LINES = 15.5;
+    const split = all.map((a, k) => {
+      const el = els[k] && els[k].querySelector('[data-split]');
+      const tn = el && Array.from(el.childNodes).find(n => n.nodeType === 3);
+      if (!tn) return null;
+      const s = tn.data, rg = document.createRange(), starts = [];
+      let top = -1e9;
+      for (let o = 0; o < s.length; o++) {
+        if (/\s/.test(s[o]) || (o > 0 && !/[\s\-\/]/.test(s[o - 1]))) continue;
+        rg.setStart(tn, o); rg.setEnd(tn, o + 1);
+        const r = rg.getClientRects()[0];
+        if (r && r.top > top + 2) { starts.push(o); top = r.top; }
+      }
+      const bodyH = toPt(el.getBoundingClientRect().height);
+      return starts.length >= LINES_MIN * 2
+        ? { key: el.getAttribute('data-split'), text: s, starts, lh: bodyH / starts.length }
+        : null;
+    });
     const cols = [];
     let i = 0;
     while (i < all.length) {
       let used = 0;
       const atoms = [];
+      const start = i;
+      // A page turn follows the same rules as a column break (producer, after
+      // v14): a race may carry from column 4 onto the next page, and the text
+      // splits, the two-line minimum and Entries with Acceptances all hold.
       while (i < all.length) {
         const cost = (all[i].head && atoms.length ? GAP : 0) + h[i];
-        if (used + cost > LIMIT && atoms.length) break;
+        if (used + cost > LIMIT && atoms.length) {
+          const sp = split[i];
+          if (sp) {
+            const n = sp.starts.length;
+            const tail = h[i] - n * sp.lh;
+            const fit = Math.min(n - LINES_MIN, Math.floor((LIMIT - used - tail) / sp.lh + 0.01));
+            if (fit >= LINES_MIN) {
+              const a = all[i], cut = sp.starts[fit], restH = (n - fit) * sp.lh;
+              const first = { ...a, [sp.key]: [{ t: sp.text.slice(0, cut).trimEnd() }] };
+              const rest = { ...a, penH: [], balH: [], [sp.key]: [{ t: sp.text.slice(cut).trimStart() }] };
+              const firstH = h[i] - restH;
+              all.splice(i, 1, first, rest); h.splice(i, 1, firstH, restH); split.splice(i, 1, null, null);
+              used += firstH; atoms.push(all[i]); i++;
+            }
+          }
+          break;
+        }
         used += cost; atoms.push(all[i]); i++;
       }
-      while (atoms.length > 1 && atoms[atoms.length - 1].head) { atoms.pop(); i--; }
-      // No single line of a race carried over on its own. When the boundary
-      // leaves exactly one atom of a race for the next column, one more atom is
-      // handed forward so the remainder reads as a block rather than a stray
-      // line under the next column's heading. If that would empty the column,
-      // it is left alone — a column has to hold something.
-      if (i < all.length && atoms.length) {
+      // At least two lines of a race on each side of a column break. If what
+      // carries over is under two lines deep, the atom before it goes too,
+      // unless that would empty the column.
+      if (i < all.length && atoms.length > 1) {
         const carried = all[i].race;
-        if (carried) {
-          let ahead = 0;
-          for (let k = i; k < all.length && all[k].race === carried; k++) ahead++;
-          if (ahead === 1 && atoms.length > 1 && atoms[atoms.length - 1].race === carried) {
-            atoms.pop();
-            i--;
-          }
+        if (carried && atoms[atoms.length - 1].race === carried) {
+          let aheadH = 0;
+          for (let k = i; k < all.length && all[k].race === carried; k++) aheadH += h[k];
+          if (aheadH < TWO_LINES) { atoms.pop(); i--; }
         }
       }
-      cols.push({ atoms: atoms.map((a, k) => (a.head && k > 0 ? { ...a, gap: [{}] } : { ...a, gap: [] })) });
+      // Never leave a meeting heading at a column foot. Run last, after every
+      // rule that hands atoms forward, since any of them can leave one behind
+      // (v10 p41, BET365 SWAN HILL).
+      while (atoms.length > 1 && atoms[atoms.length - 1].head) { atoms.pop(); i--; }
+      let depth = 0;
+      for (let k = start; k < i; k++) depth += h[k] + (all[k].head && k > start ? GAP : 0);
+      cols.push({ depth, atoms: atoms.map((a, k) => (a.head && k > 0 ? { ...a, gap: [{}] } : { ...a, gap: [] })) });
     }
+    // column rules stop at the deepest column, so a short last page reads short
+    const RULE_FULL = 756.8;
     const pages = [];
     for (let p = 0; p * 4 < cols.length; p++) {
+      const pc = [0, 1, 2, 3].map(c => cols[p * 4 + c] || { atoms: [], depth: 0 });
+      const deep = Math.max(...pc.map(c => c.depth || 0)) + 6;
       pages.push({
-        cols: [0, 1, 2, 3].map(c => cols[p * 4 + c] || { atoms: [] }),
+        ruleH: (deep >= RULE_FULL - 90 ? RULE_FULL : deep).toFixed(1) + 'pt',
+        cols: pc,
         no: 0
       });
     }
@@ -304,7 +375,7 @@ class Component extends DCLogic {
   renderVals() {
     const pages = this.state.pages
       ? this.state.pages
-      : (this.state.meetings ? [{ cols: [{ atoms: this.atoms() }, { atoms: [] }, { atoms: [] }, { atoms: [] }], no: this.state.from || 0 }] : []);
+      : (this.state.meetings ? [{ ruleH: '756.8pt', cols: [{ atoms: this.atoms() }, { atoms: [] }, { atoms: [] }, { atoms: [] }], no: this.state.from || 0 }] : []);
     const M = ['JANUARY','FEBRUARY','MARCH','APRIL','MAY','JUNE','JULY','AUGUST','SEPTEMBER','OCTOBER','NOVEMBER','DECEMBER'];
     const ms = this.state.meetings || [];
     // the parser resolves each meeting's month; the filter column's order varies
