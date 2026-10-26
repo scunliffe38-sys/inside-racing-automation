@@ -48,23 +48,24 @@ const textOf = xml => unescapeXml(
 const EMAIL_OR_URL = /((?:https?:\/\/|www\.)[^\s<>()]+[^\s<>().,;:]|[\w.+-]+@[\w-]+(?:\.[\w-]+)+)/g;
 function runsOf(pxml, rels) {
   const out = [];
-  const add = (t, b, href) => {
+  const add = (t, b, href, f) => {
     if (!t) return;
     const last = out[out.length - 1];
-    if (last && !last.br && last.b === b && last.href === href) last.t += t;
-    else out.push({ t, b, href });
+    if (last && !last.br && last.b === b && last.href === href && last.i === f.i && last.u === f.u) last.t += t;
+    else out.push({ t, b, href, i: f.i, u: f.u });
   };
   let fieldHref = null, instr = '', inInstr = false;
   const doRun = (run, href) => {
     const bold = runIsBold(run);
+    const f = { i: runIs(run, 'i'), u: runIsUnderlined(run) };
     for (const m of run.matchAll(/<w:fldChar\b[^>]*w:fldCharType="(\w+)"[^>]*\/>|<w:instrText\b[^>]*>([\s\S]*?)<\/w:instrText>|<w:t(?:\s[^>]*)?>([\s\S]*?)<\/w:t>|<w:(br|cr)\b[^>]*\/>|<w:tab\b[^>]*\/>/g)) {
       if (m[1] === 'begin') { inInstr = true; instr = ''; }
       else if (m[1] === 'separate') { inInstr = false; const u = instr.match(/HYPERLINK\s+"([^"]+)"/i); fieldHref = u ? u[1] : null; }
       else if (m[1] === 'end') { inInstr = false; fieldHref = null; }
       else if (m[2] !== undefined) { if (inInstr) instr += unescapeXml(m[2]); }
-      else if (m[3] !== undefined) { if (!inInstr) add(unescapeXml(m[3]), bold, href || fieldHref); }
+      else if (m[3] !== undefined) { if (!inInstr) add(unescapeXml(m[3]), bold, href || fieldHref, f); }
       else if (m[4]) out.push({ br: true });
-      else add(' ', bold, href || fieldHref);
+      else add(' ', bold, href || fieldHref, f);
     }
   };
   const re = /<w:hyperlink\b([^>]*)>([\s\S]*?)<\/w:hyperlink>|<w:fldSimple\b([^>]*)>([\s\S]*?)<\/w:fldSimple>|<w:r\b[^>]*>[\s\S]*?<\/w:r>/g;
@@ -92,18 +93,20 @@ function runsOf(pxml, rels) {
     if (p.br || p.href) { linked.push(p); return; }
     String(p.t).split(EMAIL_OR_URL).forEach((bit, k) => {
       if (!bit) return;
-      if (k % 2) linked.push({ t: bit, b: p.b, href: /@/.test(bit) && !/^https?:/i.test(bit) ? 'mailto:' + bit : (/^www\./i.test(bit) ? 'https://' + bit : bit) });
-      else linked.push({ t: bit, b: p.b, href: null });
+      if (k % 2) linked.push({ t: bit, b: p.b, i: p.i, u: p.u, href: /@/.test(bit) && !/^https?:/i.test(bit) ? 'mailto:' + bit : (/^www\./i.test(bit) ? 'https://' + bit : bit) });
+      else linked.push({ t: bit, b: p.b, i: p.i, u: p.u, href: null });
     });
   });
   return linked.filter(p => p.br || p.t);
 }
 
 /** The runs in the shape the templates print: one list per kind, so each run
- *  is a plain span, a bold span, a link or a line break. */
+ *  is a plain span, a bold span, a formatted span (italic or underlined, with
+ *  or without bold), a link or a line break. */
 export const printRuns = runs => (runs || []).map(p => ({
-  plain: !p.br && !p.href && !p.b ? [{ t: p.t }] : [],
-  bold: !p.br && !p.href && p.b ? [{ t: p.t }] : [],
+  plain: !p.br && !p.href && !p.b && !p.i && !p.u ? [{ t: p.t }] : [],
+  bold: !p.br && !p.href && p.b && !p.i && !p.u ? [{ t: p.t }] : [],
+  fmt: !p.br && !p.href && (p.i || p.u) ? [{ t: p.t, w: p.b ? 700 : 400, fs: p.i ? 'italic' : 'normal', td: p.u ? 'underline' : 'none' }] : [],
   link: !p.br && p.href && !p.b ? [{ t: p.t, href: p.href }] : [],
   linkBold: !p.br && p.href && p.b ? [{ t: p.t, href: p.href }] : [],
   br: p.br ? [{}] : []
@@ -123,6 +126,18 @@ const runIsBold = run => {
   const rPr = (String(run).match(/<w:rPr>[\s\S]*?<\/w:rPr>/) || [''])[0];
   const b = rPr.match(/<w:b(\s+w:val="([^"]*)")?\s*\/?>/);
   return !!b && !/^(0|false|off)$/i.test(b[2] || '1');
+};
+// Italic and underline are read the same way; underline is on for any value
+// but none.
+const runIs = (run, tag) => {
+  const rPr = (String(run).match(/<w:rPr>[\s\S]*?<\/w:rPr>/) || [''])[0];
+  const m = rPr.match(new RegExp('<w:' + tag + '(\\s+w:val="([^"]*)")?\\s*\\/?>'));
+  return !!m && !/^(0|false|off)$/i.test(m[2] || '1');
+};
+const runIsUnderlined = run => {
+  const rPr = (String(run).match(/<w:rPr>[\s\S]*?<\/w:rPr>/) || [''])[0];
+  const m = rPr.match(/<w:u\b(?:[^>]*\sw:val="([^"]*)")?[^>]*\/?>/);
+  return !!m && !/^(none|0|false)$/i.test(m[1] || 'single');
 };
 function allBold(xml) {
   const runs = [...String(xml).matchAll(/<w:r(?:\s[^>]*)?>[\s\S]*?<\/w:r>/g)]
@@ -145,16 +160,18 @@ const PAGE_DEPTH = 720;      // A4 less the title block and the folio zone
 
 // Characters to the line measured off the printed page: a full-measure line
 // at 8pt holds about 158, not the 118 a narrower column would.
+// The November review opened the space above a heading by half again.
 const NOTICE_METRICS = {
-  isSubject: [10, 17, 70], isSubhead: [11, 11, 120],
+  isSubject: [15, 17, 70], isSubhead: [16.5, 11, 120],
   isStep: [5, 10.4, 150], isClause: [4, 10.4, 152], isBullet: [4, 10.4, 150], isPara: [7, 10.4, 158]
 };
 
 // Tightened from the October review: 13pt above every topic and 6pt between
-// paragraphs ran the section past one page. The pages set 9pt and 5pt, and
-// these figures have to stay the same or the overrun warning misleads.
+// paragraphs ran the section past one page. The November review opened the
+// space above a heading by half again, to 13.5pt. The pages set 13.5pt and
+// 5pt, and these figures have to stay the same or the overrun warning misleads.
 const STEWARDS_METRICS = {
-  isHeading: [9, 17, 70], isSubhead: [9, 11, 120],
+  isHeading: [13.5, 17, 70], isSubhead: [13.5, 11, 120], isStep: [5, 10.4, 150],
   isClause: [4, 10.4, 152], isBullet: [4, 10.4, 150], isPara: [5, 10.4, 158]
 };
 
@@ -221,6 +238,53 @@ function tableOf(xml) {
   };
 }
 
+// Word's own lists. A paragraph in a list carries <w:numPr> (numId, ilvl);
+// numbering.xml says whether that level is a bullet or a number and how the
+// number is written ("%1.", "(%2)"). Counters run per list and reset the
+// deeper levels when a shallower one advances, as Word does. Returns a
+// function from paragraph XML to { kind: 'bullet'|'number', label, level }.
+function listNumbering(nxml) {
+  const abs = {}, num = {};
+  for (const a of nxml.matchAll(/<w:abstractNum\b[^>]*w:abstractNumId="(\d+)"[^>]*>([\s\S]*?)<\/w:abstractNum>/g)) {
+    const lv = {};
+    for (const l of a[2].matchAll(/<w:lvl\b[^>]*w:ilvl="(\d+)"[^>]*>([\s\S]*?)<\/w:lvl>/g)) {
+      lv[l[1]] = {
+        fmt: (l[2].match(/<w:numFmt\s+w:val="([^"]+)"/) || [])[1] || 'decimal',
+        text: unescapeXml((l[2].match(/<w:lvlText\s+w:val="([^"]*)"/) || [])[1] || '%' + (+l[1] + 1) + '.'),
+        start: +((l[2].match(/<w:start\s+w:val="(\d+)"/) || [])[1] || 1)
+      };
+    }
+    abs[a[1]] = lv;
+  }
+  for (const n of nxml.matchAll(/<w:num\b[^>]*w:numId="(\d+)"[^>]*>([\s\S]*?)<\/w:num>/g)) {
+    num[n[1]] = (n[2].match(/<w:abstractNumId\s+w:val="(\d+)"/) || [])[1];
+  }
+  const roman = n => { let r = '', v = n; [[1000,'m'],[900,'cm'],[500,'d'],[400,'cd'],[100,'c'],[90,'xc'],[50,'l'],[40,'xl'],[10,'x'],[9,'ix'],[5,'v'],[4,'iv'],[1,'i']].forEach(([k, s]) => { while (v >= k) { r += s; v -= k; } }); return r; };
+  const letter = n => { let r = ''; while (n > 0) { n--; r = String.fromCharCode(97 + (n % 26)) + r; n = Math.floor(n / 26); } return r; };
+  const show = (n, fmt) => fmt === 'lowerLetter' ? letter(n) : fmt === 'upperLetter' ? letter(n).toUpperCase()
+    : fmt === 'lowerRoman' ? roman(n) : fmt === 'upperRoman' ? roman(n).toUpperCase() : String(n);
+  const counters = {};
+  return pxml => {
+    const pr = (String(pxml).match(/<w:numPr>([\s\S]*?)<\/w:numPr>/) || [])[1];
+    if (!pr) return null;
+    const id = (pr.match(/<w:numId\s+w:val="(\d+)"/) || [])[1];
+    const lvl = +((pr.match(/<w:ilvl\s+w:val="(\d+)"/) || [])[1] || 0);
+    if (!id || id === '0') return null;
+    const def = (abs[num[id]] || {})[lvl] || { fmt: 'bullet', text: '', start: 1 };
+    if (def.fmt === 'bullet' || def.fmt === 'none') return { kind: 'bullet', label: '', level: lvl };
+    const key = num[id] || id;
+    const c = counters[key] = counters[key] || [];
+    const lv = (abs[num[id]] || {});
+    c[lvl] = c[lvl] == null ? def.start : c[lvl] + 1;
+    c.length = lvl + 1;
+    const label = def.text.replace(/%(\d)/g, (m, k) => {
+      const i = +k - 1, d = lv[i] || { fmt: 'decimal', start: 1 };
+      return show(c[i] == null ? d.start : c[i], d.fmt);
+    });
+    return { kind: 'number', label, level: lvl };
+  };
+}
+
 // one flat list of { style, text }, blank paragraphs dropped. With tables on,
 // a Word table arrives as one block rather than as its cells' paragraphs.
 async function paragraphs(url, opts = {}) {
@@ -236,18 +300,19 @@ async function paragraphs(url, opts = {}) {
     if (id && target && /hyperlink/i.test(m[0])) rels[id] = unescapeXml(target);
   }
   const body = (xml.match(/<w:body>([\s\S]*)<\/w:body>/) || [])[1] || '';
+  const lists = listNumbering(files['word/numbering.xml'] ? new TextDecoder().decode(files['word/numbering.xml']) : '');
   const re = opts.tables
     ? /<w:tbl>[\s\S]*?<\/w:tbl>|<w:p\b[^>]*>[\s\S]*?<\/w:p>|<w:p\b[^>]*\/>/g
     : /<w:p\b[^>]*>[\s\S]*?<\/w:p>|<w:p\b[^>]*\/>/g;
   return [...body.matchAll(re)]
-    .map(m => /^<w:tbl>/.test(m[0]) ? tableOf(m[0]) : ({ style: styleOf(m[0]), text: textOf(m[0]), bold: allBold(m[0]), runs: runsOf(m[0], rels) }))
+    .map(m => /^<w:tbl>/.test(m[0]) ? tableOf(m[0]) : ({ style: styleOf(m[0]), text: textOf(m[0]), bold: allBold(m[0]), runs: runsOf(m[0], rels), list: textOf(m[0]) ? lists(m[0]) : null }))
     .filter(b => b.text || (b.isTable && b.cells.length));
 }
 
 const isH1 = s => /^Heading1$|^Title$/i.test(s);
 // Styled first, appearance second — and never for a list paragraph, which is a
 // bullet that happens to be bold.
-const heads = b => isH1(b.style) || (b.style !== 'ListParagraph' && b.style !== 'IRBullet'
+const heads = b => isH1(b.style) || (!b.list && b.style !== 'ListParagraph' && b.style !== 'IRBullet'
   && b.style !== 'IRStep' && b.style !== 'IRClause' && !isH2(b.style) && looksLikeHeading(b));
 
 /** Says so once when the headings had to be inferred from bold. */
@@ -286,15 +351,18 @@ export async function loadNotice(url) {
     if (heads(b) || isH2(b.style)) step = 0;
     if (b.style === 'IRStep') step += 1;
     const head = heads(b) || isH2(b.style);
-    const bullet = !head && b.style !== 'IRStep' && b.style !== 'IRClause' && isBulletPara(b);
+    // a Word numbered list prints as numbered steps, with Word's own numbers
+    const numbered = !head && !!b.list && b.list.kind === 'number';
+    const stepped = b.style === 'IRStep' || numbered;
+    const bullet = !head && !stepped && b.style !== 'IRClause' && ((b.list && b.list.kind === 'bullet') || isBulletPara(b));
     return {
       isSubject: heads(b),
       isSubhead: isH2(b.style),
-      isStep: b.style === 'IRStep',
-      isClause: b.style === 'IRClause',
+      isStep: stepped,
+      isClause: !stepped && b.style === 'IRClause',
       isBullet: bullet,
-      isPara: !head && !bullet && b.style !== 'IRStep' && b.style !== 'IRClause',
-      no: b.style === 'IRStep' ? step + '.' : '',
+      isPara: !head && !bullet && !stepped && b.style !== 'IRClause',
+      no: numbered ? b.list.label : b.style === 'IRStep' ? step + '.' : '',
       text: bullet ? debullet(b.text) : b.text,
       runs: printRuns(bullet ? debulletRuns(b.runs) : b.runs)
     };
@@ -327,13 +395,16 @@ export async function loadStewards(url) {
   const blocks = paras.map(b => {
     if (b.isTable) return b;
     const head = heads(b) || isH2(b.style);
-    const bullet = !head && b.style !== 'IRClause' && isBulletPara(b);
+    const numbered = !head && !!b.list && b.list.kind === 'number';
+    const bullet = !head && !numbered && b.style !== 'IRClause' && ((b.list && b.list.kind === 'bullet') || isBulletPara(b));
     return {
       isHeading: heads(b),
       isSubhead: isH2(b.style),
-      isClause: b.style === 'IRClause',
+      isStep: numbered,
+      no: numbered ? b.list.label : '',
+      isClause: !numbered && b.style === 'IRClause',
       isBullet: bullet,
-      isPara: !head && !bullet && b.style !== 'IRClause',
+      isPara: !head && !bullet && !numbered && b.style !== 'IRClause',
       text: bullet ? debullet(b.text) : b.text,
       runs: printRuns(bullet ? debulletRuns(b.runs) : b.runs)
     };

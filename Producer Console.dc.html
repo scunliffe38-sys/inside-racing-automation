@@ -181,7 +181,67 @@ a:hover{color:#2c9cd7}
 
 <div style="margin-top:14px;background:#fff;border:1px solid #dfe4e9;padding:16px 18px 18px">
 <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap">
-<div style="font-size:11px;letter-spacing:.08em;font-weight:700">4 &nbsp;RUN THE EDITION</div>
+<div style="font-size:11px;letter-spacing:.08em;font-weight:700">4 &nbsp;COVER PHOTOGRAPH</div>
+<div style="font-size:12px;color:#5b616e">{{ coverStatus }}</div>
+</div>
+<div style="display:flex;gap:24px;flex-wrap:wrap;margin-top:12px;align-items:flex-start">
+<div style="flex:0 0 358px;width:358px;height:507px;position:relative;overflow:hidden;background:#eceff2;border:1px solid #dfe4e9">
+<div style="position:absolute;left:0;top:0;width:595.3pt;height:841.9pt;transform:scale(0.451);transform-origin:0 0;overflow:hidden;background:#fff;font-family:'Gotham Narrow',sans-serif;color:#2c2e35">
+<sc-if value="{{ hasCover }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;left:0;top:0;width:100%;height:100%;background:{{ coverFill }}"></div>
+<img src="{{ coverUrl }}" alt="" style="position:absolute;left:{{ coverL }};top:{{ coverT }};width:{{ coverW }};height:{{ coverH }};object-fit:cover;display:block">
+</sc-if>
+<sc-if value="{{ noCover }}" hint-placeholder-val="{{ true }}">
+<div style="position:absolute;left:0;top:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:'Gotham XNarrow',sans-serif;font-size:16pt;font-weight:700;letter-spacing:.08em;color:#9aa1a9">{{ coverEmpty }}</div>
+</sc-if>
+<div style="position:absolute;left:0;right:0;top:0;height:37.3pt;background:#0086bf"></div>
+<div style="position:absolute;left:21.3pt;top:15.1pt;font-family:'Gotham XNarrow',sans-serif;font-size:16pt;font-weight:700;line-height:1;letter-spacing:.03em;color:#fff">{{ editionName }}</div>
+<div style="position:absolute;right:22.7pt;top:17.7pt;font-size:9pt;line-height:1;letter-spacing:.01em;text-align:right;color:#fff">VICTORIAN THOROUGHBRED RACING INDUSTRY OFFICIAL PUBLICATION</div>
+<img src="assets/cover-masthead.svg" alt="Inside Racing" style="position:absolute;left:22.68pt;top:63.92pt;width:549.92pt;height:80.64pt">
+<div style="position:absolute;left:31.2pt;top:753.4pt;width:532.9pt;height:65.2pt;background:rgba(255,255,255,.9)"></div>
+<img src="assets/cover-inside-script.svg" alt="Inside" style="position:absolute;left:48.64pt;top:767.32pt;width:42.37pt;height:15.46pt">
+<div style="position:absolute;left:205.4pt;top:782.4pt;width:4pt;height:27.7pt;background:#0086bf"></div>
+<div style="position:absolute;left:391.1pt;top:782.4pt;width:4pt;height:27.7pt;background:#0086bf"></div>
+<div style="position:absolute;left:47.3pt;top:791.3pt;font-family:'Gotham XNarrow',sans-serif;font-size:13pt;font-weight:700;line-height:1;letter-spacing:.04em">ENTRY DEADLINES</div>
+<div style="position:absolute;left:237.1pt;top:791.3pt;font-family:'Gotham XNarrow',sans-serif;font-size:13pt;font-weight:700;line-height:1;letter-spacing:.04em">PROGRAM CHART</div>
+<div style="position:absolute;left:423.8pt;top:791.3pt;font-family:'Gotham XNarrow',sans-serif;font-size:13pt;font-weight:700;line-height:1;letter-spacing:.04em">RACE PROGRAMS</div>
+<sc-if value="{{ showGuides }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;left:0;right:0;top:144.8pt;border-top:2.5pt dashed #ff0040"></div>
+<div style="position:absolute;left:0;right:0;top:753.4pt;border-top:2.5pt dashed #ff0040"></div>
+</sc-if>
+</div>
+</div>
+<div style="flex:1 1 320px;min-width:260px;display:flex;flex-direction:column;gap:18px">
+<div style="font-size:12px;color:#5b616e;line-height:1.45">The cover as it will print, from <span style="font-weight:700">Cover.jpg</span> in the input folder. The framing is worked out automatically; move it here if the subject needs to sit differently. The photograph always fills the page below the masthead, so a move stops where an edge would show.</div>
+<div>
+<div style="display:flex;justify-content:space-between;gap:10px;font-size:12.5px"><div style="font-weight:700">Left / right</div><div style="color:#5b616e">{{ adjXLabel }}</div></div>
+<input type="range" min="-30" max="30" step="0.5" value="{{ adjXVal }}" onChange="{{ onAdjX }}" style="width:100%;margin-top:6px;accent-color:#2c9cd7">
+<div style="font-size:11.5px;color:{{ limitXColour }}">{{ limitXNote }}</div>
+</div>
+<div>
+<div style="display:flex;justify-content:space-between;gap:10px;font-size:12.5px"><div style="font-weight:700">Up / down</div><div style="color:#5b616e">{{ adjYLabel }}</div></div>
+<input type="range" min="-120" max="120" step="1" value="{{ adjYVal }}" onChange="{{ onAdjY }}" style="width:100%;margin-top:6px;accent-color:#2c9cd7">
+<div style="font-size:11.5px;color:{{ limitYColour }}">{{ limitYNote }}</div>
+</div>
+<div>
+<div style="display:flex;justify-content:space-between;gap:10px;font-size:12.5px"><div style="font-weight:700">Size</div><div style="color:#5b616e">{{ adjZLabel }}</div></div>
+<input type="range" min="70" max="150" step="1" value="{{ adjZVal }}" onChange="{{ onAdjZ }}" style="width:100%;margin-top:6px;accent-color:#2c9cd7">
+<div style="font-size:11.5px;color:{{ ppiColour }}">{{ ppiNote }}</div>
+</div>
+<div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+<button onClick="{{ onCoverReset }}" style="font-family:inherit;font-size:12.5px;font-weight:700;padding:8px 13px;border:1px solid #c3cad2;background:#fff;color:#5b616e;cursor:pointer" style-hover="border-color:#2c9cd7;color:#2c9cd7">Back to automatic framing</button>
+<button onClick="{{ onCoverReload }}" style="font-family:inherit;font-size:12.5px;font-weight:700;padding:8px 13px;border:1px solid #c3cad2;background:#fff;color:#5b616e;cursor:pointer" style-hover="border-color:#2c9cd7;color:#2c9cd7">Reload Cover.jpg</button>
+<label style="display:flex;align-items:center;gap:6px;font-size:12.5px;color:#5b616e;cursor:pointer"><input type="checkbox" checked="{{ showGuides }}" onChange="{{ onGuides }}" style="accent-color:#ff0040">Show where the masthead and teaser strip sit</label>
+</div>
+<div style="font-size:12px;color:#5b616e;line-height:1.45;border-top:1px solid #eef1f4;padding-top:10px">{{ coverReport }}</div>
+<div style="font-size:11.5px;color:#8b929c;line-height:1.4">Kept for this photograph and carried into the edition the next time you run it. A new Cover.jpg starts again from the automatic framing.</div>
+</div>
+</div>
+</div>
+
+<div style="margin-top:14px;background:#fff;border:1px solid #dfe4e9;padding:16px 18px 18px">
+<div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap">
+<div style="font-size:11px;letter-spacing:.08em;font-weight:700">5 &nbsp;RUN THE EDITION</div>
 <div style="font-size:12px;color:#5b616e">{{ runNote }}</div>
 </div>
 <div style="display:flex;align-items:center;gap:14px;margin-top:12px;flex-wrap:wrap">
@@ -206,7 +266,7 @@ a:hover{color:#2c9cd7}
 
 <div style="margin-top:14px;background:#fff;border:1px solid #dfe4e9;padding:16px 18px 18px">
 <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap">
-<div style="font-size:11px;letter-spacing:.08em;font-weight:700">5 &nbsp;WHAT NEEDS A LOOK</div>
+<div style="font-size:11px;letter-spacing:.08em;font-weight:700">6 &nbsp;WHAT NEEDS A LOOK</div>
 <div style="font-size:12px;color:#5b616e">{{ checksSummary }}</div>
 </div>
 <sc-if value="{{ noChecks }}" hint-placeholder-val="{{ true }}">
@@ -229,7 +289,7 @@ a:hover{color:#2c9cd7}
 </div>
 
 <div style="margin-top:14px;background:#edf6fb;border:1px solid #bfdff2;padding:16px 18px 18px">
-<div style="font-size:11px;letter-spacing:.08em;font-weight:700">6 &nbsp;THE EDITION</div>
+<div style="font-size:11px;letter-spacing:.08em;font-weight:700">7 &nbsp;THE EDITION</div>
 <div style="margin-top:9px;font-family:'Gotham XNarrow',sans-serif;font-weight:700;font-size:19px;line-height:1.25">View and download the edition</div>
 <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:14px">
 <a href="Inside Racing Edition.dc.html" style="font-family:inherit;font-size:12.5px;font-weight:700;padding:11px 18px;border:1px solid #2c2e35;background:#fff;border-bottom-width:1px;color:#2c2e35;cursor:pointer" style-hover="border-color:#2c9cd7;color:#2c9cd7">View the edition on screen</a>
@@ -246,6 +306,8 @@ const OK = '#1f7a4d', WARN = '#b06a00', FAIL = '#b3261e', WAIT = '#c3cad2', RUN 
 
 const MONTHS_FULL = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 const STORE_KEY = 'ir-edition-settings';
+const COVER_KEY = 'ir-cover-adjust';
+const PAGE = { w: 595.3, h: 841.9 }, SAFE = { top: 0.172, bottom: 0.895 };
 const pad = n => String(n).padStart(2, '0');
 const isYes = v => /^(yes|y|true|1|included)$/i.test(String(v || '').trim());
 
@@ -297,7 +359,8 @@ class Component extends DCLogic {
     src: { mode: 'bundled', label: 'inputs/ beside the pages', ready: false, needsPermission: false, canPick: true },
     remembered: '', rows: [], months: [], count: 0, choices: [], scanned: false, srcError: '', build: '',
     ads: [], placements: false,
-    stages: [], running: false, ran: false, edition: '', pages: null, baked: null, error: ''
+    stages: [], running: false, ran: false, edition: '', pages: null, baked: null, error: '',
+    coverPrev: null, coverAdj: { x: 0, y: 0, zoom: 1 }, coverFrame: null, coverMsg: '', showGuides: true
   };
 
   componentDidMount() {
@@ -360,6 +423,67 @@ class Component extends DCLogic {
       .map(f => f.name);
     this.setState({ seen: listing.map(f => f.path) });
     this.setState(s => ({ rows, months, count: listing.length, extra, scanned: true, edit: s.edit || this.loadEdit(null) }));
+    if (rows.some(r => /^cover\.jpg$/i.test(r.file) && r.found)) this.loadCover();
+    else this.setState({ coverPrev: null, coverFrame: null, coverMsg: 'No Cover.jpg in the input folder' });
+  }
+
+  // ---- cover preview --------------------------------------------------------
+
+  /**
+   * A light copy of Cover.jpg for the preview, framed by the same code the
+   * edition uses. refW/refH carry the size of the 5000px derivative the run
+   * bakes, so the cover.json centre check reads against the real thing.
+   */
+  async loadCover() {
+    this.setState({ coverMsg: 'Loading Cover.jpg\u2026' });
+    try {
+      const res = await fetch('inputs/Cover.jpg', { cache: 'no-store' });
+      if (!res.ok) { this.setState({ coverPrev: null, coverFrame: null, coverMsg: 'No Cover.jpg in the input folder' }); return; }
+      const bmp = await createImageBitmap(await res.blob());
+      const ow = bmp.width, oh = bmp.height;
+      const k = Math.min(1, 5000 / Math.max(ow, oh));
+      const p = Math.min(1, 1600 / Math.max(ow, oh));
+      const c = document.createElement('canvas');
+      c.width = Math.round(ow * p); c.height = Math.round(oh * p);
+      c.getContext('2d').drawImage(bmp, 0, 0, c.width, c.height);
+      bmp.close();
+      let adj = { x: 0, y: 0, zoom: 1 };
+      try {
+        const sv = JSON.parse(localStorage.getItem(COVER_KEY) || 'null');
+        if (sv && sv.w === ow && sv.h === oh) adj = { x: sv.x || 0, y: sv.y || 0, zoom: sv.zoom || 1 };
+      } catch (e) { /* ignore */ }
+      this.setState({
+        coverPrev: { url: c.toDataURL('image/jpeg', 0.85), ow, oh, refW: Math.round(ow * k), refH: Math.round(oh * k) },
+        coverAdj: adj, coverMsg: ''
+      }, () => this.reframe());
+    } catch (e) {
+      this.setState({ coverPrev: null, coverFrame: null, coverMsg: 'Cover.jpg could not be read: ' + ((e && e.message) || e) });
+    }
+  }
+
+  reframe() {
+    clearTimeout(this._rf);
+    this._rf = setTimeout(async () => {
+      const cp = this.state.coverPrev;
+      if (!cp) return;
+      const fm = await import('./parsers/cover-frame.js');
+      const f = await fm.frameCover(cp.url, PAGE, SAFE, 1.9, Object.assign({ refW: cp.refW, refH: cp.refH }, this.state.coverAdj));
+      this.setState({ coverFrame: f });
+    }, 60);
+  }
+
+  setAdj(patch) {
+    const coverAdj = Object.assign({}, this.state.coverAdj, patch);
+    const cp = this.state.coverPrev;
+    if (cp) try { localStorage.setItem(COVER_KEY, JSON.stringify(Object.assign({ w: cp.ow, h: cp.oh }, coverAdj))); } catch (e) { /* ignore */ }
+    this.setState({ coverAdj }, () => this.reframe());
+  }
+
+  /** The hand adjustment for this photograph, or null when it is untouched. */
+  coverAdjustFor(w, h) {
+    const cp = this.state.coverPrev, a = this.state.coverAdj;
+    if (!cp || cp.ow !== w || cp.oh !== h) return null;
+    return (a.x || a.y || Math.abs((a.zoom || 1) - 1) > 0.001) ? { x: a.x || 0, y: a.y || 0, zoom: a.zoom || 1 } : null;
   }
 
   /** The controlled settings: remembered, else taken from the workbook. */
@@ -566,6 +690,7 @@ class Component extends DCLogic {
         const blob = await res.blob();
         const bmp = await createImageBitmap(blob);
         const from = bmp.width + '\u00d7' + bmp.height;
+        ctx.coverAdjust = this.coverAdjustFor(bmp.width, bmp.height);
         const scale = Math.min(1, 5000 / Math.max(bmp.width, bmp.height));
         const w = Math.round(bmp.width * scale), h = Math.round(bmp.height * scale);
         const canvas = document.createElement('canvas');
@@ -577,7 +702,7 @@ class Component extends DCLogic {
         const warnings = [];
         try {
           const fm = await P('./parsers/cover-frame.js');
-          const f = await fm.frameCover(ctx.cover, { w: 595.3, h: 841.9 }, { top: 0.172, bottom: 0.895 }, 1.9);
+          const f = await fm.frameCover(ctx.cover, PAGE, SAFE, 1.9, ctx.coverAdjust);
           const ppi = Math.round(h / (parseFloat(f.box.height) / 100 * 841.9 / 72));
           if (ppi < 250) warnings.push('Cover prints at ' + ppi + 'ppi at the framing\u2019s ' + Math.round((f.scale - 1) * 100) + '% enlargement \u2014 under 250ppi it will look grainy. Supply a larger original.');
           ctx.coverPpi = ppi;
@@ -587,6 +712,7 @@ class Component extends DCLogic {
           summary: from + ' reduced to ' + w + '\u00d7' + h
             + ' (' + Math.round(ctx.cover.length / 1365) + ' kB'
             + (ctx.coverPpi ? ', ' + ctx.coverPpi + 'ppi printed' : '') + ')'
+            + (ctx.coverAdjust ? ' \u00b7 framing adjusted by hand' : '')
         };
       } },
       { name: 'HR Assist artwork', fn: async ctx => {
@@ -700,7 +826,7 @@ class Component extends DCLogic {
     });
     const payload = {
       bakedAt: new Date().toISOString(), warnings, notes,
-      settings: c.settings || {}, edition: c.edition || '', cover: c.cover || '', hrAssist: c.hrAssist || '',
+      settings: c.settings || {}, edition: c.edition || '', cover: c.cover || '', coverAdjust: c.coverAdjust || null, hrAssist: c.hrAssist || '',
       days: c.days || [], chart: c.chart || { header: [], rows: [] }, chartMonths: c.chartMonths || [],
       meetings: c.meetings || [], permits: c.permits || [], trialsText: c.trialsText || '', agents: c.agents || [],
       joBlocks: c.joBlocks || [], joMeetings: c.joMeetings || [],
@@ -792,7 +918,41 @@ class Component extends DCLogic {
     const failed = st.stages.some(s => s.status === 'fail');
     const total = (st.pages && st.pages.total) || 0;
 
+    const cp = st.coverPrev, cf = st.coverFrame, ca = st.coverAdj || { x: 0, y: 0, zoom: 1 };
+    const cb = (cf && cf.box) || { width: '100%', height: '82.8%', left: '0%', top: '17.2%' };
+    const ppi = cp && cf ? Math.round(cp.refH / (parseFloat(cb.height) / 100 * PAGE.h / 72)) : 0;
+    const signed = (v, unit) => (v > 0 ? '+' : v < 0 ? '\u2212' : '') + Math.abs(v) + unit;
+    const touched = !!(ca.x || ca.y || Math.abs(ca.zoom - 1) > 0.001);
+    const cover = {
+      coverStatus: st.coverMsg || (cp ? cp.ow + '\u00d7' + cp.oh + (touched ? ' \u00b7 adjusted by hand' : ' \u00b7 automatic framing') : ''),
+      hasCover: !!(cp && cf), noCover: !(cp && cf),
+      coverEmpty: cp ? 'FRAMING\u2026' : 'NO COVER PHOTOGRAPH',
+      coverUrl: cp ? cp.url : '', coverFill: (cf && cf.fill) || '#fff',
+      coverL: cb.left, coverT: cb.top, coverW: cb.width, coverH: cb.height,
+      showGuides: !!st.showGuides,
+      onGuides: e => this.setState({ showGuides: e.target.checked }),
+      adjXVal: ca.x * 100, adjXLabel: ca.x ? signed(+(ca.x * 100).toFixed(1), '% ') + (ca.x > 0 ? 'right' : 'left') : 'as framed',
+      adjYVal: ca.y, adjYLabel: ca.y ? signed(ca.y, 'pt ') + (ca.y > 0 ? 'down' : 'up') : 'as framed',
+      adjZVal: Math.round(ca.zoom * 100), adjZLabel: Math.abs(ca.zoom - 1) > 0.001 ? Math.round(ca.zoom * 100) + '% of the automatic size' : 'as framed',
+      limitXNote: cf && cf.limitX ? 'At the edge of the photograph \u2014 it cannot move further this way without leaving a gap. Enlarge it to go further.' : '',
+      limitXColour: WARN,
+      limitYNote: cf && cf.limitY ? 'At the edge of the photograph \u2014 it cannot move further this way without leaving a gap. Enlarge it to go further.' : '',
+      limitYColour: WARN,
+      ppiNote: ppi ? 'Prints at about ' + ppi + 'ppi' + (ppi < 250 ? ' \u2014 under 250ppi it will look grainy' : '') : '',
+      ppiColour: ppi && ppi < 250 ? WARN : '#5b616e',
+      coverReport: cf && cf.heroTop != null
+        ? 'Subject starts ' + Math.round(cf.heroTop) + 'pt below the masthead and ends ' + Math.round(cf.heroClear) + 'pt above the teaser strip'
+          + (cf.heroClear < 0 ? ' \u2014 it runs under the strip.' : '.')
+        : (cf ? cf.note : ''),
+      onAdjX: e => this.setAdj({ x: Number(e.target.value) / 100 }),
+      onAdjY: e => this.setAdj({ y: Number(e.target.value) }),
+      onAdjZ: e => this.setAdj({ zoom: Number(e.target.value) / 100 }),
+      onCoverReset: () => this.setAdj({ x: 0, y: 0, zoom: 1 }),
+      onCoverReload: () => this.loadCover()
+    };
+
     return {
+      ...cover,
       sourceNote: st.srcError ? st.srcError
         : src.canPick ? 'Any folder on the machine \u2014 a local drive, a network drive or a synced OneDrive folder.'
         : 'This browser has no folder picker \u2014 use \u201cchoose the folder\u2019s files\u201d instead.',

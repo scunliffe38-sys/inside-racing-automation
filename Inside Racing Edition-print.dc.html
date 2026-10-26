@@ -324,10 +324,7 @@ DETAILS</div>
 </sc-for>
 <sc-for list="{{ a.bar }}" as="r" hint-placeholder-count="1">
 <div style="height:2pt"></div>
-<div style="display:flex;justify-content:space-between;gap:4pt;background:#d8d9da;padding:0.8pt 2pt 0;margin-bottom:2pt;font-size:6.5pt;font-weight:700;line-height:8.8pt;color:#2c2e35">
-<span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ r.cond }}</span>
-<span style="flex:0 0 auto;text-align:right">{{ r.dist }}</span>
-</div>
+<svg width="100%" height="9.6pt" style="display:block;margin-bottom:2pt;font-size:6.5pt;font-weight:700;overflow:hidden"><rect width="100%" height="100%" style="fill:#d8d9da"></rect><text x="2pt" y="7.08pt" style="fill:#2c2e35" data-bar-t="{{ r.cond }}"></text><text x="100%" y="7.08pt" transform="translate(-2.667 0)" style="fill:#2c2e35;text-anchor:end" data-bar-t="{{ r.dist }}"></text></svg>
 </sc-for>
 <sc-for list="{{ a.title }}" as="r" hint-placeholder-count="1"><div style="font-size:7pt;font-weight:700;line-height:9pt;white-space:pre-wrap;color:#2c2e35">{{ r.t }}</div></sc-for>
 <sc-for list="{{ a.claim }}" as="r" hint-placeholder-count="0"><div style="font-size:7pt;font-weight:700;line-height:9pt;white-space:pre-wrap;color:#2c2e35">{{ r.t }}</div></sc-for>
@@ -403,20 +400,20 @@ DETAILS</div>
 <div style="width:24.8pt;flex:0 0 24.8pt;padding:3.7pt 0 2.1pt 4pt;box-sizing:border-box;border-left:0.25pt solid #2c2e35;border-bottom:0.25pt solid #2c2e35">{{ p.wT }}</div>
 </div>
 </sc-for>
-</div>
-
-<div style="position:absolute;left:22.7pt;top:715.7pt;font-family:'Gotham Narrow',sans-serif;font-size:15pt;font-weight:700;line-height:1;letter-spacing:-.005em">Eligible to ride in trials</div>
-<div style="position:absolute;left:25.3pt;top:738.8pt;width:547pt;height:3pt;background:#2c2e35"></div>
-<div style="position:absolute;left:24.3pt;top:747.2pt;width:540pt;font-size:9pt;line-height:1">{{ paTrialsIntro }}</div>
+<div style="margin-top:24pt">
+<div style="margin-left:-1.3pt;font-size:15pt;font-weight:700;line-height:1;letter-spacing:-.005em">Eligible to ride in trials</div>
+<div style="margin-top:8.1pt;margin-left:1.3pt;width:547pt;height:3pt;background:#2c2e35"></div>
+<div style="margin-top:5.4pt;margin-left:0.3pt;width:540pt;font-size:9pt;line-height:1">{{ paTrialsIntro }}</div>
+<div style="position:relative;margin-top:6.1pt;height:61pt">
 <sc-for list="{{ paTrialCols }}" as="c" hint-placeholder-count="5">
-<div style="position:absolute;left:{{ c.left }};top:762.3pt;width:100pt;font-size:6pt;line-height:8.8pt">
+<div style="position:absolute;left:{{ c.left }};top:0;width:{{ c.w }};font-size:6pt;line-height:8.8pt">
 <sc-for list="{{ c.top }}" as="t" hint-placeholder-count="1">
 <div style="font-weight:700">{{ t.name }}</div>
 <div>{{ t.phone }}</div>
 <div>{{ t.cat }}</div>
 </sc-for>
 </div>
-<div style="position:absolute;left:{{ c.left }};top:796.9pt;width:100pt;font-size:6pt;line-height:8.8pt">
+<div style="position:absolute;left:{{ c.left }};top:34.6pt;width:{{ c.w }};font-size:6pt;line-height:8.8pt">
 <sc-for list="{{ c.bottom }}" as="t" hint-placeholder-count="1">
 <div style="font-weight:700">{{ t.name }}</div>
 <div>{{ t.phone }}</div>
@@ -424,6 +421,9 @@ DETAILS</div>
 </sc-for>
 </div>
 </sc-for>
+</div>
+</div>
+</div>
 
 <div style="position:absolute;left:12.2pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1;letter-spacing:-.013em">{{ footer }}</div>
 <div style="position:absolute;right:12.3pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1">{{ paPagePermits }}</div>
@@ -561,7 +561,7 @@ DETAILS</div>
 <div style="margin-top:3.2pt;font-size:7.4pt;font-weight:700;line-height:1;letter-spacing:.01em;color:#37ac49">{{ hd.date }}</div>
 </sc-for>
 <sc-for list="{{ g.races }}" as="r" hint-placeholder-count="8">
-<div style="margin-top:2.6pt;display:flex;justify-content:space-between;gap:5pt;background:#d8d9da;height:8.5pt;box-sizing:border-box;padding:1.4pt 3pt 0;font-size:6.2pt;line-height:7pt;font-weight:700"><span>{{ r.cond }}</span><span style="text-align:right">{{ r.dist }}</span></div>
+<svg width="100%" height="8.5pt" style="display:block;margin-top:2.6pt;font-size:6.2pt;font-weight:700;overflow:hidden"><rect width="100%" height="100%" style="fill:#d8d9da"></rect><text x="3pt" y="6.42pt" style="fill:#2c2e35" data-bar-t="{{ r.cond }}"></text><text x="100%" y="6.42pt" transform="translate(-4 0)" style="fill:#2c2e35;text-anchor:end" data-bar-t="{{ r.dist }}"></text></svg>
 <div style="margin-top:1.5pt;font-size:6.6pt;font-weight:700;line-height:7.6pt">{{ r.title }}</div>
 </sc-for>
 </div>
@@ -646,7 +646,7 @@ DETAILS</div>
 <div style="margin-top:3.8pt;font-size:8pt;font-weight:400;line-height:1;letter-spacing:.01em;color:#00843d">{{ a.date }}</div>
 </sc-if>
 <sc-if value="{{ a.isRace }}" hint-placeholder-val="{{ false }}">
-<div style="margin-top:3.5pt;display:flex;justify-content:space-between;align-items:center;gap:5pt;background:#d8d9da;height:9pt;box-sizing:border-box;padding:0 3pt;font-size:6.3pt;line-height:1"><span style="display:block;line-height:1">{{ a.cond }}</span><span style="display:block;line-height:1;text-align:right">{{ a.dist }}</span></div>
+<svg width="100%" height="9pt" style="display:block;margin-top:3.5pt;font-size:6.3pt;overflow:hidden"><rect width="100%" height="100%" style="fill:#d8d9da"></rect><text x="3pt" y="6.7pt" style="fill:#2c2e35" data-bar-t="{{ a.cond }}"></text><text x="100%" y="6.7pt" transform="translate(-4 0)" style="fill:#2c2e35;text-anchor:end" data-bar-t="{{ a.dist }}"></text></svg>
 <div style="margin-top:1.75pt;font-size:6.8pt;line-height:8.1pt">{{ a.title }}</div>
 </sc-if>
 </sc-for>
@@ -818,22 +818,22 @@ DETAILS</div>
 <div style="position:absolute;left:22.7pt;top:{{ tp.top }};width:549.9pt">
 <sc-for list="{{ tp.blocks }}" as="b" hint-placeholder-count="8">
 <sc-if value="{{ b.isSubject }}" hint-placeholder-val="{{ true }}">
-<div style="margin-top:10pt;font-size:15pt;font-weight:700;line-height:17pt;letter-spacing:-.006em;text-wrap:pretty">{{ b.text }}</div>
+<div style="margin-top:15pt;font-size:15pt;font-weight:700;line-height:17pt;letter-spacing:-.006em;text-wrap:pretty">{{ b.text }}</div>
 </sc-if>
 <sc-if value="{{ b.isSubhead }}" hint-placeholder-val="{{ true }}">
-<div style="margin-top:11pt;font-size:9pt;font-weight:700;line-height:11pt;letter-spacing:.02em">{{ b.text }}</div>
+<div style="margin-top:16.5pt;font-size:9pt;font-weight:700;line-height:11pt;letter-spacing:.02em">{{ b.text }}</div>
 </sc-if>
 <sc-if value="{{ b.isPara }}" hint-placeholder-val="{{ true }}">
-<div style="margin-top:7pt;font-size:8pt;font-weight:400;line-height:10.4pt;text-wrap:pretty"><sc-for list="{{ b.runs }}" as="r" hint-placeholder-count="0"><sc-for list="{{ r.plain }}" as="x" hint-placeholder-count="0"><span>{{ x.t }}</span></sc-for><sc-for list="{{ r.bold }}" as="x" hint-placeholder-count="0"><span style="font-weight:700">{{ x.t }}</span></sc-for><sc-for list="{{ r.link }}" as="x" hint-placeholder-count="0"><a href="{{ x.href }}" style="color:#2c9cd7;text-decoration:underline">{{ x.t }}</a></sc-for><sc-for list="{{ r.linkBold }}" as="x" hint-placeholder-count="0"><a href="{{ x.href }}" style="color:#2c9cd7;text-decoration:underline;font-weight:700">{{ x.t }}</a></sc-for><sc-for list="{{ r.br }}" as="x" hint-placeholder-count="0"><br></sc-for></sc-for></div>
+<div style="margin-top:7pt;font-size:8pt;font-weight:400;line-height:10.4pt;text-wrap:pretty"><sc-for list="{{ b.runs }}" as="r" hint-placeholder-count="0"><sc-for list="{{ r.plain }}" as="x" hint-placeholder-count="0"><span>{{ x.t }}</span></sc-for><sc-for list="{{ r.bold }}" as="x" hint-placeholder-count="0"><span style="font-weight:700">{{ x.t }}</span></sc-for><sc-for list="{{ r.fmt }}" as="x" hint-placeholder-count="0"><span style="font-weight:{{ x.w }};font-style:{{ x.fs }};text-decoration:{{ x.td }}">{{ x.t }}</span></sc-for><sc-for list="{{ r.link }}" as="x" hint-placeholder-count="0"><a href="{{ x.href }}" style="color:#2c9cd7;text-decoration:underline">{{ x.t }}</a></sc-for><sc-for list="{{ r.linkBold }}" as="x" hint-placeholder-count="0"><a href="{{ x.href }}" style="color:#2c9cd7;text-decoration:underline;font-weight:700">{{ x.t }}</a></sc-for><sc-for list="{{ r.br }}" as="x" hint-placeholder-count="0"><br></sc-for></sc-for></div>
 </sc-if>
 <sc-if value="{{ b.isStep }}" hint-placeholder-val="{{ true }}">
 <div style="margin-top:5pt;display:flex;gap:6pt;font-size:8pt;line-height:10.4pt">
 <div style="flex:0 0 13pt;font-weight:700">{{ b.no }}</div>
-<div style="flex:1;text-wrap:pretty"><sc-for list="{{ b.runs }}" as="r" hint-placeholder-count="0"><sc-for list="{{ r.plain }}" as="x" hint-placeholder-count="0"><span>{{ x.t }}</span></sc-for><sc-for list="{{ r.bold }}" as="x" hint-placeholder-count="0"><span style="font-weight:700">{{ x.t }}</span></sc-for><sc-for list="{{ r.link }}" as="x" hint-placeholder-count="0"><a href="{{ x.href }}" style="color:#2c9cd7;text-decoration:underline">{{ x.t }}</a></sc-for><sc-for list="{{ r.linkBold }}" as="x" hint-placeholder-count="0"><a href="{{ x.href }}" style="color:#2c9cd7;text-decoration:underline;font-weight:700">{{ x.t }}</a></sc-for><sc-for list="{{ r.br }}" as="x" hint-placeholder-count="0"><br></sc-for></sc-for></div>
+<div style="flex:1;text-wrap:pretty"><sc-for list="{{ b.runs }}" as="r" hint-placeholder-count="0"><sc-for list="{{ r.plain }}" as="x" hint-placeholder-count="0"><span>{{ x.t }}</span></sc-for><sc-for list="{{ r.bold }}" as="x" hint-placeholder-count="0"><span style="font-weight:700">{{ x.t }}</span></sc-for><sc-for list="{{ r.fmt }}" as="x" hint-placeholder-count="0"><span style="font-weight:{{ x.w }};font-style:{{ x.fs }};text-decoration:{{ x.td }}">{{ x.t }}</span></sc-for><sc-for list="{{ r.link }}" as="x" hint-placeholder-count="0"><a href="{{ x.href }}" style="color:#2c9cd7;text-decoration:underline">{{ x.t }}</a></sc-for><sc-for list="{{ r.linkBold }}" as="x" hint-placeholder-count="0"><a href="{{ x.href }}" style="color:#2c9cd7;text-decoration:underline;font-weight:700">{{ x.t }}</a></sc-for><sc-for list="{{ r.br }}" as="x" hint-placeholder-count="0"><br></sc-for></sc-for></div>
 </div>
 </sc-if>
 <sc-if value="{{ b.isClause }}" hint-placeholder-val="{{ true }}">
-<div style="margin-top:4pt;padding-left:13pt;font-size:8pt;line-height:10.4pt;text-wrap:pretty"><sc-for list="{{ b.runs }}" as="r" hint-placeholder-count="0"><sc-for list="{{ r.plain }}" as="x" hint-placeholder-count="0"><span>{{ x.t }}</span></sc-for><sc-for list="{{ r.bold }}" as="x" hint-placeholder-count="0"><span style="font-weight:700">{{ x.t }}</span></sc-for><sc-for list="{{ r.link }}" as="x" hint-placeholder-count="0"><a href="{{ x.href }}" style="color:#2c9cd7;text-decoration:underline">{{ x.t }}</a></sc-for><sc-for list="{{ r.linkBold }}" as="x" hint-placeholder-count="0"><a href="{{ x.href }}" style="color:#2c9cd7;text-decoration:underline;font-weight:700">{{ x.t }}</a></sc-for><sc-for list="{{ r.br }}" as="x" hint-placeholder-count="0"><br></sc-for></sc-for></div>
+<div style="margin-top:4pt;padding-left:13pt;font-size:8pt;line-height:10.4pt;text-wrap:pretty"><sc-for list="{{ b.runs }}" as="r" hint-placeholder-count="0"><sc-for list="{{ r.plain }}" as="x" hint-placeholder-count="0"><span>{{ x.t }}</span></sc-for><sc-for list="{{ r.bold }}" as="x" hint-placeholder-count="0"><span style="font-weight:700">{{ x.t }}</span></sc-for><sc-for list="{{ r.fmt }}" as="x" hint-placeholder-count="0"><span style="font-weight:{{ x.w }};font-style:{{ x.fs }};text-decoration:{{ x.td }}">{{ x.t }}</span></sc-for><sc-for list="{{ r.link }}" as="x" hint-placeholder-count="0"><a href="{{ x.href }}" style="color:#2c9cd7;text-decoration:underline">{{ x.t }}</a></sc-for><sc-for list="{{ r.linkBold }}" as="x" hint-placeholder-count="0"><a href="{{ x.href }}" style="color:#2c9cd7;text-decoration:underline;font-weight:700">{{ x.t }}</a></sc-for><sc-for list="{{ r.br }}" as="x" hint-placeholder-count="0"><br></sc-for></sc-for></div>
 </sc-if>
 <sc-if value="{{ b.isTable }}" hint-placeholder-val="{{ false }}">
 <div style="margin-top:6pt;display:grid;grid-template-columns:{{ b.cols }};width:{{ b.width }};max-width:100%;box-sizing:border-box;border-top:1pt solid #2c2e35;border-left:1pt solid #2c2e35">
@@ -860,7 +860,7 @@ DETAILS</div>
 <sc-if value="{{ b.isBullet }}" hint-placeholder-val="{{ true }}">
 <div style="margin-top:4pt;display:flex;gap:5pt;font-size:8pt;line-height:10.4pt">
 <div style="flex:0 0 7pt">&bull;</div>
-<div style="flex:1;text-wrap:pretty"><sc-for list="{{ b.runs }}" as="r" hint-placeholder-count="0"><sc-for list="{{ r.plain }}" as="x" hint-placeholder-count="0"><span>{{ x.t }}</span></sc-for><sc-for list="{{ r.bold }}" as="x" hint-placeholder-count="0"><span style="font-weight:700">{{ x.t }}</span></sc-for><sc-for list="{{ r.link }}" as="x" hint-placeholder-count="0"><a href="{{ x.href }}" style="color:#2c9cd7;text-decoration:underline">{{ x.t }}</a></sc-for><sc-for list="{{ r.linkBold }}" as="x" hint-placeholder-count="0"><a href="{{ x.href }}" style="color:#2c9cd7;text-decoration:underline;font-weight:700">{{ x.t }}</a></sc-for><sc-for list="{{ r.br }}" as="x" hint-placeholder-count="0"><br></sc-for></sc-for></div>
+<div style="flex:1;text-wrap:pretty"><sc-for list="{{ b.runs }}" as="r" hint-placeholder-count="0"><sc-for list="{{ r.plain }}" as="x" hint-placeholder-count="0"><span>{{ x.t }}</span></sc-for><sc-for list="{{ r.bold }}" as="x" hint-placeholder-count="0"><span style="font-weight:700">{{ x.t }}</span></sc-for><sc-for list="{{ r.fmt }}" as="x" hint-placeholder-count="0"><span style="font-weight:{{ x.w }};font-style:{{ x.fs }};text-decoration:{{ x.td }}">{{ x.t }}</span></sc-for><sc-for list="{{ r.link }}" as="x" hint-placeholder-count="0"><a href="{{ x.href }}" style="color:#2c9cd7;text-decoration:underline">{{ x.t }}</a></sc-for><sc-for list="{{ r.linkBold }}" as="x" hint-placeholder-count="0"><a href="{{ x.href }}" style="color:#2c9cd7;text-decoration:underline;font-weight:700">{{ x.t }}</a></sc-for><sc-for list="{{ r.br }}" as="x" hint-placeholder-count="0"><br></sc-for></sc-for></div>
 </div>
 </sc-if>
 </sc-for>
@@ -889,16 +889,22 @@ DETAILS</div>
 <div style="position:absolute;left:22.7pt;top:{{ tp.top }};width:549.9pt">
 <sc-for list="{{ tp.blocks }}" as="b" hint-placeholder-count="8">
 <sc-if value="{{ b.isHeading }}" hint-placeholder-val="{{ true }}">
-<div style="margin-top:9pt;font-size:15pt;font-weight:700;line-height:17pt;letter-spacing:-.006em;text-wrap:pretty">{{ b.text }}</div>
+<div style="margin-top:13.5pt;font-size:15pt;font-weight:700;line-height:17pt;letter-spacing:-.006em;text-wrap:pretty">{{ b.text }}</div>
 </sc-if>
 <sc-if value="{{ b.isSubhead }}" hint-placeholder-val="{{ true }}">
-<div style="margin-top:9pt;font-size:9pt;font-weight:700;line-height:11pt;text-wrap:pretty">{{ b.text }}</div>
+<div style="margin-top:13.5pt;font-size:9pt;font-weight:700;line-height:11pt;text-wrap:pretty">{{ b.text }}</div>
+</sc-if>
+<sc-if value="{{ b.isStep }}" hint-placeholder-val="{{ false }}">
+<div style="margin-top:5pt;display:flex;gap:6pt;font-size:8pt;line-height:10.4pt">
+<div style="flex:0 0 13pt">{{ b.no }}</div>
+<div style="flex:1;text-wrap:pretty"><sc-for list="{{ b.runs }}" as="r" hint-placeholder-count="0"><sc-for list="{{ r.plain }}" as="x" hint-placeholder-count="0"><span>{{ x.t }}</span></sc-for><sc-for list="{{ r.bold }}" as="x" hint-placeholder-count="0"><span style="font-weight:700">{{ x.t }}</span></sc-for><sc-for list="{{ r.fmt }}" as="x" hint-placeholder-count="0"><span style="font-weight:{{ x.w }};font-style:{{ x.fs }};text-decoration:{{ x.td }}">{{ x.t }}</span></sc-for><sc-for list="{{ r.link }}" as="x" hint-placeholder-count="0"><a href="{{ x.href }}" style="color:#2c9cd7;text-decoration:underline">{{ x.t }}</a></sc-for><sc-for list="{{ r.linkBold }}" as="x" hint-placeholder-count="0"><a href="{{ x.href }}" style="color:#2c9cd7;text-decoration:underline;font-weight:700">{{ x.t }}</a></sc-for><sc-for list="{{ r.br }}" as="x" hint-placeholder-count="0"><br></sc-for></sc-for></div>
+</div>
 </sc-if>
 <sc-if value="{{ b.isPara }}" hint-placeholder-val="{{ true }}">
-<div style="margin-top:5pt;font-size:8pt;font-weight:400;line-height:10.4pt;text-wrap:pretty"><sc-for list="{{ b.runs }}" as="r" hint-placeholder-count="0"><sc-for list="{{ r.plain }}" as="x" hint-placeholder-count="0"><span>{{ x.t }}</span></sc-for><sc-for list="{{ r.bold }}" as="x" hint-placeholder-count="0"><span style="font-weight:700">{{ x.t }}</span></sc-for><sc-for list="{{ r.link }}" as="x" hint-placeholder-count="0"><a href="{{ x.href }}" style="color:#2c9cd7;text-decoration:underline">{{ x.t }}</a></sc-for><sc-for list="{{ r.linkBold }}" as="x" hint-placeholder-count="0"><a href="{{ x.href }}" style="color:#2c9cd7;text-decoration:underline;font-weight:700">{{ x.t }}</a></sc-for><sc-for list="{{ r.br }}" as="x" hint-placeholder-count="0"><br></sc-for></sc-for></div>
+<div style="margin-top:5pt;font-size:8pt;font-weight:400;line-height:10.4pt;text-wrap:pretty"><sc-for list="{{ b.runs }}" as="r" hint-placeholder-count="0"><sc-for list="{{ r.plain }}" as="x" hint-placeholder-count="0"><span>{{ x.t }}</span></sc-for><sc-for list="{{ r.bold }}" as="x" hint-placeholder-count="0"><span style="font-weight:700">{{ x.t }}</span></sc-for><sc-for list="{{ r.fmt }}" as="x" hint-placeholder-count="0"><span style="font-weight:{{ x.w }};font-style:{{ x.fs }};text-decoration:{{ x.td }}">{{ x.t }}</span></sc-for><sc-for list="{{ r.link }}" as="x" hint-placeholder-count="0"><a href="{{ x.href }}" style="color:#2c9cd7;text-decoration:underline">{{ x.t }}</a></sc-for><sc-for list="{{ r.linkBold }}" as="x" hint-placeholder-count="0"><a href="{{ x.href }}" style="color:#2c9cd7;text-decoration:underline;font-weight:700">{{ x.t }}</a></sc-for><sc-for list="{{ r.br }}" as="x" hint-placeholder-count="0"><br></sc-for></sc-for></div>
 </sc-if>
 <sc-if value="{{ b.isClause }}" hint-placeholder-val="{{ true }}">
-<div style="margin-top:4pt;padding-left:13pt;font-size:8pt;line-height:10.4pt;text-wrap:pretty"><sc-for list="{{ b.runs }}" as="r" hint-placeholder-count="0"><sc-for list="{{ r.plain }}" as="x" hint-placeholder-count="0"><span>{{ x.t }}</span></sc-for><sc-for list="{{ r.bold }}" as="x" hint-placeholder-count="0"><span style="font-weight:700">{{ x.t }}</span></sc-for><sc-for list="{{ r.link }}" as="x" hint-placeholder-count="0"><a href="{{ x.href }}" style="color:#2c9cd7;text-decoration:underline">{{ x.t }}</a></sc-for><sc-for list="{{ r.linkBold }}" as="x" hint-placeholder-count="0"><a href="{{ x.href }}" style="color:#2c9cd7;text-decoration:underline;font-weight:700">{{ x.t }}</a></sc-for><sc-for list="{{ r.br }}" as="x" hint-placeholder-count="0"><br></sc-for></sc-for></div>
+<div style="margin-top:4pt;padding-left:13pt;font-size:8pt;line-height:10.4pt;text-wrap:pretty"><sc-for list="{{ b.runs }}" as="r" hint-placeholder-count="0"><sc-for list="{{ r.plain }}" as="x" hint-placeholder-count="0"><span>{{ x.t }}</span></sc-for><sc-for list="{{ r.bold }}" as="x" hint-placeholder-count="0"><span style="font-weight:700">{{ x.t }}</span></sc-for><sc-for list="{{ r.fmt }}" as="x" hint-placeholder-count="0"><span style="font-weight:{{ x.w }};font-style:{{ x.fs }};text-decoration:{{ x.td }}">{{ x.t }}</span></sc-for><sc-for list="{{ r.link }}" as="x" hint-placeholder-count="0"><a href="{{ x.href }}" style="color:#2c9cd7;text-decoration:underline">{{ x.t }}</a></sc-for><sc-for list="{{ r.linkBold }}" as="x" hint-placeholder-count="0"><a href="{{ x.href }}" style="color:#2c9cd7;text-decoration:underline;font-weight:700">{{ x.t }}</a></sc-for><sc-for list="{{ r.br }}" as="x" hint-placeholder-count="0"><br></sc-for></sc-for></div>
 </sc-if>
 <sc-if value="{{ b.isTable }}" hint-placeholder-val="{{ false }}">
 <div style="margin-top:6pt;display:grid;grid-template-columns:{{ b.cols }};width:{{ b.width }};max-width:100%;box-sizing:border-box;border-top:1pt solid #2c2e35;border-left:1pt solid #2c2e35">
@@ -925,7 +931,7 @@ DETAILS</div>
 <sc-if value="{{ b.isBullet }}" hint-placeholder-val="{{ true }}">
 <div style="margin-top:4pt;display:flex;gap:5pt;font-size:8pt;line-height:10.4pt">
 <div style="flex:0 0 7pt">&bull;</div>
-<div style="flex:1;text-wrap:pretty"><sc-for list="{{ b.runs }}" as="r" hint-placeholder-count="0"><sc-for list="{{ r.plain }}" as="x" hint-placeholder-count="0"><span>{{ x.t }}</span></sc-for><sc-for list="{{ r.bold }}" as="x" hint-placeholder-count="0"><span style="font-weight:700">{{ x.t }}</span></sc-for><sc-for list="{{ r.link }}" as="x" hint-placeholder-count="0"><a href="{{ x.href }}" style="color:#2c9cd7;text-decoration:underline">{{ x.t }}</a></sc-for><sc-for list="{{ r.linkBold }}" as="x" hint-placeholder-count="0"><a href="{{ x.href }}" style="color:#2c9cd7;text-decoration:underline;font-weight:700">{{ x.t }}</a></sc-for><sc-for list="{{ r.br }}" as="x" hint-placeholder-count="0"><br></sc-for></sc-for></div>
+<div style="flex:1;text-wrap:pretty"><sc-for list="{{ b.runs }}" as="r" hint-placeholder-count="0"><sc-for list="{{ r.plain }}" as="x" hint-placeholder-count="0"><span>{{ x.t }}</span></sc-for><sc-for list="{{ r.bold }}" as="x" hint-placeholder-count="0"><span style="font-weight:700">{{ x.t }}</span></sc-for><sc-for list="{{ r.fmt }}" as="x" hint-placeholder-count="0"><span style="font-weight:{{ x.w }};font-style:{{ x.fs }};text-decoration:{{ x.td }}">{{ x.t }}</span></sc-for><sc-for list="{{ r.link }}" as="x" hint-placeholder-count="0"><a href="{{ x.href }}" style="color:#2c9cd7;text-decoration:underline">{{ x.t }}</a></sc-for><sc-for list="{{ r.linkBold }}" as="x" hint-placeholder-count="0"><a href="{{ x.href }}" style="color:#2c9cd7;text-decoration:underline;font-weight:700">{{ x.t }}</a></sc-for><sc-for list="{{ r.br }}" as="x" hint-placeholder-count="0"><br></sc-for></sc-for></div>
 </div>
 </sc-if>
 </sc-for>
@@ -953,10 +959,10 @@ DETAILS</div>
 <div style="font-size:9pt;font-weight:700;line-height:11pt;letter-spacing:.01em;text-wrap:pretty">{{ g.heading }}</div>
 <sc-for list="{{ g.blocks }}" as="b" hint-placeholder-count="3">
 <sc-if value="{{ b.isPara }}" hint-placeholder-val="{{ true }}">
-<div style="margin-top:4pt;font-size:7.5pt;font-weight:400;line-height:9.4pt;text-wrap:pretty"><sc-for list="{{ b.runs }}" as="r" hint-placeholder-count="0"><sc-for list="{{ r.plain }}" as="x" hint-placeholder-count="0"><span>{{ x.t }}</span></sc-for><sc-for list="{{ r.bold }}" as="x" hint-placeholder-count="0"><span style="font-weight:700">{{ x.t }}</span></sc-for><sc-for list="{{ r.link }}" as="x" hint-placeholder-count="0"><a href="{{ x.href }}" style="color:#2c9cd7;text-decoration:underline">{{ x.t }}</a></sc-for><sc-for list="{{ r.linkBold }}" as="x" hint-placeholder-count="0"><a href="{{ x.href }}" style="color:#2c9cd7;text-decoration:underline;font-weight:700">{{ x.t }}</a></sc-for><sc-for list="{{ r.br }}" as="x" hint-placeholder-count="0"><br></sc-for></sc-for></div>
+<div style="margin-top:4pt;font-size:7.5pt;font-weight:400;line-height:9.4pt;text-wrap:pretty"><sc-for list="{{ b.runs }}" as="r" hint-placeholder-count="0"><sc-for list="{{ r.plain }}" as="x" hint-placeholder-count="0"><span>{{ x.t }}</span></sc-for><sc-for list="{{ r.bold }}" as="x" hint-placeholder-count="0"><span style="font-weight:700">{{ x.t }}</span></sc-for><sc-for list="{{ r.fmt }}" as="x" hint-placeholder-count="0"><span style="font-weight:{{ x.w }};font-style:{{ x.fs }};text-decoration:{{ x.td }}">{{ x.t }}</span></sc-for><sc-for list="{{ r.link }}" as="x" hint-placeholder-count="0"><a href="{{ x.href }}" style="color:#2c9cd7;text-decoration:underline">{{ x.t }}</a></sc-for><sc-for list="{{ r.linkBold }}" as="x" hint-placeholder-count="0"><a href="{{ x.href }}" style="color:#2c9cd7;text-decoration:underline;font-weight:700">{{ x.t }}</a></sc-for><sc-for list="{{ r.br }}" as="x" hint-placeholder-count="0"><br></sc-for></sc-for></div>
 </sc-if>
 <sc-if value="{{ b.isClause }}" hint-placeholder-val="{{ true }}">
-<div style="margin-top:4pt;font-size:7.5pt;font-weight:400;line-height:9.4pt;text-wrap:pretty"><sc-for list="{{ b.runs }}" as="r" hint-placeholder-count="0"><sc-for list="{{ r.plain }}" as="x" hint-placeholder-count="0"><span>{{ x.t }}</span></sc-for><sc-for list="{{ r.bold }}" as="x" hint-placeholder-count="0"><span style="font-weight:700">{{ x.t }}</span></sc-for><sc-for list="{{ r.link }}" as="x" hint-placeholder-count="0"><a href="{{ x.href }}" style="color:#2c9cd7;text-decoration:underline">{{ x.t }}</a></sc-for><sc-for list="{{ r.linkBold }}" as="x" hint-placeholder-count="0"><a href="{{ x.href }}" style="color:#2c9cd7;text-decoration:underline;font-weight:700">{{ x.t }}</a></sc-for><sc-for list="{{ r.br }}" as="x" hint-placeholder-count="0"><br></sc-for></sc-for></div>
+<div style="margin-top:4pt;font-size:7.5pt;font-weight:400;line-height:9.4pt;text-wrap:pretty"><sc-for list="{{ b.runs }}" as="r" hint-placeholder-count="0"><sc-for list="{{ r.plain }}" as="x" hint-placeholder-count="0"><span>{{ x.t }}</span></sc-for><sc-for list="{{ r.bold }}" as="x" hint-placeholder-count="0"><span style="font-weight:700">{{ x.t }}</span></sc-for><sc-for list="{{ r.fmt }}" as="x" hint-placeholder-count="0"><span style="font-weight:{{ x.w }};font-style:{{ x.fs }};text-decoration:{{ x.td }}">{{ x.t }}</span></sc-for><sc-for list="{{ r.link }}" as="x" hint-placeholder-count="0"><a href="{{ x.href }}" style="color:#2c9cd7;text-decoration:underline">{{ x.t }}</a></sc-for><sc-for list="{{ r.linkBold }}" as="x" hint-placeholder-count="0"><a href="{{ x.href }}" style="color:#2c9cd7;text-decoration:underline;font-weight:700">{{ x.t }}</a></sc-for><sc-for list="{{ r.br }}" as="x" hint-placeholder-count="0"><br></sc-for></sc-for></div>
 </sc-if>
 </sc-for>
 </div>
@@ -1227,6 +1233,8 @@ class Component extends DCLogic {
   applyBaked(b) {
     const t0 = performance.now();
     if (b.cover) this.state.cover = b.cover;
+    // the producer's hand adjustment from the console's cover preview
+    if (b.coverAdjust) this.state.coverAdjust = b.coverAdjust;
     // HR Assist artwork is baked by the console from inputs/HR Assist.JPG: the
     // producer's input folder is not on the web server, so the page cannot
     // load it by path (v14 printed the page blank).
@@ -1682,6 +1690,16 @@ class Component extends DCLogic {
           if (aheadH < TWO_LINES) { atoms.pop(); i--; }
         }
       }
+      // A race's prizemoney never parts from the label above it (Nov review,
+      // p35): when the break would fall inside the prize lines, the race's
+      // label and every prize line already placed go forward with it, unless
+      // that would empty the column.
+      if (i < all.length && atoms.length > 1 && all[i].race && (all[i].prize || []).length) {
+        const r = all[i].race;
+        let k = atoms.length - 1;
+        while (k >= 0 && atoms[k].race === r && !(atoms[k].bar || []).length && (atoms[k].prize || []).length) k--;
+        if (k > 0 && atoms[k].race === r && (atoms[k].bar || []).length) { const n = atoms.length - k; atoms.splice(k); i -= n; }
+      }
       // Never leave a meeting heading at a column foot. Run last, after every
       // rule that hands atoms forward, since any of them can leave one behind
       // (v10 p41, BET365 SWAN HILL).
@@ -1738,7 +1756,7 @@ class Component extends DCLogic {
     this._coverFramed = true;
     import('./parsers/cover-frame.js')
       .then(m => m.frameCover(this.state.cover,
-        { w: 595.3, h: 841.9 }, { top: 0.172, bottom: 0.895 }, 1.9))
+        { w: 595.3, h: 841.9 }, { top: 0.172, bottom: 0.895 }, 1.9, this.state.coverAdjust))
       .then(f => {
         console.info('Cover \u2014 framing: ' + f.objectPosition
           + (f.scale > 1.001 ? ', zoomed ' + Math.round((f.scale - 1) * 100) + '%' : '')
@@ -1748,7 +1766,18 @@ class Component extends DCLogic {
       .catch(e => console.warn('Cover \u2014 could not frame the photograph: ' + (e.message || e)));
   }
 
+  /** SVG <text> cannot take a template hole (the hole's wrapper span does not
+   * render inside SVG), so the bars carry their label as data-bar-t and it is
+   * written in here, after every render and again before printing. */
+  fillBars() {
+    document.querySelectorAll('text[data-bar-t]').forEach(t => {
+      const v = t.getAttribute('data-bar-t') || '';
+      if (t.textContent !== v) t.textContent = v;
+    });
+  }
+
   componentDidUpdate() {
+    this.fillBars();
     const sc = this.scope();
     if (sc.front) this.frameCoverPhoto();
     // Pass 2: the sections measure and pack in this one update and commit
@@ -2512,6 +2541,14 @@ class Component extends DCLogic {
    * both are full. Depth comes from the block's own parts, so no measuring.
    */
   rsPack() {
+    const src = this.state.seriesBlocks;
+    if (this._rsMemo && this._rsMemo.src === src) return this._rsMemo.pages;
+    const pages = this.rsPackRaw();
+    this._rsMemo = { src, pages };
+    return pages;
+  }
+
+  rsPackRaw() {
     const PAGE = 841.89, BOTTOM = 30, TOP_FIRST = 93.8, TOP_CONT = 57.9, GAP = 15;
     const depth = b => {
       const grid = b.columns.length === 3 ? RS_THREE : RS_FOUR;
@@ -2579,6 +2616,32 @@ class Component extends DCLogic {
         pages.push({ first: false, cols });
       }
     });
+    // The last page is solved for space rather than packed greedily: every way
+    // of splitting its series between the two columns is tried, each column
+    // keeping document order and the highweight schedule last, and the split
+    // whose deeper column is shallowest wins. That leaves the most clear depth
+    // across the foot of the page (Nov review, p47).
+    if (pages.length) {
+      const last = pages[pages.length - 1];
+      const mine = last.cols[0].blocks.concat(last.cols[1].blocks);
+      const tl = mine.filter(b => b.tail), body = blocks.filter(b => !b.tail && mine.indexOf(b) >= 0);
+      if (body.length && body.length <= 14) {
+        const limit = limitOf(last.first);
+        const dOf = new Map(mine.map(b => [b, depth(b)]));
+        const sum = list => list.reduce((a, b, k) => a + dOf.get(b) + (k ? GAP : 0), 0);
+        let best = null;
+        for (let mask = 0; mask < (1 << body.length); mask++) {
+          const L = body.filter((b, k) => !((mask >> k) & 1));
+          const Rt = body.filter((b, k) => (mask >> k) & 1).concat(tl);
+          if (!L.length) continue;
+          const ld = sum(L), rd = sum(Rt);
+          if (ld > limit || rd > limit) continue;
+          const score = Math.max(ld, rd) * 1000 + Math.abs(ld - rd);
+          if (!best || score < best.score) best = { score, L, Rt, ld, rd };
+        }
+        if (best) last.cols = [{ used: best.ld, blocks: best.L }, { used: best.rd, blocks: best.Rt }];
+      }
+    }
     if (!pages.length) pages.push({ first: true, cols: [{ blocks: [] }, { blocks: [] }] });
     return pages;
   }
@@ -2591,8 +2654,8 @@ class Component extends DCLogic {
   ntPack(which) {
     const PAGE = 841.89, BOTTOM = 30, TOP_FIRST = 92, TOP_CONT = 50;
     const M = which === 'notice'
-      ? { isSubject: [10, 17, 70], isSubhead: [11, 11, 120], isPara: [7, 10.4, 158], isStep: [5, 10.4, 150], isClause: [4, 10.4, 152], isBullet: [4, 10.4, 150] }
-      : { isHeading: [9, 17, 70], isSubhead: [9, 11, 120], isPara: [5, 10.4, 158], isClause: [4, 10.4, 152], isBullet: [4, 10.4, 150] };
+      ? { isSubject: [15, 17, 70], isSubhead: [16.5, 11, 120], isPara: [7, 10.4, 158], isStep: [5, 10.4, 150], isClause: [4, 10.4, 152], isBullet: [4, 10.4, 150] }
+      : { isHeading: [13.5, 17, 70], isSubhead: [13.5, 11, 120], isStep: [5, 10.4, 150], isPara: [5, 10.4, 158], isClause: [4, 10.4, 152], isBullet: [4, 10.4, 150] };
     const HEADS = which === 'notice' ? ['isSubject', 'isSubhead'] : ['isHeading', 'isSubhead'];
     // a bake from before the notices carried runs prints its plain text
     const withRuns = b => (b.runs && b.runs.length ? b : { ...b, runs: [{ plain: [{ t: b.text }], bold: [], link: [], linkBold: [], br: [] }] });
@@ -2644,7 +2707,7 @@ class Component extends DCLogic {
     // pushed it past the export in v11 and page 5 went out without its panel.
     if (!this._fillerPrintHook) {
       this._fillerPrintHook = true;
-      window.addEventListener('beforeprint', () => { clearTimeout(this._fillerTimer); this.applyFillers(); });
+      window.addEventListener('beforeprint', () => { clearTimeout(this._fillerTimer); this.fillBars(); this.applyFillers(); });
     }
     const pages = [...document.querySelectorAll('doc-page > .page')];
     if (!pages.length) return;
@@ -2939,11 +3002,19 @@ class Component extends DCLogic {
         bg: i % 2 ? '#e2f0fa' : '#fbfbfb'
       };
     });
-    // five columns across the foot of the permits page, two entries deep
-    const trialLefts = [24.7, 121, 207.7, 311.8, 398.5];
+    // Two entries deep under the permits table, as many columns as that takes:
+    // the printed five while ten riders or fewer, then evenly across the
+    // measure (Nov review: twelve riders, six to a row — a fixed five dropped
+    // the eleventh and twelfth). Positions are inside the table's own box,
+    // which sits at 24pt.
     const tr = this.state.trials.map(x => ({ name: x.Name, phone: x.Phone, cat: x.Category }));
+    const nTrialCols = Math.max(5, Math.ceil(tr.length / 2));
+    const trialLefts = nTrialCols === 5 ? [24.7, 121, 207.7, 311.8, 398.5]
+      : Array.from({ length: nTrialCols }, (u, i) => 24.7 + i * (546 / nTrialCols));
+    const trialW = nTrialCols === 5 ? 100 : 546 / nTrialCols - 4;
     const paTrialCols = trialLefts.map((l, i) => ({
-      left: l + 'pt',
+      left: (l - 24).toFixed(1) + 'pt',
+      w: trialW.toFixed(1) + 'pt',
       top: tr[i * 2] ? [tr[i * 2]] : [],
       bottom: tr[i * 2 + 1] ? [tr[i * 2 + 1]] : []
     }));

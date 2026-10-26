@@ -154,8 +154,15 @@ function band(arr, share) {
  * safe  — { top, bottom } fractions of page height that other furniture covers
  *         (masthead, teaser strip); the subject is aimed between them
  * zoom  — largest scale-up allowed past `cover`; 1 disables it
+ * adjust — the producer's hand adjustment from the console, applied on top of
+ *          the measured framing: { x: share of the page width, positive moves
+ *          the picture right; y: points, positive moves it down; zoom: factor
+ *          on the measured enlargement; refW/refH: the derivative's size when
+ *          a smaller preview copy is being framed }. The photograph still has
+ *          to fill its window, so a move past the overflow is held at the edge.
  */
-export async function frameCover(url, box, safe, zoom) {
+export async function frameCover(url, box, safe, zoom, adjust) {
+  const adj = adjust || {};
   const maxZoom = Math.max(1, zoom == null ? 1.2 : zoom);
   const top = (safe && safe.top) || 0;
   const bottom = (safe && safe.bottom) != null ? safe.bottom : 1;
@@ -182,6 +189,7 @@ export async function frameCover(url, box, safe, zoom) {
   if (!img || !img.naturalWidth) return fallback;
 
   const iw = img.naturalWidth, ih = img.naturalHeight;
+  const refW = adj.refW || iw, refH = adj.refH || ih;
   // The subject's centre across the photograph, when the producer has set it.
   // The energy measure cannot find a horse sideways against a grandstand and a
   // crowd — both carry more detail than the horse does — so the point is set by
@@ -194,8 +202,8 @@ export async function frameCover(url, box, safe, zoom) {
       const j = await r.json();
       const cx = Number(j.centreX);
       if (!(cx > 0 && cx < 1)) centreNote = '';
-      else if (j.width && j.height && (j.width !== iw || j.height !== ih)) {
-        centreNote = ' cover.json is for a ' + j.width + '\u00d7' + j.height + ' picture, not this ' + iw + '\u00d7' + ih + ' one \u2014 its centre was ignored; set it again for the new cover.';
+      else if (j.width && j.height && (j.width !== refW || j.height !== refH)) {
+        centreNote = ' cover.json is for a ' + j.width + '\u00d7' + j.height + ' picture, not this ' + refW + '\u00d7' + refH + ' one \u2014 its centre was ignored; set it again for the new cover.';
         console.warn('Cover \u2014' + centreNote);
       } else centreX = cx;
     }
@@ -278,6 +286,7 @@ export async function frameCover(url, box, safe, zoom) {
     const zClear = (baseH - clearDepth + AIR) / (below * ih * base);
     if (zClear > z) z = Math.min(maxZoom, zClear);
   }
+  if (adj.zoom > 0 && Math.abs(adj.zoom - 1) > 0.001) z = Math.max(1, Math.min(2.6, z * adj.zoom));
   // The photograph fills the window it is given — masthead foot to page foot,
   // edge to edge. Printing it under size instead only opens a band of flat
   // sampled colour under the wordmark, which reads as a mistake however
@@ -313,6 +322,9 @@ export async function frameCover(url, box, safe, zoom) {
   if (xHi - xLo <= baseW) slidX = Math.max(xHi - baseW, Math.min(xLo, slidX));
   if (centreX != null) slidX = centreX * fw - baseW / 2;
   slidX = Math.max(0, Math.min(overX, slidX));
+  const wantX = slidX - (Number(adj.x) || 0) * baseW;
+  slidX = Math.max(0, Math.min(overX, wantX));
+  const limitX = Math.abs(slidX - wantX) > 0.5;
   const px = overX > 0.5 ? (slidX / overX) * 100 : 50;
   // Down the page the hero is centred in the clear space rather than aimed by
   // its energy centroid. The centroid sits wherever the detail happens to be
@@ -327,6 +339,9 @@ export async function frameCover(url, box, safe, zoom) {
   const upTo = Math.min(overY, heroLo * fh - AIR);
   const from = Math.max(0, rows.hi * fh - (safeHi - AIR));
   if (from <= upTo) slid = Math.max(from, Math.min(upTo, slid));
+  const wantY = slid - (Number(adj.y) || 0);
+  slid = Math.max(0, Math.min(overY, wantY));
+  const limitY = Math.abs(slid - wantY) > 0.5;
   const py = overY > 0.5 ? (slid / overY) * 100 : 50;
   const heroTop = heroLo * fh - slid, heroFoot = rows.hi * fh - slid;
 
@@ -343,6 +358,7 @@ export async function frameCover(url, box, safe, zoom) {
     // Painted behind the photograph, so the strip it leaves at the head of the
     // page carries on from the picture's own sky.
     fill: skyFill || null,
+    heroTop, heroClear: safeHi - heroFoot, limitX, limitY,
     note: 'subject from ' + Math.round(subjectTop * 100) + '% down, interest band '
       + Math.round(rows.lo * 100) + '\u2013' + Math.round(rows.hi * 100)
       + '%, centred at ' + Math.round(cols.centre * 100) + '% across; filling the page from the masthead foot down'
