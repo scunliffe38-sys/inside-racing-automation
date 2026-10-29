@@ -115,9 +115,9 @@ date: 2026-09-09
 
 | Screen | Repo files |
 |---|---|
-| index.html | Checklist.html, Producer Console.dc.html |
+| index.html | Inside Racing Input Checklist.dc.html, Producer Console.dc.html |
 | Producer Console.dc.html | parsers/source.js, parsers/settings.js, parsers/pagination.js, parsers/ads.js |
-| Inside Racing Input Checklist.dc.html | Checklist.html |
+| Inside Racing Input Checklist.dc.html | Checklist.html (redirect), terraform/cloudfront.tf + s3.tf (PUT on inputs/*) |
 | Inside Racing Edition.dc.html | Inside Racing Part 1-3.dc.html, parsers/pagination.js, data/edition.json |
 | Inside Racing Edition-print.dc.html | Inside Racing Edition.dc.html, doc-page.js |
 | Cover.dc.html | parsers/cover-frame.js, assets/cover-masthead.svg, assets/photos/cover.jpg |

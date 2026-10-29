@@ -60,7 +60,49 @@ a:hover{color:#2c9cd7}
 <div style="margin-top:6px;font-size:12px;color:#8b929c">Final step, not needed for a first draft.</div>
 </div>
 </div>
-<div style="margin-top:14px;padding-top:12px;border-top:1px solid #eef1f4;font-size:12.5px;color:#5b616e;max-width:760px">Every file goes in the month&rsquo;s input folder under the name shown, spelled exactly as printed here &mdash; the console matches on the name and reports anything it does not recognise. Overwrite last month&rsquo;s file rather than adding a dated copy.</div>
+<div style="margin-top:14px;padding-top:12px;border-top:1px solid #eef1f4;font-size:12.5px;color:#5b616e;max-width:760px">Every file goes in the month&rsquo;s input folder under the name shown, spelled exactly as printed here &mdash; the console matches on the name and reports anything it does not recognise. Overwrite last month&rsquo;s file rather than adding a dated copy. Upload them below and each one is ticked off as it lands.</div>
+</div>
+
+<div style="margin-top:14px;background:#fff;border:1px solid #dfe4e9;padding:16px 18px 18px">
+<div style="display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;align-items:baseline">
+<div style="font-size:11px;letter-spacing:.08em;font-weight:700">UPLOAD TO THE INPUT FOLDER</div>
+<div style="font-size:12px;color:#8b929c">{{ uploadTarget }}</div>
+</div>
+<div onDragOver="{{ onDragOver }}" onDragLeave="{{ onDragLeave }}" onDrop="{{ onDrop }}" style="margin-top:10px;border:2px dashed {{ dropBorder }};background:{{ dropBg }};padding:18px 16px;text-align:center">
+<div style="font-size:13.5px;font-weight:700">Drop the month&rsquo;s files here</div>
+<div style="margin-top:4px;font-size:12px;color:#5b616e;max-width:620px;margin-left:auto;margin-right:auto">Each file is saved under the name the checklist shows, replacing the copy already there. A name the console does not recognise is refused; PNG or JPG artwork that is not an input goes into <span style="font-weight:700;color:#2c2e35">ads</span>.</div>
+<div style="margin-top:12px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+<button type="button" onClick="{{ onPickInputs }}" disabled="{{ uploadOff }}" style="font-family:inherit;font-size:12.5px;font-weight:700;padding:9px 14px;border:1px solid #2c9cd7;background:#2c9cd7;color:#fff;cursor:pointer" style-hover="background:#1f86bd;border-color:#1f86bd">Choose input files&hellip;</button>
+<button type="button" onClick="{{ onPickAds }}" disabled="{{ uploadOff }}" style="font-family:inherit;font-size:12.5px;font-weight:700;padding:9px 14px;border:1px solid #c3cad2;background:#fff;color:#5b616e;cursor:pointer" style-hover="border-color:#2c9cd7;color:#2c9cd7">Choose ad artwork&hellip;</button>
+</div>
+<input type="file" multiple="" aria-label="Input files to upload" onChange="{{ onInputsChosen }}" ref="{{ setInputsEl }}" style="display:none">
+<input type="file" multiple="" accept=".png,.jpg,.jpeg,image/png,image/jpeg" aria-label="Advertising artwork to upload" onChange="{{ onAdsChosen }}" ref="{{ setAdsEl }}" style="display:none">
+</div>
+<sc-if value="{{ uploadOff }}" hint-placeholder-val="{{ false }}">
+<div style="margin-top:8px;font-size:12px;color:#b06a00;font-weight:700">Uploads only work on the hosted site, not from a copy opened on this computer.</div>
+</sc-if>
+<div aria-live="polite">
+<sc-if value="{{ hasUploads }}" hint-placeholder-val="{{ false }}">
+<div style="margin-top:12px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center">
+<div style="font-size:12.5px;font-weight:700">{{ uploadLine }}</div>
+<button type="button" onClick="{{ onClearUploads }}" disabled="{{ uploadBusy }}" style="font-family:inherit;font-size:12px;font-weight:700;padding:6px 11px;border:1px solid #c3cad2;background:#fff;color:#5b616e;cursor:pointer" style-hover="border-color:#2c2e35;color:#2c2e35">Clear the list</button>
+</div>
+<div style="margin-top:6px">
+<sc-for list="{{ uploads }}" as="u" hint-placeholder-count="0">
+<div style="display:flex;gap:12px;align-items:flex-start;padding:8px 0;border-top:1px solid #eef1f4">
+<div style="flex:1 1 auto;min-width:0">
+<div style="font-size:13px;font-weight:700;overflow-wrap:anywhere">{{ u.name }}</div>
+<div style="margin-top:2px;font-size:12px;color:#5b616e;overflow-wrap:anywhere">{{ u.dest }}</div>
+<sc-if value="{{ u.showBar }}" hint-placeholder-val="{{ false }}">
+<div style="height:5px;background:#eef1f4;overflow:hidden;margin-top:6px;max-width:420px"><div style="height:5px;background:#2c9cd7;width:{{ u.pct }}%"></div></div>
+</sc-if>
+</div>
+<div style="flex:0 0 220px;text-align:right;font-size:12px;font-weight:700;color:{{ u.colour }}">{{ u.status }}</div>
+</div>
+</sc-for>
+</div>
+</sc-if>
+</div>
 </div>
 
 <div style="margin-top:14px;background:#fff;border:1px solid #dfe4e9;padding:14px 18px 8px">
@@ -98,7 +140,7 @@ a:hover{color:#2c9cd7}
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;jumpsIncluded&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;This edition&quot;},&quot;picnicsIncluded&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;This edition&quot;},&quot;noticeIncluded&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;This edition&quot;},&quot;stewardsIncluded&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;This edition&quot;},&quot;rulesIncluded&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;This edition&quot;}}">
 class Component extends DCLogic {
-  state = { month: '', ticks: {} };
+  state = { month: '', ticks: {}, uploads: [], dragging: false };
 
   KEY = 'ir-input-checklist-v1';
 
@@ -123,6 +165,240 @@ class Component extends DCLogic {
     if (ticks[file]) delete ticks[file]; else ticks[file] = true;
     this.write(this.state.month, ticks);
     this.setState({ ticks });
+  }
+
+  /** Tick a row on (never off). Reads storage fresh so a slow upload can't undo a tick. */
+  tickOn(file) {
+    const month = this.state.month;
+    const ticks = Object.assign({}, this.read()[month] || {});
+    if (ticks[file]) return;
+    ticks[file] = true;
+    this.write(month, ticks);
+    this.setState({ ticks });
+  }
+
+  // ---- upload -------------------------------------------------------------
+  //
+  // Files go straight into the bucket's inputs/ folder through the site's own
+  // CloudFront distribution: a PUT on inputs/* is signed by the origin access
+  // control, and the bucket policy grants s3:PutObject under inputs/ only. No
+  // credentials live in the page; who may upload is decided at the edge, the
+  // same way as who may read.
+
+  // Every name the console recognises, spelled as it must be saved: the site
+  // is case-sensitive, so a file arriving as "entry deadlines.CSV" is stored
+  // under its proper name. Keep in step with EXPECTED in parsers/source.js
+  // (not imported: loading it installs the console's fetch wrapper).
+  INPUT_NAMES = [
+    'Entry Deadlines.csv',
+    'Feature Race Deadlines - Entry Deadlines.xlsx',
+    'Meeting Corrections - Entry Deadlines.xlsx',
+    'Race Programs.csv',
+    'Add Twilight in Race Program.xlsx',
+    'Race Program - Race Name Updates.xlsx',
+    'Country run as Metro.xlsx',
+    'The Valley Transfer meetings.xlsx',
+    'NOM ACCEPT REMOVE.xlsx',
+    'Race Series.docx',
+    'Highweights.docx',
+    'Jumps Racing Program.xlsx',
+    'Jumps Trials.csv',
+    'Jumps Prizemoney Breakdowns.csv',
+    'Picnic Program.xlsx',
+    'Jump Outs.xlsx',
+    'HR Assist.JPG',
+    'Official Flat Trials.csv',
+    'Eligible to Ride in Trials.csv',
+    'Permits to Ride.xlsx',
+    'Riders Agents.csv',
+    'Industry Notice.docx',
+    'Stewards Room.docx',
+    'Rules Extracts.docx',
+    'Division of Races Policy.docx',
+    'Ad Placements.xlsx',
+    'Edition Settings.xlsx',
+    'Cover.jpg'
+  ];
+
+  MONTH_ABBR = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+  CALENDAR_ROW = 'Vic Calendar - mmm yy.xlsx';
+  ADS_ROW = 'ads/ \u2014 the booked artwork';
+
+  _ups = [];
+  _seq = 0;
+  _running = false;
+
+  canUpload() {
+    return typeof location !== 'undefined' && /^https?:$/.test(location.protocol);
+  }
+
+  isArtwork(name) {
+    return /\.(png|jpe?g)$/i.test(name);
+  }
+
+  /** Where an input file belongs, or null when the console wouldn't know it. */
+  inputPlace(name) {
+    const low = String(name || '').trim().toLowerCase();
+    const hit = this.INPUT_NAMES.find(n => n.toLowerCase() === low);
+    if (hit) return { as: hit, key: 'inputs/' + hit, tick: hit };
+    if (low === 'vic calendar.xlsx') {
+      return { as: 'Vic Calendar.xlsx', key: 'inputs/Vic Calendar.xlsx', tick: this.CALENDAR_ROW };
+    }
+    // one workbook per month, " - Mmm YY" title-case (see parsers/chart.js)
+    const m = low.match(/^vic calendar\s*-\s*([a-z]{3})\s+(\d{2})\.xlsx$/);
+    if (m) {
+      const i = this.MONTH_ABBR.findIndex(a => a.toLowerCase() === m[1]);
+      if (i >= 0) {
+        const as = 'Vic Calendar - ' + this.MONTH_ABBR[i] + ' ' + m[2] + '.xlsx';
+        return { as, key: 'inputs/' + as, tick: this.CALENDAR_ROW };
+      }
+    }
+    return null;
+  }
+
+  /** Booked artwork keeps its own name: Ad Placements refers to it by that name. */
+  adPlace(name) {
+    const as = String(name || '').trim();
+    if (!this.isArtwork(as) || /[\\/\u0000-\u001f]/.test(as)) return null;
+    return { as, key: 'inputs/ads/' + as, tick: this.ADS_ROW };
+  }
+
+  typeFor(name) {
+    const ext = (String(name).match(/\.([^.]+)$/) || [])[1];
+    return ({
+      csv: 'text/csv',
+      xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      jpg: 'image/jpeg',
+      jpeg: 'image/jpeg',
+      png: 'image/png'
+    })[(ext || '').toLowerCase()] || '';
+  }
+
+  /** inputs/ads/Spring (Oct).png -> absolute URL, each segment strictly encoded. */
+  urlFor(key) {
+    const strict = s => encodeURIComponent(s).replace(/[!'()*]/g, c => '%' + c.charCodeAt(0).toString(16).toUpperCase());
+    return new URL(key.split('/').map(strict).join('/'), location.href).href;
+  }
+
+  /** Queue a picked or dropped FileList. asArtwork forces images into ads/. */
+  enqueue(list, asArtwork) {
+    const files = Array.from(list || []);
+    if (!files.length) return;
+    for (const file of files) {
+      let place = null;
+      let refusal = '';
+      if (asArtwork) {
+        place = this.adPlace(file.name);
+        if (!place) refusal = 'Refused \u2014 artwork must be PNG or JPG.';
+      } else {
+        place = this.inputPlace(file.name) || this.adPlace(file.name);
+        if (!place) refusal = 'Refused \u2014 not a name the console recognises. Rename it to the name in the checklist.';
+      }
+      if (!place && !refusal) refusal = 'Refused.';
+      if (place && !file.size) { refusal = 'Refused \u2014 the file is empty.'; place = null; }
+      this._ups.push({
+        id: ++this._seq,
+        file,
+        name: file.name,
+        as: place ? place.as : '',
+        key: place ? place.key : '',
+        tick: place ? place.tick : '',
+        status: place ? 'waiting' : 'refused',
+        pct: 0,
+        msg: refusal
+      });
+    }
+    this.publish();
+    this.drain();
+  }
+
+  patch(id, changes) {
+    const u = this._ups.find(x => x.id === id);
+    if (!u) return;
+    Object.assign(u, changes);
+    this.publish();
+  }
+
+  publish() {
+    this.setState({ uploads: this._ups.map(u => Object.assign({}, u)) });
+  }
+
+  /** One at a time, in the order they were chosen: a repeated name ends as the last copy. */
+  async drain() {
+    if (this._running) return;
+    this._running = true;
+    try {
+      let next;
+      while ((next = this._ups.find(u => u.status === 'waiting'))) {
+        const id = next.id;
+        this.patch(id, { status: 'uploading', pct: 0 });
+        try {
+          await this.put(next);
+          this.patch(id, { status: 'checking', pct: 100 });
+          await this.verify(next);
+          this.patch(id, { status: 'done' });
+          this.tickOn(next.tick);
+        } catch (e) {
+          this.patch(id, { status: 'failed', msg: String((e && e.message) || e) });
+        }
+      }
+    } finally {
+      this._running = false;
+    }
+  }
+
+  put(u) {
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.open('PUT', this.urlFor(u.key));
+      xhr.setRequestHeader('Content-Type', this.typeFor(u.as) || u.file.type || 'application/octet-stream');
+      let last = 0;
+      xhr.upload.onprogress = e => {
+        if (!e.lengthComputable) return;
+        const pct = Math.round((e.loaded / e.total) * 100);
+        if (pct - last >= 2 || pct === 100) { last = pct; this.patch(u.id, { pct }); }
+      };
+      xhr.onload = () => {
+        // S3 answers a good PUT with an empty body. The distribution serves its
+        // error page in place of a 403 with a 200, so a body means refused.
+        const body = xhr.responseText || '';
+        if (xhr.status >= 200 && xhr.status < 300 && !body.trim()) return resolve();
+        reject(new Error(this.refusal(xhr.status, body)));
+      };
+      xhr.onerror = () => reject(new Error('Did not reach the site \u2014 check the connection and try again.'));
+      xhr.onabort = () => reject(new Error('Cancelled.'));
+      xhr.send(u.file);
+    });
+  }
+
+  refusal(status, body) {
+    if (status === 403 || /<html/i.test(body)) return 'Refused by the site (403). Uploads may not be switched on here yet, or your sign-in has lapsed \u2014 reload the page and try again.';
+    if (status === 405 || status === 501) return 'This copy of the site does not accept uploads (' + status + ').';
+    if (status === 413) return 'Too large for the site to accept (413).';
+    return 'Upload failed (' + (status || 'no response') + ').';
+  }
+
+  /** Read the object back: it must be there, at the size that was sent. */
+  async verify(u) {
+    let res;
+    try {
+      res = await fetch(this.urlFor(u.key), { method: 'HEAD', cache: 'no-store' });
+    } catch (e) {
+      throw new Error('Uploaded, but could not be read back to confirm. Check it in the console.');
+    }
+    if (!res.ok) throw new Error('Uploaded, but the file is not there on reading back (' + res.status + ').');
+    const len = Number(res.headers.get('content-length'));
+    if (len && len !== u.file.size) {
+      throw new Error('Uploaded, but the copy in the folder is ' + len + ' bytes, not ' + u.file.size + '. Try again.');
+    }
+  }
+
+  sizeText(n) {
+    if (n >= 1048576) return (n / 1048576).toFixed(1) + ' MB';
+    if (n >= 1024) return Math.round(n / 1024) + ' KB';
+    return n + ' bytes';
   }
 
   spec() {
@@ -203,8 +479,77 @@ class Component extends DCLogic {
       });
     });
     const pct = need ? Math.round((have / need) * 100) : 0;
+
+    const STATUS = {
+      waiting: ['Waiting', '#8b929c'],
+      uploading: ['Uploading', '#1f6b96'],
+      checking: ['Checking', '#1f6b96'],
+      done: ['Uploaded', '#1f7a4d'],
+      failed: ['Failed', '#8f1d13'],
+      refused: ['Refused', '#8f1d13']
+    };
+    const ups = this.state.uploads || [];
+    const uploads = ups.map(u => {
+      const [word, colour] = STATUS[u.status] || [u.status, '#5b616e'];
+      const renamed = u.as && u.as !== u.name;
+      let dest = u.key
+        ? (renamed ? 'Saved as ' : 'Saved to ') + u.key + ' \u00b7 ' + this.sizeText(u.file.size)
+        : '';
+      if (u.msg) dest = u.msg;
+      const status = u.status === 'uploading' ? word + ' ' + u.pct + '%' : word;
+      return {
+        name: u.name, dest, status, colour,
+        pct: u.pct,
+        showBar: u.status === 'uploading' || u.status === 'checking'
+      };
+    });
+    const nDone = ups.filter(u => u.status === 'done').length;
+    const nBad = ups.filter(u => u.status === 'failed' || u.status === 'refused').length;
+    const busy = ups.some(u => u.status === 'waiting' || u.status === 'uploading' || u.status === 'checking');
+    const uploadLine = (busy ? 'Uploading \u2014 keep this page open. ' : '') +
+      nDone + ' uploaded' + (nBad ? ', ' + nBad + ' not uploaded' : '');
+    const canUp = this.canUpload();
+    // read the ref at click time: it is not set yet on the first render
+    const pick = which => () => {
+      const el = this[which];
+      if (el && canUp) { el.value = ''; el.click(); }
+    };
+
     return {
       rows, pct,
+      uploads,
+      hasUploads: uploads.length > 0,
+      uploadLine,
+      uploadBusy: busy,
+      uploadOff: !canUp,
+      uploadTarget: canUp ? 'Saves to ' + location.host + '/inputs/' : '',
+      dropBorder: this.state.dragging ? '#2c9cd7' : '#c3cad2',
+      dropBg: this.state.dragging ? '#e8f4fb' : '#fafbfc',
+      setInputsEl: el => { this._inputsEl = el; },
+      setAdsEl: el => { this._adsEl = el; },
+      onPickInputs: pick('_inputsEl'),
+      onPickAds: pick('_adsEl'),
+      onInputsChosen: e => this.enqueue(e.target.files, false),
+      onAdsChosen: e => this.enqueue(e.target.files, true),
+      onDragOver: e => {
+        e.preventDefault();
+        if (e.dataTransfer) e.dataTransfer.dropEffect = canUp ? 'copy' : 'none';
+        if (!this.state.dragging) this.setState({ dragging: true });
+      },
+      onDragLeave: e => {
+        // leaving for a child of the zone is not leaving the zone
+        if (e.currentTarget.contains(e.relatedTarget)) return;
+        this.setState({ dragging: false });
+      },
+      onDrop: e => {
+        e.preventDefault();
+        this.setState({ dragging: false });
+        if (canUp && e.dataTransfer) this.enqueue(e.dataTransfer.files, false);
+      },
+      onClearUploads: () => {
+        this._ups = this._ups.filter(u => u.status === 'waiting' || u.status === 'uploading' || u.status === 'checking');
+        this.publish();
+      },
       month: this.state.month,
       progressLine: have + ' of ' + need + ' input files ready',
       adLine: adHave + ' of ' + adTotal + ' advertising files ready',
