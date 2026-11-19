@@ -267,7 +267,19 @@ class Component extends DCLogic {
     const edition = s.edition || '';
     // "AUGUST EDITION 2026" -> "August", for the section title
     const w = edition.trim().split(/\s+/)[0] || '';
-    const monthWord = w ? w[0].toUpperCase() + w.slice(1).toLowerCase() : '';
+    const editionWord = w ? w[0].toUpperCase() + w.slice(1).toLowerCase() : '';
+    // a program running over several months titles itself as a range: "April - June"
+    const monthWord = (() => {
+      const NM = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+      const seen = [];
+      (this.state.meetings || []).forEach(m => {
+        const a = String(m.dateLabel || '').toUpperCase().match(/\b(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)/);
+        if (a) { const i = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'].indexOf(a[1]); if (seen[seen.length - 1] !== i) seen.push(i); }
+      });
+      if (seen.length > 1) return NM[seen[0]] + ' - ' + NM[seen[seen.length - 1]];
+      if (seen.length === 1) return NM[seen[0]];
+      return editionWord;
+    })();
 
     // Two races of one class in a meeting split the cell, and the prizemoney
     // cell beside it splits with them. The divider is the same rule as the

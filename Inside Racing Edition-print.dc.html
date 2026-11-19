@@ -3082,8 +3082,20 @@ class Component extends DCLogic {
     const ntNoticePages = ntPaged(ntNoticePacked, ntNoticeFolios, this.state.tailLoaded && !this.state.notice.length);
     const ntStewardsPages = ntPaged(ntStewardsPacked, ntStewardsFolios, this.state.tailLoaded && !this.state.stewards.length);
 
-    const jpMonth = (String(this.state.edition || '').split(' ')[0] || '')
+    const jpMonthWord = (String(this.state.edition || '').split(' ')[0] || '')
       .replace(/^(\w)(\w*)$/, (m, a2, b2) => a2 + b2.toLowerCase());
+    // a program running over several months titles itself as a range: "April - June"
+    const jpMonth = (() => {
+      const NM = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+      const seen = [];
+      (this.state.jpMeetings || []).forEach(m => {
+        const a = String(m.dateLabel || '').toUpperCase().match(/\b(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)/);
+        if (a) { const i = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'].indexOf(a[1]); if (seen[seen.length - 1] !== i) seen.push(i); }
+      });
+      if (seen.length > 1) return NM[seen[0]] + ' - ' + NM[seen[seen.length - 1]];
+      if (seen.length === 1) return NM[seen[0]];
+      return jpMonthWord;
+    })();
 
     // ── Jumps Program ──
     const JP_RULE = '0.75pt solid #2c2e35';
