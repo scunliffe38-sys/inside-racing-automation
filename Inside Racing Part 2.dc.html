@@ -429,14 +429,17 @@ DETAILS</div>
 </section>
 </sc-for>
 
-<sc-for list="{{ jumpsPages }}" as="tp" hint-placeholder-count="1">
+<sc-for list="{{ jpPages }}" as="tp" hint-placeholder-count="1">
 <section class="page" data-screen-label="Jumps Program" style="position:relative;font-family:'Gotham Narrow',sans-serif;color:#2c2e35;background:#fff;padding:0;overflow:hidden">
 <div style="position:absolute;left:22.7pt;top:24pt;font-size:10pt;font-weight:400;line-height:1;letter-spacing:.019em">JUMPS RACING PROGRAM, JUMPS TRIALS AND JUMPS RACES PRIZEMONEY BREAKDOWNS</div>
 <div style="position:absolute;left:22.7pt;top:37pt;width:549.9pt;height:3pt;background:#9ecff0"></div>
 
-<div style="position:absolute;left:22pt;top:59.3pt;font-size:24pt;font-weight:700;line-height:1;letter-spacing:-.01em">Jumps Racing Program {{ jpMonth }}</div>
-<div id="jp-flow" style="position:absolute;left:22.7pt;top:90.7pt;width:549.9pt">
+<sc-for list="{{ tp.titleRow }}" as="tt" hint-placeholder-count="1">
+<div style="position:absolute;left:22pt;top:59.3pt;font-size:24pt;font-weight:700;line-height:1;letter-spacing:-.01em">{{ jpMonth }}</div>
+</sc-for>
+<div style="position:absolute;left:22.7pt;top:{{ tp.top }};width:549.9pt">
 
+<sc-for list="{{ tp.table }}" as="tb" hint-placeholder-count="1">
 <div style="border-top:0.75pt solid #2c2e35;border-left:0.75pt solid #2c2e35">
 <div style="display:flex;font-family:'Gotham XNarrow',sans-serif;font-size:6.2pt;font-weight:700;line-height:7pt;letter-spacing:.01em">
 <div style="width:42.4pt;flex:0 0 42.4pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;padding:6pt 3pt;display:flex;align-items:center">DATE</div>
@@ -453,7 +456,7 @@ DETAILS</div>
 <div style="width:36.4pt;flex:0 0 36.4pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;padding:6pt 3pt;display:flex;align-items:center">PRIZEMONEY</div>
 </div>
 
-<sc-for list="{{ jpMeetings }}" as="m" hint-placeholder-count="3">
+<sc-for list="{{ tb.rows }}" as="m" hint-placeholder-count="3">
 <div style="display:flex;align-items:stretch;font-size:6.6pt;line-height:8pt">
 <div style="width:42.4pt;flex:0 0 42.4pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;padding:2.5pt 3pt;display:flex;align-items:center;font-weight:700;white-space:nowrap">{{ m.dateLabel }}</div>
 <div style="width:45.2pt;flex:0 0 45.2pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;padding:2.5pt 4pt;display:flex;align-items:center;font-weight:700">{{ m.venue }}</div>
@@ -515,11 +518,13 @@ DETAILS</div>
 </div>
 </sc-for>
 </div>
+</sc-for>
 
-<div style="margin-top:27.6pt">
+<sc-for list="{{ tp.trials }}" as="tr" hint-placeholder-count="1">
+<div style="margin-top:{{ tr.gap }}">
 <div style="margin-left:-0.7pt;font-size:24pt;font-weight:700;line-height:1;letter-spacing:-.01em">Jumps Trials</div>
 <div style="margin-top:5.2pt;display:flex;align-items:stretch">
-<sc-for list="{{ jpTrialColumns }}" as="col" hint-placeholder-count="1">
+<sc-for list="{{ tr.cols }}" as="col" hint-placeholder-count="1">
 <div style="width:133.1pt;flex:0 0 133.1pt;box-sizing:border-box;padding-right:6.6pt;border-right:{{ col.rule }}">
 <div style="width:126.5pt">
 <sc-for list="{{ col.groups }}" as="g" hint-placeholder-count="1">
@@ -540,7 +545,9 @@ DETAILS</div>
 </sc-for>
 </div>
 </div>
+</sc-for>
 
+<sc-for list="{{ tp.tiers }}" as="x" hint-placeholder-count="1">
 <div style="margin-top:27pt">
 <div style="margin-left:-0.7pt;font-size:24pt;font-weight:700;line-height:1;letter-spacing:-.01em">Jumps Races Prizemoney Breakdowns</div>
 <div style="margin-top:5.2pt;height:2pt;background:#2c2e35"></div>
@@ -554,23 +561,11 @@ DETAILS</div>
 </sc-for>
 </div>
 </div>
-
-<sc-for list="{{ jpOttPanel }}" as="o" hint-placeholder-count="1">
-<div data-ad-fixed="jumps" style="position:relative;margin-top:29pt;height:96pt;background:#edf6fb;box-sizing:border-box;padding:10pt 12pt">
-<div style="font-size:20.6pt;font-weight:700;line-height:1;letter-spacing:-.01em">Transition Pathway Programs</div>
-<div style="margin-top:7pt;font-size:8pt;line-height:10.5pt;width:330pt">There are many and varied options for your horse when it retires from racing. Visit ottcommunity.com.au to access RV&rsquo;s easy-to-follow transition guide.</div>
-<img src="assets/photos/off-the-track-handler.png" alt="" style="position:absolute;right:0;top:0;width:130pt;height:96pt;object-fit:cover" />
-</div>
-</sc-for>
-<sc-for list="{{ jpFillerAd }}" as="f" hint-placeholder-count="0">
-<div style="position:relative;margin-top:29pt;height:96pt;background:#edf6fb;overflow:hidden">
-<img src="{{ f.art }}" alt="" style="position:absolute;left:0;top:0;width:100%;height:100%;object-fit:contain;display:block" />
-</div>
 </sc-for>
 </div>
 
 <div style="position:absolute;left:12.2pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1;letter-spacing:-.013em">{{ footer }}</div>
-<div style="position:absolute;right:12.3pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1">{{ jpPageNo }}</div>
+<div style="position:absolute;right:12.3pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1">{{ tp.no }}</div>
 </section>
 </sc-for>
 
@@ -2258,6 +2253,43 @@ class Component extends DCLogic {
    *
    *   depth  how deep a column may run, in points
    */
+  /**
+   * How the jumps section falls onto pages. One page when the program, the
+   * trials and the breakdowns fit together; otherwise the program table takes
+   * the first page (more if it runs long, the header row repeated) and the
+   * trials and breakdowns follow on a page of their own. Whatever is left at a
+   * page foot is offered as a bookable advertising panel by the filler pass.
+   *
+   *   n     program rows        half  tier rows per column
+   *   pack  depth -> trial columns
+   */
+  jpLayout(n, half, pack) {
+    const BOTTOM = 790, ROW = 37, HEAD_ROW = 26;
+    const TRIALS_HEAD = 29.2, TRIALS_GAP = 27.6;
+    const TIERS = 27 + 24 + 5.2 + 2 + 7 + half * 21.2;
+    const need = pack(100000).length ? 29 + 20.2 : 0;
+    const spare1 = BOTTOM - 90.7 - (HEAD_ROW + n * ROW) - TRIALS_GAP - TRIALS_HEAD - TIERS;
+    const one = pack(Math.max(spare1, 1));
+    if (spare1 >= need && one.length <= 4) {
+      return [{ top: 90.7, title: true, rows: [0, n], trials: { gap: TRIALS_GAP, cols: one }, tiers: true }];
+    }
+    const pages = [];
+    for (let a = 0; a < n || !pages.length; ) {
+      const top = pages.length ? 59.3 : 90.7;
+      const per = Math.max(1, Math.floor((BOTTOM - top - HEAD_ROW) / ROW));
+      pages.push({ top, title: !pages.length, rows: [a, Math.min(n, a + per)], trials: null, tiers: false });
+      a += per;
+    }
+    const cols = pack(BOTTOM - 59.3 - TRIALS_HEAD - TIERS);
+    pages.push({ top: 59.3, title: false, rows: null, trials: { gap: 0, cols }, tiers: true });
+    if (cols.length > 4 && !this._jpWarnedCols) {
+      this._jpWarnedCols = true;
+      console.warn('Jumps Trials: the races fill ' + cols.length + ' columns against the four a page sets — '
+        + (cols.length - 4) + ' will not print.');
+    }
+    return pages;
+  }
+
   jpPackTrials(depth) {
     const HEAD = 29;      // rule, venue, date
     const RACE = 20.2;    // gap, conditions bar, title
@@ -2761,7 +2793,10 @@ class Component extends DCLogic {
     const cPrograms = span(1 + len(this.state.rpPages, STANDING.programs - 1));
     const cPermits = span(1);
     const cAgents = span(1);
-    const cJumps = yes(cs.jumps_included) ? span(1) : '';
+    const jpLaid = yes(cs.jumps_included)
+      ? this.jpLayout((this.state.jpMeetings || []).length, Math.ceil((this.state.jpTiers || []).length / 2), d => this.jpPackTrials(d))
+      : [];
+    const cJumps = jpLaid.length ? span(jpLaid.length) : '';
     // the policy follows the trials, on the last trials page or one of its own
     const joTrialPages = joPacked.filter(p => !p.policyOnly).length || 1;
     const joPolicyPages = joPacked.length - joTrialPages;
@@ -2833,7 +2868,8 @@ class Component extends DCLogic {
     const paPageAgents = tailNo();
     // out of the edition entirely when the toggle is No: no page, no folio
     const jpOn = yes(cs.jumps_included);
-    const jpPageNo = jpOn ? tailNo() : '';
+    const jpFolios = jpOn ? jpLaid.map(() => tailNo()) : [];
+    const jpPageNo = jpFolios[0] || '';
     const joFolios = joPacked.map(() => tailNo());
     const joPageNo = joFolios[0] || '';
     const rsFolios = rsPacked.map(() => tailNo());
@@ -2986,20 +3022,9 @@ class Component extends DCLogic {
     const ntNoticePages = ntPaged(ntNoticePacked, ntNoticeFolios, this.state.tailLoaded && !this.state.notice.length);
     const ntStewardsPages = ntPaged(ntStewardsPacked, ntStewardsFolios, this.state.tailLoaded && !this.state.stewards.length);
 
-    const jpMonthWord = (String(this.state.edition || '').split(' ')[0] || '')
+    const jpMonth = ((this.state.jpMeetings || [])[0] || {}).programTitle
+      || 'Jumps Racing Program ' + (String(this.state.edition || '').split(' ')[0] || '')
       .replace(/^(\w)(\w*)$/, (m, a2, b2) => a2 + b2.toLowerCase());
-    // a program running over several months titles itself as a range: "April - June"
-    const jpMonth = (() => {
-      const NM = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-      const seen = [];
-      (this.state.jpMeetings || []).forEach(m => {
-        const a = String(m.dateLabel || '').toUpperCase().match(/\b(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)/);
-        if (a) { const i = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'].indexOf(a[1]); if (seen[seen.length - 1] !== i) seen.push(i); }
-      });
-      if (seen.length > 1) return NM[seen[0]] + ' - ' + NM[seen[seen.length - 1]];
-      if (seen.length === 1) return NM[seen[0]];
-      return jpMonthWord;
-    })();
 
     // ── Jumps Program ──
     const JP_RULE = '0.75pt solid #2c2e35';
@@ -3019,43 +3044,16 @@ class Component extends DCLogic {
     const jpTierColumns = jpTiers.length
       ? [{ tiers: jpTiers.slice(0, jpHalf) }, { tiers: jpTiers.slice(jpHalf) }]
       : [];
-    // What is left for the trials once the program and the breakdowns have
-    // taken theirs. The Off The Track panel is discretionary.
-    const jpSpare = (790 - 90.7) - (26 + jpMeetings.length * 37) - (27.6 + 29.2)
-      - (27 + 24 + 5.2 + 2 + 7 + jpHalf * 21.2);
-    const JP_PANEL = 29 + 96;
-    let jpCols = this.jpPackTrials(jpSpare - JP_PANEL);
-    let jpOttPanel = [{}];
-    if (jpCols.length > 4) { jpCols = this.jpPackTrials(jpSpare); jpOttPanel = []; }
-    // Second test, on what the page actually came to rather than what the
-    // trials were allowed: a long program pushes everything down too, so the
-    // panel goes whenever the foot of the page cannot hold it.
-    const jpDepth = Math.max(0, ...jpCols.slice(0, 4).map(c => c.depth));
-    const jpSettled = 90.7 + (26 + jpMeetings.length * 37) + (27.6 + 29.2) + jpDepth
-      + (27 + 24 + 5.2 + 2 + 7 + jpHalf * 21.2);
-    if (jpOttPanel.length && jpSettled + JP_PANEL > 790) jpOttPanel = [];
-    // A booked jumps-filler takes the Off The Track panel's place.
-    const jpBooking = (((this.state.settings || {}).$placements || {}).bySlot || {})['jumps-filler'];
-    let jpFillerAd = [];
-    if (jpOttPanel.length && jpBooking) {
-      if (!jpBooking.enabled) jpOttPanel = [];
-      else if (jpBooking.artwork) { jpOttPanel = []; jpFillerAd = [{ art: jpBooking.artwork }]; }
-    }
-    if (jpCols.length > 4 && !this._jpWarnedCols) {
-      this._jpWarnedCols = true;
-      console.warn('Jumps Trials: the races fill ' + jpCols.length + ' columns against the four page 49 sets'
-        + ' — ' + (jpCols.length - 4) + ' will not print. Reduce the races listed, or the section needs a second page.');
-    }
-    if (jpSettled > 790 && !this._jpWarnedDepth) {
-      this._jpWarnedDepth = true;
-      console.warn('Jumps Program: the page comes to about ' + Math.round(jpSettled) + 'pt against 790pt of usable'
-        + ' depth, with the advertisement already dropped — the section needs a second page.');
-    }
-    // a hairline sits in the gutter after every column but the fourth, so a
-    // single-column month still carries the rule the published page shows
-    const jpTrialColumns = jpCols.slice(0, 4).map((c, i) => ({
-      groups: c.groups,
-      rule: i < 3 ? '0.5pt solid #a7a9ac' : 'none'
+    const jpPages = (sc.tail && jpOn ? jpLaid : []).map((p, i) => ({
+      top: p.top + 'pt',
+      titleRow: p.title ? [{}] : [],
+      table: p.rows ? [{ rows: jpMeetings.slice(p.rows[0], p.rows[1]) }] : [],
+      trials: p.trials ? [{
+        gap: p.trials.gap + 'pt',
+        cols: p.trials.cols.slice(0, 4).map((c, j) => ({ groups: c.groups, rule: j < 3 ? '0.5pt solid #a7a9ac' : 'none' }))
+      }] : [],
+      tiers: p.tiers ? [{}] : [],
+      no: jpFolios[i] || ''
     }));
 
     // ── Picnic Racing ──
@@ -3081,7 +3079,6 @@ class Component extends DCLogic {
       frontPages: sc.front ? [{}] : [],
       rpKeyPages: sc.programs ? [{}] : [],
       tailPages: sc.tail ? [{}] : [],
-      jumpsPages: sc.tail && jpOn ? [{}] : [],
       adPages,
       adPanelBooked,
       adPanelHouse,
@@ -3105,9 +3102,7 @@ class Component extends DCLogic {
       paPageAgents,
       jpMonth,
       jpMeetings,
-      jpTrialColumns,
-      jpOttPanel,
-      jpFillerAd,
+      jpPages,
       pcPages,
       pcRangeCaps: String(this.state.pcRange || '').toUpperCase(),
       jpTierColumns,

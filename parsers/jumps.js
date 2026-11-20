@@ -62,6 +62,8 @@ function parseDate(raw) {
   return new Date(Date.UTC(year, mi, day));
 }
 
+const monthYear = d => MONTHS[d.getUTCMonth()][0].toUpperCase() + MONTHS[d.getUTCMonth()].slice(1, 3) + ' ' + d.getUTCFullYear();
+
 /** "SUN 2 AUG", as the chart sets it. */
 function chartDate(d) {
   return DAYS[d.getUTCDay()] + ' ' + d.getUTCDate() + ' ' + ABBR[d.getUTCMonth()];
@@ -130,25 +132,45 @@ export async function loadJumpsProgram(url, edition) {
     all.push({ date: d, dateLabel: chartDate(d), venue, cells, races: races.length, line });
   });
 
-  // A season workbook holding a date from another year is a typo, not a horizon.
-  if (want) {
-    const strays = all.filter(m => m.date.getUTCFullYear() !== want.year);
-    if (strays.length) {
-      warnings.push('Jumps Program: ' + strays.length + ' meeting' + (strays.length > 1 ? 's are' : ' is')
-        + ' dated ' + [...new Set(strays.map(m => m.date.getUTCFullYear()))].join(' and ')
-        + ' in a ' + want.year + ' program — ' + strays.map(m => m.venue + ', ' + m.line).join('; ') + '.');
-    }
-  }
 
-  const inMonth = want
+  let inMonth = want
     ? all.filter(m => m.date.getUTCMonth() === want.month && m.date.getUTCFullYear() === want.year)
     : [];
-  const meetings = inMonth.filter(m => m.races > 0);
+  // No jumps racing in the edition month (the off-season): print the season
+  // ahead instead — every meeting in the workbook from the edition month on —
+  // titled by its year rather than the month.
+  let title = want ? want.name : '';
+  if (want && !inMonth.some(m => m.races > 0)) {
+    const start = new Date(Date.UTC(want.year, want.month, 1));
+    const ahead = all.filter(m => m.date >= start);
+    if (ahead.some(m => m.races > 0)) {
+      inMonth = ahead;
+      want.ahead = start;
+      // "2027 Jumps Racing Program: Feb-May" — the year(s) and the first and last
+      // months in the workbook, trials and schooling days included.
+      const racing = ahead.map(m => m.date).sort((x, y) => x - y);
+      const first = racing[0], last = racing[racing.length - 1];
+      const mon = d => MONTHS[d.getUTCMonth()][0].toUpperCase() + MONTHS[d.getUTCMonth()].slice(1, 3);
+      const y1 = first.getUTCFullYear(), y2 = last.getUTCFullYear();
+      const yrs = y1 === y2 ? String(y1) : y1 + '-' + String(y2).slice(-2);
+      const span = mon(first) === mon(last) && y1 === y2 ? mon(first) : mon(first) + '-' + mon(last);
+      title = yrs + ' Jumps Racing Program: ' + span;
+      want.fullTitle = true;
+    }
+  }
+  // Trials and schooling days are listed in the chart too, in date order, with
+  // their race cells empty — in a single month and in the season-ahead view.
+  const meetings = inMonth.slice();
+  meetings.forEach(m => { m.programTitle = want && want.fullTitle ? title : 'Jumps Racing Program ' + title; });
   const trialDays = inMonth.filter(m => m.races === 0);
 
-  if (want && !meetings.length) {
-    warnings.push('Jumps Program: no jumps meetings carrying races in ' + want.name + ' ' + want.year
-      + ' — check the workbook covers this month, or set jumps_included to No.');
+  if (want && !meetings.some(m => m.races > 0)) {
+    const span = all.length
+      ? ' The workbook runs ' + monthYear(all.reduce((a, m) => m.date < a ? m.date : a, all[0].date))
+        + ' to ' + monthYear(all.reduce((a, m) => m.date > a ? m.date : a, all[0].date)) + '.'
+      : '';
+    warnings.push('Jumps Program: no jumps race meetings from ' + want.name + ' ' + want.year + ' onwards.' + span
+      + ' Add the coming season to Jumps Racing Program.xlsx, or set Jumps Included to No in the console.');
   }
   meetings.forEach(m => {
     CLASSES.forEach(c => {
@@ -164,10 +186,34 @@ export async function loadJumpsProgram(url, edition) {
 
 export async function loadJumpsTrials(url, trialDays, want) {
   const { text } = await fetchDelimited(url);
-  const { head, body } = tsvRows(text);
+  const parsed = tsvRows(text);
   const warnings = [];
   const need = ['Meeting', 'Date', 'Race', 'Name', 'Type', 'Distance'];
-  need.forEach(h => { if (!head.includes(h)) warnings.push('Jumps Trials: no "' + h + '" column — header reads ' + head.join(' | ') + '.'); });
+  // The race-programs export of the trial races is read as it comes.
+  const ALIAS = { Meeting: 'meet_day_venue_name', Date: 'meet_date', Race: 'race_number',
+    Name: 'name_race_full', Type: 'race_conditions', Distance: 'race_distance' };
+  const isExport = need.some(h => !parsed.head.includes(h)) && need.every(h => parsed.head.includes(ALIAS[h]));
+  let body = parsed.body;
+  if (isExport) {
+    // the export leaves date and venue blank under the first race of a meeting
+    let lastDate = '', lastVenue = '';
+    body = body.map(r => {
+      const o = {};
+      need.forEach(h => { o[h] = r[ALIAS[h]] || ''; });
+      if (o.Date) lastDate = o.Date; else o.Date = lastDate;
+      if (o.Meeting) lastVenue = o.Meeting; else o.Meeting = lastVenue;
+      if (!o.Type) o.Type = r.group_type || '';
+      if (/^\d{3,4}$/.test(o.Distance)) o.Distance += ' m';
+      return o;
+    }).filter(r => /hurdle|hdle|steeple|stple/i.test(r.Name + ' ' + r.Type));
+  } else {
+    const missing = need.filter(h => !parsed.head.includes(h));
+    if (missing.length) {
+      warnings.push('Jumps Trials: the file is not in the expected layout (missing ' + missing.join(', ')
+        + '). Row 1 must read: Meeting, Date, Race, Name, Type, Distance — one trial race per row.');
+      return { meetings: [], warnings };
+    }
+  }
 
   // The file holds whatever has been entered; only the edition month prints.
   let rows = body;
@@ -179,13 +225,14 @@ export async function loadJumpsTrials(url, trialDays, want) {
         if ((r.Meeting || '').trim()) warnings.push('Jumps Trials: cannot read the date "' + r.Date + '" — row ' + (i + 2) + '.');
         return false;
       }
-      const hit = d.getUTCMonth() === want.month && d.getUTCFullYear() === want.year;
+      const hit = want.ahead ? d >= want.ahead
+        : d.getUTCMonth() === want.month && d.getUTCFullYear() === want.year;
       if (!hit) other.push(r.Meeting);
       return hit;
     });
     if (other.length) {
       warnings.push('Jumps Trials: ' + other.length + ' race' + (other.length > 1 ? 's are' : ' is')
-        + ' outside ' + want.name + ' ' + want.year + ' and not printed ('
+        + ' outside ' + (want.ahead ? 'the season printed' : want.name + ' ' + want.year) + ' and not printed ('
         + [...new Set(other)].join(', ') + ').');
     }
   }
@@ -224,13 +271,21 @@ export async function loadJumpsTrials(url, trialDays, want) {
 }
 
 export async function loadJumpsBreakdowns(url) {
-  const { text } = await fetchDelimited(url);
+  let { text } = await fetchDelimited(url);
+  // Opened in Excel as a comma file and saved back, each line is split at its
+  // commas and re-quoted: Of $35,"000.<tab>1st $21",450, … ,  — undo that.
+  text = String(text).split(/\r?\n/).map(l => /\t/.test(l) ? l.replace(/"/g, '').replace(/,+\s*$/, '') : l).join('\n');
   const { head, body } = tsvRows(text);
   const warnings = [];
   if (!head.includes('Amount') || !head.includes('Breakdown')) {
-    warnings.push('Jumps Prizemoney Breakdowns: header reads ' + head.join(' | ') + ', expected Amount | Breakdown.');
+    warnings.push('Jumps Prizemoney Breakdowns: the file is not in the expected layout. Row 1 must read Amount'
+      + ' in column A and Breakdown in column B, one tier per row (e.g. "Of $35,000." | "1st $21,450, 2nd $6,600 …").');
+    return { tiers: [], warnings };
   }
   const tiers = body.filter(r => (r.Amount || '').trim()).map((r, i) => {
+    // a row typed without the tab: "Of $350,000.1st $192,500, …" in one cell
+    const run = !r.Breakdown && /^(Of\s*\$[\d,]+\.?)\s*(1st[\s\S]+)$/i.exec(r.Amount.trim());
+    if (run) { r = { Amount: run[1], Breakdown: run[2] }; }
     if (!r.Breakdown) warnings.push('Jumps Prizemoney Breakdowns: "' + r.Amount + '" has no breakdown — row ' + (i + 2) + '.');
     return { amount: r.Amount.trim(), breakdown: (r.Breakdown || '').trim() };
   });

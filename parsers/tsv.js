@@ -89,8 +89,19 @@ function cells(line, d) {
  * Splits the text into row objects keyed by the header row's own column names.
  * Trailing empty columns from the export are ignored.
  */
+/**
+ * A tab-separated file opened in Excel and saved as CSV comes back with each
+ * whole line in one quoted cell and a run of commas after it:
+ * "Amount<tab>Breakdown",,,,  — put the line back as it was.
+ */
+function rewrap(line) {
+  const m = /^\s*"([\s\S]*\t[\s\S]*)"\s*,*\s*$/.exec(line);
+  return m ? m[1].replace(/""/g, '"') : line;
+}
+
 export function rows(text) {
-  const lines = String(text || '').replace(/\r\n/g, '\n').replace(/\r/g, '\n').split('\n').filter(l => l.trim());
+  const lines = String(text || '').replace(/\r\n/g, '\n').replace(/\r/g, '\n').split('\n')
+    .map(rewrap).filter(l => l.trim());
   if (!lines.length) return { head: [], body: [] };
   const d = delimiter(lines[0]);
   const head = cells(lines[0], d).map(h => h.trim());

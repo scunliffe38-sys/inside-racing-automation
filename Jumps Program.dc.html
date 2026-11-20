@@ -22,14 +22,18 @@ a:hover{color:#1b7fb4}
 </helmet>
 <doc-page size="a4">
 
-<section class="page" data-screen-label="49" style="position:relative;font-family:'Gotham Narrow',sans-serif;color:#2c2e35;background:#fff;padding:0;overflow:hidden">
+<sc-for list="{{ pages }}" as="tp" hint-placeholder-count="1">
+<section class="page" data-screen-label="Jumps Program" style="position:relative;font-family:'Gotham Narrow',sans-serif;color:#2c2e35;background:#fff;padding:0;overflow:hidden">
 <div style="position:absolute;left:22.7pt;top:24pt;font-size:10pt;font-weight:400;line-height:1;letter-spacing:.019em">JUMPS RACING PROGRAM, JUMPS TRIALS AND JUMPS RACES PRIZEMONEY BREAKDOWNS</div>
 <div style="position:absolute;left:22.7pt;top:37pt;width:549.9pt;height:3pt;background:#9ecff0"></div>
 
-<div style="position:absolute;left:22pt;top:59.3pt;font-size:24pt;font-weight:700;line-height:1;letter-spacing:-.01em">Jumps Racing Program {{ month }}</div>
+<sc-for list="{{ tp.titleRow }}" as="tt" hint-placeholder-count="1">
+<div style="position:absolute;left:22pt;top:59.3pt;font-size:24pt;font-weight:700;line-height:1;letter-spacing:-.01em">{{ month }}</div>
+</sc-for>
 
-<div id="jp-flow" style="position:absolute;left:22.7pt;top:90.7pt;width:549.9pt">
+<div style="position:absolute;left:22.7pt;top:{{ tp.top }};width:549.9pt">
 
+<sc-for list="{{ tp.table }}" as="tb" hint-placeholder-count="1">
 <div style="border-top:0.75pt solid #2c2e35;border-left:0.75pt solid #2c2e35">
 <div style="display:flex;font-family:'Gotham XNarrow',sans-serif;font-size:6.2pt;font-weight:700;line-height:7pt;letter-spacing:.01em">
 <div style="width:42.4pt;flex:0 0 42.4pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;padding:6pt 3pt;display:flex;align-items:center">DATE</div>
@@ -46,7 +50,7 @@ a:hover{color:#1b7fb4}
 <div style="width:36.4pt;flex:0 0 36.4pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;padding:6pt 3pt;display:flex;align-items:center">PRIZEMONEY</div>
 </div>
 
-<sc-for list="{{ meetings }}" as="m" hint-placeholder-count="3">
+<sc-for list="{{ tb.rows }}" as="m" hint-placeholder-count="3">
 <div style="display:flex;align-items:stretch;font-size:6.6pt;line-height:8pt">
 <div style="width:42.4pt;flex:0 0 42.4pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;padding:2.5pt 3pt;display:flex;align-items:center;font-weight:700;white-space:nowrap">{{ m.dateLabel }}</div>
 <div style="width:45.2pt;flex:0 0 45.2pt;box-sizing:border-box;border-right:0.75pt solid #2c2e35;border-bottom:0.75pt solid #2c2e35;padding:2.5pt 4pt;display:flex;align-items:center;font-weight:700">{{ m.venue }}</div>
@@ -108,11 +112,13 @@ a:hover{color:#1b7fb4}
 </div>
 </sc-for>
 </div>
+</sc-for>
 
-<div style="margin-top:27.6pt">
+<sc-for list="{{ tp.trials }}" as="tr" hint-placeholder-count="1">
+<div style="margin-top:{{ tr.gap }}">
 <div style="margin-left:-0.7pt;font-size:24pt;font-weight:700;line-height:1;letter-spacing:-.01em">Jumps Trials</div>
 <div style="margin-top:5.2pt;display:flex;align-items:stretch">
-<sc-for list="{{ trialColumns }}" as="col" hint-placeholder-count="1">
+<sc-for list="{{ tr.cols }}" as="col" hint-placeholder-count="1">
 <div style="width:133.1pt;flex:0 0 133.1pt;box-sizing:border-box;padding-right:6.6pt;border-right:{{ col.rule }}">
 <div style="width:126.5pt">
 <sc-for list="{{ col.groups }}" as="g" hint-placeholder-count="1">
@@ -133,7 +139,9 @@ a:hover{color:#1b7fb4}
 </sc-for>
 </div>
 </div>
+</sc-for>
 
+<sc-for list="{{ tp.tiers }}" as="x" hint-placeholder-count="1">
 <div style="margin-top:27pt">
 <div style="margin-left:-0.7pt;font-size:24pt;font-weight:700;line-height:1;letter-spacing:-.01em">Jumps Races Prizemoney Breakdowns</div>
 <div style="margin-top:5.2pt;height:2pt;background:#2c2e35"></div>
@@ -147,19 +155,13 @@ a:hover{color:#1b7fb4}
 </sc-for>
 </div>
 </div>
-
-<sc-for list="{{ ottPanel }}" as="o" hint-placeholder-count="1">
-<div style="position:relative;margin-top:29pt;height:96pt;background:#edf6fb;box-sizing:border-box;padding:10pt 12pt">
-<div style="font-size:20.6pt;font-weight:700;line-height:1;letter-spacing:-.01em">Transition Pathway Programs</div>
-<div style="margin-top:7pt;font-size:8pt;line-height:10.5pt;width:330pt">There are many and varied options for your horse when it retires from racing. Visit ottcommunity.com.au to access RV&rsquo;s easy-to-follow transition guide.</div>
-<img src="assets/photos/off-the-track-handler.png" alt="" style="position:absolute;right:0;top:0;width:130pt;height:96pt;object-fit:cover" />
-</div>
 </sc-for>
 </div>
 
 <div style="position:absolute;left:12.2pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1;letter-spacing:-.013em">{{ footer }}</div>
-<div style="position:absolute;right:12.3pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1">{{ pageNo }}</div>
+<div style="position:absolute;right:12.3pt;bottom:4.2pt;font-family:'Gotham XNarrow',sans-serif;font-size:7pt;line-height:1">{{ tp.no }}</div>
 </section>
+</sc-for>
 
 </doc-page>
 </x-dc>
@@ -209,6 +211,56 @@ class Component extends DCLogic {
   componentDidUpdate() {
     const dp = document.querySelector('doc-page');
     if (dp && dp._measure) dp._measure();
+    const n = document.querySelectorAll('doc-page > .page').length;
+    if (n) import('./parsers/pagination.js').then(P => P.report && P.report('jumps', n)).catch(() => {});
+    // the bookable panel in any page foot left empty, as the assembled edition draws it
+    clearTimeout(this._fillerTimer);
+    this._fillerTimer = setTimeout(() => this.applyFillers(), 900);
+  }
+
+  applyFillers() {
+    import('./parsers/ads.js').then(A => {
+      document.querySelectorAll('doc-page > .page').forEach(pg => {
+        const had = pg.querySelector('[data-filler]');
+        if (had) had.remove();
+        const foot = pg.lastElementChild;
+        const folio = ((foot && foot.textContent) || '').trim();
+        if (!/^\d+$/.test(folio)) return;
+        const pr = pg.getBoundingClientRect();
+        if (!pr.height) return;
+        const scale = pr.height / 841.89;
+        let top = 811.89, bottom = 0;
+        [...pg.children].forEach(el => {
+          if (/bottom:/.test(el.getAttribute('style') || '')) return;
+          const r = el.getBoundingClientRect();
+          if (!r.height) return;
+          top = Math.min(top, (r.top - pr.top) / scale);
+          bottom = Math.max(bottom, (r.bottom - pr.top) / scale);
+        });
+        const from = Math.max(top, 90);
+        const slot = A.pageSlot(folio, from, Math.max(0, bottom - from), 811.89, (this.state.settings || {}).$placements)[0];
+        if (!slot) return;
+        const box = document.createElement('div');
+        box.setAttribute('data-filler', slot.id);
+        box.style.cssText = 'position:absolute;left:22.7pt;top:' + slot.top + ';width:549.9pt;height:' + slot.height + ';box-sizing:border-box';
+        if (slot.booked) {
+          const img = document.createElement('img');
+          img.src = slot.art; img.alt = '';
+          img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block';
+          box.appendChild(img);
+        } else {
+          box.style.cssText += ';border:0.75pt dashed #b6bcc3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5pt;color:#9aa1a9';
+          const name = document.createElement('div');
+          name.style.cssText = "font-family:'Gotham XNarrow',sans-serif;font-size:10pt;font-weight:700;letter-spacing:.09em";
+          name.textContent = 'ADVERTISING SLOT \u2014 ' + slot.id;
+          const size = document.createElement('div');
+          size.style.cssText = 'font-size:7.5pt;letter-spacing:.02em';
+          size.textContent = slot.size;
+          box.appendChild(name); box.appendChild(size);
+        }
+        pg.appendChild(box);
+      });
+    }).catch(() => {});
   }
 
   /**
@@ -218,6 +270,43 @@ class Component extends DCLogic {
    *
    *   depth  how deep a column may run, in points
    */
+/**
+   * How the jumps section falls onto pages. One page when the program, the
+   * trials and the breakdowns fit together; otherwise the program table takes
+   * the first page (more if it runs long, the header row repeated) and the
+   * trials and breakdowns follow on a page of their own. Whatever is left at a
+   * page foot is offered as a bookable advertising panel by the filler pass.
+   *
+   *   n     program rows        half  tier rows per column
+   *   pack  depth -> trial columns
+   */
+  jpLayout(n, half, pack) {
+    const BOTTOM = 790, ROW = 37, HEAD_ROW = 26;
+    const TRIALS_HEAD = 29.2, TRIALS_GAP = 27.6;
+    const TIERS = 27 + 24 + 5.2 + 2 + 7 + half * 21.2;
+    const need = pack(100000).length ? 29 + 20.2 : 0;
+    const spare1 = BOTTOM - 90.7 - (HEAD_ROW + n * ROW) - TRIALS_GAP - TRIALS_HEAD - TIERS;
+    const one = pack(Math.max(spare1, 1));
+    if (spare1 >= need && one.length <= 4) {
+      return [{ top: 90.7, title: true, rows: [0, n], trials: { gap: TRIALS_GAP, cols: one }, tiers: true }];
+    }
+    const pages = [];
+    for (let a = 0; a < n || !pages.length; ) {
+      const top = pages.length ? 59.3 : 90.7;
+      const per = Math.max(1, Math.floor((BOTTOM - top - HEAD_ROW) / ROW));
+      pages.push({ top, title: !pages.length, rows: [a, Math.min(n, a + per)], trials: null, tiers: false });
+      a += per;
+    }
+    const cols = pack(BOTTOM - 59.3 - TRIALS_HEAD - TIERS);
+    pages.push({ top: 59.3, title: false, rows: null, trials: { gap: 0, cols }, tiers: true });
+    if (cols.length > 4 && !this._jpWarnedCols) {
+      this._jpWarnedCols = true;
+      console.warn('Jumps Trials: the races fill ' + cols.length + ' columns against the four a page sets — '
+        + (cols.length - 4) + ' will not print.');
+    }
+    return pages;
+  }
+
   packTrials(depth) {
     const HEAD = 29;      // rule, venue, date
     const RACE = 20.2;    // gap, conditions bar, title
@@ -267,19 +356,8 @@ class Component extends DCLogic {
     const edition = s.edition || '';
     // "AUGUST EDITION 2026" -> "August", for the section title
     const w = edition.trim().split(/\s+/)[0] || '';
-    const editionWord = w ? w[0].toUpperCase() + w.slice(1).toLowerCase() : '';
-    // a program running over several months titles itself as a range: "April - June"
-    const monthWord = (() => {
-      const NM = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-      const seen = [];
-      (this.state.meetings || []).forEach(m => {
-        const a = String(m.dateLabel || '').toUpperCase().match(/\b(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)/);
-        if (a) { const i = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'].indexOf(a[1]); if (seen[seen.length - 1] !== i) seen.push(i); }
-      });
-      if (seen.length > 1) return NM[seen[0]] + ' - ' + NM[seen[seen.length - 1]];
-      if (seen.length === 1) return NM[seen[0]];
-      return editionWord;
-    })();
+    const monthWord = ((this.state.meetings || [])[0] || {}).programTitle
+      || 'Jumps Racing Program ' + (w ? w[0].toUpperCase() + w.slice(1).toLowerCase() : '');
 
     // Two races of one class in a meeting split the cell, and the prizemoney
     // cell beside it splits with them. The divider is the same rule as the
@@ -304,49 +382,23 @@ class Component extends DCLogic {
       ? [{ tiers: tiers.slice(0, half) }, { tiers: tiers.slice(half) }]
       : [];
 
-    // What is left for the trials once the program and the breakdowns have
-    // taken theirs. The Off The Track panel is discretionary: it runs when the
-    // trials leave room and is dropped when they need it.
-    const FLOW = 790 - 90.7;
-    const program = 26 + meetings.length * 37;
-    const heading = 27.6 + 29.2;
-    const breakdowns = 27 + 24 + 5.2 + 2 + 7 + Math.ceil(tiers.length / 2) * 21.2;
-    const spare = FLOW - program - heading - breakdowns;
-
-    const PANEL = 29 + 96;
-    let cols = this.packTrials(spare - PANEL);
-    let ottPanel = [{}];
-    if (cols.length > 4) {
-      cols = this.packTrials(spare);
-      ottPanel = [];
-    }
-    // Second test, on what the page actually came to rather than what the
-    // trials were allowed: a long program pushes everything down too, so the
-    // panel goes whenever the foot of the page cannot hold it.
-    const trialsDepth = Math.max(0, ...cols.slice(0, 4).map(c => c.depth));
-    const settled = 90.7 + program + heading + trialsDepth + breakdowns;
-    if (ottPanel.length && settled + PANEL > 790) ottPanel = [];
-    if (cols.length > 4 && !this._warnedCols) {
-      this._warnedCols = true;
-      console.warn('Jumps Trials: the races fill ' + cols.length + ' columns against the four page 49 sets'
-        + ' — ' + (cols.length - 4) + ' will not print. Reduce the races listed, or the section needs a second page.');
-    }
-    if (settled > 790 && !this._warnedDepth) {
-      this._warnedDepth = true;
-      console.warn('Jumps Program: the page comes to about ' + Math.round(settled) + 'pt against 790pt of usable'
-        + ' depth, with the advertisement already dropped — the section needs a second page.');
-    }
-    // a hairline sits in the gutter after every column but the fourth, so a
-    // single-column month still carries the rule the published page shows
-    const trialColumns = cols.slice(0, 4).map((c, i) => ({
-      groups: c.groups,
-      rule: i < 3 ? '0.5pt solid #a7a9ac' : 'none'
+    const laid = this.jpLayout(meetings.length, half, d => this.packTrials(d));
+    const base = Number(s.page_jumps) || 0;
+    const pages = laid.map((p, i) => ({
+      top: p.top + 'pt',
+      titleRow: p.title ? [{}] : [],
+      table: p.rows ? [{ rows: meetings.slice(p.rows[0], p.rows[1]) }] : [],
+      trials: p.trials ? [{
+        gap: p.trials.gap + 'pt',
+        cols: p.trials.cols.slice(0, 4).map((c, j) => ({ groups: c.groups, rule: j < 3 ? '0.5pt solid #a7a9ac' : 'none' }))
+      }] : [],
+      tiers: p.tiers ? [{}] : [],
+      no: base ? String(base + i) : String(i + 1)
     }));
 
     return {
-      meetings, tierColumns, ottPanel, trialColumns,
+      pages, tierColumns,
       month: monthWord,
-      pageNo: s.page_jumps || '',
       footer: 'INSIDE RACING I ' + edition
     };
   }
